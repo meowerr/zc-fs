@@ -476,7 +476,15 @@ zc-fs/
       4. Club Admin queries pending approval queue and executes approval update into `Technical - Vehicle Dynamics` (`11111111-1111-1111-1111-111111111111`) with role `member`.
       5. Post-approval telemetry unlocked: Engineer gains real-time access to `#ch-vehicle-dynamics` and `#ch-announcements`.
   - **Slice 3: Real Tasks, Assignees, Submissions & Review Workflow**
-    - [PENDING]
+    - [VERIFIED: node scripts/verify-slice-3.mjs executed against live Supabase] Tested with Admin and Member accounts on live database:
+      1. Admin creates task with multi-assignee junction in Vehicle Dynamics.
+      2. Cross-group RLS task isolation: Member VD sees own group task, blocked from seeing Aero group task.
+      3. Member starts work: assignee status update triggers automatic status rollup to `in_progress`.
+      4. Task discussion comments: Member and Admin post comments with chronological ordering.
+      5. Multi-version deliverable submission (v1): Submissions recorded with versioning; status rolls up to `submitted`.
+      6. Review workflow: Reviewer requests changes with engineering feedback; status rolls up to `changes_requested`.
+      7. Member submits revision (v2) and Reviewer approves: status rolls up to `approved`.
+      8. Negative security checks: Member blocked from creating tasks in foreign groups; Member blocked from reviewing submissions.
   - **Slice 4: Real Channels, Direct Messages & Realtime Websockets**
     - [PENDING]
   - **Slice 5: Storage Uploads & Storage RLS Policies**

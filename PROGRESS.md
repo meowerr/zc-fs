@@ -205,6 +205,16 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
      - Club Admin inspected pending approval queue in real-time.
      - Club Admin approved Engineer into `Technical - Vehicle Dynamics` (`11111111-1111-1111-1111-111111111111`) with role `member`.
      - Engineer workspace telemetry immediately unlocked: gained live access to `#ch-vehicle-dynamics` and `#ch-announcements`.
+4. **Slice 3: Real Tasks, Assignees, Submissions & Review Workflow:**
+   - [x] [VERIFIED: node scripts/verify-slice-3.mjs executed against live Supabase (all 8 steps passed)]:
+     - Step 1: Admin created task with multi-assignee junction in Vehicle Dynamics.
+     - Step 2: Cross-group RLS isolation verified (Member VD sees own group task; blocked from Aero group task).
+     - Step 3: Member started work (assignee status `in_progress` triggered automatic DB rollup to `tasks.status = 'in_progress'`).
+     - Step 4: Discussion comments exchanged between Member and Admin with chronological ordering.
+     - Step 5: Member submitted Deliverable v1; status rolled up to `submitted`.
+     - Step 6: Admin reviewed v1 requesting changes with engineering feedback; status rolled up to `changes_requested`.
+     - Step 7: Member submitted v2 revision and Admin approved; status rolled up to `approved`.
+     - Step 8: Negative security tests verified: Member blocked from creating tasks in foreign groups; Member blocked from reviewing submissions.
 
 ---
 
