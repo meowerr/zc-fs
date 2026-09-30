@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { F1HorizontalTransition } from './components/transitions/F1HorizontalTransition';
 import { AppShell } from './components/layout/AppShell';
 import { NavTab } from './components/layout/BottomNav';
 import { MissionControl } from './components/dashboard/MissionControl';
@@ -20,6 +21,8 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const prevUserRef = useRef<string | null>(null);
 
   const {
     currentUser,
@@ -70,6 +73,20 @@ export const App: React.FC = () => {
     removeToast,
     requestWebPush,
   } = useNotifications(currentUser);
+
+  // ─── F1 Horizontal Reveal Transition Trigger ───
+  useEffect(() => {
+    if (currentUser && !prevUserRef.current) {
+      const alreadyTransitioned = sessionStorage.getItem('zcfs_login_transitioned');
+      if (!alreadyTransitioned && currentUser.status === 'approved') {
+        setIsTransitioning(true);
+      }
+    } else if (!currentUser && prevUserRef.current) {
+      sessionStorage.removeItem('zcfs_login_transitioned');
+      setIsTransitioning(false);
+    }
+    prevUserRef.current = currentUser ? currentUser.id : null;
+  }, [currentUser]);
 
   // 1. Not Authenticated -> Show Auth Screen (strictly Supabase Auth)
   if (!currentUser) {
@@ -132,7 +149,7 @@ export const App: React.FC = () => {
     }
   };
 
-  return (
+  const authenticatedContent = (
     <>
       <AppShell
         activeTab={activeTab}
@@ -224,6 +241,23 @@ export const App: React.FC = () => {
       />
     </>
   );
+
+  if (isTransitioning) {
+    return (
+      <F1HorizontalTransition
+        direction="left-to-right"
+        duration={1050}
+        onComplete={() => {
+          setIsTransitioning(false);
+          sessionStorage.setItem('zcfs_login_transitioned', 'true');
+        }}
+      >
+        {authenticatedContent}
+      </F1HorizontalTransition>
+    );
+  }
+
+  return authenticatedContent;
 };
 
 export default App;
