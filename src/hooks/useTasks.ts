@@ -11,203 +11,30 @@ import {
   SubmissionReviewStatus,
   Profile 
 } from '../lib/database.types';
-
-// Realistic initial Formula Student tasks
-const INITIAL_DEMO_TASKS: Task[] = [
-  {
-    id: 'task-101',
-    group_id: '11111111-1111-1111-1111-111111111111', // Vehicle Dynamics
-    creator_id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', // Kareem (Head)
-    title: 'Double Wishbone Suspension Kinematics Simulation',
-    description: 'Perform bump steer, roll center migration, and camber recovery simulation in Lotus Shark. Validate with tire envelope.',
-    task_type: 'design',
-    priority: 'high',
-    status: 'in_progress',
-    deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days from now
-    links: [{ title: 'Lotus Shark Model CAD', url: 'https://cad.onshape.com/sample-suspension' }],
-    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-    assignees: [
-      {
-        id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-        email: 'omar.member@zewailcity.edu.eg',
-        full_name: 'Omar Sherif',
-        avatar_url: null,
-        phone: null,
-        role: 'member',
-        group_id: '11111111-1111-1111-1111-111111111111',
-        status: 'approved',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }
-    ],
-  },
-  {
-    id: 'task-102',
-    group_id: '11111111-1111-1111-1111-111111111111', // Vehicle Dynamics
-    creator_id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-    title: 'Brake Caliper Bracket FEA Stress Analysis',
-    description: 'Run ANSYS structural analysis under 1.8G maximum deceleration. Target factor of safety: 2.2 on 7075-T6 aluminum.',
-    task_type: 'report',
-    priority: 'urgent',
-    status: 'submitted',
-    deadline: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString(),
-    links: [{ title: 'Ansys Project Repo', url: 'https://github.com/zcfs/brake-fea' }],
-    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-    assignees: [
-      {
-        id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-        email: 'omar.member@zewailcity.edu.eg',
-        full_name: 'Omar Sherif',
-        avatar_url: null,
-        phone: null,
-        role: 'member',
-        group_id: '11111111-1111-1111-1111-111111111111',
-        status: 'approved',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }
-    ],
-  },
-  {
-    id: 'task-201',
-    group_id: '22222222-2222-2222-2222-222222222222', // Aerodynamics
-    creator_id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    title: 'Front Wing Multi-Element Airfoil Mesh',
-    description: 'Generate polyhedral mesh with 15 prism layers for Y+ < 1 boundary layer resolution.',
-    task_type: 'code',
-    priority: 'high',
-    status: 'changes_requested',
-    deadline: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // Overdue
-    links: [{ title: 'CFD Setup Docs', url: 'https://openfoam.org' }],
-    created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-    assignees: [],
-  },
-  {
-    id: 'task-301',
-    group_id: '33333333-3333-3333-3333-333333333333', // Electronics
-    creator_id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    title: 'CAN Bus Dashboard Packet Decoder Node',
-    description: 'Implement C++ firmware for STM32 to decode RPM, wheel speeds, and brake pressure.',
-    task_type: 'code',
-    priority: 'medium',
-    status: 'approved',
-    deadline: new Date(Date.now() + 6 * 24 * 60 * 60 * 1000).toISOString(),
-    links: [{ title: 'Firmware GitHub Repo', url: 'https://github.com/zcfs/can-telemetry' }],
-    created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
-    updated_at: new Date().toISOString(),
-    assignees: [],
-  }
-];
-
-const INITIAL_DEMO_SUBMISSIONS: Record<string, TaskSubmission[]> = {
-  'task-102': [
-    {
-      id: 'sub-01',
-      task_id: 'task-102',
-      submitted_by: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-      version_number: 1,
-      submission_type: 'link',
-      content: 'https://github.com/zcfs/brake-fea/pull/12',
-      notes: 'Completed mesh convergence study and static stress analysis. Max von Mises stress is 214 MPa.',
-      review_status: 'pending',
-      review_feedback: null,
-      reviewed_by: null,
-      reviewed_at: null,
-      created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-      submitter: {
-        id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-        email: 'omar.member@zewailcity.edu.eg',
-        full_name: 'Omar Sherif',
-        avatar_url: null,
-        phone: null,
-        role: 'member',
-        group_id: '11111111-1111-1111-1111-111111111111',
-        status: 'approved',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }
-    }
-  ],
-  'task-201': [
-    {
-      id: 'sub-02',
-      task_id: 'task-201',
-      submitted_by: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-      version_number: 1,
-      submission_type: 'link',
-      content: 'https://github.com/zcfs/aero-cfd/commits/mesh-v1',
-      notes: 'Initial polyhedral mesh generated.',
-      review_status: 'changes_requested',
-      review_feedback: 'Trailing edge prism layers collapsed. Please refine aspect ratio around the flap gurney.',
-      reviewed_by: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-      reviewed_at: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    }
-  ]
-};
-
-const INITIAL_DEMO_COMMENTS: Record<string, TaskComment[]> = {
-  'task-101': [
-    {
-      id: 'comm-01',
-      task_id: 'task-101',
-      author_id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-      content: 'Make sure you verify clearance with the upright steering arm in full bump!',
-      attachment_url: null,
-      created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      author: {
-        id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-        email: 'kareem.vd@zewailcity.edu.eg',
-        full_name: 'Kareem Tarek (Head)',
-        avatar_url: null,
-        phone: null,
-        role: 'head',
-        group_id: '11111111-1111-1111-1111-111111111111',
-        status: 'approved',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }
-    },
-    {
-      id: 'comm-02',
-      task_id: 'task-101',
-      author_id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-      content: 'Understood. Kinematics model has 15mm clearance in full jounce.',
-      attachment_url: null,
-      created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-      author: {
-        id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-        email: 'omar.member@zewailcity.edu.eg',
-        full_name: 'Omar Sherif',
-        avatar_url: null,
-        phone: null,
-        role: 'member',
-        group_id: '11111111-1111-1111-1111-111111111111',
-        status: 'approved',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      }
-    }
-  ]
-};
+import { 
+  isDemoMode, 
+  INITIAL_DEMO_TASKS, 
+  INITIAL_DEMO_SUBMISSIONS, 
+  INITIAL_DEMO_COMMENTS 
+} from '../lib/demoData';
 
 export function useTasks(currentUser: Profile | null) {
   const [tasks, setTasks] = useState<Task[]>(() => {
+    if (!isDemoMode) return [];
     const saved = localStorage.getItem('zcfs_tasks');
     return saved ? JSON.parse(saved) : INITIAL_DEMO_TASKS;
   });
 
   const [submissions, setSubmissions] = useState<Record<string, TaskSubmission[]>>(() => {
+    if (!isDemoMode) return {};
     const saved = localStorage.getItem('zcfs_submissions');
-    return saved ? JSON.parse(saved) : INITIAL_DEMO_SUBMISSIONS;
+    return saved ? JSON.parse(saved) : (INITIAL_DEMO_SUBMISSIONS as Record<string, TaskSubmission[]>);
   });
 
   const [comments, setComments] = useState<Record<string, TaskComment[]>>(() => {
+    if (!isDemoMode) return {};
     const saved = localStorage.getItem('zcfs_comments');
-    return saved ? JSON.parse(saved) : INITIAL_DEMO_COMMENTS;
+    return saved ? JSON.parse(saved) : (INITIAL_DEMO_COMMENTS as Record<string, TaskComment[]>);
   });
 
   const [loading, setLoading] = useState<boolean>(false);

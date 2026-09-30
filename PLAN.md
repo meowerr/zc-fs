@@ -460,13 +460,24 @@ zc-fs/
   - [VERIFIED: Web Audio API synthesizer tested in browser] Synthesized telemetry chime and approval sound.
   - [VERIFIED: UI role gating in AppShell and TaskDetailModal] / [IMPLEMENTED, UNTESTED: storage RLS policy in 002_rls_policies.sql] Cross-group file sharing exclusively for Heads and Admin.
 
-- **Phase 5: Polish, Accessibility & Production Delivery**
-  - [VERIFIED: AppShell.tsx localStorage sync and classList toggle] Dark Mode ("Midnight" vs "Chrome") toggle with persistent glass styling.
-  - [VERIFIED: verify-suite.mjs RFC 4180 escaping & JSON roundtrip with pasted output] CSV / JSON task export for meeting reports and BOM cost tracking (`exportUtils.ts`).
-  - [IMPLEMENTED, UNTESTED: requires manual color picker & screen reader testing] WCAG AA contrast validation on glass surfaces and keyboard accessibility.
-  - [VERIFIED: manifest.webmanifest standalone & sw.js verified in verify-suite.mjs] PWA build artifacts generated.
-  - [IMPLEMENTED, UNTESTED: requires testing on physical iPhone & Android device] PWA installation audit on iOS and Android devices.
-  - [VERIFIED: RoleGuideModal.tsx compiled and wired to TopHeader] User role guides (Club Admin, Head, Member) in-app.
+- **Phase 6: GO REAL (Real Supabase Backend Replacement)**
+  - **Slice 1: Database Migrations, Schema Triggers & RLS Security Invariant Verification**
+    - [VERIFIED: dist/assets/*.js grep returns zero matches] Mock data tree-shaken and absent from production bundle.
+    - [VERIFIED: real PostgreSQL execution on live Supabase project] Schema, enums, `task_assignees` junction with status rollup trigger, `prevent_profile_privilege_escalation()` trigger, and case-insensitive domain checks (`supabase/migrations/001_initial_schema.sql`).
+    - [VERIFIED: real PostgreSQL execution on live Supabase project] Strict database-level RLS policies on profiles, groups, tasks, assignees, submissions, comments, channels, messages (`supabase/migrations/002_rls_policies.sql`).
+    - [VERIFIED: real PostgreSQL execution on live Supabase project] 5 official sub-teams and default channels seeded; zero fake users (`supabase/migrations/003_seed_data.sql`).
+    - [VERIFIED: real PostgreSQL execution on live Supabase project] Consolidated single-file schema and seed migration (`supabase/000_complete_setup.sql`).
+    - [VERIFIED: 7/7 passed on live Supabase instance with output proof] Automated PostgreSQL security invariant test suite (`supabase/tests/rls_security_test.sql`).
+  - **Slice 2: Real Auth, Email Confirmation, Pending Gateway & Admin Approval**
+    - [READY TO START: Awaiting user prompt go-ahead]
+  - **Slice 3: Real Tasks, Assignees, Submissions & Review Workflow**
+    - [PENDING]
+  - **Slice 4: Real Channels, Direct Messages & Realtime Websockets**
+    - [PENDING]
+  - **Slice 5: Storage Uploads & Storage RLS Policies**
+    - [PENDING]
+  - **Slice 6: In-App Notifications, Production Build & Edge Deployment**
+    - [PENDING]
 
 ---
 

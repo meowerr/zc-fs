@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
+import { supabase, isLiveSupabaseConfigured, isDemoMode } from '../lib/supabase';
+import { INITIAL_CHANNELS, INITIAL_MESSAGES } from '../lib/demoData';
 import { 
   Channel, 
   Conversation, 
@@ -7,148 +8,10 @@ import {
   Profile 
 } from '../lib/database.types';
 
-// Default seeded channels
-const INITIAL_CHANNELS: Channel[] = [
-  {
-    id: 'ch-announcements',
-    name: 'Mission Control Announcements',
-    slug: 'announcements',
-    channel_type: 'announcements',
-    group_id: null,
-    description: 'Official club-wide updates, competition deadlines, and general announcements. Read-only for engineers.',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'ch-pit-wall-heads',
-    name: 'Pit Wall (Heads Only)',
-    slug: 'pit-wall-heads',
-    channel_type: 'heads_only',
-    group_id: null,
-    description: 'Cross-group leadership coordination channel for Sub-team Heads and Club Admins.',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'ch-vd',
-    name: 'Vehicle Dynamics Telemetry',
-    slug: 'ch-vehicle-dynamics',
-    channel_type: 'group',
-    group_id: '11111111-1111-1111-1111-111111111111',
-    description: 'Suspension kinematics, steering, brake balance, and tire data discussion.',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'ch-aero',
-    name: 'Aero CFD & Flight',
-    slug: 'ch-aerodynamics',
-    channel_type: 'group',
-    group_id: '22222222-2222-2222-2222-222222222222',
-    description: 'Front/rear wings, undertray diffusers, and OpenFOAM simulation data.',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'ch-elec',
-    name: 'Low-Voltage Systems',
-    slug: 'ch-electronics',
-    channel_type: 'group',
-    group_id: '33333333-3333-3333-3333-333333333333',
-    description: 'CAN bus packet decoding, wiring harness, and telemetry dashboard.',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'ch-power',
-    name: 'Powertrain & Torque',
-    slug: 'ch-powertrain',
-    channel_type: 'group',
-    group_id: '44444444-4444-4444-4444-444444444444',
-    description: 'Motor cooling, dyno testing, and drivetrain CAD modeling.',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: 'ch-ops',
-    name: 'Operations & Sponsorship',
-    slug: 'ch-business-ops',
-    channel_type: 'group',
-    group_id: '55555555-5555-5555-5555-555555555555',
-    description: 'BOM cost accounting, sponsor presentations, and team logistics.',
-    created_at: new Date().toISOString(),
-  },
-];
-
-const INITIAL_MESSAGES: Message[] = [
-  {
-    id: 'msg-01',
-    channel_id: 'ch-announcements',
-    conversation_id: null,
-    sender_id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    content: '🏁 Welcome to the ZC PitLane Telemetry Workspace! Formula Student UK 2026 design freeze is in 45 days. Check sub-team deliverables.',
-    attachment_url: null,
-    attachment_name: null,
-    attachment_type: null,
-    created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-    sender: {
-      id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-      email: 'admin@zewailcity.edu.eg',
-      full_name: 'Dr. Mostafa (Club Advisor)',
-      avatar_url: null,
-      phone: null,
-      role: 'admin',
-      group_id: null,
-      status: 'approved',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    }
-  },
-  {
-    id: 'msg-02',
-    channel_id: 'ch-pit-wall-heads',
-    conversation_id: null,
-    sender_id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-    content: 'Vehicle Dynamics has finalized the suspension hardpoints in Lotus Shark. Aero team can now run full car CFD with tire steering envelope.',
-    attachment_url: null,
-    attachment_name: null,
-    attachment_type: null,
-    created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-    sender: {
-      id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-      email: 'kareem.vd@zewailcity.edu.eg',
-      full_name: 'Kareem Tarek (Head)',
-      avatar_url: null,
-      phone: null,
-      role: 'head',
-      group_id: '11111111-1111-1111-1111-111111111111',
-      status: 'approved',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    }
-  },
-  {
-    id: 'msg-03',
-    channel_id: 'ch-vd',
-    conversation_id: null,
-    sender_id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-    content: 'Working on the double wishbone kinematics deliverable now. Camber recovery looks solid at -1.4 deg in 2G cornering.',
-    attachment_url: null,
-    attachment_name: null,
-    attachment_type: null,
-    created_at: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
-    sender: {
-      id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-      email: 'omar.member@zewailcity.edu.eg',
-      full_name: 'Omar Sherif',
-      avatar_url: null,
-      phone: null,
-      role: 'member',
-      group_id: '11111111-1111-1111-1111-111111111111',
-      status: 'approved',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    }
-  }
-];
-
 export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profile[]) {
   const [messages, setMessages] = useState<Message[]>(() => {
     const saved = localStorage.getItem('zcfs_chat_messages');
+    if (!isDemoMode) return [];
     return saved ? JSON.parse(saved) : INITIAL_MESSAGES;
   });
 
@@ -168,7 +31,7 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
   }, [messages, conversations]);
 
   // Compute channels visible to current user (enforcing RLS constraints in UI)
-  const accessibleChannels = useMemo(() => {
+  const accessibleChannels: Channel[] = useMemo(() => {
     if (!currentUser || currentUser.status !== 'approved') return [];
 
     return INITIAL_CHANNELS.filter((ch) => {

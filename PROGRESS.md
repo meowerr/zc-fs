@@ -65,6 +65,20 @@
 - `[IMPLEMENTED, UNTESTED: physical phone testing required]` PWA installation audit on iOS and Android devices.
 - `[VERIFIED: node scripts/verify-suite.mjs [2/7], total gzip 146 KB < 200 KB budget, main JS 31.5 KB]` Verified production bundle size.
 
+### Phase 6: GO REAL (Real Supabase Backend Replacement)
+- **Slice 1: Database Migrations, Schema Triggers & RLS Security Invariant Verification**
+  - `[VERIFIED: Select-String in dist/assets/*.js returns zero matches]` Mock data tree-shaken and absent from production build.
+  - `[VERIFIED: real PostgreSQL execution on live Supabase project]` PostgreSQL schema with domain restriction, `task_assignees` junction table with rollup trigger, and `prevent_profile_privilege_escalation()` trigger (`supabase/migrations/001_initial_schema.sql`).
+  - `[VERIFIED: real PostgreSQL execution on live Supabase project]` Comprehensive Row Level Security policies across all tables (`supabase/migrations/002_rls_policies.sql`).
+  - `[VERIFIED: real PostgreSQL execution on live Supabase project]` Official 5 sub-teams and default communication channels seeded; zero fake users (`supabase/migrations/003_seed_data.sql`).
+  - `[VERIFIED: real PostgreSQL execution on live Supabase project]` Consolidated single migration script (`supabase/000_complete_setup.sql`).
+  - `[VERIFIED: 7/7 passed on live Supabase instance with output proof]` 7 automated SQL security invariant tests proving cross-group isolation, privilege escalation protection, domain validation, and pending quarantine (`supabase/tests/rls_security_test.sql`).
+- **Slice 2: Real Auth, Email Confirmation, Pending Gateway & Admin Approval** [READY TO START]
+- **Slice 3: Real Tasks, Assignees, Submissions & Review Workflow** [PENDING]
+- **Slice 4: Real Channels, Direct Messages & Realtime Websockets** [PENDING]
+- **Slice 5: Storage Uploads & Storage RLS Policies** [PENDING]
+- **Slice 6: In-App Notifications, Production Build & Edge Deployment** [PENDING]
+
 ---
 
 ## 2. Automated Terminal Test Evidence Output

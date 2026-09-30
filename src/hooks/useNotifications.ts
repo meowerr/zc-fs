@@ -1,39 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { NotificationItem, NotificationType, Profile } from '../lib/database.types';
 import { playTelemetrySound } from '../lib/telemetryAudio';
-
-const INITIAL_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: 'notif-1',
-    user_id: 'any',
-    type: 'announcement',
-    title: 'Design Freeze Approaching',
-    message: 'Official design freeze for Formula Student UK is in 45 days. Review your sub-team tasks.',
-    link: null,
-    is_read: false,
-    created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'notif-2',
-    user_id: 'any',
-    type: 'task_assigned',
-    title: 'New Deliverable Assigned',
-    message: 'You have been assigned to Double Wishbone Suspension Kinematics Simulation.',
-    link: null,
-    is_read: false,
-    created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: 'notif-3',
-    user_id: 'any',
-    type: 'review_result',
-    title: 'Submission Approved',
-    message: 'Your FEA Brake Caliper Bracket submission was reviewed and marked APPROVED by Kareem Tarek.',
-    link: null,
-    is_read: true,
-    created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-  }
-];
+import { isDemoMode } from '../lib/supabase';
+import { INITIAL_NOTIFICATIONS } from '../lib/demoData';
 
 export interface ToastItem {
   id: string;
@@ -45,6 +14,7 @@ export interface ToastItem {
 export function useNotifications(currentUser: Profile | null) {
   const [notifications, setNotifications] = useState<NotificationItem[]>(() => {
     const saved = localStorage.getItem('zcfs_notifications');
+    if (!isDemoMode) return [];
     return saved ? JSON.parse(saved) : INITIAL_NOTIFICATIONS;
   });
 

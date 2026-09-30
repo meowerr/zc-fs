@@ -1,58 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
+import { supabase, isLiveSupabaseConfigured, isDemoMode } from '../lib/supabase';
 import { Profile, UserRole, UserStatus } from '../lib/database.types';
-
-// Demo initial mock profiles for zero-configuration local preview
-const MOCK_PROFILES: Record<string, Profile> = {
-  'admin@zewailcity.edu.eg': {
-    id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-    email: 'admin@zewailcity.edu.eg',
-    full_name: 'Dr. Mostafa (Club Advisor)',
-    avatar_url: null,
-    phone: '+20 100 123 4567',
-    role: 'admin',
-    group_id: null,
-    status: 'approved',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  'kareem.vd@zewailcity.edu.eg': {
-    id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
-    email: 'kareem.vd@zewailcity.edu.eg',
-    full_name: 'Kareem Tarek',
-    avatar_url: null,
-    phone: '+20 101 234 5678',
-    role: 'head',
-    group_id: '11111111-1111-1111-1111-111111111111', // Vehicle Dynamics
-    status: 'approved',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  'omar.member@zewailcity.edu.eg': {
-    id: 'cccccccc-cccc-cccc-cccc-cccccccccccc',
-    email: 'omar.member@zewailcity.edu.eg',
-    full_name: 'Omar Sherif',
-    avatar_url: null,
-    phone: '+20 102 345 6789',
-    role: 'member',
-    group_id: '11111111-1111-1111-1111-111111111111', // Vehicle Dynamics
-    status: 'approved',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  'ziad.new@zewailcity.edu.eg': {
-    id: 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee',
-    email: 'ziad.new@zewailcity.edu.eg',
-    full_name: 'Ziad Mohamed',
-    avatar_url: null,
-    phone: '+20 103 456 7890',
-    role: 'pending',
-    group_id: null,
-    status: 'pending',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-};
+import { MOCK_PROFILES } from '../lib/demoData';
 
 export const UNIVERSITY_DOMAIN = 'zewailcity.edu.eg';
 
@@ -62,14 +11,16 @@ export function isUniversityEmail(email: string): boolean {
 
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState<Profile | null>(() => {
-    // Default to Kareem (Head) in demo mode
+    if (!isDemoMode) return null;
     const saved = localStorage.getItem('zcfs_demo_user');
     if (saved && MOCK_PROFILES[saved]) {
       return MOCK_PROFILES[saved];
     }
-    return MOCK_PROFILES['kareem.vd@zewailcity.edu.eg'];
+    return MOCK_PROFILES['kareem.vd@zewailcity.edu.eg'] || null;
   });
-  const [allProfiles, setAllProfiles] = useState<Profile[]>(() => Object.values(MOCK_PROFILES));
+  const [allProfiles, setAllProfiles] = useState<Profile[]>(() => 
+    isDemoMode ? Object.values(MOCK_PROFILES) : []
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -228,6 +179,15 @@ export function useAuth() {
   // Sign Out function
   const signOut = async () => {
     localStorage.removeItem('zcfs_demo_user');
+    // Flush service worker and browser caches on logout
+    if (typeof window !== 'undefined' && 'caches' in window) {
+      try {
+        const cacheKeys = await window.caches.keys();
+        await Promise.all(cacheKeys.map((key) => window.caches.delete(key)));
+      } catch (e) {
+        console.warn('Failed to clear cache on logout:', e);
+      }
+    }
     if (!isLiveSupabaseConfigured) {
       setCurrentUser(null);
       return;

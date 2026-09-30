@@ -82,6 +82,19 @@ AS $$
     );
 $$;
 
+CREATE OR REPLACE FUNCTION public.is_approved_user()
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM public.profiles 
+        WHERE id = auth.uid() AND status = 'approved'
+    );
+$$;
+
 -- 2. Enable RLS on ALL Tables
 ALTER TABLE groups ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
@@ -102,60 +115,77 @@ CREATE POLICY "Approved users can view groups"
     ON groups FOR SELECT
     TO authenticated
     USING (
-        EXISTS (SELECT 1 FROM public.profiles WHERE id = auth.uid() AND status = 'approved')
+        EXISTS (
+            SELECT 1 FROM public.profiles 
+            WHERE id = auth.uid() AND status = 'approved'
+        )
     );
 
--- Only Admin can insert/update/delete groups
+-- Only Admins can modify groups
 CREATE POLICY "Admins can manage groups"
     ON groups FOR ALL
     TO authenticated
     USING (public.is_admin())
     WITH CHECK (public.is_admin());
 
+CREATE OR REPLACE FUNCTION public.get_auth_role()
+RETURNS user_role
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT role FROM public.profiles WHERE id = auth.uid();
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_auth_status()
+RETURNS user_status
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT status FROM public.profiles WHERE id = auth.uid();
+$$;
+
+CREATE OR REPLACE FUNCTION public.get_auth_group()
+RETURNS UUID
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+    SELECT group_id FROM public.profiles WHERE id = auth.uid();
+$$;
+
 -- ------------------------------------------------------------------------------
 -- PROFILES POLICIES
 -- ------------------------------------------------------------------------------
--- Users can view their own profile regardless of approval status
-CREATE POLICY "Users can view own profile"
-    ON profiles FOR SELECT
-    TO authenticated
-    USING (id = auth.uid());
-
--- Approved users can view approved team members (same group, or heads/admin)
-CREATE POLICY "Approved users can view teammates"
+-- Users can view their own profile, or colleagues in their sub-team, or heads/admins
+-- Uses non-recursive SECURITY DEFINER helper lookups
+CREATE POLICY "View profiles"
     ON profiles FOR SELECT
     TO authenticated
     USING (
-        status = 'approved' AND EXISTS (
-            SELECT 1 FROM public.profiles my_prof
-            WHERE my_prof.id = auth.uid() 
-              AND my_prof.status = 'approved'
-              AND (
-                  my_prof.role = 'admin'
-                  OR my_prof.role = 'head'
-                  OR my_prof.group_id = profiles.group_id
-                  OR profiles.role IN ('admin', 'head')
-              )
+        id = auth.uid()
+        OR public.is_admin()
+        OR (
+            public.is_approved_user()
+            AND (
+                role IN ('admin', 'head')
+                OR group_id = public.get_auth_group()
+            )
         )
     );
 
--- Users can update basic details of their own profile (name, avatar, phone)
-CREATE POLICY "Users can update own basic profile"
+-- Users can update their own profile, Admins can update any profile.
+-- Privilege escalation (modifying role, group_id, status) is strictly guarded by 
+-- the prevent_profile_privilege_escalation() database trigger.
+CREATE POLICY "Update profiles"
     ON profiles FOR UPDATE
     TO authenticated
-    USING (id = auth.uid())
-    WITH CHECK (
-        id = auth.uid() 
-        AND role = (SELECT role FROM public.profiles WHERE id = auth.uid()) -- Cannot elevate role
-        AND status = (SELECT status FROM public.profiles WHERE id = auth.uid()) -- Cannot self-approve
-    );
-
--- Admins can update any profile (assign group, change role, approve/reject)
-CREATE POLICY "Admins can update any profile"
-    ON profiles FOR UPDATE
-    TO authenticated
-    USING (public.is_admin())
-    WITH CHECK (public.is_admin());
+    USING (id = auth.uid() OR public.is_admin())
+    WITH CHECK (id = auth.uid() OR public.is_admin());
 
 -- ------------------------------------------------------------------------------
 -- TASKS POLICIES
@@ -211,6 +241,7 @@ CREATE POLICY "View task assignees"
         )
     );
 
+-- Heads and Admins can assign/unassign members
 CREATE POLICY "Manage task assignees"
     ON task_assignees FOR ALL
     TO authenticated
@@ -227,6 +258,22 @@ CREATE POLICY "Manage task assignees"
             WHERE t.id = task_assignees.task_id 
               AND (public.is_admin() OR public.is_head_of_group(t.group_id))
         )
+    );
+
+-- Assignees can update their own assignment status (e.g., in_progress, submitted)
+CREATE POLICY "Assignees can update own status"
+    ON task_assignees FOR UPDATE
+    TO authenticated
+    USING (
+        user_id = auth.uid()
+        AND EXISTS (
+            SELECT 1 FROM tasks t 
+            WHERE t.id = task_assignees.task_id 
+              AND public.is_member_of_group(t.group_id)
+        )
+    )
+    WITH CHECK (
+        user_id = auth.uid()
     );
 
 -- ------------------------------------------------------------------------------
@@ -300,9 +347,14 @@ CREATE POLICY "View channels"
     TO authenticated
     USING (
         public.is_admin()
-        OR channel_type = 'announcements'
-        OR (channel_type = 'heads_only' AND public.is_any_head_or_admin())
-        OR (channel_type = 'group' AND public.is_member_of_group(group_id))
+        OR (
+            public.is_approved_user()
+            AND (
+                channel_type = 'announcements'
+                OR (channel_type = 'heads_only' AND public.is_any_head_or_admin())
+                OR (channel_type = 'group' AND public.is_member_of_group(group_id))
+            )
+        )
     );
 
 -- ------------------------------------------------------------------------------
@@ -312,15 +364,19 @@ CREATE POLICY "View conversations"
     ON conversations FOR SELECT
     TO authenticated
     USING (
-        participant_1 = auth.uid() OR participant_2 = auth.uid() OR public.is_admin()
+        public.is_admin()
+        OR (
+            public.is_approved_user()
+            AND (participant_1 = auth.uid() OR participant_2 = auth.uid())
+        )
     );
 
 CREATE POLICY "Create conversations"
     ON conversations FOR INSERT
     TO authenticated
     WITH CHECK (
-        (participant_1 = auth.uid() OR participant_2 = auth.uid())
-        AND EXISTS (SELECT 1 FROM profiles WHERE id = auth.uid() AND status = 'approved')
+        public.is_approved_user()
+        AND (participant_1 = auth.uid() OR participant_2 = auth.uid())
     );
 
 CREATE POLICY "View messages"
@@ -329,21 +385,26 @@ CREATE POLICY "View messages"
     USING (
         public.is_admin()
         OR (
-            channel_id IS NOT NULL AND EXISTS (
-                SELECT 1 FROM channels c 
-                WHERE c.id = messages.channel_id 
-                  AND (
-                      c.channel_type = 'announcements'
-                      OR (c.channel_type = 'heads_only' AND public.is_any_head_or_admin())
-                      OR (c.channel_type = 'group' AND public.is_member_of_group(c.group_id))
-                  )
-            )
-        )
-        OR (
-            conversation_id IS NOT NULL AND EXISTS (
-                SELECT 1 FROM conversations conv
-                WHERE conv.id = messages.conversation_id
-                  AND (conv.participant_1 = auth.uid() OR conv.participant_2 = auth.uid())
+            public.is_approved_user()
+            AND (
+                (
+                    channel_id IS NOT NULL AND EXISTS (
+                        SELECT 1 FROM channels c 
+                        WHERE c.id = messages.channel_id 
+                          AND (
+                              c.channel_type = 'announcements'
+                              OR (c.channel_type = 'heads_only' AND public.is_any_head_or_admin())
+                              OR (c.channel_type = 'group' AND public.is_member_of_group(c.group_id))
+                          )
+                    )
+                )
+                OR (
+                    conversation_id IS NOT NULL AND EXISTS (
+                        SELECT 1 FROM conversations conv
+                        WHERE conv.id = messages.conversation_id
+                          AND (conv.participant_1 = auth.uid() OR conv.participant_2 = auth.uid())
+                    )
+                )
             )
         )
     );
@@ -353,6 +414,7 @@ CREATE POLICY "Send messages"
     TO authenticated
     WITH CHECK (
         sender_id = auth.uid()
+        AND public.is_approved_user()
         AND (
             public.is_admin()
             OR (
@@ -382,5 +444,5 @@ CREATE POLICY "Send messages"
 CREATE POLICY "Manage own notifications"
     ON notifications FOR ALL
     TO authenticated
-    USING (user_id = auth.uid())
-    WITH CHECK (user_id = auth.uid());
+    USING (user_id = auth.uid() AND public.is_approved_user())
+    WITH CHECK (user_id = auth.uid() AND public.is_approved_user());

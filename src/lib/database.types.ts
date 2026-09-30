@@ -3,6 +3,7 @@ export type UserStatus = 'pending' | 'approved' | 'rejected';
 export type TaskPriority = 'low' | 'medium' | 'high' | 'urgent';
 export type TaskType = 'read' | 'code' | 'design' | 'report' | 'research' | 'other';
 export type TaskStatus = 'todo' | 'in_progress' | 'submitted' | 'changes_requested' | 'approved' | 'done';
+export type AssigneeTaskStatus = 'assigned' | 'in_progress' | 'submitted' | 'changes_requested' | 'approved';
 export type SubmissionType = 'file' | 'link' | 'note';
 export type SubmissionReviewStatus = 'pending' | 'approved' | 'changes_requested';
 export type ChannelType = 'group' | 'heads_only' | 'announcements';
@@ -53,6 +54,16 @@ export interface Task {
   group?: Group;
   creator?: Profile;
   assignees?: Profile[];
+}
+
+export interface TaskAssignee {
+  id: string;
+  task_id: string;
+  user_id: string;
+  status: AssigneeTaskStatus;
+  assigned_at: string;
+  updated_at: string;
+  user?: Profile;
 }
 
 export interface TaskSubmission {
