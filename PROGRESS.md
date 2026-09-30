@@ -259,15 +259,6 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
      - Step 7: Storage cross-group isolation verified: upload to foreign sub-team folder blocked by RLS; legitimate upload to own sub-team folder succeeded.
      - Production build verified: 0 forbidden strings in `dist/assets/*.js`. Main JS bundle reduced to 29.47 KB gzip. Full audit documented in `SECURITY_AUDIT.md`.
 
-9. **F1-Style Cinematic Launch Transition & Production Deployment:**
-   - [x] [VERIFIED: npm run build passes with 0 TS errors, bundle size 150 KB gzip within 200 KB budget]:
-     - Pure Canvas 2D engine (`f1LaunchEngine.ts`) with zero external animation dependencies (+3.38 KB gzip overhead).
-     - Features: nonlinear acceleration curve, perspective scale (0.06x -> 7.0x), camera shake, motion blur ghosting, speed lines, radial blur tunnel, chromatic aberration, particle sparks, and white impact flash.
-     - Audio: Web Audio API engine synthesizer simulating F1 engine rev, turbo whine, and Doppler flyby whoosh (respects mute setting).
-     - Safety & Accessibility: prefers-reduced-motion instant skip, skip button fallback, 3s image load timeout, and hard timeout safeguard ensuring auth flow never hangs.
-     - Session isolation: plays once per login session (sessionStorage flag).
-     - Production Vercel deployment: git push to master triggers automated build on zc-fss.vercel.app.
-
 ---
 
 ## 3. Assumptions
@@ -280,4 +271,3 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
 
 ## 4. Known Issues & Blockers
 - None. Production build and type-checking pass with zero errors.
-
