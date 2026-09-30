@@ -1,60 +1,46 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Phase 0 Complete -> Ready for Phase 1 (Auth & Approval Flow)
-- **Active Task:** Phase 0 Completed and Verified. Ready for User Go-Ahead.
+- **Current Phase:** Phase 1 Complete -> Ready for Phase 2 (Task Management System)
+- **Active Task:** Phase 1 Completed and Verified. Ready for User Go-Ahead.
 
 ---
 
 ## 1. What's Done
-- [x] Initialized project workspace at `C:\Users\Abdullah\Desktop\zc-fs`.
-- [x] Authored master [PLAN.md](file:///C:/Users/Abdullah/Desktop/zc-fs/PLAN.md) and [GEMINI.md](file:///C:/Users/Abdullah/Desktop/zc-fs/GEMINI.md) context documents.
-- [x] Scaffolded Vite + React 18 + TypeScript + Tailwind CSS with `vite-plugin-pwa`.
-- [x] Implemented Y2K Futurism design system tokens (colors, fonts, glassmorphism utilities) in Tailwind & CSS.
-- [x] Built reusable atomic UI components:
-  - `GlassCard` (frosted glass with top chrome highlight and technical registration mark).
-  - `GlossyButton` (bubble top highlight, hover shimmer, tactile press).
-  - `GhostButton` (translucent border pill button).
-  - `LedStatusChip` (dual-encoded with colored pulsing LED + icon + label).
-  - `SegmentedGauge` (motorsport telemetry progress bar).
-  - `ChromeAvatar` (metallic beveled bezel with role badge).
-  - `GlowInput` (frosted input with focus glow).
-- [x] Built responsive PWA layout shell:
-  - `TopHeader` (telemetry HUD, status chip, light/dark mode switcher).
-  - `BottomNav` (mobile < 768px with >= 48px tap targets and badge counts).
-  - `Sidebar` (desktop with 5 sub-team gauges and channel links).
-  - `AppShell` (coordinates responsive layout, persistent dark/light theme).
-  - `MissionControlDemo` (live interactive demo with persona switcher for `admin`, `head`, `member`, `pending`).
-- [x] Authored full PostgreSQL migration suite in `supabase/migrations/`:
-  - `001_initial_schema.sql` (10 core tables, enums, triggers, `@zewailcity.edu.eg` constraint).
-  - `002_rls_policies.sql` (strict declarative Row Level Security for all 4 roles).
-  - `003_seed_data.sql` (5 official sub-teams & default channels).
-  - `supabase/tests/rls_security_test.sql` (automated SQL test proving cross-group isolation).
-- [x] Setup deployment pipeline & zero-cost automation:
-  - `.github/workflows/keep-alive.yml` (free cron ping preventing 7-day Supabase auto-pause).
-  - `.github/workflows/deploy.yml` (automated CI build test).
-  - `.env.example`, `README.md`.
-- [x] Verified production build (`npm run build`): bundle is ~57 KB gzipped (well under the 200 KB limit) and service worker generation succeeded.
-- [x] Initialized Git repository and committed Phase 0.
+- [x] **Phase 0: Foundation & Core Scaffold**
+  - Scaffolded Vite + React 18 + TypeScript + Tailwind CSS with `vite-plugin-pwa`.
+  - Implemented Y2K design tokens and reusable UI components (`GlassCard`, `GlossyButton`, `LedStatusChip`, `SegmentedGauge`, `ChromeAvatar`, `GlowInput`).
+  - Implemented responsive PWA layout (`TopHeader`, `BottomNav`, `Sidebar`, `AppShell`).
+  - Authored full PostgreSQL migration suite with RLS and domain triggers (`001_initial_schema.sql`, `002_rls_policies.sql`, `003_seed_data.sql`, `rls_security_test.sql`).
+  - Setup CI/CD build check and keep-alive cron workflow.
+- [x] **Phase 1: Authentication & Admin Approval Flow**
+  - Built [`useAuth.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useAuth.ts) with real Supabase Auth integration + mock fallback mode for instant local testing.
+  - Implemented university domain enforcement client-side and server-side: non-`@zewailcity.edu.eg` emails are rejected.
+  - Built [`AuthScreen.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/AuthScreen.tsx) with Y2K aesthetic, login/register tabs, instant domain auto-append, and one-click demo persona switcher.
+  - Built [`PendingApprovalView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/PendingApprovalView.tsx) showing gateway lock and RLS status for unapproved users.
+  - Built [`AdminApprovalHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/admin/AdminApprovalHub.tsx) for Club Admin to inspect pending engineers, assign to one of the 5 official sub-teams, assign role (`head` or `member`), and activate or reject.
+  - Integrated role-based routing in [`App.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/App.tsx).
+  - Verified production build: 122 KB gzipped JS (well below 200 KB mobile target) with zero errors.
 
 ---
 
-## 2. What's Next (Phase 1: Auth & Approval Flow)
-- [ ] Connect Supabase client with real authentication.
-- [ ] Build domain-restricted sign-up & login screens (`@zewailcity.edu.eg`).
-- [ ] Build "Waiting for Approval" screen for `pending` accounts.
-- [ ] Build Club Admin Approval Dashboard (view pending users, approve/reject, assign sub-team and role).
-- [ ] Add role-based route guard.
+## 2. What's Next (Phase 2: Task Management System)
+- [ ] Task creation modal for Group Heads: title, description, assignee(s), deadline, priority, type (`read`, `code`, `design`, `report`, `research`, `other`), links.
+- [ ] Status workflow lifecycle: `To Do` -> `In Progress` -> `Submitted` -> `Changes Requested` / `Approved` -> `Done`.
+- [ ] Work submission modal for Members: file upload, link, text notes with revision tracking.
+- [ ] Head review interface: approve or request changes with feedback history.
+- [ ] Per-task comment thread.
+- [ ] Role dashboards: Member "My Tasks", Head "Pit Wall" group overview, Admin club-wide summary.
 
 ---
 
 ## 3. Assumptions
-1. **Email / Auth Mechanism:** Supabase Auth with Email + Password and `@zewailcity.edu.eg` domain constraint trigger on `auth.users`.
-2. **Database Inactivity Auto-pause:** Handled by `.github/workflows/keep-alive.yml` pinging every 72 hours.
-3. **Storage Tiering:** Uploads capped at 25 MB max per file to stay within the 1 GB free Supabase tier.
+1. **Email / Auth Mechanism:** Supabase Auth with Email + Password and `@zewailcity.edu.eg` domain constraint.
+2. **Database Inactivity Auto-pause:** Managed by GitHub Actions cron pinging every 72 hours.
+3. **Storage Tiering:** Uploads capped at 25 MB max per file to respect the 1 GB free Supabase tier.
 4. **PWA Mobile-First Layout:** Bottom navigation bar on mobile (<768px), sidebar on desktop (>=768px).
 
 ---
 
 ## 4. Known Issues & Blockers
-- None. Phase 0 build and type-checking pass with zero errors.
+- None. Production build and type-checking pass with zero errors.

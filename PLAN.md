@@ -419,12 +419,12 @@ zc-fs/
   - [x] Create core atomic UI components (GlassCard, GlossyButton, LedStatusChip, SegmentedGauge, GlowInput).
   - [x] Create `.env.example`, README with setup instructions, and GitHub Actions keep-alive workflow.
 
-- [ ] **Phase 1: Authentication & Admin Approval Flow**
-  - [ ] Supabase Auth integration with email domain constraint enforcement.
-  - [ ] Sign-up / Login screen styled in Chrome Y2K theme.
-  - [ ] "Waiting for Approval" screen for `pending` accounts.
-  - [ ] Club Admin Approval Dashboard: view pending users, approve/reject, assign group and role (`head` or `member`).
-  - [ ] Role-based route guard and initial Club Admin seeding script.
+- [x] **Phase 1: Authentication & Admin Approval Flow**
+  - [x] Supabase Auth integration with email domain constraint enforcement.
+  - [x] Sign-up / Login screen styled in Chrome Y2K theme.
+  - [x] "Waiting for Approval" screen for `pending` accounts.
+  - [x] Club Admin Approval Dashboard: view pending users, approve/reject, assign group and role (`head` or `member`).
+  - [x] Role-based route guard and initial Club Admin seeding script.
 
 - [ ] **Phase 2: Task Management System (Core Work Value)**
   - [ ] Group Head Task Creation: title, description, assignee(s), deadline, priority, type, attachments/links.
