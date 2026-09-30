@@ -259,6 +259,15 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
      - Step 7: Storage cross-group isolation verified: upload to foreign sub-team folder blocked by RLS; legitimate upload to own sub-team folder succeeded.
      - Production build verified: 0 forbidden strings in `dist/assets/*.js`. Main JS bundle reduced to 29.47 KB gzip. Full audit documented in `SECURITY_AUDIT.md`.
 
+9. **F1 Horizontal Reveal Transition (Production):**
+   - [x] [VERIFIED: npm run build passes with 0 TS errors, total JS bundle 140.33 KB gzip within 200 KB budget]:
+     - Horizontal high-speed pass using authentic F1 vector asset (McLaren-Honda style livery).
+     - Dynamic GPU clip-path mask revealing the live incoming Dashboard through an expanding horizontal energy strip.
+     - Dual neon luminous edges (cyan #22E4F0 and electric blue #2F6BFF) with aerodynamic wake.
+     - Tuned 1450ms duration with smooth cubic acceleration curve for optimal readability and velocity.
+     - Strict failsafe timeout, asset error isolation, and prefers-reduced-motion compliance.
+     - Pushed to master and deployed live to production on Vercel.
+
 ---
 
 ## 3. Assumptions
@@ -271,3 +280,4 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
 
 ## 4. Known Issues & Blockers
 - None. Production build and type-checking pass with zero errors.
+
