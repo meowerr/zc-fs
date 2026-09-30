@@ -122,22 +122,22 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-md overflow-y-auto">
-      <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[92vh] flex flex-col p-5 sm:p-7 my-auto border-telemetry-blue/40 shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+      <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[92vh] flex flex-col p-4 sm:p-6 my-auto border-cyber-border-strong shadow-cyber-elevated overflow-hidden">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 pb-4 border-b border-chrome-300/60 dark:border-white/10 flex-shrink-0">
+        <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-cyber-border flex-shrink-0">
           <div className="space-y-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-mono text-xs font-bold text-telemetry-blue dark:text-telemetry-aqua">
-                {task.id}
+              <span className="font-mono text-xs font-bold text-accent-cyan">
+                {task.id.slice(0, 8)}
               </span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-black/5 dark:bg-white/10 font-bold">
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-cyber-bg-alt border border-cyber-border text-cyber-secondary font-bold">
                 {task.task_type}
               </span>
               <LedStatusChip status={task.priority} size="sm" />
             </div>
 
-            <h3 className="font-sans font-bold text-lg sm:text-xl text-chrome-900 dark:text-white leading-snug">
+            <h3 className="font-sans font-bold text-base sm:text-lg text-cyber-primary leading-snug">
               {task.title}
             </h3>
           </div>
@@ -147,7 +147,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             {isHeadOrAdmin && onDeleteTask && (
               <button
                 onClick={() => setIsConfirmingDelete(true)}
-                className="p-1.5 px-2.5 rounded-lg text-telemetry-red/80 hover:text-telemetry-red hover:bg-telemetry-red/10 border border-telemetry-red/20 hover:border-telemetry-red/40 transition-all flex items-center gap-1.5 text-xs font-mono font-bold cursor-pointer"
+                className="p-1 px-2.5 rounded text-accent-red hover:bg-accent-red/10 border border-accent-red/30 transition-all flex items-center gap-1.5 text-xs font-mono font-bold cursor-pointer"
                 title="Delete Deliverable"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -156,7 +156,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             )}
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-chrome-900/60 dark:text-white/60 cursor-pointer"
+              className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-cyber-surface-hover transition-colors text-cyber-muted hover:text-cyber-primary border border-transparent hover:border-cyber-border cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -164,23 +164,23 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-1 my-3 p-1 rounded-xl bg-black/5 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 flex-shrink-0">
+        <div className="flex items-center gap-1 my-3 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border flex-shrink-0">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
+            className={`flex-1 py-1.5 px-3 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
               activeTab === 'overview'
-                ? 'bg-white dark:bg-midnight-800 text-telemetry-blue dark:text-telemetry-aqua shadow-sm'
-                : 'text-chrome-900/60 dark:text-white/50 hover:text-chrome-900'
+                ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
+                : 'text-cyber-muted hover:text-cyber-primary'
             }`}
           >
             Overview
           </button>
           <button
             onClick={() => setActiveTab('submissions')}
-            className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-1.5 px-3 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === 'submissions'
-                ? 'bg-white dark:bg-midnight-800 text-telemetry-blue dark:text-telemetry-aqua shadow-sm'
-                : 'text-chrome-900/60 dark:text-white/50 hover:text-chrome-900'
+                ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
+                : 'text-cyber-muted hover:text-cyber-primary'
             }`}
           >
             <History className="w-3.5 h-3.5" />
@@ -188,10 +188,10 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('discussion')}
-            className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 py-1.5 px-3 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === 'discussion'
-                ? 'bg-white dark:bg-midnight-800 text-telemetry-blue dark:text-telemetry-aqua shadow-sm'
-                : 'text-chrome-900/60 dark:text-white/50 hover:text-chrome-900'
+                ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
+                : 'text-cyber-muted hover:text-cyber-primary'
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
@@ -205,41 +205,41 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           {activeTab === 'overview' && (
             <div className="space-y-4">
               {/* Description */}
-              <div className="p-4 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10 space-y-1">
-                <div className="text-[10px] font-mono text-chrome-900/50 dark:text-white/40 uppercase tracking-wider">
+              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-1">
+                <div className="text-[10px] font-mono text-cyber-muted uppercase tracking-wider">
                   Technical Specifications & Objectives
                 </div>
-                <p className="text-sm text-chrome-900/90 dark:text-white/90 leading-relaxed whitespace-pre-wrap">
+                <p className="text-sm text-cyber-primary leading-relaxed whitespace-pre-wrap">
                   {task.description || 'No description provided.'}
                 </p>
               </div>
 
               {/* Deadline & Meta Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10">
-                  <div className="text-[10px] font-mono text-chrome-900/50 dark:text-white/40 uppercase">
+                <div className="p-3 rounded-xl bg-cyber-surface border border-cyber-border">
+                  <div className="text-[10px] font-mono text-cyber-muted uppercase">
                     Deadline Target
                   </div>
-                  <div className="text-xs font-mono font-bold text-telemetry-amber flex items-center gap-1.5 mt-1">
+                  <div className="text-xs font-mono font-bold text-accent-yellow flex items-center gap-1.5 mt-1">
                     <Clock className="w-4 h-4" />
                     {new Date(task.deadline).toLocaleString()}
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10">
-                  <div className="text-[10px] font-mono text-chrome-900/50 dark:text-white/40 uppercase">
+                <div className="p-3 rounded-xl bg-cyber-surface border border-cyber-border">
+                  <div className="text-[10px] font-mono text-cyber-muted uppercase">
                     Assigned Engineers
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     {task.assignees && task.assignees.length > 0 ? (
                       task.assignees.map((a) => (
-                        <div key={a.id} className="flex items-center gap-1.5 text-xs font-semibold">
+                        <div key={a.id} className="flex items-center gap-1.5 text-xs font-semibold text-cyber-primary">
                           <ChromeAvatar name={a.full_name} role={a.role} size="sm" />
                           <span>{a.full_name}</span>
                         </div>
                       ))
                     ) : (
-                      <span className="text-xs text-chrome-900/50 dark:text-white/40 italic">
+                      <span className="text-xs text-cyber-muted italic font-mono">
                         Unassigned
                       </span>
                     )}
@@ -250,7 +250,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               {/* Reference Links */}
               {task.links && task.links.length > 0 && (
                 <div className="space-y-2">
-                  <div className="text-[11px] font-mono font-bold text-chrome-900/70 dark:text-white/60 uppercase">
+                  <div className="text-[11px] font-mono font-bold text-cyber-secondary uppercase">
                     Attached CAD / Document References
                   </div>
                   <div className="space-y-1.5">
@@ -260,13 +260,13 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                         href={link.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center justify-between p-2.5 rounded-xl bg-white/60 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 hover:border-telemetry-blue dark:hover:border-telemetry-aqua transition-all text-xs font-mono group"
+                        className="flex items-center justify-between p-2.5 rounded-xl bg-cyber-surface border border-cyber-border hover:border-accent-cyan/60 transition-all text-xs font-mono group"
                       >
-                        <span className="flex items-center gap-2 text-chrome-900 dark:text-white font-medium">
-                          <LinkIcon className="w-3.5 h-3.5 text-telemetry-blue" />
+                        <span className="flex items-center gap-2 text-cyber-primary font-medium">
+                          <LinkIcon className="w-3.5 h-3.5 text-accent-cyan" />
                           {link.title}
                         </span>
-                        <ExternalLink className="w-3.5 h-3.5 text-chrome-900/40 dark:text-white/40 group-hover:text-telemetry-blue transition-colors" />
+                        <ExternalLink className="w-3.5 h-3.5 text-cyber-muted group-hover:text-accent-cyan transition-colors" />
                       </a>
                     ))}
                   </div>
@@ -274,8 +274,8 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               )}
 
               {/* Quick Status Action Bar */}
-              <div className="pt-3 border-t border-chrome-300/60 dark:border-white/10 flex flex-wrap items-center justify-between gap-3">
-                <div className="text-xs font-mono text-chrome-900/60 dark:text-white/50">
+              <div className="pt-3 border-t border-cyber-border flex flex-wrap items-center justify-between gap-3">
+                <div className="text-xs font-mono text-cyber-muted">
                   Update Lifecycle State:
                 </div>
 
@@ -304,7 +304,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   {isHeadOrAdmin && task.status === 'approved' && (
                     <GlossyButton
                       size="sm"
-                      variant="success"
+                      variant="action"
                       onClick={() => onUpdateStatus(task.id, 'done')}
                     >
                       Mark Done
@@ -320,22 +320,22 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             <div className="space-y-4">
               {/* Member Work Submission Form */}
               {isSubmittingWork ? (
-                <GlassCard variant="telemetry" className="p-4 space-y-3">
-                  <div className="flex items-center justify-between pb-2 border-b border-chrome-300/40 dark:border-white/10">
-                    <span className="font-display font-bold text-xs uppercase tracking-wider text-telemetry-blue dark:text-telemetry-aqua">
+                <GlassCard variant="elevated" className="p-4 space-y-3 border-cyber-border-strong bg-cyber-surface">
+                  <div className="flex items-center justify-between pb-2 border-b border-cyber-border">
+                    <span className="font-display font-bold text-xs uppercase tracking-wider text-accent-cyan">
                       Submit Work Deliverable (v{submissions.length + 1})
                     </span>
                     <button
                       type="button"
                       onClick={() => setIsSubmittingWork(false)}
-                      className="text-xs text-chrome-900/50 hover:underline"
+                      className="text-xs text-cyber-muted hover:text-cyber-primary hover:underline"
                     >
                       Cancel
                     </button>
                   </div>
 
                   {subError && (
-                    <div className="p-2 rounded-lg bg-telemetry-red/10 text-telemetry-red text-xs font-mono">
+                    <div className="p-2 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono">
                       {subError}
                     </div>
                   )}
@@ -347,10 +347,10 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                           key={t}
                           type="button"
                           onClick={() => setSubType(t)}
-                          className={`py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
+                          className={`py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all cursor-pointer border ${
                             subType === t
-                              ? 'bg-telemetry-blue text-white shadow-sm'
-                              : 'bg-white/40 dark:bg-white/5 text-chrome-900/60 dark:text-white/50'
+                              ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm'
+                              : 'bg-cyber-surface text-cyber-secondary border-cyber-border hover:text-cyber-primary'
                           }`}
                         >
                           {t}
@@ -367,7 +367,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     />
 
                     <div>
-                      <label className="block text-[11px] font-mono uppercase text-chrome-900/70 dark:text-white/60 mb-1">
+                      <label className="block text-[11px] font-mono uppercase text-cyber-secondary mb-1">
                         Revision Notes for Reviewer
                       </label>
                       <textarea
@@ -375,7 +375,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                         value={subNotes}
                         onChange={(e) => setSubNotes(e.target.value)}
                         placeholder="Detail changes made, simulation parameters, or notes for the Sub-team Head..."
-                        className="w-full p-2.5 rounded-xl text-xs bg-white/70 dark:bg-midnight-950/60 border border-chrome-300 dark:border-white/15 focus:outline-none focus:border-telemetry-blue text-chrome-900 dark:text-white"
+                        className="w-full p-2.5 rounded-xl text-xs bg-cyber-surface border border-cyber-border focus:outline-none focus:border-accent-cyan text-cyber-primary placeholder:text-cyber-muted font-sans"
                       />
                     </div>
 
@@ -383,7 +383,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                       <GhostButton size="sm" type="button" onClick={() => setIsSubmittingWork(false)}>
                         Cancel
                       </GhostButton>
-                      <GlossyButton size="sm" variant="holo" type="submit">
+                      <GlossyButton size="sm" variant="primary" type="submit">
                         Confirm Submission
                       </GlossyButton>
                     </div>
@@ -391,11 +391,11 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 </GlassCard>
               ) : (
                 <div className="flex justify-between items-center">
-                  <span className="text-xs font-mono text-chrome-900/60 dark:text-white/50">
+                  <span className="text-xs font-mono text-cyber-muted">
                     Submission History & Review Records
                   </span>
                   {(isAssignee || isHeadOrAdmin) && (
-                    <GlossyButton size="sm" variant="holo" onClick={() => setIsSubmittingWork(true)}>
+                    <GlossyButton size="sm" variant="primary" onClick={() => setIsSubmittingWork(true)}>
                       + New Submission
                     </GlossyButton>
                   )}
@@ -404,7 +404,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
               {/* Submissions List */}
               {submissions.length === 0 ? (
-                <div className="py-8 text-center text-xs font-mono text-chrome-900/50 dark:text-white/40 italic">
+                <div className="py-8 text-center text-xs font-mono text-cyber-muted italic">
                   No deliverables submitted yet.
                 </div>
               ) : (
@@ -412,14 +412,14 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   {submissions.map((sub) => (
                     <div
                       key={sub.id}
-                      className="p-4 rounded-xl bg-white/50 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 space-y-2.5"
+                      className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2.5"
                     >
                       <div className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold px-2 py-0.5 rounded bg-black/5 dark:bg-white/10 text-telemetry-blue dark:text-telemetry-aqua">
+                          <span className="font-mono font-bold px-2 py-0.5 rounded bg-cyber-surface-hover text-accent-cyan border border-cyber-border text-[11px]">
                             REV v{sub.version_number}
                           </span>
-                          <span className="text-chrome-900/60 dark:text-white/50 font-mono text-[11px]">
+                          <span className="text-cyber-muted font-mono text-[11px]">
                             {new Date(sub.created_at).toLocaleString()}
                           </span>
                         </div>
@@ -428,41 +428,41 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                       </div>
 
                       <div className="text-xs font-sans">
-                        <span className="font-bold text-chrome-900 dark:text-white">Content: </span>
+                        <span className="font-bold text-cyber-primary">Content: </span>
                         {sub.submission_type === 'link' ? (
                           <a
                             href={sub.content}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-telemetry-blue dark:text-telemetry-aqua hover:underline inline-flex items-center gap-1 font-mono"
+                            className="text-accent-cyan hover:underline inline-flex items-center gap-1 font-mono"
                           >
                             {sub.content} <ExternalLink className="w-3 h-3" />
                           </a>
                         ) : (
-                          <span className="font-mono">{sub.content}</span>
+                          <span className="font-mono text-cyber-secondary">{sub.content}</span>
                         )}
                       </div>
 
                       {sub.notes && (
-                        <div className="text-xs text-chrome-900/70 dark:text-white/60 bg-black/5 dark:bg-white/5 p-2 rounded-lg">
-                          <span className="font-semibold text-chrome-900 dark:text-white">Notes: </span>
+                        <div className="text-xs text-cyber-secondary bg-cyber-surface-hover p-2 rounded-lg border border-cyber-border/40">
+                          <span className="font-semibold text-cyber-primary">Notes: </span>
                           {sub.notes}
                         </div>
                       )}
 
                       {/* Review Feedback if present */}
                       {sub.review_feedback && (
-                        <div className="p-2.5 rounded-lg bg-telemetry-blue/10 dark:bg-telemetry-aqua/10 border border-telemetry-blue/20 text-xs space-y-1">
-                          <div className="font-mono font-bold text-telemetry-blue dark:text-telemetry-aqua flex items-center gap-1">
+                        <div className="p-2.5 rounded-lg bg-accent-cyan/10 border border-accent-cyan/20 text-xs space-y-1">
+                          <div className="font-mono font-bold text-accent-cyan flex items-center gap-1">
                             <Sparkles className="w-3 h-3" /> Reviewer Feedback:
                           </div>
-                          <p className="text-chrome-900/80 dark:text-white/80">{sub.review_feedback}</p>
+                          <p className="text-cyber-secondary">{sub.review_feedback}</p>
                         </div>
                       )}
 
                       {/* Head Review Action Box */}
                       {isHeadOrAdmin && sub.review_status === 'pending' && (
-                        <div className="pt-2 border-t border-chrome-300/40 dark:border-white/10">
+                        <div className="pt-2 border-t border-cyber-border">
                           {reviewingSubId === sub.id ? (
                             <div className="space-y-2">
                               <textarea
@@ -470,7 +470,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                 value={reviewFeedback}
                                 onChange={(e) => setReviewFeedback(e.target.value)}
                                 placeholder="Enter constructive feedback or change requests..."
-                                className="w-full p-2 text-xs rounded-lg bg-white dark:bg-midnight-900 border border-chrome-300 dark:border-white/20 text-chrome-900 dark:text-white"
+                                className="w-full p-2 text-xs rounded-lg bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
                               />
                               <div className="flex justify-end gap-2">
                                 <GhostButton size="sm" onClick={() => setReviewingSubId(null)}>
@@ -485,7 +485,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                 </GlossyButton>
                                 <GlossyButton
                                   size="sm"
-                                  variant="success"
+                                  variant="action"
                                   onClick={() => handleReviewSubmit(sub.id, 'approved')}
                                 >
                                   Approve Work
@@ -495,7 +495,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                           ) : (
                             <button
                               onClick={() => setReviewingSubId(sub.id)}
-                              className="text-xs font-mono font-bold text-telemetry-blue dark:text-telemetry-aqua hover:underline cursor-pointer"
+                              className="text-xs font-mono font-bold text-accent-cyan hover:underline cursor-pointer"
                             >
                               + Review this deliverable
                             </button>
@@ -513,7 +513,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           {activeTab === 'discussion' && (
             <div className="space-y-3">
               {comments.length === 0 ? (
-                <div className="py-8 text-center text-xs font-mono text-chrome-900/50 dark:text-white/40 italic">
+                <div className="py-8 text-center text-xs font-mono text-cyber-muted italic">
                   No discussion comments yet. Start the engineering thread below.
                 </div>
               ) : (
@@ -521,7 +521,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   {comments.map((comm) => (
                     <div
                       key={comm.id}
-                      className="p-3 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10 space-y-1"
+                      className="p-3 rounded-xl bg-cyber-surface border border-cyber-border space-y-1"
                     >
                       <div className="flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
@@ -530,15 +530,15 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                             role={comm.author?.role || 'member'}
                             size="sm"
                           />
-                          <span className="font-bold text-chrome-900 dark:text-white">
+                          <span className="font-bold text-cyber-primary">
                             {comm.author?.full_name || 'Team Member'}
                           </span>
                         </div>
-                        <span className="font-mono text-[10px] text-chrome-900/40 dark:text-white/40">
+                        <span className="font-mono text-[10px] text-cyber-muted">
                           {new Date(comm.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
-                      <p className="text-xs text-chrome-900/80 dark:text-white/80 pl-8 leading-relaxed">
+                      <p className="text-xs text-cyber-secondary pl-8 leading-relaxed font-sans">
                         {comm.content}
                       </p>
                     </div>
@@ -553,7 +553,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   placeholder="Post technical update or question..."
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  className="flex-1 h-10 px-3 rounded-xl text-xs bg-white/70 dark:bg-midnight-950/60 border border-chrome-300 dark:border-white/15 text-chrome-900 dark:text-white focus:outline-none focus:border-telemetry-blue"
+                  className="flex-1 h-10 px-3 rounded-xl text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted font-sans"
                 />
                 <GlossyButton size="sm" variant="primary" type="submit" icon={<Send className="w-3.5 h-3.5" />}>
                   Reply
@@ -566,29 +566,29 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
       {/* Delete Task Confirmation Modal */}
       {isConfirmingDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
-          <div className="w-full max-w-md p-6 rounded-2xl bg-chrome-50 dark:bg-midnight-950 border border-telemetry-red/40 shadow-2xl space-y-4">
-            <div className="flex items-center gap-3 text-telemetry-red">
-              <AlertTriangle className="w-6 h-6 shrink-0" />
-              <h3 className="font-display font-black text-lg uppercase tracking-wider text-chrome-900 dark:text-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="w-full max-w-md p-6 rounded-xl bg-cyber-surface border border-accent-red/40 shadow-cyber-elevated space-y-4">
+            <div className="flex items-center gap-3 text-accent-red">
+              <AlertTriangle className="w-5 h-5 shrink-0" />
+              <h3 className="font-display font-black text-base sm:text-lg uppercase tracking-wider text-cyber-primary">
                 Delete Task Permanently?
               </h3>
             </div>
-            <p className="text-xs text-chrome-900/70 dark:text-white/70 leading-relaxed">
-              Are you sure you want to permanently delete <strong className="text-chrome-900 dark:text-white font-mono">{task.title}</strong>? 
+            <p className="text-xs text-cyber-secondary leading-relaxed">
+              Are you sure you want to permanently delete <strong className="text-cyber-primary font-mono">{task.title}</strong>? 
               This will remove this task, all versioned submissions, reviews, and discussion comments from the database.
             </p>
             {deleteError && (
-              <div className="p-3 rounded-lg bg-telemetry-red/10 border border-telemetry-red/30 text-telemetry-red text-xs font-mono">
+              <div className="p-2.5 rounded bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono">
                 {deleteError}
               </div>
             )}
-            <div className="flex items-center justify-end gap-3 pt-2">
+            <div className="flex items-center justify-end gap-2.5 pt-2">
               <button
                 type="button"
                 onClick={() => { setIsConfirmingDelete(false); setDeleteError(null); }}
                 disabled={isDeleting}
-                className="px-4 py-2 rounded-lg text-xs font-mono font-bold border border-chrome-300 dark:border-white/20 text-chrome-900/70 dark:text-white/70 hover:bg-white/10 transition-all cursor-pointer"
+                className="px-3.5 py-1.5 rounded text-xs font-mono font-bold border border-cyber-border text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover transition-all cursor-pointer"
               >
                 Cancel
               </button>
@@ -609,7 +609,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   }
                 }}
                 disabled={isDeleting}
-                className="px-4 py-2 rounded-lg text-xs font-mono font-bold bg-telemetry-red text-white hover:bg-telemetry-red/90 shadow-md shadow-telemetry-red/30 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-3.5 py-1.5 rounded text-xs font-mono font-bold bg-accent-red text-white hover:brightness-110 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 <span>{isDeleting ? 'Deleting...' : 'Confirm Delete'}</span>

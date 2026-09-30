@@ -2,9 +2,12 @@ import React from 'react';
 
 interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  variant?: 'default' | 'elevated' | 'telemetry' | 'accent';
+  variant?: 'default' | 'elevated' | 'telemetry' | 'accent' | 'interactive';
   className?: string;
   hasShine?: boolean;
+  cornerMark?: boolean;
+  accentColor?: string;
+  chamfer?: boolean;
 }
 
 export const GlassCard: React.FC<GlassCardProps> = ({
@@ -12,29 +15,45 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   variant = 'default',
   className = '',
   hasShine = true,
+  cornerMark = true,
+  accentColor,
+  chamfer = false,
+  style,
   ...props
 }) => {
   const variantStyles = {
-    default: 'bg-white/75 dark:bg-midnight-850/65 border-chrome-300/80 dark:border-white/10 shadow-glass dark:shadow-glass-dark',
-    elevated: 'bg-white/90 dark:bg-midnight-800/80 border-chrome-300 dark:border-white/20 shadow-xl',
-    telemetry: 'bg-chrome-50/80 dark:bg-midnight-950/80 border-telemetry-blue/30 dark:border-telemetry-blue/40 shadow-neon-blue/10',
-    accent: 'bg-gradient-to-br from-white/80 via-chrome-100/60 to-white/70 dark:from-midnight-800/80 dark:to-midnight-900/80 border-telemetry-aqua/40',
+    default: 'bg-cyber-surface border-cyber-border text-cyber-primary shadow-cyber-sm',
+    elevated: 'bg-cyber-surface-elevated border-cyber-border-strong text-cyber-primary shadow-cyber',
+    telemetry: 'bg-cyber-bg-alt border-cyber-border text-cyber-primary shadow-cyber-sm',
+    accent: 'bg-gradient-to-b from-cyber-surface to-cyber-surface-elevated border-cyber-border-strong text-cyber-primary shadow-cyber',
+    interactive: 'bg-cyber-surface hover:bg-cyber-surface-hover border-cyber-border hover:border-accent-cyan/60 text-cyber-primary transition-all duration-200 cursor-pointer shadow-cyber-sm hover:shadow-cyber',
   };
 
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl backdrop-blur-md border transition-all duration-300 ${variantStyles[variant]} ${className}`}
+      className={`
+        relative overflow-hidden border transition-all duration-200
+        ${chamfer ? 'tech-chamfer rounded-lg' : 'rounded-xl'}
+        ${variantStyles[variant]} 
+        ${className}
+      `}
+      style={{
+        ...(accentColor ? { borderLeftColor: accentColor, borderLeftWidth: '3px' } : {}),
+        ...style,
+      }}
       {...props}
     >
-      {/* Subtle Y2K top chrome reflection highlight */}
+      {/* Subtle top edge light reflection */}
       {hasShine && (
-        <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/80 dark:via-white/30 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/20 dark:via-white/10 to-transparent pointer-events-none" />
       )}
       
       {/* Technical corner registration mark */}
-      <div className="absolute top-1 right-2 font-mono text-[9px] text-chrome-900/20 dark:text-white/20 select-none pointer-events-none tracking-widest">
-        +
-      </div>
+      {cornerMark && (
+        <div className="absolute top-1.5 right-2 font-mono text-[9px] text-cyber-muted/40 select-none pointer-events-none tracking-widest">
+          +
+        </div>
+      )}
 
       {children}
     </div>

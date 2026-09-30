@@ -17,17 +17,17 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
   className = '',
 }) => {
   const sizeStyles = {
-    sm: 'w-8 h-8 text-[11px]',
-    md: 'w-10 h-10 text-xs',
-    lg: 'w-14 h-14 text-sm',
-    xl: 'w-20 h-20 text-lg',
+    sm: 'w-7 h-7 text-[10px]',
+    md: 'w-9 h-9 text-xs',
+    lg: 'w-12 h-12 text-sm',
+    xl: 'w-16 h-16 text-base',
   };
 
   const roleBadgeStyles: Record<UserRole, string> = {
-    admin: 'bg-gradient-to-r from-telemetry-pink to-telemetry-blue border-white text-white',
-    head: 'bg-telemetry-blue border-white text-white',
-    member: 'bg-[#8ED91E] border-white text-midnight-900',
-    pending: 'bg-telemetry-amber border-white text-midnight-900',
+    admin: 'bg-accent-red border-cyber-bg text-white',
+    head: 'bg-accent-cyan border-cyber-bg text-black',
+    member: 'bg-accent-lime border-cyber-bg text-black',
+    pending: 'bg-accent-yellow border-cyber-bg text-black',
   };
 
   const getInitials = (n: string) => {
@@ -41,17 +41,16 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
 
   return (
     <div className={`relative inline-block ${className}`}>
-      {/* Chrome Bezel Outer Ring */}
+      {/* Cyber Technical Bezel Outer Ring */}
       <div
         className={`
-          ${sizeStyles[size]} rounded-full p-[2.5px] 
-          bg-gradient-to-b from-white via-[#CBD5E1] to-[#94A3B8] 
-          dark:from-[#475569] dark:via-[#1E293B] dark:to-[#0F172A] 
-          shadow-[0_2px_8px_rgba(0,0,0,0.15)] flex items-center justify-center
+          ${sizeStyles[size]} rounded-lg p-[1.5px] 
+          bg-cyber-border-strong border border-white/10
+          shadow-cyber-sm flex items-center justify-center
         `}
       >
         {/* Avatar Inner Core */}
-        <div className="w-full h-full rounded-full overflow-hidden bg-chrome-200 dark:bg-midnight-800 flex items-center justify-center font-display font-bold text-chrome-900 dark:text-chrome-100 select-none">
+        <div className="w-full h-full rounded-[6px] overflow-hidden bg-cyber-surface-elevated flex items-center justify-center font-mono font-bold text-cyber-primary select-none">
           {avatarUrl ? (
             <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
           ) : (
@@ -60,13 +59,13 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
         </div>
       </div>
 
-      {/* Role Indicator Dot / Micro Badge */}
+      {/* Role Indicator Micro Badge */}
       {role && (
         <span
           title={`Role: ${role.toUpperCase()}`}
           className={`
-            absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 
-            ${roleBadgeStyles[role]} shadow-sm flex items-center justify-center font-mono text-[7px] font-bold
+            absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded border 
+            ${roleBadgeStyles[role]} shadow-sm flex items-center justify-center font-mono text-[8px] font-bold leading-none
           `}
         >
           {role[0].toUpperCase()}

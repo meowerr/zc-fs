@@ -26,9 +26,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   ];
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl bg-white/80 dark:bg-midnight-950/85 border-t border-chrome-300/80 dark:border-white/10 shadow-[0_-8px_20px_rgba(0,0,0,0.06)]">
-      {/* Top metallic shimmer line */}
-      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-telemetry-aqua/50 to-transparent" />
+    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 pb-[env(safe-area-inset-bottom)] backdrop-blur-md bg-cyber-surface/95 border-t border-cyber-border shadow-cyber">
+      {/* Top micro border with subtle cyan accent */}
+      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-accent-cyan/40 to-transparent" />
       
       <div className="flex items-center justify-around px-2 py-1">
         {tabs.map((tab) => {
@@ -40,24 +40,24 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
               className={`
-                relative flex flex-col items-center justify-center min-w-[56px] min-h-[50px] py-1 px-2 rounded-xl
-                transition-all duration-200 active:scale-95 cursor-pointer
+                relative flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 px-2 rounded-lg
+                transition-all duration-150 active:scale-95 cursor-pointer
                 ${
                   isActive
-                    ? 'text-telemetry-blue dark:text-telemetry-aqua'
-                    : 'text-chrome-900/60 dark:text-white/50 hover:text-chrome-900 dark:hover:text-white'
+                    ? 'text-accent-cyan'
+                    : 'text-cyber-muted hover:text-cyber-primary'
                 }
               `}
             >
-              {/* Active Pill Glow Bubble */}
+              {/* Active Top Line Indicator */}
               {isActive && (
-                <div className="absolute inset-0 bg-telemetry-blue/10 dark:bg-telemetry-aqua/10 rounded-xl -z-10 border border-telemetry-blue/20 dark:border-telemetry-aqua/20" />
+                <div className="absolute top-0 inset-x-4 h-[2px] bg-accent-cyan rounded-full shadow-[0_0_6px_rgba(0,217,255,0.6)]" />
               )}
 
-              <div className="relative">
-                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
+              <div className="relative mt-0.5">
+                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-105' : ''}`} />
                 {Boolean(tab.badge && tab.badge > 0) && (
-                  <span className="absolute -top-1.5 -right-2 px-1.5 py-0.2 rounded-full text-[9px] font-mono font-bold bg-telemetry-pink text-white shadow-sm">
+                  <span className="absolute -top-1 -right-2 px-1 rounded-full text-[9px] font-mono font-bold bg-accent-red text-white shadow-sm">
                     {tab.badge}
                   </span>
                 )}

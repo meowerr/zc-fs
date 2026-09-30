@@ -4,14 +4,14 @@ import {
   Clock, 
   AlertCircle, 
   RotateCcw, 
-  Sparkles, 
   CircleDashed,
   Flame,
-  Radio
+  Radio,
+  Sliders
 } from 'lucide-react';
 import { TaskStatus, TaskPriority } from '../../lib/database.types';
 
-type ChipType = TaskStatus | TaskPriority | 'online' | 'offline' | 'pending';
+export type ChipType = TaskStatus | TaskPriority | 'online' | 'offline' | 'pending' | 'system';
 
 interface LedStatusChipProps {
   status: ChipType;
@@ -30,24 +30,23 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
       case 'approved':
         return {
           label: customLabel || (status === 'done' ? 'DONE' : 'APPROVED'),
-          colorClasses: 'bg-[#B6FF3B]/15 text-[#4E8009] dark:text-[#B6FF3B] border-[#B6FF3B]/50',
-          dotColor: 'bg-[#8ED91E] shadow-neon-lime',
+          colorClasses: 'bg-accent-lime/10 text-accent-lime border-accent-lime/30',
+          dotColor: 'bg-accent-lime shadow-[0_0_6px_rgba(16,229,122,0.4)]',
           icon: <CheckCircle2 className="w-3 h-3" />,
         };
       case 'submitted':
-      case 'medium':
+      case 'pending':
         return {
-          label: customLabel || (status === 'submitted' ? 'IN REVIEW' : 'MED PRIORITY'),
-          colorClasses: 'bg-telemetry-amber/15 text-[#9E6E00] dark:text-telemetry-amber border-telemetry-amber/50',
-          dotColor: 'bg-telemetry-amber shadow-[0_0_8px_#FFC53D]',
+          label: customLabel || (status === 'submitted' ? 'IN REVIEW' : 'PENDING'),
+          colorClasses: 'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/30',
+          dotColor: 'bg-accent-yellow shadow-[0_0_6px_rgba(255,212,59,0.4)] animate-pulse',
           icon: <Clock className="w-3 h-3" />,
         };
       case 'in_progress':
-      case 'low':
         return {
-          label: customLabel || (status === 'in_progress' ? 'IN PROGRESS' : 'LOW PRIORITY'),
-          colorClasses: 'bg-telemetry-blue/15 text-telemetry-blue border-telemetry-blue/50',
-          dotColor: 'bg-telemetry-blue shadow-neon-blue',
+          label: customLabel || 'IN PROGRESS',
+          colorClasses: 'bg-accent-orange/10 text-accent-orange border-accent-orange/30',
+          dotColor: 'bg-accent-orange shadow-[0_0_6px_rgba(255,106,0,0.4)]',
           icon: <RotateCcw className="w-3 h-3" />,
         };
       case 'changes_requested':
@@ -55,37 +54,51 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
       case 'high':
         return {
           label: customLabel || (status === 'changes_requested' ? 'REVISIONS REQ' : status === 'urgent' ? 'CRITICAL' : 'HIGH PRIORITY'),
-          colorClasses: 'bg-telemetry-red/15 text-telemetry-red border-telemetry-red/50',
-          dotColor: 'bg-telemetry-red shadow-[0_0_8px_#FF4D4D] animate-pulse',
+          colorClasses: 'bg-accent-red/10 text-accent-red border-accent-red/30',
+          dotColor: 'bg-accent-red shadow-[0_0_6px_rgba(255,48,79,0.5)] animate-pulse',
           icon: status === 'urgent' ? <Flame className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />,
+        };
+      case 'medium':
+        return {
+          label: customLabel || 'MED PRIORITY',
+          colorClasses: 'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/30',
+          dotColor: 'bg-accent-yellow',
+          icon: <Clock className="w-3 h-3" />,
+        };
+      case 'low':
+        return {
+          label: customLabel || 'LOW PRIORITY',
+          colorClasses: 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border',
+          dotColor: 'bg-cyber-muted',
+          icon: <Sliders className="w-3 h-3" />,
         };
       case 'todo':
         return {
           label: customLabel || 'TO DO',
-          colorClasses: 'bg-chrome-300/30 text-chrome-800 dark:text-chrome-200 border-chrome-300 dark:border-white/20',
-          dotColor: 'bg-chrome-400',
+          colorClasses: 'bg-cyber-surface-elevated text-cyber-muted border-cyber-border',
+          dotColor: 'bg-cyber-muted',
           icon: <CircleDashed className="w-3 h-3" />,
-        };
-      case 'pending':
-        return {
-          label: customLabel || 'PENDING',
-          colorClasses: 'bg-telemetry-aqua/15 text-telemetry-aqua border-telemetry-aqua/50',
-          dotColor: 'bg-telemetry-aqua shadow-neon-aqua animate-pulse',
-          icon: <Clock className="w-3 h-3" />,
         };
       case 'online':
         return {
-          label: customLabel || 'TELEMETRY LIVE',
-          colorClasses: 'bg-[#B6FF3B]/10 text-[#4E8009] dark:text-[#B6FF3B] border-[#B6FF3B]/40',
-          dotColor: 'bg-[#8ED91E] shadow-neon-lime animate-pulse',
+          label: customLabel || 'ONLINE',
+          colorClasses: 'bg-accent-lime/10 text-accent-lime border-accent-lime/30',
+          dotColor: 'bg-accent-lime shadow-[0_0_6px_rgba(16,229,122,0.5)] animate-pulse',
+          icon: <Radio className="w-3 h-3" />,
+        };
+      case 'system':
+        return {
+          label: customLabel || 'SYSTEM',
+          colorClasses: 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/30',
+          dotColor: 'bg-accent-cyan shadow-[0_0_6px_rgba(0,217,255,0.4)]',
           icon: <Radio className="w-3 h-3" />,
         };
       default:
         return {
           label: customLabel || String(status).toUpperCase(),
-          colorClasses: 'bg-white/60 text-chrome-900 border-chrome-300',
-          dotColor: 'bg-chrome-400',
-          icon: <Sparkles className="w-3 h-3" />,
+          colorClasses: 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border',
+          dotColor: 'bg-cyber-muted',
+          icon: <CircleDashed className="w-3 h-3" />,
         };
     }
   };
@@ -96,20 +109,15 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
   return (
     <span
       className={`
-        inline-flex items-center gap-1.5 rounded-full font-mono font-bold tracking-wider border
-        backdrop-blur-sm shadow-sm select-none transition-all
-        ${colorClasses}
+        inline-flex items-center gap-1.5 rounded font-mono font-bold tracking-wider border
+        select-none transition-all
         ${sizeClasses}
+        ${colorClasses}
       `}
     >
-      {/* Pulsing Hardware LED Indicator */}
-      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${dotColor}`} />
-      
-      {/* Visual Icon (Double Encoding for Colorblind Accessibility) */}
-      <span className="flex items-center">{icon}</span>
-      
-      {/* Text Label */}
-      <span className="leading-none">{label}</span>
+      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${dotColor}`} />
+      <span className="shrink-0">{icon}</span>
+      <span className="truncate">{label}</span>
     </span>
   );
 };

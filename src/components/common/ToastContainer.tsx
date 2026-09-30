@@ -14,13 +14,13 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismis
   const getIcon = (type: NotificationType) => {
     switch (type) {
       case 'review_result':
-        return <CheckCircle2 className="w-4 h-4 text-[#8ED91E]" />;
+        return <CheckCircle2 className="w-4 h-4 text-accent-lime" />;
       case 'task_due_soon':
-        return <AlertCircle className="w-4 h-4 text-telemetry-amber" />;
+        return <AlertCircle className="w-4 h-4 text-accent-yellow" />;
       case 'announcement':
-        return <Sparkles className="w-4 h-4 text-telemetry-pink" />;
+        return <Sparkles className="w-4 h-4 text-accent-orange" />;
       default:
-        return <Bell className="w-4 h-4 text-telemetry-blue" />;
+        return <Bell className="w-4 h-4 text-accent-cyan" />;
     }
   };
 
@@ -29,24 +29,24 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismis
       {toasts.map((toast) => (
         <div
           key={toast.id}
-          className="pointer-events-auto p-3.5 rounded-2xl backdrop-blur-xl bg-white/90 dark:bg-midnight-800/90 border border-telemetry-blue/50 dark:border-telemetry-aqua/40 shadow-xl shadow-telemetry-blue/10 animate-fade-in transition-all flex items-start gap-3"
+          className="pointer-events-auto p-3.5 rounded-xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-cyber-elevated animate-fade-in transition-all flex items-start gap-3"
         >
-          <div className="p-1 rounded-lg bg-black/5 dark:bg-white/10 flex-shrink-0 mt-0.5">
+          <div className="p-1.5 rounded-lg bg-cyber-surface border border-cyber-border flex-shrink-0 mt-0.5">
             {getIcon(toast.type)}
           </div>
 
           <div className="flex-1 min-w-0">
-            <h5 className="font-display font-bold text-xs text-chrome-900 dark:text-white uppercase tracking-wider">
+            <h5 className="font-display font-bold text-xs text-cyber-primary uppercase tracking-wider">
               {toast.title}
             </h5>
-            <p className="text-xs text-chrome-900/80 dark:text-white/80 line-clamp-2 mt-0.5 leading-snug">
+            <p className="text-xs text-cyber-secondary line-clamp-2 mt-0.5 leading-snug font-sans">
               {toast.message}
             </p>
           </div>
 
           <button
             onClick={() => onDismiss(toast.id)}
-            className="text-chrome-900/40 dark:text-white/40 hover:text-chrome-900 dark:hover:text-white p-1 cursor-pointer"
+            className="text-cyber-muted hover:text-cyber-primary p-1 cursor-pointer transition-colors"
           >
             <X className="w-3.5 h-3.5" />
           </button>

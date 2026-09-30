@@ -1,8 +1,9 @@
 import React from 'react';
 import { GlossyButton } from './GlossyButton';
+import { Activity, CheckCircle2 } from 'lucide-react';
 
 interface EmptyStateProps {
-  illustration?: 'wheel' | 'helmet' | 'star';
+  illustration?: 'wheel' | 'helmet' | 'telemetry' | 'check';
   title: string;
   description: string;
   actionLabel?: string;
@@ -11,7 +12,7 @@ interface EmptyStateProps {
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
-  illustration = 'wheel',
+  illustration = 'telemetry',
   title,
   description,
   actionLabel,
@@ -21,91 +22,83 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   const renderIllustration = () => {
     if (illustration === 'helmet') {
       return (
-        <svg viewBox="0 0 100 100" className="w-16 h-16 mx-auto drop-shadow-md text-telemetry-blue" fill="none">
+        <svg viewBox="0 0 100 100" className="w-14 h-14 mx-auto text-accent-cyan" fill="none">
           {/* Driver Racing Helmet */}
           <path
-            d="M50 15 C28 15 18 32 18 55 C18 72 26 84 50 84 C74 84 82 72 82 55 C82 32 72 15 50 15 Z"
+            d="M50 16 C30 16 20 32 20 54 C20 70 28 82 50 82 C72 82 80 70 80 54 C80 32 70 16 50 16 Z"
             fill="currentColor"
-            fillOpacity="0.1"
+            fillOpacity="0.08"
             stroke="currentColor"
-            strokeWidth="3.5"
-          />
-          {/* Tinted Visor */}
-          <path
-            d="M30 45 C42 40 58 40 70 45 C73 52 70 60 50 60 C30 60 27 52 30 45 Z"
-            fill="url(#visorGradient)"
-            stroke="#22E4F0"
             strokeWidth="2.5"
           />
-          {/* Chrome reflection line */}
-          <path d="M35 48 Q50 44 65 48" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
-          <defs>
-            <linearGradient id="visorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2F6BFF" />
-              <stop offset="100%" stop-color="#22E4F0" />
-            </linearGradient>
-          </defs>
-        </svg>
-      );
-    }
-
-    if (illustration === 'star') {
-      return (
-        <svg viewBox="0 0 100 100" className="w-16 h-16 mx-auto drop-shadow-md text-telemetry-pink" fill="none">
-          {/* 4-point Y2K Cyber Star */}
+          {/* Visor */}
           <path
-            d="M50 10 Q50 50 10 50 Q50 50 50 90 Q50 50 90 50 Q50 50 50 10 Z"
-            fill="url(#starGradient)"
-            stroke="#FFFFFF"
+            d="M30 46 C42 42 58 42 70 46 C72 52 70 58 50 58 C30 58 28 52 30 46 Z"
+            fill="var(--cyber-surface-elevated)"
+            stroke="var(--accent-orange)"
             strokeWidth="2"
           />
-          <circle cx="50" cy="50" r="6" fill="#FFFFFF" />
-          <defs>
-            <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FF4FA3" />
-              <stop offset="50%" stop-color="#22E4F0" />
-              <stop offset="100%" stop-color="#B892FF" />
-            </linearGradient>
-          </defs>
+          <path d="M35 48 Q50 45 65 48" stroke="#FFFFFF" strokeWidth="1" strokeLinecap="round" />
         </svg>
       );
     }
 
-    // Default: Formula Student Center-lock Racing Wheel
+    if (illustration === 'wheel') {
+      return (
+        <svg viewBox="0 0 100 100" className="w-14 h-14 mx-auto text-cyber-muted" fill="none">
+          <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="4" strokeOpacity="0.6" />
+          <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" strokeOpacity="0.4" />
+          <line x1="50" y1="20" x2="50" y2="80" stroke="currentColor" strokeWidth="2" strokeOpacity="0.5" />
+          <line x1="20" y1="50" x2="80" y2="50" stroke="currentColor" strokeWidth="2" strokeOpacity="0.5" />
+          <circle cx="50" cy="50" r="8" fill="var(--cyber-surface-elevated)" stroke="var(--accent-cyan)" strokeWidth="2" />
+        </svg>
+      );
+    }
+
+    if (illustration === 'check') {
+      return (
+        <div className="w-12 h-12 mx-auto rounded-lg bg-accent-lime/10 border border-accent-lime/30 flex items-center justify-center text-accent-lime">
+          <CheckCircle2 className="w-6 h-6" />
+        </div>
+      );
+    }
+
+    // Default: Telemetry Radar / Inactive Sensor
     return (
-      <svg viewBox="0 0 100 100" className="w-16 h-16 mx-auto drop-shadow-md text-telemetry-aqua" fill="none">
-        {/* Outer Tire */}
-        <circle cx="50" cy="50" r="42" stroke="currentColor" strokeWidth="6" strokeOpacity="0.8" />
-        <circle cx="50" cy="50" r="32" stroke="#A5C4F0" strokeWidth="2" strokeDasharray="6 3" />
-        {/* Rim Spokes */}
-        <line x1="50" y1="18" x2="50" y2="82" stroke="currentColor" strokeWidth="3" />
-        <line x1="18" y1="50" x2="82" y2="50" stroke="currentColor" strokeWidth="3" />
-        <line x1="27" y1="27" x2="73" y2="73" stroke="currentColor" strokeWidth="2.5" />
-        <line x1="73" y1="27" x2="27" y2="73" stroke="currentColor" strokeWidth="2.5" />
-        {/* Center Nut */}
-        <circle cx="50" cy="50" r="10" fill="#2F6BFF" stroke="#FFFFFF" strokeWidth="2" />
-        <circle cx="50" cy="50" r="4" fill="#B6FF3B" />
-      </svg>
+      <div className="relative w-14 h-14 mx-auto flex items-center justify-center">
+        <div className="absolute inset-0 rounded-lg border border-cyber-border bg-cyber-surface-elevated" />
+        <div className="absolute inset-2 rounded border border-cyber-border-strong border-dashed" />
+        <Activity className="w-6 h-6 text-accent-cyan opacity-80" />
+      </div>
     );
   };
 
   return (
-    <div className={`py-12 px-4 text-center space-y-3 ${className}`}>
-      <div className="mb-2 animate-bounce" style={{ animationDuration: '3s' }}>
+    <div className={`p-8 text-center space-y-3 rounded-xl border border-cyber-border bg-cyber-surface/60 ${className}`}>
+      {/* Decorative Technical Header */}
+      <div className="flex items-center justify-center gap-2 font-mono text-[10px] text-cyber-muted tracking-widest uppercase">
+        <span>[</span>
+        <span className="text-accent-cyan">//</span>
+        <span>TELEMETRY STANDBY</span>
+        <span>]</span>
+      </div>
+
+      <div className="my-3">
         {renderIllustration()}
       </div>
 
-      <h4 className="font-display font-bold text-base text-chrome-900 dark:text-white uppercase tracking-wider">
-        {title}
-      </h4>
-
-      <p className="text-xs font-sans text-chrome-900/60 dark:text-white/50 max-w-sm mx-auto leading-relaxed">
-        {description}
-      </p>
+      <div>
+        <h4 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
+          {title}
+        </h4>
+        <p className="text-xs text-cyber-secondary max-w-sm mx-auto mt-1 leading-relaxed">
+          {description}
+        </p>
+      </div>
 
       {actionLabel && onAction && (
-        <div className="pt-3">
-          <GlossyButton size="sm" variant="holo" onClick={onAction}>
+        <div className="pt-2">
+          <GlossyButton variant="secondary" size="sm" onClick={onAction}>
             {actionLabel}
           </GlossyButton>
         </div>

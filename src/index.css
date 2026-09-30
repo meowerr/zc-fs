@@ -8,25 +8,87 @@
     --sar: env(safe-area-inset-right);
     --sab: env(safe-area-inset-bottom);
     --sal: env(safe-area-inset-left);
+
+    /* Light Theme (Chrome Motorsport) */
+    --bg-base: #F3F6FA;
+    --bg-alt: #E8EEF5;
+    --surface-base: #FFFFFF;
+    --surface-elevated: #F8FAFC;
+    --surface-hover: #EDF2F7;
+    --border-subtle: #D1DAE5;
+    --border-strong: #9AA8BA;
+    --text-primary: #0D1522;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+    --chrome: #516074;
+    --chrome-dark: #94A3B8;
+
+    /* Primary Visual Accents (Light-mode tuned for contrast) */
+    --accent-cyan: #0099B8;
+    --accent-red: #D61E38;
+    --accent-orange: #DE5200;
+    --accent-yellow: #B8860B;
+    --accent-lime: #0B9E50;
+
+    /* Sub-Team Accents */
+    --team-vd: #0099B8;   /* Vehicle Dynamics */
+    --team-aero: #D61E38; /* Aerodynamics */
+    --team-elec: #DE5200; /* Low-Voltage Electronics */
+    --team-pt: #B8860B;   /* Powertrain & Drivetrain */
+    --team-ops: #0B9E50;  /* Business, Cost & Ops */
+  }
+
+  .dark {
+    /* Dark Theme (Graphite Cyber Racing) */
+    --bg-base: #070A0E;
+    --bg-alt: #0B0F14;
+    --surface-base: #11161D;
+    --surface-elevated: #181E26;
+    --surface-hover: #202731;
+    --border-subtle: #2A323C;
+    --border-strong: #39434F;
+    --text-primary: #F2F4F7;
+    --text-secondary: #B0B8C2;
+    --text-muted: #737D89;
+    --chrome: #C8CED6;
+    --chrome-dark: #707986;
+
+    /* Primary Visual Accents (Restrained Cyber Racing) */
+    --accent-cyan: #00D9FF;   /* Electric Cyan */
+    --accent-red: #FF304F;    /* Racing Red */
+    --accent-orange: #FF6A00; /* Racing Orange */
+    --accent-yellow: #FFD43B; /* Racing Yellow */
+    --accent-lime: #10E57A;   /* Racing Lime */
+
+    /* Sub-Team Accents */
+    --team-vd: #00D9FF;   /* Vehicle Dynamics */
+    --team-aero: #FF304F; /* Aerodynamics */
+    --team-elec: #FF6A00; /* Low-Voltage Electronics */
+    --team-pt: #FFD43B;   /* Powertrain & Drivetrain */
+    --team-ops: #10E57A;  /* Business, Cost & Ops */
   }
 
   html {
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
   }
 
   body {
     overflow-x: hidden;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
   }
 
-  /* Centralized Theme-Aware Telemetry Scrollbar */
+  /* Centralized Theme-Aware Cyber Racing Scrollbar */
   * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(180, 195, 215, 0.6) transparent;
+    scrollbar-color: rgba(180, 195, 215, 0.7) transparent;
   }
 
   .dark * {
-    scrollbar-color: rgba(47, 107, 255, 0.4) transparent;
+    scrollbar-color: rgba(57, 67, 79, 0.8) transparent;
   }
 
   /* WebKit & Chromium */
@@ -40,22 +102,78 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(180, 195, 215, 0.6);
-    border-radius: 9999px;
+    background: rgba(180, 195, 215, 0.7);
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(47, 107, 255, 0.7);
+    background: rgba(0, 153, 184, 0.8);
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    background: rgba(47, 107, 255, 0.4);
+    background: #2A323C;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: rgba(34, 228, 240, 0.7);
-    box-shadow: 0 0 8px rgba(34, 228, 240, 0.5);
+    background: #39434F;
+    box-shadow: 0 0 6px rgba(0, 217, 255, 0.3);
   }
+}
+
+/* ─── Cyber-Sigilism & Y2K Micro-Utilities ─── */
+.tech-border {
+  border: 1px solid var(--border-subtle);
+}
+
+.tech-chamfer {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+}
+
+.tech-chamfer-sm {
+  clip-path: polygon(
+    0 0,
+    calc(100% - 6px) 0,
+    100% 6px,
+    100% 100%,
+    6px 100%,
+    0 calc(100% - 6px)
+  );
+}
+
+.micro-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Subtle corner registration mark */
+.corner-cross::before {
+  content: "+";
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  line-height: 1;
+  color: var(--chrome-dark);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Subtle racing speed hash pattern */
+.bg-tech-grid {
+  background-image: radial-gradient(var(--border-subtle) 1px, transparent 1px);
+  background-size: 16px 16px;
 }
 
 /* Custom Y2K subtle animations */

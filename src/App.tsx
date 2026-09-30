@@ -11,6 +11,7 @@ import { ChatView } from './components/chat/ChatView';
 import { NotificationDrawer } from './components/notifications/NotificationDrawer';
 import { ToastContainer } from './components/common/ToastContainer';
 import { RoleGuideModal } from './components/common/RoleGuideModal';
+import { StyleGuide } from './components/styleguide/StyleGuide';
 import { useAuth } from './hooks/useAuth';
 import { useTasks } from './hooks/useTasks';
 import { useRealtimeChat } from './hooks/useRealtimeChat';
@@ -21,8 +22,19 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isStyleGuideOpen, setIsStyleGuideOpen] = useState<boolean>(() => {
+    return window.location.pathname === '/styleguide' || window.location.hash === '#styleguide';
+  });
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const prevUserRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setIsStyleGuideOpen(window.location.pathname === '/styleguide' || window.location.hash === '#styleguide');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const {
     currentUser,
@@ -91,6 +103,20 @@ export const App: React.FC = () => {
     }
     prevUserRef.current = currentUser ? currentUser.id : null;
   }, [currentUser]);
+
+  // 0. Styleguide Direct Route Check
+  if (isStyleGuideOpen) {
+    return (
+      <StyleGuide
+        onBack={() => {
+          setIsStyleGuideOpen(false);
+          if (window.location.pathname === '/styleguide') {
+            window.history.pushState(null, '', '/');
+          }
+        }}
+      />
+    );
+  }
 
   // 1. Not Authenticated -> Show Auth Screen (strictly Supabase Auth)
   if (!currentUser) {
@@ -171,6 +197,10 @@ export const App: React.FC = () => {
         notificationCount={notifUnreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
         onOpenGuide={() => setIsGuideOpen(true)}
+        onOpenStyleGuide={() => {
+          setIsStyleGuideOpen(true);
+          window.history.pushState(null, '', '/styleguide');
+        }}
         groups={allGroups}
         tasks={tasks}
       >

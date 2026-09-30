@@ -7,11 +7,12 @@ import {
   ShieldAlert, 
   Gauge, 
   Flag,
-  Sparkles
+  Palette
 } from 'lucide-react';
 import { NavTab } from './BottomNav';
 import { UserRole, Group, Task } from '../../lib/database.types';
 import { SegmentedGauge } from '../common/SegmentedGauge';
+import { SUB_TEAMS } from '../../lib/constants';
 
 interface SidebarProps {
   activeTab: NavTab;
@@ -22,6 +23,7 @@ interface SidebarProps {
   unreadCount?: number;
   groups?: Group[];
   tasks?: Task[];
+  onOpenStyleGuide?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -32,6 +34,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   unreadCount = 0,
   groups,
   tasks = [],
+  onOpenStyleGuide,
 }) => {
   const navItems = [
     { id: 'dashboard' as NavTab, label: 'Mission Control', subtitle: 'Overview & Velocity', icon: LayoutDashboard },
@@ -41,18 +44,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     ...(role === 'admin' ? [{ id: 'admin' as NavTab, label: 'Admin Hub', subtitle: 'Approvals & Access', icon: ShieldAlert }] : []),
   ];
 
-  // Fallback initial sub-teams if groups query is still settling
-  const fallbackTeams: Array<{ id: string; name: string; slug: string; color_accent: string }> = [
-    { id: '11111111-1111-1111-1111-111111111111', name: 'Technical - Vehicle Dynamics', slug: 'vehicle-dynamics', color_accent: '#2F6BFF' },
-    { id: '22222222-2222-2222-2222-222222222222', name: 'Technical - Aerodynamics', slug: 'aerodynamics', color_accent: '#22E4F0' },
-    { id: '33333333-3333-3333-3333-333333333333', name: 'Technical - Low-Voltage Electronics', slug: 'electronics', color_accent: '#FFC53D' },
-    { id: '44444444-4444-4444-4444-444444444444', name: 'Technical - Powertrain & Drivetrain', slug: 'powertrain', color_accent: '#FF4FA3' },
-    { id: '55555555-5555-5555-5555-555555555555', name: 'Operations - Business, Cost & Marketing', slug: 'business-ops', color_accent: '#B6FF3B' },
-  ];
+  const sourceGroups = (groups && groups.length > 0) ? groups : SUB_TEAMS;
 
-  const sourceGroups = (groups && groups.length > 0) ? groups : fallbackTeams;
-
-  // Real, honest progress calculated directly from loaded tasks
+  // Real progress calculated directly from loaded tasks
   const subTeams = sourceGroups.map((g) => {
     const groupTasks = tasks.filter((t) => t.group_id === g.id);
     const completedTasks = groupTasks.filter(
@@ -69,7 +63,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       name: shortName,
       fullName: g.name,
       slug: g.slug,
-      color: g.color_accent || '#2F6BFF',
+      color: g.color_accent || '#00D9FF',
       totalTasks: groupTasks.length,
       completedTasks,
       progress,
@@ -77,14 +71,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   });
 
   return (
-    <aside className="hidden md:flex flex-col w-64 lg:w-72 h-[calc(100vh-4rem)] sticky top-16 backdrop-blur-xl bg-white/60 dark:bg-midnight-950/60 border-r border-chrome-300/80 dark:border-white/10 p-4 overflow-y-auto">
-      {/* Navigation Links */}
-      <div className="space-y-1.5">
-        <div className="px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-chrome-900/50 dark:text-white/40 flex items-center justify-between">
-          <span>Telemetry Navigation</span>
-          <Sparkles className="w-3 h-3 text-telemetry-aqua" />
-        </div>
+    <aside className="hidden md:flex flex-col w-64 lg:w-72 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)] sticky top-14 sm:top-16 bg-cyber-surface border-r border-cyber-border p-3.5 overflow-y-auto">
+      {/* Micro Console Header */}
+      <div className="px-2 py-1 mb-2 font-mono text-[10px] uppercase tracking-wider text-cyber-muted flex items-center justify-between border-b border-cyber-border pb-2">
+        <span className="flex items-center gap-1.5">
+          <span className="text-accent-cyan">//</span>
+          <span>CONSOLE // NAV</span>
+        </span>
+        <span className="text-[9px] text-cyber-chrome">PITLANE-OS</span>
+      </div>
 
+      {/* Navigation Links */}
+      <div className="space-y-1">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -94,29 +92,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
               key={item.id}
               onClick={() => onTabChange(item.id)}
               className={`
-                w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all duration-200 cursor-pointer
+                w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left transition-all duration-150 cursor-pointer
                 ${
                   isActive
-                    ? 'bg-white/80 dark:bg-white/10 text-telemetry-blue dark:text-telemetry-aqua shadow-sm border border-telemetry-blue/20 dark:border-telemetry-aqua/30'
-                    : 'text-chrome-900/70 dark:text-white/70 hover:bg-white/40 dark:hover:bg-white/5 hover:text-chrome-900 dark:hover:text-white'
+                    ? 'bg-cyber-surface-elevated text-cyber-primary border-l-2 border-l-accent-cyan border-y border-r border-cyber-border shadow-cyber-sm'
+                    : 'text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover border border-transparent'
                 }
               `}
             >
-              <div className={`p-2 rounded-lg ${isActive ? 'bg-telemetry-blue text-white shadow-neon-blue/40' : 'bg-black/5 dark:bg-white/5'}`}>
+              <div className={`p-1.5 rounded ${isActive ? 'bg-accent-cyan/15 text-accent-cyan' : 'text-cyber-muted'}`}>
                 <Icon className="w-4 h-4" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <span className="font-display text-xs font-bold tracking-wider truncate">
+                  <span className={`font-display text-xs tracking-wider truncate ${isActive ? 'font-bold text-accent-cyan' : 'font-medium'}`}>
                     {item.label}
                   </span>
                   {Boolean(item.badge && item.badge > 0) && (
-                    <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono font-bold bg-telemetry-pink text-white">
+                    <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-accent-red text-white">
                       {item.badge}
                     </span>
                   )}
                 </div>
-                <div className="text-[11px] font-sans text-chrome-900/50 dark:text-white/40 truncate">
+                <div className="text-[10px] font-mono text-cyber-muted truncate">
                   {item.subtitle}
                 </div>
               </div>
@@ -126,44 +124,70 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Sub-teams Telemetry Progress Monitor */}
-      <div className="mt-8 pt-6 border-t border-chrome-300/60 dark:border-white/10">
-        <div className="px-2 mb-3 flex items-center justify-between text-[11px] font-mono font-bold uppercase tracking-wider text-chrome-900/60 dark:text-white/50">
+      <div className="mt-6 pt-4 border-t border-cyber-border">
+        <div className="px-2 mb-2.5 flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-cyber-muted">
           <span className="flex items-center gap-1.5">
-            <Gauge className="w-3.5 h-3.5 text-telemetry-blue" />
-            Sub-Teams Status ({subTeams.length})
+            <Gauge className="w-3 h-3 text-accent-cyan" />
+            <span>SUB-TEAMS // {subTeams.length}</span>
           </span>
-          <Flag className="w-3 h-3 text-[#8ED91E]" />
+          <Flag className="w-3 h-3 text-accent-lime opacity-80" />
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {subTeams.map((team) => (
-            <div key={team.id || team.slug} className="p-2.5 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/5">
-              <div className="flex items-center justify-between mb-1 text-xs">
-                <div className="min-w-0 pr-2">
-                  <span className="font-medium text-chrome-900 dark:text-white truncate block">
+            <div 
+              key={team.id || team.slug} 
+              className="p-2 rounded-lg bg-cyber-bg-alt border border-cyber-border transition-colors hover:border-cyber-border-strong"
+            >
+              <div className="flex items-center justify-between mb-1.5 text-xs">
+                <div className="flex items-center gap-2 min-w-0 pr-2">
+                  {/* Subtle team accent marker */}
+                  <span 
+                    className="w-1.5 h-1.5 rounded-full shrink-0" 
+                    style={{ backgroundColor: team.color }} 
+                  />
+                  <span className="font-sans font-medium text-cyber-primary text-[11px] truncate">
                     {team.name}
                   </span>
-                  <span className="text-[10px] font-mono text-chrome-900/50 dark:text-white/40">
-                    {team.completedTasks}/{team.totalTasks} deliverables
-                  </span>
                 </div>
-                <span className="font-mono text-[10px] font-bold shrink-0" style={{ color: team.color }}>
+                <span 
+                  className="font-mono text-[10px] font-bold shrink-0" 
+                  style={{ color: team.color }}
+                >
                   {team.progress}%
                 </span>
               </div>
-              <SegmentedGauge value={team.progress} totalSegments={6} showPercent={false} />
+              <SegmentedGauge 
+                value={team.progress} 
+                totalSegments={6} 
+                showPercent={false} 
+                accentColor={team.color} 
+              />
             </div>
           ))}
         </div>
       </div>
 
+      {/* Style Guide Shortcut (if provided) */}
+      {onOpenStyleGuide && (
+        <div className="mt-4 pt-3 border-t border-cyber-border">
+          <button
+            onClick={onOpenStyleGuide}
+            className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-mono text-cyber-secondary hover:text-accent-cyan hover:bg-cyber-surface-hover border border-cyber-border/60 transition-all cursor-pointer"
+          >
+            <Palette className="w-3.5 h-3.5 text-accent-cyan" />
+            <span>SYSTEM // STYLEGUIDE</span>
+          </button>
+        </div>
+      )}
+
       {/* Active Group Scoping Footer */}
-      <div className="mt-auto pt-6">
-        <div className="p-3 rounded-xl bg-gradient-to-br from-white/70 to-chrome-100/40 dark:from-midnight-900/90 dark:to-midnight-800/80 border border-chrome-300/80 dark:border-white/10 shadow-sm">
-          <div className="text-[10px] font-mono text-chrome-900/50 dark:text-white/40 uppercase tracking-wider">
-            Active Group Scope
+      <div className="mt-auto pt-4">
+        <div className="p-2.5 rounded-lg bg-cyber-bg-alt border border-cyber-border">
+          <div className="text-[9px] font-mono text-cyber-muted uppercase tracking-wider flex items-center gap-1">
+            <span className="text-accent-cyan">●</span> SCOPE // ACTIVE
           </div>
-          <div className="text-xs font-bold text-chrome-900 dark:text-white mt-0.5 truncate">
+          <div className="text-xs font-semibold text-cyber-primary mt-0.5 truncate">
             {currentGroupName}
           </div>
         </div>

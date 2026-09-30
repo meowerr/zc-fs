@@ -23,7 +23,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
           name={senderName}
           role={senderRole}
           size="sm"
-          className="flex-shrink-0 mb-1"
+          className="flex-shrink-0 mb-0.5"
         />
       )}
 
@@ -31,21 +31,21 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
         {/* Sender Name & Role Header (Incoming only) */}
         {!isOwn && (
           <div className="flex items-center gap-1.5 px-1 text-[11px] font-mono">
-            <span className="font-bold text-chrome-900 dark:text-white">{senderName}</span>
-            <span className="text-[9px] uppercase px-1 rounded bg-black/5 dark:bg-white/10 text-telemetry-blue dark:text-telemetry-aqua font-bold">
+            <span className="font-bold text-cyber-primary">{senderName}</span>
+            <span className="text-[9px] uppercase px-1 rounded bg-cyber-surface-elevated border border-cyber-border text-accent-cyan font-bold">
               {senderRole}
             </span>
           </div>
         )}
 
-        {/* Message Bubble Glass Surface */}
+        {/* Message Bubble Surface */}
         <div
           className={`
-            p-3.5 rounded-2xl text-xs sm:text-sm font-sans leading-relaxed backdrop-blur-md transition-all shadow-sm
+            p-3 rounded-lg text-xs sm:text-sm font-sans leading-relaxed transition-all shadow-cyber-sm
             ${
               isOwn
-                ? 'bg-gradient-to-r from-telemetry-blue to-[#1F50C9] text-white rounded-br-none border-t border-white/40 shadow-neon-blue/20'
-                : 'bg-white/75 dark:bg-midnight-850/70 text-chrome-900 dark:text-white rounded-bl-none border border-chrome-300/80 dark:border-white/10'
+                ? 'bg-cyber-surface-elevated text-cyber-primary rounded-br-none border border-accent-cyan/40 shadow-[0_1px_8px_rgba(0,217,255,0.15)]'
+                : 'bg-cyber-bg-alt text-cyber-primary rounded-bl-none border border-cyber-border'
             }
           `}
         >
@@ -54,15 +54,12 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
 
           {/* Optional Attachment Link */}
           {message.attachment_url && (
-            <div className="mt-2 pt-2 border-t border-white/20 dark:border-white/10">
+            <div className="mt-2 pt-2 border-t border-cyber-border">
               <a
                 href={message.attachment_url}
                 target="_blank"
                 rel="noreferrer"
-                className={`
-                  inline-flex items-center gap-1.5 text-xs font-mono underline font-medium
-                  ${isOwn ? 'text-white/90 hover:text-white' : 'text-telemetry-blue dark:text-telemetry-aqua'}
-                `}
+                className="inline-flex items-center gap-1.5 text-xs font-mono underline font-medium text-accent-cyan hover:brightness-110"
               >
                 <Paperclip className="w-3.5 h-3.5" />
                 <span>{message.attachment_name || 'CAD / File Attachment'}</span>
@@ -72,12 +69,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
           )}
 
           {/* Timestamp footer in bubble */}
-          <div
-            className={`
-              mt-1 text-[9px] font-mono text-right select-none
-              ${isOwn ? 'text-white/60' : 'text-chrome-900/40 dark:text-white/40'}
-            `}
-          >
+          <div className="mt-1 text-[9px] font-mono text-right select-none text-cyber-muted">
             {timeFormatted}
           </div>
         </div>

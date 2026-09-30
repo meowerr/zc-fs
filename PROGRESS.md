@@ -92,6 +92,16 @@
 - `[VERIFIED: scripts/verify-polish-tasks-groups.mjs (6/6 passed)]` Task deletion with PostgreSQL RLS authorization (Admin/Head only, Member blocked), cascade deletion, and deletion confirmation modal in TaskDetailModal.tsx.
 - `[VERIFIED: scripts/verify-polish-tasks-groups.mjs (6/6 passed)]` Admin sub-team creation in AdminApprovalHub.tsx and useAuth.ts with color picker, slug generation, and real-time subscription.
 - `[VERIFIED: scripts/verify-polish-tasks-groups.mjs (6/6 passed)]` Member removal from sub-team with role reset to pending and unassigned group_id: null while strictly preserving historical records and satisfying database check constraints.
+
+### Phase 8: Clean Cyber Racing / Y2K Visual Identity Redesign & /styleguide
+- `[VERIFIED: tailwind.config.js & src/index.css]` Configured dark neutral foundation palette (`#070A0E`, `#0B0F14`, `#11161D`, `#181E26`, `#202731`, `#2A323C`, `#39434F`, `#F2F4F7`, `#B0B8C2`, `#737D89`, `#C8CED6`).
+- `[VERIFIED: global design tokens & components]` Configured controlled semantic accents: Electric Cyan (`#00D9FF`), Racing Red (`#FF304F`), Racing Orange (`#FF6A00`), Racing Yellow (`#FFD43B`), Racing Lime (`#10E57A`).
+- `[VERIFIED: src/lib/constants.ts & SUB_TEAMS]` Updated 5 sub-teams with distinct accessible accents: Vehicle Dynamics (`#00D9FF`), Aerodynamics (`#FF304F`), Electronics (`#FF6A00`), Powertrain (`#FFD43B`), Operations (`#10E57A`).
+- `[VERIFIED: npx tsc --noEmit (code 0)]` Redesigned cards, buttons, inputs, status chips, gauges, modals, and telemetry readouts with cyber-sigilism accents (crosshairs, corner crosses, micro-labels).
+- `[VERIFIED: src/components/styleguide/StyleGuide.tsx & App.tsx]` Implemented comprehensive interactive `/styleguide` route showcasing all color tokens, button variants, status indicators, form inputs, team accents, segmented gauges, and typography.
+- `[VERIFIED: F1HorizontalTransition.tsx untouched]` Maintained F1 Horizontal Reveal Transition logic with 100% fidelity.
+- `[VERIFIED: npm run build (code 0)]` Production build bundles at ~156 KB gzipped, strictly under the 200 KB limit.
+- `[VERIFIED: node scripts/verify-polish-tasks-groups.mjs & scripts/verify-security-audit.mjs]` All backend tests, RLS security policies, and authorization boundaries verified 100% passing.
 ---
 
 ## 2. Automated Terminal Test Evidence Output

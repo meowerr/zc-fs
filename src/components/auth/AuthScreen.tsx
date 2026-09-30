@@ -73,41 +73,46 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-b from-chrome-100 via-chrome-50 to-chrome-100 dark:from-midnight-950 dark:via-midnight-900 dark:to-midnight-950">
-      {/* Background Decorative Neon Rings */}
-      <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-telemetry-blue/15 dark:bg-telemetry-blue/20 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-telemetry-pink/15 dark:bg-telemetry-pink/20 blur-3xl pointer-events-none" />
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-cyber-bg text-cyber-primary">
+      {/* Background Subtle Tech-Grid Texture */}
+      <div 
+        className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
+        style={{
+          backgroundImage: `radial-gradient(currentColor 1px, transparent 1px)`,
+          backgroundSize: '20px 20px'
+        }}
+      />
 
       <div className="w-full max-w-md relative z-10 space-y-4">
         {/* Main Brand Header */}
         <div className="text-center space-y-2 mb-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-white/10 border border-chrome-300 dark:border-white/20 backdrop-blur-md shadow-sm">
-            <Gauge className="w-4 h-4 text-telemetry-blue dark:text-telemetry-aqua animate-pulse" />
-            <span className="font-mono text-xs font-bold tracking-wider text-chrome-900 dark:text-white uppercase">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-cyber-bg-alt border border-cyber-border font-mono text-xs shadow-cyber-sm">
+            <Gauge className="w-3.5 h-3.5 text-accent-cyan animate-pulse" />
+            <span className="font-bold tracking-wider text-cyber-primary uppercase">
               PitLane Telemetry v1.0
             </span>
           </div>
 
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-chrome-900 dark:text-white uppercase tracking-wider">
+          <h1 className="font-display font-black text-2xl sm:text-3xl text-cyber-primary uppercase tracking-wider">
             Zewail City Racing
           </h1>
-          <p className="text-xs sm:text-sm font-sans text-chrome-900/70 dark:text-white/60">
+          <p className="text-xs sm:text-sm font-sans text-cyber-secondary">
             Formula Student Engineering & Project Workspace
           </p>
         </div>
 
         {/* Auth Glass Card */}
-        <GlassCard variant="elevated" className="p-6 sm:p-8">
+        <GlassCard variant="elevated" className="p-6 sm:p-7 border-cyber-border-strong shadow-cyber-elevated">
           {/* Tab Selector: Login vs Register */}
-          <div className="grid grid-cols-2 p-1 rounded-xl bg-black/5 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 mb-6">
+          <div className="grid grid-cols-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border mb-5">
             <button
               type="button"
               onClick={() => { setIsLoginTab(true); setError(null); }}
               className={`
-                py-2 text-xs font-mono font-bold uppercase rounded-lg transition-all cursor-pointer
+                py-1.5 text-xs font-mono font-bold uppercase rounded transition-all cursor-pointer
                 ${isLoginTab 
-                  ? 'bg-telemetry-blue text-white shadow-neon-blue' 
-                  : 'text-chrome-900/70 dark:text-white/70 hover:text-chrome-900 dark:hover:text-white'}
+                  ? 'bg-accent-cyan text-black shadow-sm font-bold' 
+                  : 'text-cyber-secondary hover:text-cyber-primary'}
               `}
             >
               Sign In
@@ -116,10 +121,10 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               type="button"
               onClick={() => { setIsLoginTab(false); setError(null); }}
               className={`
-                py-2 text-xs font-mono font-bold uppercase rounded-lg transition-all cursor-pointer
+                py-1.5 text-xs font-mono font-bold uppercase rounded transition-all cursor-pointer
                 ${!isLoginTab 
-                  ? 'bg-telemetry-blue text-white shadow-neon-blue' 
-                  : 'text-chrome-900/70 dark:text-white/70 hover:text-chrome-900 dark:hover:text-white'}
+                  ? 'bg-accent-cyan text-black shadow-sm font-bold' 
+                  : 'text-cyber-secondary hover:text-cyber-primary'}
               `}
             >
               Register
@@ -128,17 +133,17 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
 
           {/* Error Banner */}
           {error && (
-            <div className="mb-4 p-3 rounded-xl bg-telemetry-red/10 border border-telemetry-red/40 text-telemetry-red flex items-start gap-2.5 text-xs font-sans animate-fade-in">
+            <div className="mb-4 p-2.5 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red flex items-start gap-2 text-xs font-sans animate-fade-in">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <div className="leading-snug">{error}</div>
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3.5">
             {!isLoginTab && (
               <div>
-                <label className="block text-xs font-mono font-semibold uppercase text-chrome-900/70 dark:text-white/70 mb-1">
+                <label className="block text-xs font-mono font-semibold uppercase text-cyber-secondary mb-1">
                   Full Name
                 </label>
                 <GlowInput
@@ -153,14 +158,14 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
 
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-mono font-semibold uppercase text-chrome-900/70 dark:text-white/70">
+                <label className="block text-xs font-mono font-semibold uppercase text-cyber-secondary">
                   University Email
                 </label>
                 {!email.includes('@') && email.length > 2 && (
                   <button
                     type="button"
                     onClick={handleAppendDomain}
-                    className="text-[10px] font-mono text-telemetry-blue dark:text-telemetry-aqua hover:underline cursor-pointer"
+                    className="text-[10px] font-mono text-accent-cyan hover:underline cursor-pointer"
                   >
                     +@{UNIVERSITY_DOMAIN}
                   </button>
@@ -177,7 +182,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase text-chrome-900/70 dark:text-white/70 mb-1">
+              <label className="block text-xs font-mono font-semibold uppercase text-cyber-secondary mb-1">
                 Password
               </label>
               <GlowInput
@@ -195,7 +200,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="w-full justify-center"
+                fullWidth
                 disabled={loading}
                 icon={<ArrowRight className="w-4 h-4" />}
               >
@@ -205,8 +210,8 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
           </form>
 
           {/* Domain Security Badge */}
-          <div className="mt-5 pt-4 border-t border-chrome-300/60 dark:border-white/10 flex items-center justify-center gap-1.5 text-[11px] font-mono text-chrome-900/60 dark:text-white/40">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#8ED91E]" />
+          <div className="mt-5 pt-3.5 border-t border-cyber-border flex items-center justify-center gap-1.5 text-[10px] font-mono text-cyber-muted">
+            <ShieldCheck className="w-3.5 h-3.5 text-accent-lime" />
             <span>Server-side restricted to @{UNIVERSITY_DOMAIN}</span>
           </div>
         </GlassCard>

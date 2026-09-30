@@ -16,6 +16,7 @@ interface AppShellProps {
   notificationCount?: number;
   onOpenNotifications?: () => void;
   onOpenGuide?: () => void;
+  onOpenStyleGuide?: () => void;
   groups?: Group[];
   tasks?: Task[];
 }
@@ -32,6 +33,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   notificationCount = 0,
   onOpenNotifications,
   onOpenGuide,
+  onOpenStyleGuide,
   groups,
   tasks,
 }) => {
@@ -54,13 +56,13 @@ export const AppShell: React.FC<AppShellProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-chrome-100 to-chrome-50 dark:from-midnight-900 dark:to-midnight-950 text-chrome-900 dark:text-chrome-50 font-sans transition-colors duration-300">
-      {/* Background Micro-Grid Texture */}
+    <div className="min-h-screen flex flex-col bg-cyber-bg text-cyber-primary font-sans transition-colors duration-200">
+      {/* Background Subtle Tech-Grid Texture */}
       <div 
-        className="fixed inset-0 pointer-events-none opacity-[0.035] dark:opacity-[0.05]"
+        className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
         style={{
           backgroundImage: `radial-gradient(currentColor 1px, transparent 1px)`,
-          backgroundSize: '24px 24px'
+          backgroundSize: '20px 20px'
         }}
       />
 
@@ -75,6 +77,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         notificationCount={notificationCount}
         onOpenNotifications={onOpenNotifications}
         onOpenGuide={onOpenGuide}
+        onOpenStyleGuide={onOpenStyleGuide}
       />
 
       {/* Body: Desktop Sidebar + Main Content */}
@@ -87,9 +90,10 @@ export const AppShell: React.FC<AppShellProps> = ({
           unreadCount={unreadCount}
           groups={groups}
           tasks={tasks}
+          onOpenStyleGuide={onOpenStyleGuide}
         />
 
-        <main className="flex-1 p-4 md:p-6 pb-24 md:pb-8 max-w-full overflow-x-hidden">
+        <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-24 md:pb-8 max-w-full overflow-x-hidden">
           {children}
         </main>
       </div>

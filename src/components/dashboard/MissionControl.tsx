@@ -1,19 +1,19 @@
 import React from 'react';
 import { 
-  Sparkles, 
-  Gauge, 
   Clock, 
   ChevronRight, 
   Plus, 
   MessageSquare, 
   Activity,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  Sliders
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { LedStatusChip } from '../common/LedStatusChip';
+import { EmptyState } from '../common/EmptyState';
 import { Profile, Task } from '../../lib/database.types';
 import { NavTab } from '../layout/BottomNav';
 
@@ -36,39 +36,38 @@ export const MissionControl: React.FC<MissionControlProps> = ({
   const approvedCount = tasks.filter((t) => t.status === 'approved' || t.status === 'done').length;
   const urgentCount = tasks.filter((t) => t.priority === 'urgent' || t.priority === 'high').length;
 
-  // Filter tasks relevant to current user:
-  // - If admin: all tasks
-  // - If head/member: tasks belonging to their sub-team
   const relevantTasks = tasks.slice(0, 6);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Hero Telemetry Banner */}
-      <GlassCard variant="accent" className="p-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      <GlassCard variant="elevated" className="p-5 sm:p-6">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/60 dark:bg-white/10 border border-chrome-300 dark:border-white/20 text-xs font-mono">
-              <Sparkles className="w-3.5 h-3.5 text-telemetry-pink" />
-              <span className="font-bold text-telemetry-blue dark:text-telemetry-aqua uppercase">
+            <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
+              <span className="text-accent-cyan font-bold">//</span>
+              <span className="text-cyber-secondary uppercase tracking-widest text-[11px]">
                 {currentUser.role === 'admin' 
-                  ? 'Club Administration Telemetry' 
+                  ? 'CLUB // RACE CONTROL' 
                   : currentUser.role === 'head'
-                  ? 'Sub-Team Pit Wall'
-                  : 'Engineering Workspace'}
+                  ? 'SUB-TEAM // PIT WALL'
+                  : 'ENGINEERING // WORKSPACE'}
               </span>
+              <span className="text-accent-lime text-[10px]">● LIVE</span>
             </div>
-            <h2 className="font-display font-black text-2xl sm:text-3xl text-chrome-900 dark:text-white tracking-wide uppercase">
+
+            <h2 className="font-display font-black text-xl sm:text-2xl lg:text-3xl text-cyber-primary tracking-wider uppercase">
               Mission Control & Telemetry
             </h2>
-            <p className="text-sm text-chrome-900/70 dark:text-white/70 max-w-xl">
-              Real-time engineering task tracking, multi-version deliverable verification, and motorsport communications for Zewail City Formula Student.
+            <p className="text-xs sm:text-sm text-cyber-secondary max-w-xl leading-relaxed">
+              Motorsport engineering management, multi-version deliverable verification, and telemetry communications for Zewail City Formula Student.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
             {(currentUser.role === 'admin' || currentUser.role === 'head') && (
               <GlossyButton
-                variant="holo"
+                variant="primary"
                 icon={<Plus className="w-4 h-4" />}
                 onClick={onCreateTaskClick || (() => onNavigateTab('tasks'))}
               >
@@ -80,101 +79,124 @@ export const MissionControl: React.FC<MissionControlProps> = ({
               icon={<MessageSquare className="w-4 h-4" />}
               onClick={() => onNavigateTab('chat')}
             >
-              Open Pit Wall
+              Pit Wall Chat
             </GlossyButton>
           </div>
         </div>
 
         {/* Live Gauges (Derived from real Supabase task records) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-chrome-300/60 dark:border-white/10">
-          <div className="p-3.5 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10">
-            <div className="text-[11px] font-mono text-chrome-900/60 dark:text-white/50 uppercase flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-telemetry-blue" />
-              In Progress
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-5 border-t border-cyber-border">
+          {/* Active / In Progress Metric */}
+          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-orange/40 transition-colors">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-orange opacity-70" />
+            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-accent-orange" />
+                Active
+              </span>
+              <span className="text-[9px] text-cyber-muted tracking-tighter">P1</span>
             </div>
-            <div className="text-2xl font-display font-black text-telemetry-blue mt-1">
+            <div className="text-2xl sm:text-3xl font-display font-black text-accent-orange mt-1">
               {inProgressCount}
             </div>
-            <div className="text-[10px] font-mono text-chrome-900/60 dark:text-white/40 mt-1">
-              Active engineering work
+            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">
+              In Progress Work
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10">
-            <div className="text-[11px] font-mono text-chrome-900/60 dark:text-white/50 uppercase flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-telemetry-amber" />
-              Awaiting Review
+          {/* Pending / In Review Metric */}
+          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
+            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-accent-yellow" />
+                In Review
+              </span>
+              <span className="text-[9px] text-cyber-muted tracking-tighter">QUEUE</span>
             </div>
-            <div className="text-2xl font-display font-black text-telemetry-amber mt-1">
+            <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">
               {reviewCount}
             </div>
-            <div className="text-[10px] font-mono text-chrome-900/60 dark:text-white/40 mt-1">
-              Submissions queued
+            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">
+              Submissions Queued
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10">
-            <div className="text-[11px] font-mono text-chrome-900/60 dark:text-white/50 uppercase flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-telemetry-lime" />
-              Approved
+          {/* Approved / Done Metric */}
+          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-lime/40 transition-colors">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime opacity-70" />
+            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
+                Approved
+              </span>
+              <span className="text-[9px] text-cyber-muted tracking-tighter">PASSED</span>
             </div>
-            <div className="text-2xl font-display font-black text-telemetry-lime mt-1">
+            <div className="text-2xl sm:text-3xl font-display font-black text-accent-lime mt-1">
               {approvedCount}
             </div>
-            <div className="text-[10px] font-mono text-chrome-900/60 dark:text-white/40 mt-1">
-              Deliverables accepted
+            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">
+              Deliverables Verified
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10">
-            <div className="text-[11px] font-mono text-chrome-900/60 dark:text-white/50 uppercase flex items-center gap-1.5">
-              <AlertTriangle className="w-3.5 h-3.5 text-telemetry-pink" />
-              High Priority
+          {/* Urgent / Critical Metric */}
+          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
+            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
+                Critical
+              </span>
+              <span className="text-[9px] text-cyber-muted tracking-tighter">ALERT</span>
             </div>
-            <div className="text-2xl font-display font-black text-telemetry-pink mt-1">
+            <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">
               {urgentCount}
             </div>
-            <div className="text-[10px] font-mono text-chrome-900/60 dark:text-white/40 mt-1">
-              Urgent / High tasks
+            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">
+              Urgent / High Priority
             </div>
           </div>
         </div>
       </GlassCard>
 
       {/* Active Sub-Team Tasks Feed (Live Data) */}
-      <GlassCard className="p-5 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
+      <GlassCard className="p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-cyber-border">
           <div className="flex items-center gap-2">
-            <Gauge className="w-5 h-5 text-telemetry-blue" />
-            <h3 className="font-display font-bold text-base text-chrome-900 dark:text-white uppercase tracking-wider">
-              Recent Engineering Tasks
+            <Sliders className="w-4 h-4 text-accent-cyan" />
+            <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
+              Recent Engineering Deliverables
             </h3>
           </div>
           <GhostButton size="sm" onClick={() => onNavigateTab('tasks')}>
-            View All ({tasks.length}) <ChevronRight className="w-4 h-4 ml-1 inline" />
+            <span>VIEW ALL ({tasks.length})</span>
+            <ChevronRight className="w-3.5 h-3.5 inline ml-0.5" />
           </GhostButton>
         </div>
 
         {relevantTasks.length === 0 ? (
-          <div className="p-8 text-center rounded-xl bg-black/5 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10">
-            <p className="text-xs font-mono text-chrome-900/60 dark:text-white/50">
-              No tasks currently registered for your sub-team scope.
-            </p>
-          </div>
+          <EmptyState
+            illustration="telemetry"
+            title="NO ACTIVE DELIVERABLES"
+            description="All deliverables for your sub-team scope are currently clear or waiting for dispatch."
+            actionLabel={currentUser.role === 'admin' || currentUser.role === 'head' ? 'CREATE FIRST DELIVERABLE' : undefined}
+            onAction={onCreateTaskClick || (() => onNavigateTab('tasks'))}
+          />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {relevantTasks.map((t) => (
               <div
                 key={t.id}
                 onClick={() => onNavigateTab('tasks')}
-                className="p-4 rounded-xl bg-white/50 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 hover:border-telemetry-blue/50 transition-all space-y-3 cursor-pointer"
+                className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border hover:border-accent-cyan/50 transition-all space-y-2.5 cursor-pointer group shadow-cyber-sm"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <div className="space-y-0.5">
-                    <span className="font-mono text-[10px] text-chrome-900/50 dark:text-white/40 uppercase">
-                      {t.task_type} • {t.priority} priority
+                  <div className="space-y-0.5 min-w-0">
+                    <span className="font-mono text-[9px] uppercase tracking-wider text-cyber-muted">
+                      {t.task_type} // {t.priority}
                     </span>
-                    <h4 className="font-sans font-bold text-sm text-chrome-900 dark:text-white leading-snug">
+                    <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-accent-cyan transition-colors leading-snug truncate">
                       {t.title}
                     </h4>
                   </div>
@@ -182,18 +204,15 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 </div>
 
                 {t.description && (
-                  <p className="text-xs font-sans text-chrome-900/70 dark:text-white/60 line-clamp-2">
+                  <p className="text-xs text-cyber-secondary line-clamp-1 leading-relaxed">
                     {t.description}
                   </p>
                 )}
 
-                <div className="flex items-center justify-between pt-2 border-t border-chrome-300/40 dark:border-white/5 text-xs font-mono text-chrome-900/60 dark:text-white/50">
-                  <span className="flex items-center gap-1.5 text-telemetry-blue dark:text-telemetry-aqua">
-                    <Clock className="w-3.5 h-3.5" />
-                    Due {new Date(t.deadline).toLocaleDateString()}
-                  </span>
-                  <span className="text-[10px] uppercase font-bold text-chrome-900/50 dark:text-white/40">
-                    Open in Tasks →
+                <div className="flex items-center justify-between pt-2 border-t border-cyber-border text-[11px] font-mono text-cyber-muted">
+                  <span>DUE: {new Date(t.deadline).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
+                  <span className="text-accent-cyan group-hover:translate-x-0.5 transition-transform flex items-center">
+                    OPEN <ChevronRight className="w-3 h-3 ml-0.5 inline" />
                   </span>
                 </div>
               </div>

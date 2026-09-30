@@ -73,26 +73,28 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
   const sizePercentage = Math.min(100, Math.round((fileSizeBytes / MAX_FILE_SIZE_BYTES) * 100));
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-      <GlassCard variant="elevated" className="w-full max-w-md p-6 border-telemetry-blue/40 shadow-2xl space-y-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <GlassCard variant="elevated" className="w-full max-w-md p-6 border-cyber-border-strong shadow-2xl space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-chrome-300/60 dark:border-white/10">
+        <div className="flex items-center justify-between pb-3 border-b border-cyber-border">
           <div className="flex items-center gap-2">
-            <UploadCloud className="w-5 h-5 text-telemetry-blue" />
-            <h3 className="font-display font-bold text-base text-chrome-900 dark:text-white uppercase tracking-wider">
+            <div className="p-1.5 rounded-lg bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">
+              <UploadCloud className="w-5 h-5" />
+            </div>
+            <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
               Upload Telemetry File
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 text-chrome-900/60 dark:text-white/60 cursor-pointer"
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {error && (
-          <div className="p-3 rounded-xl bg-telemetry-red/10 border border-telemetry-red/40 text-telemetry-red text-xs font-mono flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
             <span>{error}</span>
           </div>
@@ -105,8 +107,8 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
             p-6 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-center space-y-2
             ${
               selectedFile
-                ? 'border-telemetry-aqua bg-telemetry-aqua/5'
-                : 'border-chrome-300 dark:border-white/20 hover:border-telemetry-blue bg-black/5 dark:bg-white/5'
+                ? 'border-accent-cyan bg-accent-cyan/5'
+                : 'border-cyber-border hover:border-accent-cyan/60 bg-cyber-surface'
             }
           `}
         >
@@ -118,15 +120,15 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
             accept=".pdf,.zip,.step,.stp,.iges,.igs,.cad,.sldprt,.sldasm,.png,.jpg,.jpeg,.svg,.csv,.xlsx,.m,.py,.c,.cpp,.txt"
           />
 
-          <div className="w-12 h-12 mx-auto rounded-full bg-telemetry-blue/15 text-telemetry-blue flex items-center justify-center">
-            {selectedFile ? <FileText className="w-6 h-6 text-telemetry-aqua" /> : <UploadCloud className="w-6 h-6" />}
+          <div className="w-12 h-12 mx-auto rounded-full bg-accent-cyan/10 text-accent-cyan flex items-center justify-center">
+            {selectedFile ? <FileText className="w-6 h-6 text-accent-cyan" /> : <UploadCloud className="w-6 h-6" />}
           </div>
 
           <div>
-            <div className="font-sans font-bold text-sm text-chrome-900 dark:text-white truncate">
+            <div className="font-sans font-bold text-sm text-cyber-primary truncate">
               {selectedFile ? selectedFile.name : 'Click to select CAD model or document'}
             </div>
-            <p className="text-[11px] font-mono text-chrome-900/60 dark:text-white/50">
+            <p className="text-[11px] font-mono text-cyber-muted">
               {selectedFile ? `${fileSizeMb} MB selected` : 'STEP, IGES, PDF, ZIP, code, or images (25 MB max)'}
             </p>
           </div>
@@ -134,14 +136,14 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
 
         {/* File Quota Telemetry Gauge */}
         {selectedFile && (
-          <div className="space-y-1.5 p-3 rounded-xl bg-white/40 dark:bg-white/5 border border-chrome-300/40 dark:border-white/10">
+          <div className="space-y-1.5 p-3 rounded-xl bg-cyber-surface border border-cyber-border">
             <div className="flex items-center justify-between text-[11px] font-mono">
-              <span className="text-chrome-900/60 dark:text-white/50">Quota Usage:</span>
-              <span className="font-bold text-telemetry-blue dark:text-telemetry-aqua">
+              <span className="text-cyber-muted">Quota Usage:</span>
+              <span className="font-bold text-accent-cyan">
                 {fileSizeMb} MB / 25 MB max
               </span>
             </div>
-            <SegmentedGauge value={sizePercentage} totalSegments={10} showPercent={false} />
+            <SegmentedGauge value={sizePercentage} totalSegments={10} showPercent={false} accentColor="#00D9FF" />
           </div>
         )}
 
@@ -149,12 +151,12 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
         {isUploading && (
           <div className="space-y-1">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="text-chrome-900/70 dark:text-white/70">Uploading to Supabase Storage...</span>
-              <span className="text-telemetry-blue font-bold">{uploadProgress}%</span>
+              <span className="text-cyber-secondary">Uploading to Supabase Storage...</span>
+              <span className="text-accent-cyan font-bold">{uploadProgress}%</span>
             </div>
-            <div className="w-full h-2 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
+            <div className="w-full h-2 rounded-full bg-cyber-surface overflow-hidden border border-cyber-border">
               <div
-                className="h-full bg-gradient-to-r from-telemetry-blue to-telemetry-aqua transition-all duration-300"
+                className="h-full bg-accent-cyan transition-all duration-300"
                 style={{ width: `${uploadProgress}%` }}
               />
             </div>
@@ -162,13 +164,13 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
         )}
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-2 pt-2 border-t border-chrome-300/40 dark:border-white/10">
+        <div className="flex items-center justify-end gap-2 pt-2 border-t border-cyber-border">
           <GhostButton size="sm" onClick={onClose} disabled={isUploading}>
             Cancel
           </GhostButton>
           <GlossyButton
             size="sm"
-            variant="holo"
+            variant="primary"
             disabled={!selectedFile || isUploading}
             onClick={handleUpload}
             icon={<CheckCircle2 className="w-4 h-4" />}

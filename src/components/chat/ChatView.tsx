@@ -8,7 +8,6 @@ import {
   Radio, 
   Paperclip, 
   ChevronLeft, 
-  Sparkles,
   Link as LinkIcon
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
@@ -97,42 +96,40 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
   const getChatSubtitle = () => {
     if (activeConversationId && otherParticipant) {
-      return `Direct Message • ${otherParticipant.role.toUpperCase()} • ${otherParticipant.email}`;
+      return `DIRECT // ${otherParticipant.role.toUpperCase()} // ${otherParticipant.email}`;
     }
     return currentChannel?.description || 'Active sub-team telemetry channel';
   };
 
   return (
-    <div className="h-[calc(100vh-10rem)] md:h-[calc(100vh-8rem)] flex flex-col md:flex-row gap-4">
+    <div className="h-[calc(100vh-9.5rem)] md:h-[calc(100vh-7.5rem)] flex flex-col md:flex-row gap-3.5">
       {/* LEFT: Channels & Direct Messages Sidebar */}
       <GlassCard
         className={`
-          w-full md:w-72 lg:w-80 flex-shrink-0 flex flex-col p-4 overflow-hidden
+          w-full md:w-64 lg:w-72 flex-shrink-0 flex flex-col p-3.5 overflow-hidden
           ${showMobileList ? 'flex' : 'hidden md:flex'}
         `}
       >
-        <div className="flex items-center justify-between pb-3 border-b border-chrome-300/60 dark:border-white/10">
-          <div className="flex items-center gap-2">
-            <Radio className="w-4 h-4 text-telemetry-aqua animate-pulse" />
-            <h3 className="font-display font-bold text-sm text-chrome-900 dark:text-white uppercase tracking-wider">
-              Pit Wall Comms
-            </h3>
+        <div className="flex items-center justify-between pb-2.5 border-b border-cyber-border">
+          <div className="flex items-center gap-1.5 font-mono text-xs text-cyber-primary font-bold">
+            <Radio className="w-3.5 h-3.5 text-accent-cyan animate-pulse" />
+            <span className="uppercase tracking-wider">PIT WALL // COMMS</span>
           </div>
           <button
             onClick={() => setIsDMModalOpen(true)}
-            className="p-1 rounded-lg bg-black/5 dark:bg-white/10 hover:bg-telemetry-blue hover:text-white transition-all text-chrome-900/70 dark:text-white/70 cursor-pointer"
+            className="p-1 rounded bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-cyber-border hover:border-accent-cyan text-cyber-secondary hover:text-accent-cyan transition-all cursor-pointer"
             title="Start Direct Message"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
           </button>
         </div>
 
         {/* Scrollable Channel & DM List */}
-        <div className="flex-1 overflow-y-auto space-y-4 py-3 pr-1">
+        <div className="flex-1 overflow-y-auto space-y-3.5 py-2.5 pr-1">
           {/* Section: Channels */}
           <div>
-            <div className="text-[10px] font-mono uppercase tracking-wider text-chrome-900/50 dark:text-white/40 mb-1.5 px-2">
-              Channels
+            <div className="text-[10px] font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
+              // CHANNELS
             </div>
             <div className="space-y-1">
               {accessibleChannels.map((channel) => {
@@ -148,19 +145,19 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       setShowMobileList(false);
                     }}
                     className={`
-                      w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-left transition-all cursor-pointer
+                      w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer border
                       ${
                         isActive
-                          ? 'bg-telemetry-blue text-white shadow-neon-blue/30 font-bold'
-                          : 'text-chrome-900/75 dark:text-white/70 hover:bg-white/60 dark:hover:bg-white/10 hover:text-chrome-900'
+                          ? 'bg-cyber-surface-elevated text-accent-cyan border-l-2 border-l-accent-cyan border-y border-r border-cyber-border font-bold shadow-cyber-sm'
+                          : 'bg-transparent border-transparent text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover hover:border-cyber-border'
                       }
                     `}
                   >
                     <div className="flex-shrink-0">
                       {isHeadsOnly ? (
-                        <Lock className="w-3.5 h-3.5 text-telemetry-pink" />
+                        <Lock className="w-3.5 h-3.5 text-accent-red" />
                       ) : isAnnouncements ? (
-                        <Sparkles className="w-3.5 h-3.5 text-telemetry-amber" />
+                        <Radio className="w-3.5 h-3.5 text-accent-yellow" />
                       ) : (
                         <Hash className="w-3.5 h-3.5" />
                       )}
@@ -176,11 +173,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
           {/* Section: Direct Messages */}
           <div>
-            <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-chrome-900/50 dark:text-white/40 mb-1.5 px-2">
-              <span>Direct Messages</span>
+            <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
+              <span>// DIRECT COMMS</span>
               <button
                 onClick={() => setIsDMModalOpen(true)}
-                className="text-telemetry-blue dark:text-telemetry-aqua hover:underline cursor-pointer lowercase font-sans font-bold"
+                className="text-accent-cyan hover:underline cursor-pointer lowercase font-mono text-[10px]"
               >
                 + new
               </button>
@@ -188,8 +185,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
             <div className="space-y-1">
               {conversations.length === 0 ? (
-                <div className="px-2 py-3 text-[11px] font-mono text-chrome-900/40 dark:text-white/40 italic">
-                  No active DMs. Click + to chat with teammates.
+                <div className="px-2 py-2 text-[10px] font-mono text-cyber-muted italic">
+                  No active DMs. Click + to transmit.
                 </div>
               ) : (
                 conversations.map((conv) => {
@@ -212,23 +209,18 @@ export const ChatView: React.FC<ChatViewProps> = ({
                         setShowMobileList(false);
                       }}
                       className={`
-                        w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-xl text-left transition-all cursor-pointer
+                        w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer border
                         ${
                           isActive
-                            ? 'bg-telemetry-blue text-white shadow-neon-blue/30 font-bold'
-                            : 'text-chrome-900/75 dark:text-white/70 hover:bg-white/60 dark:hover:bg-white/10'
+                            ? 'bg-cyber-surface-elevated text-accent-cyan border-l-2 border-l-accent-cyan border-y border-r border-cyber-border font-bold shadow-cyber-sm'
+                            : 'bg-transparent border-transparent text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover hover:border-cyber-border'
                         }
                       `}
                     >
                       <ChromeAvatar name={partner.full_name} role={partner.role} size="sm" />
-                      <div className="min-w-0 flex-1">
-                        <div className="text-xs font-sans truncate font-medium">
-                          {partner.full_name}
-                        </div>
-                        <div className="text-[9px] font-mono opacity-70 uppercase truncate">
-                          {partner.role}
-                        </div>
-                      </div>
+                      <span className="text-xs font-sans truncate">
+                        {partner.full_name}
+                      </span>
                     </button>
                   );
                 })
@@ -238,36 +230,28 @@ export const ChatView: React.FC<ChatViewProps> = ({
         </div>
       </GlassCard>
 
-      {/* RIGHT: Active Chat Conversation Area */}
+      {/* RIGHT: Chat Messages Stream & Input */}
       <GlassCard
         className={`
-          flex-1 flex flex-col p-4 sm:p-5 overflow-hidden
+          flex-1 flex flex-col p-3.5 sm:p-4 overflow-hidden
           ${showMobileList ? 'hidden md:flex' : 'flex'}
         `}
       >
-        {/* Chat Area Top Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-chrome-300/60 dark:border-white/10 flex-shrink-0">
-          <div className="flex items-center gap-3 min-w-0">
-            {/* Mobile back to channel list button */}
+        {/* Chat Stream Header */}
+        <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
             <button
               onClick={() => setShowMobileList(true)}
-              className="md:hidden p-1.5 rounded-lg bg-black/5 dark:bg-white/10 text-chrome-900 dark:text-white cursor-pointer"
+              className="md:hidden p-1 rounded bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
             <div className="min-w-0">
-              <div className="flex items-center gap-2">
-                {activeConversationId ? (
-                  <MessageSquare className="w-4 h-4 text-telemetry-aqua flex-shrink-0" />
-                ) : (
-                  <Hash className="w-4 h-4 text-telemetry-blue flex-shrink-0" />
-                )}
-                <h3 className="font-display font-bold text-sm sm:text-base text-chrome-900 dark:text-white uppercase tracking-wider truncate">
-                  {getChatTitle()}
-                </h3>
-              </div>
-              <p className="text-[11px] font-mono text-chrome-900/60 dark:text-white/50 truncate max-w-xs sm:max-w-md">
+              <h3 className="font-display font-bold text-xs sm:text-sm text-cyber-primary truncate uppercase tracking-wider">
+                {getChatTitle()}
+              </h3>
+              <p className="text-[10px] sm:text-[11px] font-mono text-cyber-muted truncate max-w-xs sm:max-w-md">
                 {getChatSubtitle()}
               </p>
             </div>
@@ -279,17 +263,17 @@ export const ChatView: React.FC<ChatViewProps> = ({
         </div>
 
         {/* Message Stream */}
-        <div className="flex-1 overflow-y-auto py-3 px-1 space-y-1">
+        <div className="flex-1 overflow-y-auto py-2.5 px-1 space-y-1">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-2">
-              <div className="w-12 h-12 rounded-full bg-telemetry-blue/10 flex items-center justify-center text-telemetry-blue">
-                <MessageSquare className="w-6 h-6" />
+              <div className="w-10 h-10 rounded-lg bg-cyber-bg-alt border border-cyber-border flex items-center justify-center text-accent-cyan">
+                <MessageSquare className="w-5 h-5" />
               </div>
-              <h4 className="font-display font-bold text-sm text-chrome-900 dark:text-white">
+              <h4 className="font-display font-bold text-xs sm:text-sm text-cyber-primary uppercase tracking-wider">
                 Channel Clear
               </h4>
-              <p className="text-xs text-chrome-900/60 dark:text-white/50 max-w-xs">
-                No telemetry messages here yet. Be the first to start the engineering thread.
+              <p className="text-xs text-cyber-secondary max-w-xs">
+                No telemetry messages recorded yet. Begin the engineering discussion below.
               </p>
             </div>
           ) : (
@@ -305,28 +289,28 @@ export const ChatView: React.FC<ChatViewProps> = ({
         </div>
 
         {/* Chat Input Bar */}
-        <div className="pt-3 border-t border-chrome-300/60 dark:border-white/10 flex-shrink-0">
+        <div className="pt-2.5 border-t border-cyber-border flex-shrink-0">
           {!canPost ? (
-            <div className="p-3 rounded-xl bg-black/5 dark:bg-white/5 text-center text-xs font-mono text-chrome-900/60 dark:text-white/50 flex items-center justify-center gap-2">
-              <Lock className="w-3.5 h-3.5 text-telemetry-amber" />
+            <div className="p-2.5 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center text-xs font-mono text-cyber-muted flex items-center justify-center gap-2">
+              <Lock className="w-3.5 h-3.5 text-accent-yellow" />
               <span>Broadcast Channel: Only Club Admins & Sub-team Heads may post official announcements.</span>
             </div>
           ) : (
             <form onSubmit={handleSend} className="space-y-2">
               {showAttachInput && (
-                <div className="flex items-center gap-2 p-2 rounded-xl bg-white/50 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 animate-fade-in">
-                  <LinkIcon className="w-3.5 h-3.5 text-telemetry-blue" />
+                <div className="flex items-center gap-2 p-2 rounded-lg bg-cyber-bg-alt border border-cyber-border animate-fade-in">
+                  <LinkIcon className="w-3.5 h-3.5 text-accent-cyan" />
                   <input
                     type="url"
                     placeholder="Attach CAD URL or document link (https://...)"
                     value={attachmentUrl}
                     onChange={(e) => setAttachmentUrl(e.target.value)}
-                    className="flex-1 text-xs bg-transparent border-none text-chrome-900 dark:text-white focus:outline-none font-mono"
+                    className="flex-1 text-xs bg-transparent border-none text-cyber-primary focus:outline-none font-mono placeholder:text-cyber-muted"
                   />
                   <button
                     type="button"
                     onClick={() => { setShowAttachInput(false); setAttachmentUrl(''); }}
-                    className="text-xs text-chrome-900/50 hover:underline"
+                    className="text-xs text-cyber-muted hover:text-accent-red font-mono"
                   >
                     Remove
                   </button>
@@ -338,11 +322,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   type="button"
                   onClick={() => setShowAttachInput((prev) => !prev)}
                   className={`
-                    p-2.5 rounded-xl border transition-all cursor-pointer
+                    p-2 rounded-lg border transition-all cursor-pointer
                     ${
                       showAttachInput
-                        ? 'bg-telemetry-blue text-white border-telemetry-blue'
-                        : 'bg-white/70 dark:bg-midnight-950/60 border-chrome-300 dark:border-white/15 text-chrome-900/60 dark:text-white/60 hover:text-telemetry-blue'
+                        ? 'bg-accent-cyan text-black border-accent-cyan'
+                        : 'bg-cyber-surface-elevated border-cyber-border text-cyber-muted hover:text-cyber-primary hover:border-cyber-border-strong'
                     }
                   `}
                   title="Attach CAD or Web Link"
@@ -355,14 +339,14 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   placeholder={`Transmit message to ${getChatTitle()}...`}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  className="flex-1 h-11 px-4 rounded-xl text-xs sm:text-sm bg-white/70 dark:bg-midnight-950/60 border border-chrome-300 dark:border-white/15 text-chrome-900 dark:text-white focus:outline-none focus:border-telemetry-blue"
+                  className="flex-1 h-9 px-3 rounded-lg text-xs sm:text-sm bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
                 />
 
                 <GlossyButton
-                  size="md"
+                  size="sm"
                   variant="primary"
                   type="submit"
-                  icon={<Send className="w-4 h-4" />}
+                  icon={<Send className="w-3.5 h-3.5" />}
                 >
                   Send
                 </GlossyButton>
