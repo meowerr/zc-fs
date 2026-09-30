@@ -185,15 +185,26 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
    - [ ] Verify active focus ring (`focus:outline-none focus:ring-2 focus:ring-telemetry-blue`) is clearly visible on every button, input, and modal close control.
    - [ ] Verify `Esc` closes modals (`TaskDetailModal`, `RoleGuideModal`, `NotificationDrawer`).
 
-### C. Live PostgreSQL Backend & RLS Execution (When Supabase project linked)
-1. **Execute Migrations:**
-   - [ ] Run `001_initial_schema.sql`, `002_rls_policies.sql`, and `003_seed_data.sql` in Supabase SQL Editor.
-2. **Execute Automated RLS Test:**
-   - [ ] Run `supabase/tests/rls_security_test.sql` and verify output prints:
-     - `TEST PASSED: Domain constraint blocked unauthorized email domain (gmail.com).`
-     - `TEST PASSED: Member VD can only see own group tasks and is blocked from other groups.`
-     - `TEST PASSED: Member VD is blocked from Heads-Only and other sub-teams channels.`
-     - `TEST PASSED: Pending user sees 0 tasks and 0 channels.`
+### C. Live PostgreSQL Backend & RLS Execution (Supabase Project Linked)
+1. **Migrations & Seed:**
+   - [x] [VERIFIED: real PostgreSQL execution on live Supabase instance] Schema (`001_initial_schema.sql`), RLS policies (`002_rls_policies.sql`), and default groups/channels (`003_seed_data.sql`) successfully executed.
+2. **Automated RLS Security Test:**
+   - [x] [VERIFIED: 7/7 tests passed in Supabase SQL Editor via supabase/tests/rls_security_test.sql]:
+     - Test 1 (Domain Constraint Block): Non-`@zewailcity.edu.eg` rejected.
+     - Test 2 (Self-Promotion Blocked): Trigger strictly blocks non-admin role/status/group modifications.
+     - Test 3 (Approval Escalation Blocked): Members cannot approve accounts.
+     - Test 4 (Cross-Group Isolation): Member VD sees 0 rows of Aero tasks, submissions, comments, channels, and messages.
+     - Test 5 (Heads-Only Protection): Member VD blocked from heads_only channels.
+     - Test 6 (Announcements Broadcast Block): Member VD cannot insert into announcements.
+     - Test 7 (Pending Quarantine): Pending user sees 0 rows across all app tables.
+3. **Slice 2: Real Auth, Email Confirmation, Pending State & Admin Approval:**
+   - [x] [VERIFIED: node scripts/verify-slice-2.mjs executed against live Supabase]:
+     - Tested with 2 real authenticated users (`admin_pitlane@zewailcity.edu.eg` and `engineer_aero@zewailcity.edu.eg`).
+     - Engineer authenticated with real session token and confirmed in pending quarantine (0 tasks, 0 channels).
+     - Engineer self-promotion to admin blocked with exception `"Access Denied: Only approved Club Admins can modify role, group assignment, or account status."`
+     - Club Admin inspected pending approval queue in real-time.
+     - Club Admin approved Engineer into `Technical - Vehicle Dynamics` (`11111111-1111-1111-1111-111111111111`) with role `member`.
+     - Engineer workspace telemetry immediately unlocked: gained live access to `#ch-vehicle-dynamics` and `#ch-announcements`.
 
 ---
 

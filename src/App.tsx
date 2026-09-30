@@ -15,6 +15,7 @@ import { useTasks } from './hooks/useTasks';
 import { useRealtimeChat } from './hooks/useRealtimeChat';
 import { useNotifications } from './hooks/useNotifications';
 import { UserRole, SubmissionReviewStatus, SubmissionType, TaskType, TaskPriority } from './lib/database.types';
+import { isDemoMode } from './lib/supabase';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
@@ -89,7 +90,7 @@ export const App: React.FC = () => {
       <PendingApprovalView
         user={currentUser}
         onSignOut={signOut}
-        onSwitchToAdmin={() => switchDemoPersona('admin@zewailcity.edu.eg')}
+        onSwitchToAdmin={isDemoMode ? () => switchDemoPersona('admin@zewailcity.edu.eg') : undefined}
       />
     );
   }

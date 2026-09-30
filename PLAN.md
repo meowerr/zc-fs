@@ -469,7 +469,12 @@ zc-fs/
     - [VERIFIED: real PostgreSQL execution on live Supabase project] Consolidated single-file schema and seed migration (`supabase/000_complete_setup.sql`).
     - [VERIFIED: 7/7 passed on live Supabase instance with output proof] Automated PostgreSQL security invariant test suite (`supabase/tests/rls_security_test.sql`).
   - **Slice 2: Real Auth, Email Confirmation, Pending Gateway & Admin Approval**
-    - [READY TO START: Awaiting user prompt go-ahead]
+    - [VERIFIED: node scripts/verify-slice-2.mjs executed against live Supabase] Tested with 2 real authenticated users (`admin_pitlane@zewailcity.edu.eg` and `engineer_aero@zewailcity.edu.eg`):
+      1. Non-domain signups blocked by database trigger.
+      2. Authenticated pending user quarantined: sees 0 tasks and 0 channels.
+      3. Client-side privilege escalation blocked by `prevent_profile_privilege_escalation()` database trigger.
+      4. Club Admin queries pending approval queue and executes approval update into `Technical - Vehicle Dynamics` (`11111111-1111-1111-1111-111111111111`) with role `member`.
+      5. Post-approval telemetry unlocked: Engineer gains real-time access to `#ch-vehicle-dynamics` and `#ch-announcements`.
   - **Slice 3: Real Tasks, Assignees, Submissions & Review Workflow**
     - [PENDING]
   - **Slice 4: Real Channels, Direct Messages & Realtime Websockets**

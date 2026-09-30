@@ -13,6 +13,7 @@ import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
 import { GlowInput } from '../common/GlowInput';
 import { UNIVERSITY_DOMAIN, isUniversityEmail } from '../../hooks/useAuth';
+import { isDemoMode } from '../../lib/supabase';
 
 interface AuthScreenProps {
   onLogin: (email: string, password?: string) => Promise<void>;
@@ -209,31 +210,33 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
           </div>
         </GlassCard>
 
-        {/* Quick Demo Persona Shortcuts */}
-        <GlassCard variant="telemetry" className="p-4 space-y-2">
-          <div className="flex items-center justify-between text-[11px] font-mono font-bold text-chrome-900/70 dark:text-white/60 uppercase">
-            <span>⚡ Instant Demo Personas</span>
-            <span className="text-telemetry-aqua">Click to Test</span>
-          </div>
+        {/* Quick Demo Persona Shortcuts (Gated by isDemoMode) */}
+        {isDemoMode && (
+          <GlassCard variant="telemetry" className="p-4 space-y-2">
+            <div className="flex items-center justify-between text-[11px] font-mono font-bold text-chrome-900/70 dark:text-white/60 uppercase">
+              <span>⚡ Instant Demo Personas</span>
+              <span className="text-telemetry-aqua">Click to Test</span>
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {demoAccounts.map((acc) => (
-              <button
-                key={acc.email}
-                type="button"
-                onClick={() => onSelectDemoPersona(acc.email)}
-                className="p-2.5 rounded-xl bg-white/60 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 text-left hover:border-telemetry-blue dark:hover:border-telemetry-aqua transition-all cursor-pointer group"
-              >
-                <div className="font-display font-bold text-xs text-chrome-900 dark:text-white group-hover:text-telemetry-blue dark:group-hover:text-telemetry-aqua transition-colors">
-                  {acc.label}
-                </div>
-                <div className="text-[10px] text-chrome-900/50 dark:text-white/40 truncate">
-                  {acc.desc}
-                </div>
-              </button>
-            ))}
-          </div>
-        </GlassCard>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {demoAccounts.map((acc) => (
+                <button
+                  key={acc.email}
+                  type="button"
+                  onClick={() => onSelectDemoPersona(acc.email)}
+                  className="p-2.5 rounded-xl bg-white/60 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 text-left hover:border-telemetry-blue dark:hover:border-telemetry-aqua transition-all cursor-pointer group"
+                >
+                  <div className="font-display font-bold text-xs text-chrome-900 dark:text-white group-hover:text-telemetry-blue dark:group-hover:text-telemetry-aqua transition-colors">
+                    {acc.label}
+                  </div>
+                  <div className="text-[10px] text-chrome-900/50 dark:text-white/40 truncate">
+                    {acc.desc}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </GlassCard>
+        )}
       </div>
     </div>
   );

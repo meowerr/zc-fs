@@ -24,6 +24,27 @@ export function useAuth() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Fetch all accessible profiles (scoped by RLS)
+  const fetchAllProfiles = useCallback(async () => {
+    if (!isLiveSupabaseConfigured) return;
+    try {
+      const { data, error: profilesErr } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (profilesErr) {
+        console.warn('Profiles fetch notice:', profilesErr.message);
+        return;
+      }
+      if (data) {
+        setAllProfiles(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch all profiles:', err);
+    }
+  }, []);
+
   // Fetch or sync user profile
   const fetchProfile = useCallback(async (userId: string, userEmail: string) => {
     if (!isLiveSupabaseConfigured) {
@@ -47,6 +68,8 @@ export function useAuth() {
       }
 
       setCurrentUser(data);
+      // Once current user is resolved, load all accessible profiles
+      fetchAllProfiles();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to fetch user profile';
       console.error('Profile fetch error:', err);
@@ -54,7 +77,7 @@ export function useAuth() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [fetchAllProfiles]);
 
   useEffect(() => {
     if (!isLiveSupabaseConfigured) {
@@ -80,10 +103,28 @@ export function useAuth() {
       }
     });
 
+    // Realtime listener for profile status changes (e.g. Admin approvals)
+    const profileChannel = supabase
+      .channel('public:profiles_realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'profiles' },
+        (payload) => {
+          fetchAllProfiles();
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session?.user && payload.new && (payload.new as Profile).id === session.user.id) {
+              setCurrentUser(payload.new as Profile);
+            }
+          });
+        }
+      )
+      .subscribe();
+
     return () => {
       subscription.unsubscribe();
+      supabase.removeChannel(profileChannel);
     };
-  }, [fetchProfile]);
+  }, [fetchProfile, fetchAllProfiles]);
 
   // Sign In function
   const signIn = async (email: string, password?: string) => {
@@ -237,6 +278,8 @@ export function useAuth() {
       throw updateErr;
     }
 
+    await fetchAllProfiles();
+
     if (currentUser?.id === userId) {
       fetchProfile(userId, currentUser.email);
     }
@@ -262,6 +305,8 @@ export function useAuth() {
     if (rejectErr) {
       throw rejectErr;
     }
+
+    await fetchAllProfiles();
   };
 
   return {

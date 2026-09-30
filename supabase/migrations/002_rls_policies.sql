@@ -446,3 +446,15 @@ CREATE POLICY "Manage own notifications"
     TO authenticated
     USING (user_id = auth.uid() AND public.is_approved_user())
     WITH CHECK (user_id = auth.uid() AND public.is_approved_user());
+
+-- ------------------------------------------------------------------------------
+-- SUPABASE REALTIME CONFIGURATION
+-- ------------------------------------------------------------------------------
+DO $$
+BEGIN
+    BEGIN
+        ALTER PUBLICATION supabase_realtime ADD TABLE profiles, tasks, task_assignees, task_submissions, task_comments, messages, notifications;
+    EXCEPTION WHEN duplicate_object THEN
+        NULL;
+    END;
+END $$;
