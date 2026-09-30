@@ -437,12 +437,12 @@ zc-fs/
     - *Group Head ("Pit Wall"):* Group overview matrix (who has what, workload, awaiting review).
     - *Club Admin ("Mission Control"):* Club-wide velocity and health summary across all 5 groups.
 
-- [ ] **Phase 3: Realtime Messaging & Channels**
-  - [ ] Group Channel (one for each of the 5 sub-teams).
-  - [ ] "Pit Wall" Heads-Only Channel (restricted to Group Heads and Club Admin).
-  - [ ] Announcements Channel (broadcast read-only for members, postable by Admin/Heads).
-  - [ ] Direct Messaging: 1-on-1 chats (within group for members; cross-group for Heads/Admin).
-  - [ ] Supabase Realtime websocket subscriptions for new messages and unread badge counters.
+- [x] **Phase 3: Realtime Messaging & Channels**
+  - [x] Group Channel (one for each of the 5 sub-teams).
+  - [x] "Pit Wall" Heads-Only Channel (restricted to Group Heads and Club Admin).
+  - [x] Announcements Channel (broadcast read-only for members, postable by Admin/Heads).
+  - [x] Direct Messaging: 1-on-1 chats (within group for members; cross-group for Heads/Admin).
+  - [x] Supabase Realtime websocket subscriptions for new messages and unread badge counters.
 
 - [ ] **Phase 4: Files, Attachments & In-App Notifications**
   - [ ] File upload handling in tasks and chat within free-tier limits (client-side validation for type & size < 25MB).

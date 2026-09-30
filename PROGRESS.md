@@ -1,8 +1,8 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Phase 2 Complete -> Ready for Phase 3 (Realtime Messaging & Channels)
-- **Active Task:** Phase 2 Completed and Verified. Ready for User Go-Ahead.
+- **Current Phase:** Phase 3 Complete -> **MVP MILESTONE ACHIEVED** (Phases 0–3 Done)
+- **Active Task:** Completed Phase 3 (Realtime Messaging & Channels). Ready for Phase 4 (Files & Notifications) or deployment go-ahead.
 
 ---
 
@@ -12,7 +12,7 @@
   - Implemented Y2K design tokens and reusable UI components (`GlassCard`, `GlossyButton`, `LedStatusChip`, `SegmentedGauge`, `ChromeAvatar`, `GlowInput`).
   - Implemented responsive PWA layout (`TopHeader`, `BottomNav`, `Sidebar`, `AppShell`).
   - Authored full PostgreSQL migration suite with RLS and domain triggers (`001_initial_schema.sql`, `002_rls_policies.sql`, `003_seed_data.sql`, `rls_security_test.sql`).
-  - Setup CI/CD build check and keep-alive cron workflow.
+  - Setup CI/CD build check and keep-alive cron workflow (`keep-alive.yml`).
 - [x] **Phase 1: Authentication & Admin Approval Flow**
   - Built [`useAuth.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useAuth.ts) with real Supabase Auth + mock fallback mode.
   - Implemented university domain enforcement client-side and server-side: non-`@zewailcity.edu.eg` emails are rejected.
@@ -26,16 +26,22 @@
   - Built [`TaskCreateModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TaskCreateModal.tsx) for Group Heads & Admin: sub-team binding, type, priority, deadline date/time, multi-assignee picker, and reference links.
   - Built [`TaskDetailModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TaskDetailModal.tsx): overview & CAD links, work submission form (`link`, `note`, `file`), review feedback flow (`approve` or `request changes`), and live comment thread.
   - Built [`TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx): telemetry count metrics, search bar, filter pills (`All`, `My Deliverables`, `In Review`, `In Progress`, `Overdue`, `Approved`), and sub-team selector for Admin.
-  - Verified production build: 130 KB gzipped JS (well below the 200 KB target) with zero errors.
+- [x] **Phase 3: Realtime Messaging & Channels (MVP Definition of Done)**
+  - Built [`useRealtimeChat.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useRealtimeChat.ts) with Supabase Realtime channel subscription + demo offline sync.
+  - Implemented 5 sub-team channels (Vehicle Dynamics, Aerodynamics, Electronics, Powertrain, Operations).
+  - Implemented "Pit Wall" Heads-Only channel (cross-group leadership, restricted to Group Heads & Admin).
+  - Implemented "Mission Control Announcements" channel (club-wide broadcast, read-only for members, postable by Admin/Heads).
+  - Implemented Direct Messaging system with scoped recipient filtering and [`NewDMModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/NewDMModal.tsx).
+  - Built [`ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx) and [`MessageBubble.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/MessageBubble.tsx) with Y2K glass design, attachment link helpers, and responsive sidebar.
+  - Optimized bundle with `manualChunks`: App JS is ~26.7 KB gzipped, total vendor chunks ~108 KB gzipped.
+  - Live server active at `http://localhost:5174/` and `http://10.54.79.187:5174/`.
 
 ---
 
-## 2. What's Next (Phase 3: Realtime Messaging & Channels)
-- [ ] Group channel for each of the 5 sub-teams.
-- [ ] "Pit Wall" Heads-Only channel (cross-group coordination for Heads & Admin).
-- [ ] Announcements channel (club-wide broadcast, read-only for members).
-- [ ] Direct messages (within group for members; cross-group for Heads/Admin).
-- [ ] Realtime message delivery & unread badge counters.
+## 2. What's Next (Phase 4: Files & Notifications)
+- [ ] File upload modal and validation within free-tier limits (<25MB per file).
+- [ ] In-app notification center (task assigned, review completed, new mentions).
+- [ ] Audio telemetry feedback chimes (optional subtle toggle).
 
 ---
 
