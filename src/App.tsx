@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { F1LaunchTransition } from './components/transitions/F1LaunchTransition';
 import { AppShell } from './components/layout/AppShell';
 import { NavTab } from './components/layout/BottomNav';
 import { MissionControl } from './components/dashboard/MissionControl';
@@ -20,6 +21,9 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [showLaunchAnimation, setShowLaunchAnimation] = useState(false);
+  const [animationComplete, setAnimationComplete] = useState(false);
+  const prevUserRef = useRef<boolean>(false);
 
   const {
     currentUser,
@@ -71,12 +75,44 @@ export const App: React.FC = () => {
     requestWebPush,
   } = useNotifications(currentUser);
 
+  // ─── F1 Launch Animation Trigger ──────────────────────────────
+  // Detect fresh login: currentUser transitions from null → Profile
+  // Skip animation on page refresh (existing session)
+  useEffect(() => {
+    if (currentUser && !prevUserRef.current) {
+      // Only trigger animation for approved users on fresh login
+      // Check if sessionStorage flag exists (set during this browser session)
+      const hasAnimated = sessionStorage.getItem('zcfs_launch_animated');
+      
+      if (!hasAnimated && currentUser.status === 'approved') {
+        setShowLaunchAnimation(true);
+        sessionStorage.setItem('zcfs_launch_animated', '1');
+      } else {
+        setAnimationComplete(true);
+      }
+    }
+    prevUserRef.current = !!currentUser;
+  }, [currentUser]);
+
   // 1. Not Authenticated -> Show Auth Screen (strictly Supabase Auth)
   if (!currentUser) {
     return (
       <AuthScreen
         onLogin={signIn}
         onSignup={signUp}
+      />
+    );
+  }
+
+  // 1.5 F1 Launch Animation (plays between login success and dashboard)
+  if (showLaunchAnimation && !animationComplete) {
+    return (
+      <F1LaunchTransition
+        isActive={true}
+        onComplete={() => {
+          setShowLaunchAnimation(false);
+          setAnimationComplete(true);
+        }}
       />
     );
   }
