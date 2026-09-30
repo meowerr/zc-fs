@@ -426,13 +426,13 @@ zc-fs/
   - [x] Club Admin Approval Dashboard: view pending users, approve/reject, assign group and role (`head` or `member`).
   - [x] Role-based route guard and initial Club Admin seeding script.
 
-- [ ] **Phase 2: Task Management System (Core Work Value)**
-  - [ ] Group Head Task Creation: title, description, assignee(s), deadline, priority, type, attachments/links.
-  - [ ] Status Progression Workflow: `To Do` -> `In Progress` -> `Submitted` -> `Changes Requested` / `Approved` -> `Done`.
-  - [ ] Member Work Submission: file upload, GitHub/document link, or text note.
-  - [ ] Head Review Modal: feedback notes, approve or request changes with revision history preservation.
-  - [ ] Per-task comment thread with realtime updates.
-  - [ ] Role-tailored dashboards:
+- [x] **Phase 2: Task Management System (Core Work Value)**
+  - [x] Group Head Task Creation: title, description, assignee(s), deadline, priority, type, attachments/links.
+  - [x] Status Progression Workflow: `To Do` -> `In Progress` -> `Submitted` -> `Changes Requested` / `Approved` -> `Done`.
+  - [x] Member Work Submission: file upload, GitHub/document link, or text note.
+  - [x] Head Review Modal: feedback notes, approve or request changes with revision history preservation.
+  - [x] Per-task comment thread with realtime updates.
+  - [x] Role-tailored dashboards:
     - *Member:* "My Tasks" telemetry view sorted by deadline with overdue alerts.
     - *Group Head ("Pit Wall"):* Group overview matrix (who has what, workload, awaiting review).
     - *Club Admin ("Mission Control"):* Club-wide velocity and health summary across all 5 groups.

@@ -1,8 +1,8 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Phase 1 Complete -> Ready for Phase 2 (Task Management System)
-- **Active Task:** Phase 1 Completed and Verified. Ready for User Go-Ahead.
+- **Current Phase:** Phase 2 Complete -> Ready for Phase 3 (Realtime Messaging & Channels)
+- **Active Task:** Phase 2 Completed and Verified. Ready for User Go-Ahead.
 
 ---
 
@@ -14,23 +14,28 @@
   - Authored full PostgreSQL migration suite with RLS and domain triggers (`001_initial_schema.sql`, `002_rls_policies.sql`, `003_seed_data.sql`, `rls_security_test.sql`).
   - Setup CI/CD build check and keep-alive cron workflow.
 - [x] **Phase 1: Authentication & Admin Approval Flow**
-  - Built [`useAuth.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useAuth.ts) with real Supabase Auth integration + mock fallback mode for instant local testing.
+  - Built [`useAuth.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useAuth.ts) with real Supabase Auth + mock fallback mode.
   - Implemented university domain enforcement client-side and server-side: non-`@zewailcity.edu.eg` emails are rejected.
-  - Built [`AuthScreen.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/AuthScreen.tsx) with Y2K aesthetic, login/register tabs, instant domain auto-append, and one-click demo persona switcher.
+  - Built [`AuthScreen.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/AuthScreen.tsx) with login/register tabs, instant domain auto-append, and one-click demo persona switcher.
   - Built [`PendingApprovalView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/PendingApprovalView.tsx) showing gateway lock and RLS status for unapproved users.
-  - Built [`AdminApprovalHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/admin/AdminApprovalHub.tsx) for Club Admin to inspect pending engineers, assign to one of the 5 official sub-teams, assign role (`head` or `member`), and activate or reject.
+  - Built [`AdminApprovalHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/admin/AdminApprovalHub.tsx) for Club Admin to inspect pending engineers, assign to one of the 5 sub-teams, assign role (`head` or `member`), and activate or reject.
   - Integrated role-based routing in [`App.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/App.tsx).
-  - Verified production build: 122 KB gzipped JS (well below 200 KB mobile target) with zero errors.
+- [x] **Phase 2: Task Management System (Core Work Value)**
+  - Built [`useTasks.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useTasks.ts) with task CRUD, multi-version submissions (`v1`, `v2`, etc.), review feedback loops, and per-task discussion threads.
+  - Built [`TaskCard.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TaskCard.tsx) with dual-encoded LED chips, task type badges, deadline countdowns, and overdue alerts.
+  - Built [`TaskCreateModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TaskCreateModal.tsx) for Group Heads & Admin: sub-team binding, type, priority, deadline date/time, multi-assignee picker, and reference links.
+  - Built [`TaskDetailModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TaskDetailModal.tsx): overview & CAD links, work submission form (`link`, `note`, `file`), review feedback flow (`approve` or `request changes`), and live comment thread.
+  - Built [`TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx): telemetry count metrics, search bar, filter pills (`All`, `My Deliverables`, `In Review`, `In Progress`, `Overdue`, `Approved`), and sub-team selector for Admin.
+  - Verified production build: 130 KB gzipped JS (well below the 200 KB target) with zero errors.
 
 ---
 
-## 2. What's Next (Phase 2: Task Management System)
-- [ ] Task creation modal for Group Heads: title, description, assignee(s), deadline, priority, type (`read`, `code`, `design`, `report`, `research`, `other`), links.
-- [ ] Status workflow lifecycle: `To Do` -> `In Progress` -> `Submitted` -> `Changes Requested` / `Approved` -> `Done`.
-- [ ] Work submission modal for Members: file upload, link, text notes with revision tracking.
-- [ ] Head review interface: approve or request changes with feedback history.
-- [ ] Per-task comment thread.
-- [ ] Role dashboards: Member "My Tasks", Head "Pit Wall" group overview, Admin club-wide summary.
+## 2. What's Next (Phase 3: Realtime Messaging & Channels)
+- [ ] Group channel for each of the 5 sub-teams.
+- [ ] "Pit Wall" Heads-Only channel (cross-group coordination for Heads & Admin).
+- [ ] Announcements channel (club-wide broadcast, read-only for members).
+- [ ] Direct messages (within group for members; cross-group for Heads/Admin).
+- [ ] Realtime message delivery & unread badge counters.
 
 ---
 
