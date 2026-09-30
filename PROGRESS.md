@@ -15,13 +15,13 @@
 > - `[IMPLEMENTED, UNTESTED]`: Source code or SQL written, awaiting live cloud backend / physical device test.
 
 ### Phase 0: Foundation & Core Scaffold
-- `[VERIFIED: npm run build & node tools/verify-suite.mjs (code 0)]` Scaffolded Vite + React 18 + TypeScript + Tailwind CSS with `vite-plugin-pwa`.
+- `[VERIFIED: npm run build & node scripts/verify-suite.mjs (code 0)]` Scaffolded Vite + React 18 + TypeScript + Tailwind CSS with `vite-plugin-pwa`.
 - `[VERIFIED: dist/assets/index-D9GdXRqb.css (8.07 KB gzip)]` Implemented Y2K design tokens and reusable UI components (`GlassCard`, `GlossyButton`, `LedStatusChip`, `SegmentedGauge`, `ChromeAvatar`, `GlowInput`).
-- `[VERIFIED: node tools/verify-suite.mjs, dist/manifest.webmanifest (standalone, icons, theme)]` PWA manifest and service worker precaching.
+- `[VERIFIED: node scripts/verify-suite.mjs, dist/manifest.webmanifest (standalone, icons, theme)]` PWA manifest and service worker precaching.
 - `[VERIFIED: UI components compile and render]` Responsive PWA layout (`TopHeader`, `BottomNav`, `Sidebar`, `AppShell`).
 - PostgreSQL migration suite:
   - `[IMPLEMENTED, UNTESTED: requires live PostgreSQL connection]` `001_initial_schema.sql` (10 tables, domain check trigger, enums).
-  - `[VERIFIED: node tools/verify-suite.mjs test vector checks with 9 email formats]` Email domain restriction logic (`@zewailcity.edu.eg`).
+  - `[VERIFIED: node scripts/verify-suite.mjs test vector checks with 9 email formats]` Email domain restriction logic (`@zewailcity.edu.eg`).
   - `[IMPLEMENTED, UNTESTED: 387 lines in 002_rls_policies.sql]` Row Level Security (RLS) policies for all 4 roles across all tables.
   - `[IMPLEMENTED, UNTESTED: 003_seed_data.sql]` 5 official sub-teams seeded in SQL.
   - `[MOCK: in-memory profiles in useAuth.ts]` Seed data demo personas in frontend.
@@ -30,7 +30,7 @@
 
 ### Phase 1: Authentication & Admin Approval Flow
 - `[MOCK: demo switcher fallback in useAuth.ts]` / `[IMPLEMENTED, UNTESTED: Supabase Auth client]` Built [`useAuth.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useAuth.ts) with real Supabase Auth + mock fallback mode.
-- `[VERIFIED: node tools/verify-suite.mjs [4/7] passes 9/9 tests]` University domain enforcement: non-`@zewailcity.edu.eg` emails are rejected.
+- `[VERIFIED: node scripts/verify-suite.mjs [4/7] passes 9/9 tests]` University domain enforcement: non-`@zewailcity.edu.eg` emails are rejected.
 - `[VERIFIED: component compiled and interactive in Vite preview]` Built [`AuthScreen.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/AuthScreen.tsx) with login/register tabs, instant domain auto-append, and one-click demo persona switcher.
 - `[VERIFIED: component compiled and rendered]` Built [`PendingApprovalView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/PendingApprovalView.tsx) showing gateway lock and RLS status for unapproved users.
 - `[VERIFIED: component compiled and functional in demo]` Built [`AdminApprovalHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/admin/AdminApprovalHub.tsx) for Club Admin to inspect pending engineers, assign to one of the 5 sub-teams, assign role (`head` or `member`), and activate or reject.
@@ -50,7 +50,7 @@
 - `[VERIFIED: components compiled and rendered in browser]` Built [`ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx) and [`MessageBubble.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/MessageBubble.tsx).
 
 ### Phase 4: Files, Attachments & In-App Notifications
-- `[VERIFIED: node tools/verify-suite.mjs [5/7] passes 7/7 tests (25MB quota, CAD/PDF/ZIP check)]` Built [`storage.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/lib/storage.ts) client validation.
+- `[VERIFIED: node scripts/verify-suite.mjs [5/7] passes 7/7 tests (25MB quota, CAD/PDF/ZIP check)]` Built [`storage.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/lib/storage.ts) client validation.
 - `[IMPLEMENTED, UNTESTED: supabase.storage.upload in storage.ts, requires live bucket]` Live cloud storage upload.
 - `[VERIFIED: component compiled and rendered]` Built [`FileUploadModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/FileUploadModal.tsx) with drag-and-drop file target and quota usage segmented gauge.
 - `[VERIFIED: Web Audio API tested in browser]` Built [`telemetryAudio.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/lib/telemetryAudio.ts) using Web Audio API synthesis for zero-download futuristic sound chimes and approval twinkles.
@@ -58,12 +58,12 @@
 
 ### Phase 5: Polish, Accessibility & Production Delivery
 - `[VERIFIED: localStorage check, classList toggle in AppShell.tsx]` Dark Mode ("Midnight" vs "Chrome") persistent toggle in [`TopHeader.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/layout/TopHeader.tsx) and [`AppShell.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/layout/AppShell.tsx).
-- `[VERIFIED: node tools/verify-suite.mjs [6/7] passes RFC 4180 escaping and JSON roundtrip]` RFC 4180 CSV spreadsheet export and JSON telemetry dump in [`exportUtils.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/lib/exportUtils.ts) and [`TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx).
+- `[VERIFIED: node scripts/verify-suite.mjs [6/7] passes RFC 4180 escaping and JSON roundtrip]` RFC 4180 CSV spreadsheet export and JSON telemetry dump in [`exportUtils.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/lib/exportUtils.ts) and [`TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx).
 - `[VERIFIED: component compiled and rendered]` Custom SVG racing wheel, helmet, and star empty state illustrations in [`EmptyState.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/EmptyState.tsx).
 - `[VERIFIED: component compiled and wired to TopHeader]` Interactive Formula Student Engineering Protocol Guide modal in [`RoleGuideModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/RoleGuideModal.tsx).
 - `[IMPLEMENTED, UNTESTED: manual audit required]` WCAG AA contrast on glass surfaces and keyboard accessibility.
 - `[IMPLEMENTED, UNTESTED: physical phone testing required]` PWA installation audit on iOS and Android devices.
-- `[VERIFIED: node tools/verify-suite.mjs [2/7], total gzip 146 KB < 200 KB budget, main JS 31.5 KB]` Verified production bundle size.
+- `[VERIFIED: node scripts/verify-suite.mjs [2/7], total gzip 146 KB < 200 KB budget, main JS 31.5 KB]` Verified production bundle size.
 
 ---
 

@@ -414,7 +414,7 @@ zc-fs/
 > - `[IMPLEMENTED, UNTESTED]`: Production code or SQL migration authored, awaiting cloud/device deployment or manual testing.
 
 - **Phase 0: Foundation & Core Scaffold**
-  - [VERIFIED: npm run build & node tools/verify-suite.mjs, zero errors] Initialize repository with Vite, React 18, TypeScript, Tailwind CSS, Lucide.
+  - [VERIFIED: npm run build & node scripts/verify-suite.mjs, zero errors] Initialize repository with Vite, React 18, TypeScript, Tailwind CSS, Lucide.
   - [VERIFIED: dist/manifest.webmanifest & dist/sw.js verified in verify-suite.mjs] Configure `vite-plugin-pwa` with manifest, theme color, icons, and offline caching strategy.
   - [VERIFIED: tailwind.config.js tokens compiled to dist/assets/index-D9GdXRqb.css (8.07 KB gzip)] Design Y2K Futurism design system tokens (colors, fonts, glassmorphism utilities).
   - PostgreSQL migration scripts:
