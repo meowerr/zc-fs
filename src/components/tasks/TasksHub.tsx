@@ -46,6 +46,7 @@ interface TasksHubProps {
   onSubmitWork: (taskId: string, type: SubmissionType, content: string, notes: string) => Promise<void>;
   onReviewSubmission: (submissionId: string, taskId: string, status: SubmissionReviewStatus, feedback: string) => Promise<void>;
   onAddComment: (taskId: string, content: string) => Promise<void>;
+  onDeleteTask: (taskId: string) => Promise<void>;
 }
 
 export const TasksHub: React.FC<TasksHubProps> = ({
@@ -59,6 +60,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   onSubmitWork,
   onReviewSubmission,
   onAddComment,
+  onDeleteTask,
 }) => {
   const [filter, setFilter] = useState<'all' | 'my_tasks' | 'submitted' | 'in_progress' | 'approved' | 'overdue'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -302,6 +304,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
           onSubmitWork={onSubmitWork}
           onReviewSubmission={onReviewSubmission}
           onAddComment={onAddComment}
+          onDeleteTask={onDeleteTask}
         />
       )}
     </div>

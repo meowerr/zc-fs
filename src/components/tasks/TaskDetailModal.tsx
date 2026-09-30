@@ -7,7 +7,9 @@ import {
   MessageSquare, 
   History, 
   Sparkles,
-  Link as LinkIcon
+  Link as LinkIcon,
+  Trash2,
+  AlertTriangle
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
@@ -36,6 +38,7 @@ interface TaskDetailModalProps {
   onSubmitWork: (taskId: string, type: SubmissionType, content: string, notes: string) => Promise<void>;
   onReviewSubmission: (submissionId: string, taskId: string, status: SubmissionReviewStatus, feedback: string) => Promise<void>;
   onAddComment: (taskId: string, content: string) => Promise<void>;
+  onDeleteTask?: (taskId: string) => Promise<void>;
 }
 
 export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
@@ -49,9 +52,15 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   onSubmitWork,
   onReviewSubmission,
   onAddComment,
+  onDeleteTask,
 }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'submissions' | 'discussion'>('overview');
   
+  // Delete task state
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+
   // Submit work state
   const [isSubmittingWork, setIsSubmittingWork] = useState(false);
   const [subType, setSubType] = useState<SubmissionType>('link');
@@ -135,6 +144,16 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
           <div className="flex items-center gap-2 flex-shrink-0">
             <LedStatusChip status={task.status} />
+            {isHeadOrAdmin && onDeleteTask && (
+              <button
+                onClick={() => setIsConfirmingDelete(true)}
+                className="p-1.5 px-2.5 rounded-lg text-telemetry-red/80 hover:text-telemetry-red hover:bg-telemetry-red/10 border border-telemetry-red/20 hover:border-telemetry-red/40 transition-all flex items-center gap-1.5 text-xs font-mono font-bold cursor-pointer"
+                title="Delete Deliverable"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Delete</span>
+              </button>
+            )}
             <button
               onClick={onClose}
               className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors text-chrome-900/60 dark:text-white/60 cursor-pointer"
@@ -544,6 +563,61 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           )}
         </div>
       </GlassCard>
+
+      {/* Delete Task Confirmation Modal */}
+      {isConfirmingDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="w-full max-w-md p-6 rounded-2xl bg-chrome-50 dark:bg-midnight-950 border border-telemetry-red/40 shadow-2xl space-y-4">
+            <div className="flex items-center gap-3 text-telemetry-red">
+              <AlertTriangle className="w-6 h-6 shrink-0" />
+              <h3 className="font-display font-black text-lg uppercase tracking-wider text-chrome-900 dark:text-white">
+                Delete Task Permanently?
+              </h3>
+            </div>
+            <p className="text-xs text-chrome-900/70 dark:text-white/70 leading-relaxed">
+              Are you sure you want to permanently delete <strong className="text-chrome-900 dark:text-white font-mono">{task.title}</strong>? 
+              This will remove this task, all versioned submissions, reviews, and discussion comments from the database.
+            </p>
+            {deleteError && (
+              <div className="p-3 rounded-lg bg-telemetry-red/10 border border-telemetry-red/30 text-telemetry-red text-xs font-mono">
+                {deleteError}
+              </div>
+            )}
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => { setIsConfirmingDelete(false); setDeleteError(null); }}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-lg text-xs font-mono font-bold border border-chrome-300 dark:border-white/20 text-chrome-900/70 dark:text-white/70 hover:bg-white/10 transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!onDeleteTask) return;
+                  setIsDeleting(true);
+                  setDeleteError(null);
+                  try {
+                    await onDeleteTask(task.id);
+                    setIsConfirmingDelete(false);
+                    onClose();
+                  } catch (err: unknown) {
+                    setDeleteError(err instanceof Error ? err.message : 'Deletion failed');
+                  } finally {
+                    setIsDeleting(false);
+                  }
+                }}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-lg text-xs font-mono font-bold bg-telemetry-red text-white hover:bg-telemetry-red/90 shadow-md shadow-telemetry-red/30 transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{isDeleting ? 'Deleting...' : 'Confirm Delete'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

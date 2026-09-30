@@ -18,6 +18,44 @@
   body {
     overflow-x: hidden;
   }
+
+  /* Centralized Theme-Aware Telemetry Scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(180, 195, 215, 0.6) transparent;
+  }
+
+  .dark * {
+    scrollbar-color: rgba(47, 107, 255, 0.4) transparent;
+  }
+
+  /* WebKit & Chromium */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(180, 195, 215, 0.6);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(47, 107, 255, 0.7);
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: rgba(47, 107, 255, 0.4);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: rgba(34, 228, 240, 0.7);
+    box-shadow: 0 0 8px rgba(34, 228, 240, 0.5);
+  }
 }
 
 /* Custom Y2K subtle animations */

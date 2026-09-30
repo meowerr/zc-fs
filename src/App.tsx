@@ -27,11 +27,14 @@ export const App: React.FC = () => {
   const {
     currentUser,
     allProfiles,
+    allGroups,
     signIn,
     signUp,
     signOut,
     approveUser,
     rejectUser,
+    createGroup,
+    removeMemberFromGroup,
   } = useAuth();
 
   const {
@@ -40,6 +43,7 @@ export const App: React.FC = () => {
     comments,
     createTask,
     updateTaskStatus,
+    deleteTask,
     submitWork,
     reviewSubmission,
     addComment,
@@ -149,6 +153,11 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleDeleteTask = async (taskId: string) => {
+    await deleteTask(taskId);
+    addNotification('announcement', 'Deliverable Removed', 'Task and associated data deleted from database.');
+  };
+
   const authenticatedContent = (
     <>
       <AppShell
@@ -162,16 +171,21 @@ export const App: React.FC = () => {
         notificationCount={notifUnreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
         onOpenGuide={() => setIsGuideOpen(true)}
+        groups={allGroups}
+        tasks={tasks}
       >
         {/* View Switching based on active tab & role */}
         {activeTab === 'admin' && currentUser.role === 'admin' ? (
           <AdminApprovalHub
             profiles={allProfiles}
+            groups={allGroups}
             onApproveUser={async (userId, groupId, role) => {
               await approveUser(userId, groupId, role);
               addNotification('announcement', 'Engineer Approved', 'User activated and assigned to sub-team.');
             }}
             onRejectUser={rejectUser}
+            onCreateGroup={createGroup}
+            onRemoveMember={removeMemberFromGroup}
           />
         ) : activeTab === 'tasks' ? (
           <TasksHub
@@ -185,6 +199,7 @@ export const App: React.FC = () => {
             onSubmitWork={handleSubmitWork}
             onReviewSubmission={handleReviewSubmission}
             onAddComment={addComment}
+            onDeleteTask={handleDeleteTask}
           />
         ) : activeTab === 'chat' ? (
           <ChatView

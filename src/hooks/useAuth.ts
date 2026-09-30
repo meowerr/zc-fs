@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
-import { Profile, UserRole } from '../lib/database.types';
+import { Profile, UserRole, Group } from '../lib/database.types';
 
 export const UNIVERSITY_DOMAIN = 'zewailcity.edu.eg';
 
@@ -11,8 +11,30 @@ export function isUniversityEmail(email: string): boolean {
 export function useAuth() {
   const [currentUser, setCurrentUser] = useState<Profile | null>(null);
   const [allProfiles, setAllProfiles] = useState<Profile[]>([]);
+  const [allGroups, setAllGroups] = useState<Group[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Fetch all official groups
+  const fetchAllGroups = useCallback(async () => {
+    if (!isLiveSupabaseConfigured) return;
+    try {
+      const { data, error: groupsErr } = await supabase
+        .from('groups')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (groupsErr) {
+        console.warn('Groups fetch notice:', groupsErr.message);
+        return;
+      }
+      if (data) {
+        setAllGroups(data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch groups:', err);
+    }
+  }, []);
 
   // Fetch all accessible profiles (scoped by database RLS)
   const fetchAllProfiles = useCallback(async () => {
@@ -71,6 +93,9 @@ export function useAuth() {
       return;
     }
 
+    // Initial fetch of groups and session
+    fetchAllGroups();
+
     // 1. Check existing authenticated session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
@@ -109,11 +134,24 @@ export function useAuth() {
       )
       .subscribe();
 
+    // 4. Realtime listener for group changes (e.g. Admin creates new group)
+    const groupChannel = supabase
+      .channel('public:groups_realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'groups' },
+        () => {
+          fetchAllGroups();
+        }
+      )
+      .subscribe();
+
     return () => {
       subscription.unsubscribe();
       supabase.removeChannel(profileChannel);
+      supabase.removeChannel(groupChannel);
     };
-  }, [fetchProfile, fetchAllProfiles]);
+  }, [fetchProfile, fetchAllProfiles, fetchAllGroups]);
 
   // Sign In function (strictly Supabase Auth)
   const signIn = async (email: string, password?: string) => {
@@ -229,9 +267,77 @@ export function useAuth() {
     await fetchAllProfiles();
   };
 
+  // Admin create new sub-team / group (strictly authorized via RLS)
+  const createGroup = async (name: string, slug: string, description: string, colorAccent?: string) => {
+    if (!isLiveSupabaseConfigured) return null;
+    if (currentUser?.role !== 'admin') {
+      throw new Error('Unauthorized: Only Club Administrators may create sub-teams.');
+    }
+
+    const trimmedName = name.trim();
+    const cleanSlug = slug.toLowerCase().trim().replace(/[^a-z0-9-]/g, '-');
+
+    if (!trimmedName) throw new Error('Sub-team name is required.');
+    if (!cleanSlug) throw new Error('Sub-team slug is required.');
+
+    const { data: newGroup, error: groupErr } = await supabase
+      .from('groups')
+      .insert({
+        name: trimmedName,
+        slug: cleanSlug,
+        description: description?.trim() || null,
+        color_accent: colorAccent || '#2F6BFF',
+      })
+      .select('*')
+      .single();
+
+    if (groupErr) throw groupErr;
+
+    // Automatically create the dedicated sub-team channel for the new group
+    if (newGroup) {
+      await supabase.from('channels').insert({
+        name: `${newGroup.name.replace(/^Technical - |^Operations - /, '')} Telemetry`,
+        slug: `ch-${newGroup.slug}`,
+        channel_type: 'group',
+        group_id: newGroup.id,
+        description: `${newGroup.name} sub-team engineering channel.`,
+      });
+    }
+
+    await fetchAllGroups();
+    return newGroup as Group;
+  };
+
+  // Admin remove member from group (sets to pending, releases from group scope while keeping history)
+  const removeMemberFromGroup = async (userId: string) => {
+    if (!isLiveSupabaseConfigured) return;
+    if (currentUser?.role !== 'admin') {
+      throw new Error('Unauthorized: Only Club Administrators may manage sub-team rosters.');
+    }
+
+    const { error: updateErr } = await supabase
+      .from('profiles')
+      .update({
+        status: 'pending',
+        role: 'pending',
+        group_id: null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', userId);
+
+    if (updateErr) throw updateErr;
+
+    await fetchAllProfiles();
+
+    if (currentUser?.id === userId) {
+      fetchProfile(userId);
+    }
+  };
+
   return {
     currentUser,
     allProfiles,
+    allGroups,
     loading,
     error,
     signIn,
@@ -239,6 +345,9 @@ export function useAuth() {
     signOut,
     approveUser,
     rejectUser,
+    createGroup,
+    removeMemberFromGroup,
+    fetchAllGroups,
     isLiveConfigured: isLiveSupabaseConfigured,
   };
 }

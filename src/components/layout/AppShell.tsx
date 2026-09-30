@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TopHeader } from './TopHeader';
 import { BottomNav, NavTab } from './BottomNav';
 import { Sidebar } from './Sidebar';
-import { UserRole } from '../../lib/database.types';
+import { UserRole, Group, Task } from '../../lib/database.types';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -16,6 +16,8 @@ interface AppShellProps {
   notificationCount?: number;
   onOpenNotifications?: () => void;
   onOpenGuide?: () => void;
+  groups?: Group[];
+  tasks?: Task[];
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
@@ -30,9 +32,11 @@ export const AppShell: React.FC<AppShellProps> = ({
   notificationCount = 0,
   onOpenNotifications,
   onOpenGuide,
+  groups,
+  tasks,
 }) => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('zcfs_theme') === 'dark';
+    return localStorage.getItem('zcfs_theme') !== 'light';
   });
 
   useEffect(() => {
@@ -81,6 +85,8 @@ export const AppShell: React.FC<AppShellProps> = ({
           role={currentRole}
           currentGroupName={groupName}
           unreadCount={unreadCount}
+          groups={groups}
+          tasks={tasks}
         />
 
         <main className="flex-1 p-4 md:p-6 pb-24 md:pb-8 max-w-full overflow-x-hidden">

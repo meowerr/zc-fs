@@ -433,6 +433,38 @@ export function useTasks(currentUser: Profile | null) {
     return data;
   };
 
+  // Delete Task (authorized at database level by Admin or Group Head via RLS)
+  const deleteTask = async (taskId: string) => {
+    if (!currentUser) throw new Error('Must be logged in to delete a task.');
+
+    if (!isLiveSupabaseConfigured) {
+      setTasks((prev) => prev.filter((t) => t.id !== taskId));
+      setSubmissions((prev) => {
+        const next = { ...prev };
+        delete next[taskId];
+        return next;
+      });
+      setComments((prev) => {
+        const next = { ...prev };
+        delete next[taskId];
+        return next;
+      });
+      return;
+    }
+
+    const { error } = await supabase
+      .from('tasks')
+      .delete()
+      .eq('id', taskId);
+
+    if (error) {
+      console.error('Delete task error:', error);
+      throw error;
+    }
+
+    await loadTasksFromSupabase();
+  };
+
   return {
     tasks: visibleTasks,
     allTasks: tasks,
@@ -441,6 +473,7 @@ export function useTasks(currentUser: Profile | null) {
     loading,
     createTask,
     updateTaskStatus,
+    deleteTask,
     submitWork,
     reviewSubmission,
     addComment,

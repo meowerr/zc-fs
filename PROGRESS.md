@@ -84,6 +84,14 @@
 - **Slice 6: In-App Notifications, Production Build & Edge Deployment**
   - `[VERIFIED: automated test suite on live Supabase via scripts/verify-slice-6.mjs]` Notification lifecycle, unread tracking, cross-user RLS quarantine, single and bulk mark-as-read, PWA Workbox cache policies (NetworkOnly for Supabase), keep-alive workflow, tree-shaking (0 mock data strings leaked), and bundle budget (146.00 KB < 200 KB) (7/7 passed).
 
+
+### Phase 7: UI Polish, Real Sub-Teams Telemetry, Task Deletion, Group Management & Default Dark Mode
+- `[VERIFIED: centralized CSS scrollbars in src/index.css]` Global scrollbar system matching dark and light mode without native white scrollbar leakage.
+- `[VERIFIED: index.html class="dark" + pre-render script & AppShell default]` Dark mode default with zero theme flash upon startup.
+- `[VERIFIED: Sidebar.tsx dynamic calculation]` Real sub-teams status derived from database tasks: `(completed / total) * 100%`, live counts, and dynamic group list.
+- `[VERIFIED: scripts/verify-polish-tasks-groups.mjs (6/6 passed)]` Task deletion with PostgreSQL RLS authorization (Admin/Head only, Member blocked), cascade deletion, and deletion confirmation modal in TaskDetailModal.tsx.
+- `[VERIFIED: scripts/verify-polish-tasks-groups.mjs (6/6 passed)]` Admin sub-team creation in AdminApprovalHub.tsx and useAuth.ts with color picker, slug generation, and real-time subscription.
+- `[VERIFIED: scripts/verify-polish-tasks-groups.mjs (6/6 passed)]` Member removal from sub-team with role reset to pending and unassigned group_id: null while strictly preserving historical records and satisfying database check constraints.
 ---
 
 ## 2. Automated Terminal Test Evidence Output
