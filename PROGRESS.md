@@ -1,8 +1,8 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Phase 3 Complete -> **MVP MILESTONE ACHIEVED** (Phases 0–3 Done)
-- **Active Task:** Completed Phase 3 (Realtime Messaging & Channels). Ready for Phase 4 (Files & Notifications) or deployment go-ahead.
+- **Current Phase:** Phase 4 Complete -> Ready for Phase 5 (Polish, CSV Export & Production Delivery)
+- **Active Task:** Completed Phase 4 (Files, Storage & In-App Notifications). Ready for Phase 5 go-ahead.
 
 ---
 
@@ -28,20 +28,25 @@
   - Built [`TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx): telemetry count metrics, search bar, filter pills (`All`, `My Deliverables`, `In Review`, `In Progress`, `Overdue`, `Approved`), and sub-team selector for Admin.
 - [x] **Phase 3: Realtime Messaging & Channels (MVP Definition of Done)**
   - Built [`useRealtimeChat.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useRealtimeChat.ts) with Supabase Realtime channel subscription + demo offline sync.
-  - Implemented 5 sub-team channels (Vehicle Dynamics, Aerodynamics, Electronics, Powertrain, Operations).
-  - Implemented "Pit Wall" Heads-Only channel (cross-group leadership, restricted to Group Heads & Admin).
-  - Implemented "Mission Control Announcements" channel (club-wide broadcast, read-only for members, postable by Admin/Heads).
+  - Implemented 5 sub-team channels, `#pit-wall-heads` (restricted to Heads & Admin), and `#announcements` (read-only for members).
   - Implemented Direct Messaging system with scoped recipient filtering and [`NewDMModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/NewDMModal.tsx).
-  - Built [`ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx) and [`MessageBubble.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/MessageBubble.tsx) with Y2K glass design, attachment link helpers, and responsive sidebar.
-  - Optimized bundle with `manualChunks`: App JS is ~26.7 KB gzipped, total vendor chunks ~108 KB gzipped.
-  - Live server active at `http://localhost:5174/` and `http://10.54.79.187:5174/`.
+  - Built [`ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx) and [`MessageBubble.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/MessageBubble.tsx).
+- [x] **Phase 4: Files, Attachments & In-App Notifications**
+  - Built [`storage.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/lib/storage.ts) enforcing a strict 25 MB quota limit per file and validating engineering file extensions (STEP, IGES, CAD, PDF, ZIP, code).
+  - Built [`FileUploadModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/FileUploadModal.tsx) with drag-and-drop file target and quota usage segmented gauge.
+  - Built [`telemetryAudio.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/lib/telemetryAudio.ts) using Web Audio API synthesis for zero-download futuristic sound chimes and approval twinkles.
+  - Built [`useNotifications.ts`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/hooks/useNotifications.ts) managing live alert queue, sound feedback, and Web Push permission requests.
+  - Built [`NotificationDrawer.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/notifications/NotificationDrawer.tsx) and [`ToastContainer.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/ToastContainer.tsx) with instant toast popups.
+  - Connected notification bell in [`TopHeader.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/layout/TopHeader.tsx) with live pulsing counter badge.
+  - Verified production build: App JS is 29.2 KB gzipped (561 KB uncompressed total chunks), 8.2 KB CSS.
 
 ---
 
-## 2. What's Next (Phase 4: Files & Notifications)
-- [ ] File upload modal and validation within free-tier limits (<25MB per file).
-- [ ] In-app notification center (task assigned, review completed, new mentions).
-- [ ] Audio telemetry feedback chimes (optional subtle toggle).
+## 2. What's Next (Phase 5: Polish & Accessibility)
+- [ ] Dark Mode ("Midnight") persistent verification.
+- [ ] CSV / JSON task export for Formula Student competition cost reports and BOM review.
+- [ ] WCAG AA contrast audit and keyboard accessibility.
+- [ ] In-app User Guides per role (Club Admin, Group Head, Member).
 
 ---
 

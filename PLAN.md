@@ -444,10 +444,10 @@ zc-fs/
   - [x] Direct Messaging: 1-on-1 chats (within group for members; cross-group for Heads/Admin).
   - [x] Supabase Realtime websocket subscriptions for new messages and unread badge counters.
 
-- [ ] **Phase 4: Files, Attachments & In-App Notifications**
-  - [ ] File upload handling in tasks and chat within free-tier limits (client-side validation for type & size < 25MB).
-  - [ ] In-app notification bell & toast system (task assignment, review results, deadline warnings).
-  - [ ] Cross-group file sharing exclusively for Heads and Admin.
+- [x] **Phase 4: Files, Attachments & In-App Notifications**
+  - [x] File upload handling in tasks and chat within free-tier limits (client-side validation for type & size < 25MB).
+  - [x] In-app notification bell & toast system (task assignment, review results, deadline warnings).
+  - [x] Cross-group file sharing exclusively for Heads and Admin.
 
 - [ ] **Phase 5: Polish, Accessibility & Production Delivery**
   - [ ] Dark Mode ("Midnight") toggle with seamless persistent glass styling.
