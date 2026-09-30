@@ -286,6 +286,23 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
      - Strict failsafe timeout, asset error isolation, and prefers-reduced-motion compliance.
      - Pushed to master and deployed live to production on Vercel.
 
+10. **UI Polish, Real Sub-Teams Metrics, Task Deletion & Group Management:**
+   - [x] [VERIFIED: live Supabase query and strict RLS deletion verified]:
+     - Global theme-aware scrollbars audited across all scrollable containers in dark and light modes.
+     - Replaced decorative mock sidebar stats with live, database-calculated task completion metrics.
+     - Implemented secure task deletion with database RLS enforcement, cascade cleanups, and confirmation modal.
+     - Built comprehensive Admin Sub-Team and Member Management with group creation, slug validation, and role assignment.
+     - Defaulted initial application theme to Dark Mode ("Midnight").
+
+11. **Clean Cyber Racing Visual Redesign, Form Controls Contrast & Button Hierarchy:**
+   - [x] [VERIFIED: npm run build (0 errors), tsc --noEmit (0 errors), PWA bundle gzip < 200KB]:
+     - **Old Theme Backup:** Permanently preserved on git branch `backup/old-theme`, git tag `backup-old-theme`, and standalone `archive/old-theme/` directory.
+     - **Color Palette & Visual Foundation:** Restrained graphite foundation (`#070A0E` to `#181E26`) with semantic accents: Electric Cyan (`#00D9FF`), Racing Red (`#FF304F`), Racing Orange (`#FF6A00`), Racing Yellow (`#FFD43B`), and Racing Lime (`#10E57A`).
+     - **Form Controls & Inputs:** Fully eliminated white-on-white text in dark and light modes. Added `-webkit-autofill` override, electric cyan caret, calendar picker indicator inversion, and dark select option styling.
+     - **Button Hierarchy:** Restructured into an 8-tier purposeful hierarchy (Primary, Secondary, Outline, Action, Warning, Danger, Metallic, Ghost) with chamfer support, touch targets (36px, 44px, 48px), and removal of rainbow gradients.
+     - **Style Guide:** Added interactive Design System Style Guide (`/styleguide`) showcasing the full component and token matrix.
+     - Merged to `master` and pushed to remote origin.
+
 ---
 
 ## 3. Assumptions

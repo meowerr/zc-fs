@@ -1,8 +1,8 @@
 # PROJECT MASTER PLAN: ZC FORMULA STUDENT PWA (PitLane / Telemetry Workspace)
 
-**Version:** 1.0.0-draft  
+**Version:** 1.1.0-production  
 **Target Organization:** Zewail City Formula Student Racing Team  
-**Design Theme:** Y2K Futurism (Motorsport Telemetry x Frutiger Aero Chrome)  
+**Design Theme:** Clean Cyber Racing (Motorsport Instrumentation x Restrained Y2K Futurism)  
 **Primary Constraints:** 100% Free Tiers (Zero Credit Card Required), Mobile-First PWA, Domain-Restricted Auth (`@zewailcity.edu.eg`), Strict Database-Level RLS.
 
 ---
