@@ -69,12 +69,15 @@ export async function uploadFile(
     throw error;
   }
 
-  const { data: publicUrlData } = supabase.storage
+  // Attempt signed URL for secure private bucket access; fallback to publicUrl
+  const { data: signedData } = await supabase.storage
     .from(bucket)
-    .getPublicUrl(data.path);
+    .createSignedUrl(data.path, 60 * 60 * 24 * 365); // 1 year expiry
+
+  const finalUrl = signedData?.signedUrl || supabase.storage.from(bucket).getPublicUrl(data.path).data.publicUrl;
 
   return {
-    url: publicUrlData.publicUrl,
+    url: finalUrl,
     name: file.name,
     size: file.size,
     type: file.type,

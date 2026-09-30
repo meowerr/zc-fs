@@ -224,6 +224,14 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
      - Step 5: Cross-group message isolation (VD Member reading Aero channel messages returns 0 rows).
      - Step 6: 1-on-1 direct messaging (DM conversation established, messages exchanged, history verified).
      - Step 7: Supabase Realtime postgres changes subscription verified active.
+6. **Slice 5: Storage Uploads & Storage RLS Policies:**
+   - [x] [VERIFIED: node scripts/verify-slice-5.mjs executed against live Supabase (all 6 steps passed)]:
+     - Step 1: Storage buckets (`task-attachments` and `chat-media`) verified active and operational with 25 MB max limit.
+     - Step 2: Member uploaded engineering file to own sub-team folder (`11111111-1111-1111-1111-111111111111/...`); verified download and data integrity.
+     - Step 3: Cross-group upload isolation: Member blocked from uploading to foreign Aero folder by RLS.
+     - Step 4: Cross-group read isolation: Member blocked from downloading Aero files and listing foreign sub-team directory.
+     - Step 5: Chat media scoped isolation: Member uploaded to own group channel folder; Member upload to Heads-Only chat folder rejected by RLS.
+     - Step 6: File deletion and ownership verified.
 
 ---
 

@@ -495,7 +495,13 @@ zc-fs/
       6. Direct messaging: 1-on-1 conversation established; bi-directional messages exchanged and verified in history.
       7. Realtime websocket check: Postgres CDC insert listeners verified active.
   - **Slice 5: Storage Uploads & Storage RLS Policies**
-    - [PENDING]
+    - [VERIFIED: node scripts/verify-slice-5.mjs executed against live Supabase] Tested with Admin and Member accounts on live database:
+      1. Storage buckets: `task-attachments` and `chat-media` verified active and operational (25 MB max per file).
+      2. Member upload: Member VD uploads file into own sub-team folder (`11111111-1111-1111-1111-111111111111/...`); verifies download and content integrity.
+      3. Cross-group upload isolation: Member VD attempting to upload to Aero folder is strictly blocked by RLS.
+      4. Cross-group read isolation: Member VD attempting to download or list files in Aero folder returns 0 files and access denied.
+      5. Scoped chat media: Member uploads to own group channel; Member upload to Heads-Only chat folder is blocked by RLS.
+      6. Ownership & deletion: Member deletes own file successfully.
   - **Slice 6: In-App Notifications, Production Build & Edge Deployment**
     - [PENDING]
 
