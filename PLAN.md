@@ -407,17 +407,17 @@ zc-fs/
 
 ## 7. Phased Implementation Checklist
 
-- [ ] **Phase 0: Foundation & Core Scaffold**
-  - [ ] Initialize repository with Vite, React 18, TypeScript, Tailwind CSS, Lucide.
-  - [ ] Configure `vite-plugin-pwa` with manifest, theme color, icons, and offline caching strategy.
-  - [ ] Design Y2K Futurism design system tokens (colors, fonts, glassmorphism utilities) in Tailwind & CSS.
-  - [ ] Write PostgreSQL migration scripts:
+- [x] **Phase 0: Foundation & Core Scaffold**
+  - [x] Initialize repository with Vite, React 18, TypeScript, Tailwind CSS, Lucide.
+  - [x] Configure `vite-plugin-pwa` with manifest, theme color, icons, and offline caching strategy.
+  - [x] Design Y2K Futurism design system tokens (colors, fonts, glassmorphism utilities) in Tailwind & CSS.
+  - [x] Write PostgreSQL migration scripts:
     - Tables, constraints, and university email domain check (`@zewailcity.edu.eg`).
     - Row Level Security (RLS) policies for all 4 roles across all tables.
     - Seed data with the 5 official sub-teams, mock Club Admin, Heads, and Members.
     - Automated SQL test proving RLS blocks unauthorized cross-group access.
-  - [ ] Create core atomic UI components (GlassCard, GlossyButton, LedStatusChip, SegmentedGauge, GlowInput).
-  - [ ] Create `.env.example`, README with setup instructions, and GitHub Actions keep-alive workflow.
+  - [x] Create core atomic UI components (GlassCard, GlossyButton, LedStatusChip, SegmentedGauge, GlowInput).
+  - [x] Create `.env.example`, README with setup instructions, and GitHub Actions keep-alive workflow.
 
 - [ ] **Phase 1: Authentication & Admin Approval Flow**
   - [ ] Supabase Auth integration with email domain constraint enforcement.
