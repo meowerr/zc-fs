@@ -36,6 +36,8 @@
     --team-elec: #DE5200; /* Low-Voltage Electronics */
     --team-pt: #B8860B;   /* Powertrain & Drivetrain */
     --team-ops: #0B9E50;  /* Business, Cost & Ops */
+
+    color-scheme: light;
   }
 
   .dark {
@@ -66,6 +68,8 @@
     --team-elec: #FF6A00; /* Low-Voltage Electronics */
     --team-pt: #FFD43B;   /* Powertrain & Drivetrain */
     --team-ops: #10E57A;  /* Business, Cost & Ops */
+
+    color-scheme: dark;
   }
 
   html {
@@ -79,6 +83,127 @@
     overflow-x: hidden;
     background-color: var(--bg-base);
     color: var(--text-primary);
+  }
+
+  /* ─── Global Form Control Resets (Eliminates White-on-White Inputs) ─── */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  select,
+  textarea {
+    background-color: var(--surface-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    caret-color: var(--accent-cyan);
+    font-family: inherit;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--accent-cyan) !important;
+    outline: none;
+  }
+
+  /* Specific Dark Mode Form Inputs */
+  .dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.bg-transparent),
+  .dark select,
+  .dark textarea {
+    background-color: #181E26 !important;
+    color: #F2F4F7 !important;
+    border-color: #2A323C;
+    color-scheme: dark;
+  }
+
+  .dark input.bg-transparent {
+    background-color: transparent !important;
+    color: #F2F4F7 !important;
+    border-color: transparent !important;
+  }
+
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: #737D89 !important;
+  }
+
+  .dark select option {
+    background-color: #181E26;
+    color: #F2F4F7;
+  }
+
+  .dark input[type="checkbox"],
+  .dark input[type="radio"] {
+    accent-color: #00D9FF;
+    cursor: pointer;
+  }
+
+  .dark input[type="date"]::-webkit-calendar-picker-indicator,
+  .dark input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.85);
+    cursor: pointer;
+    opacity: 0.85;
+  }
+
+  .dark input[type="date"]::-webkit-calendar-picker-indicator:hover,
+  .dark input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    filter: invert(1);
+    opacity: 1;
+  }
+
+  /* Specific Light Mode Form Inputs */
+  :root:not(.dark) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.bg-transparent),
+  :root:not(.dark) select,
+  :root:not(.dark) textarea {
+    background-color: #FFFFFF !important;
+    color: #0D1522 !important;
+    border-color: #D1DAE5;
+    color-scheme: light;
+  }
+
+  :root:not(.dark) input.bg-transparent {
+    background-color: transparent !important;
+    color: #0D1522 !important;
+    border-color: transparent !important;
+  }
+
+  :root:not(.dark) input::placeholder,
+  :root:not(.dark) textarea::placeholder {
+    color: #94A3B8 !important;
+  }
+
+  :root:not(.dark) select option {
+    background-color: #FFFFFF;
+    color: #0D1522;
+  }
+
+  :root:not(.dark) input[type="checkbox"],
+  :root:not(.dark) input[type="radio"] {
+    accent-color: #0099B8;
+    cursor: pointer;
+  }
+
+  /* Browser Autofill Neutralization (Prevents default yellow/pale blue overlay) */
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover, 
+  .dark input:-webkit-autofill:focus, 
+  .dark input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #181E26 inset !important;
+    -webkit-text-fill-color: #F2F4F7 !important;
+    caret-color: #00D9FF !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  :root:not(.dark) input:-webkit-autofill,
+  :root:not(.dark) input:-webkit-autofill:hover, 
+  :root:not(.dark) input:-webkit-autofill:focus, 
+  :root:not(.dark) input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset !important;
+    -webkit-text-fill-color: #0D1522 !important;
+    caret-color: #0099B8 !important;
+    transition: background-color 5000s ease-in-out 0s;
   }
 
   /* Centralized Theme-Aware Cyber Racing Scrollbar */

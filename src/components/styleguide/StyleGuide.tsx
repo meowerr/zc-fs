@@ -13,9 +13,12 @@ import {
   Clock, 
   Send, 
   Trash2, 
-  Sparkles,
   Sun,
-  Moon
+  Moon,
+  Calendar,
+  Mail,
+  Sliders,
+  Shield
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
@@ -31,7 +34,12 @@ interface StyleGuideProps {
 
 export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
-  const [testInput, setTestInput] = useState('');
+  const [testInput, setTestInput] = useState('Front Wing CFD v4');
+  const [testEmail, setTestEmail] = useState('engineer@zewailcity.edu.eg');
+  const [testDate, setTestDate] = useState('2026-10-15');
+  const [testTime, setTestTime] = useState('14:30');
+  const [testTextarea, setTestTextarea] = useState('Mesh resolution: 12.5M cells, k-omega SST turbulence model');
+  const [testChecked, setTestChecked] = useState(true);
   const [gaugeVal, setGaugeVal] = useState(65);
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
 
@@ -248,60 +256,90 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </div>
 
         <GlassCard variant="elevated" className="p-6 space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Primary (Cyan)</span>
-              <GlossyButton variant="primary" icon={<Activity className="w-4 h-4" />}>
-                Launch Sequence
+          {/* Main 8-Variant Hierarchy Matrix */}
+          <div>
+            <div className="text-xs font-mono text-cyber-muted uppercase tracking-wider mb-3">
+              // Core Variant Matrix
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="space-y-1.5">
+                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Primary (Cyan)</span>
+                <GlossyButton variant="primary" icon={<Activity className="w-4 h-4" />}>
+                  Launch Sequence
+                </GlossyButton>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Secondary (Elevated)</span>
+                <GlossyButton variant="secondary" icon={<Layers className="w-4 h-4" />}>
+                  Inspect Specs
+                </GlossyButton>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Outline (Wireframe)</span>
+                <GlossyButton variant="outline" icon={<Activity className="w-4 h-4" />}>
+                  Telemetry View
+                </GlossyButton>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Action (Orange)</span>
+                <GlossyButton variant="action" icon={<Flame className="w-4 h-4" />}>
+                  Execute Task
+                </GlossyButton>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Warning (Yellow)</span>
+                <GlossyButton variant="warning" icon={<Clock className="w-4 h-4" />}>
+                  Review Queue
+                </GlossyButton>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Danger (Red)</span>
+                <GlossyButton variant="danger" icon={<Trash2 className="w-4 h-4" />}>
+                  Delete Item
+                </GlossyButton>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Metallic (Machined Alloy)</span>
+                <GlossyButton variant="metallic" icon={<Sliders className="w-4 h-4" />}>
+                  Hardware Switch
+                </GlossyButton>
+              </div>
+
+              <div className="space-y-1.5">
+                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Ghost (Low Weight)</span>
+                <GhostButton icon={<ArrowLeft className="w-4 h-4" />}>
+                  Cancel Op
+                </GhostButton>
+              </div>
+            </div>
+          </div>
+
+          {/* Chamfer & Sizing Sub-Row */}
+          <div className="pt-4 border-t border-cyber-border space-y-3">
+            <div className="text-xs font-mono text-cyber-muted uppercase tracking-wider">
+              // Motorsport Chamfer & Touch Target Sizing (36px sm / 44px md / 48px lg)
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <GlossyButton variant="primary" size="sm" icon={<Activity className="w-3.5 h-3.5" />}>
+                Small (36px)
               </GlossyButton>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Secondary (Elevated)</span>
-              <GlossyButton variant="secondary" icon={<Layers className="w-4 h-4" />}>
-                Inspect Specs
+              <GlossyButton variant="primary" size="md" icon={<Activity className="w-4 h-4" />}>
+                Medium (44px Mobile)
               </GlossyButton>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Action (Orange)</span>
-              <GlossyButton variant="action" icon={<Flame className="w-4 h-4" />}>
-                Execute Task
+              <GlossyButton variant="primary" size="lg" icon={<Activity className="w-5 h-5" />}>
+                Large (48px Primary)
               </GlossyButton>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Warning (Yellow)</span>
-              <GlossyButton variant="warning" icon={<Clock className="w-4 h-4" />}>
-                Review Queue
+              <GlossyButton variant="action" size="md" chamfer icon={<Flame className="w-4 h-4" />}>
+                Chamfered Cut
               </GlossyButton>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Danger (Red)</span>
-              <GlossyButton variant="danger" icon={<Trash2 className="w-4 h-4" />}>
-                Delete Item
-              </GlossyButton>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Holo Metallic</span>
-              <GlossyButton variant="holo" icon={<Sparkles className="w-4 h-4" />}>
-                Export Report
-              </GlossyButton>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Ghost Active</span>
-              <GhostButton active={true} icon={<Terminal className="w-4 h-4" />}>
-                Terminal Active
-              </GhostButton>
-            </div>
-
-            <div className="space-y-1.5">
-              <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Ghost Default</span>
-              <GhostButton icon={<ArrowLeft className="w-4 h-4" />}>
-                Cancel Operation
+              <GhostButton size="md" active icon={<Terminal className="w-4 h-4" />}>
+                Ghost Active
               </GhostButton>
             </div>
           </div>
@@ -367,19 +405,52 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           <span className="text-[11px] font-mono text-cyber-muted">CLEAN BORDERS, CYAN FOCUS RINGS</span>
         </div>
 
-        <GlassCard className="p-6">
+        <GlassCard className="p-6 space-y-6">
+          {/* Row 1: Text Inputs & States */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <GlowInput
-              label="Standard Telemetry Input"
-              placeholder="e.g. Aerodynamics Front Wing v3"
-              value={testInput}
-              onChange={(e) => setTestInput(e.target.value)}
-            />
+            <div>
+              <GlowInput
+                label="Interactive Telemetry Input"
+                placeholder="Type here to verify contrast..."
+                value={testInput}
+                onChange={(e) => setTestInput(e.target.value)}
+                hint={`${testInput.length} chars`}
+              />
+              <div className="mt-1.5 text-[10px] font-mono text-cyber-muted truncate">
+                Echo: <span className="text-accent-cyan font-semibold">{testInput || '(empty)'}</span>
+              </div>
+            </div>
 
+            <div>
+              <GlowInput
+                label="University Email (Domain Restrained)"
+                placeholder="engineer@zewailcity.edu.eg"
+                icon={<Mail className="w-4 h-4 text-accent-cyan" />}
+                value={testEmail}
+                onChange={(e) => setTestEmail(e.target.value)}
+                hint="@zewailcity.edu.eg"
+              />
+              <div className="mt-1.5 text-[10px] font-mono text-accent-lime flex items-center gap-1">
+                <Shield className="w-3 h-3" /> Validated ZC engineering domain
+              </div>
+            </div>
+
+            <div>
+              <GlowInput
+                label="Validation Error State"
+                placeholder="CAN-BUS ID"
+                defaultValue="0x999_OVERFLOW"
+                error="Value exceeds 11-bit standard telemetry identifier"
+              />
+            </div>
+          </div>
+
+          {/* Row 2: Selects, Date/Time & Textarea */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4 border-t border-cyber-border">
             <div>
               <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 <span className="text-accent-cyan font-bold mr-1.5">//</span>
-                Sub-Team Selector
+                Sub-Team Select Dropdown
               </label>
               <select className="w-full h-11 px-3 rounded-lg text-xs font-sans bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan">
                 {SUB_TEAMS.map((t) => (
@@ -390,16 +461,77 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               </select>
             </div>
 
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1">
+                  <Calendar className="w-3 h-3 text-accent-cyan" /> Date
+                </label>
+                <input
+                  type="date"
+                  value={testDate}
+                  onChange={(e) => setTestDate(e.target.value)}
+                  className="w-full h-11 px-2.5 rounded-lg text-xs font-mono bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-accent-cyan" /> Time
+                </label>
+                <input
+                  type="time"
+                  value={testTime}
+                  onChange={(e) => setTestTime(e.target.value)}
+                  className="w-full h-11 px-2.5 rounded-lg text-xs font-mono bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 <span className="text-accent-cyan font-bold mr-1.5">//</span>
-                Engineering Notes
+                Engineering Notes Textarea
               </label>
               <textarea
-                rows={1}
+                rows={2}
+                value={testTextarea}
+                onChange={(e) => setTestTextarea(e.target.value)}
                 placeholder="Technical specifications..."
-                className="w-full h-11 p-2.5 rounded-lg text-xs bg-cyber-surface border border-cyber-border focus:outline-none focus:border-accent-cyan text-cyber-primary placeholder:text-cyber-muted font-sans"
+                className="w-full p-2.5 rounded-lg text-xs bg-cyber-surface border border-cyber-border focus:outline-none focus:border-accent-cyan text-cyber-primary placeholder:text-cyber-muted font-sans"
               />
+            </div>
+          </div>
+
+          {/* Row 3: Checkbox & Radio Controls */}
+          <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-cyber-border text-xs font-mono">
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={testChecked}
+                onChange={(e) => setTestChecked(e.target.checked)}
+                className="w-4 h-4 rounded text-accent-cyan border-cyber-border cursor-pointer"
+              />
+              <span className="text-cyber-primary font-semibold">Strict RLS Authorization Active</span>
+            </label>
+
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                defaultChecked={false}
+                className="w-4 h-4 rounded text-accent-cyan border-cyber-border cursor-pointer"
+              />
+              <span className="text-cyber-secondary">Telemetry Auto-Archive</span>
+            </label>
+
+            <div className="flex items-center gap-3">
+              <span className="text-cyber-muted">// Mode:</span>
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <input type="radio" name="telemetry_mode" defaultChecked className="text-accent-cyan cursor-pointer" />
+                <span className="text-cyber-primary">Live</span>
+              </label>
+              <label className="flex items-center gap-1.5 cursor-pointer">
+                <input type="radio" name="telemetry_mode" className="text-accent-cyan cursor-pointer" />
+                <span className="text-cyber-secondary">Replay</span>
+              </label>
             </div>
           </div>
         </GlassCard>

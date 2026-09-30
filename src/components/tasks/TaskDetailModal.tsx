@@ -294,7 +294,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   {(isAssignee || isHeadOrAdmin) && (
                     <GlossyButton
                       size="sm"
-                      variant="holo"
+                      variant="action"
                       onClick={() => setIsSubmittingWork(true)}
                     >
                       Submit Work Deliverable
@@ -478,7 +478,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                 </GhostButton>
                                 <GlossyButton
                                   size="sm"
-                                  variant="danger"
+                                  variant="warning"
                                   onClick={() => handleReviewSubmit(sub.id, 'changes_requested')}
                                 >
                                   Request Changes
@@ -584,16 +584,20 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               </div>
             )}
             <div className="flex items-center justify-end gap-2.5 pt-2">
-              <button
+              <GlossyButton
                 type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => { setIsConfirmingDelete(false); setDeleteError(null); }}
                 disabled={isDeleting}
-                className="px-3.5 py-1.5 rounded text-xs font-mono font-bold border border-cyber-border text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover transition-all cursor-pointer"
               >
                 Cancel
-              </button>
-              <button
+              </GlossyButton>
+              <GlossyButton
                 type="button"
+                variant="danger"
+                size="sm"
+                icon={<Trash2 className="w-3.5 h-3.5" />}
                 onClick={async () => {
                   if (!onDeleteTask) return;
                   setIsDeleting(true);
@@ -609,11 +613,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   }
                 }}
                 disabled={isDeleting}
-                className="px-3.5 py-1.5 rounded text-xs font-mono font-bold bg-accent-red text-white hover:brightness-110 shadow-sm transition-all flex items-center gap-1.5 cursor-pointer"
               >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>{isDeleting ? 'Deleting...' : 'Confirm Delete'}</span>
-              </button>
+                {isDeleting ? 'Deleting...' : 'Confirm Delete'}
+              </GlossyButton>
             </div>
           </div>
         </div>
