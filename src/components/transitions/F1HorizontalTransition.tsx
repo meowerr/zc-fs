@@ -33,7 +33,7 @@ export interface F1HorizontalTransitionProps {
 
 export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
   direction = 'left-to-right',
-  duration = 1050,
+  duration = 1450,
   onComplete,
   children,
 }) => {
@@ -81,20 +81,20 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
       const elapsed = now - startTimeRef.current;
       const progress = Math.min(elapsed / duration, 1);
 
-      // Phase 1: Car crossing (10% to 50% of duration: ~100ms - 520ms)
-      // High-speed power acceleration curve
-      const carStartP = 0.08;
-      const carEndP = 0.52;
+      // Phase 1: Car crossing (6% to 58% of duration: ~85ms - 840ms)
+      // Smooth cubic motorsport acceleration curve (fast, but visible)
+      const carStartP = 0.06;
+      const carEndP = 0.58;
 
       let currentCarX = isLTR ? -30 : 130;
       let currentTrailReach = 0;
 
       if (progress >= carStartP) {
         const carProgress = Math.min(Math.max((progress - carStartP) / (carEndP - carStartP), 0), 1);
-        // Nonlinear sprint curve (quartic ease-in-out for explosive speed)
+        // Smooth cubic ease-in-out for balanced speed and readability
         const easedCar = carProgress < 0.5
-          ? 8 * carProgress * carProgress * carProgress * carProgress
-          : 1 - Math.pow(-2 * carProgress + 2, 4) / 2;
+          ? 4 * carProgress * carProgress * carProgress
+          : 1 - Math.pow(-2 * carProgress + 2, 3) / 2;
 
         if (isLTR) {
           // Offscreen left (-30vw) to offscreen right (130vw)
@@ -115,10 +115,10 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
         setCarVisible(false);
       }
 
-      // Phase 2: Vertical Expansion (35% to 88% of duration: ~360ms - 920ms)
+      // Phase 2: Vertical Expansion (38% to 90% of duration: ~550ms - 1300ms)
       // The strip starts at 4px height and blossoms vertically to cover full screen
-      const expandStartP = 0.32;
-      const expandEndP = 0.88;
+      const expandStartP = 0.38;
+      const expandEndP = 0.90;
 
       let currentHalfHeight = 2; // px
 
@@ -132,9 +132,9 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
 
       setHalfHeight(currentHalfHeight);
 
-      // Phase 3: Glow edge dissolve (82% to 100% of duration)
-      if (progress >= 0.82) {
-        const fadeP = (progress - 0.82) / 0.18;
+      // Phase 3: Glow edge dissolve (85% to 100% of duration)
+      if (progress >= 0.85) {
+        const fadeP = (progress - 0.85) / 0.15;
         setEdgeGlowOpacity(Math.max(1 - fadeP, 0));
       }
 

@@ -246,7 +246,7 @@ export const App: React.FC = () => {
     return (
       <F1HorizontalTransition
         direction="left-to-right"
-        duration={1050}
+        duration={1450}
         onComplete={() => {
           setIsTransitioning(false);
           sessionStorage.setItem('zcfs_login_transitioned', 'true');
