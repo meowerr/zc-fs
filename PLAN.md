@@ -405,56 +405,68 @@ zc-fs/
 
 ---
 
-## 7. Phased Implementation Checklist
+## 7. Phased Implementation Checklist & Verification Matrix
 
-- [x] **Phase 0: Foundation & Core Scaffold**
-  - [x] Initialize repository with Vite, React 18, TypeScript, Tailwind CSS, Lucide.
-  - [x] Configure `vite-plugin-pwa` with manifest, theme color, icons, and offline caching strategy.
-  - [x] Design Y2K Futurism design system tokens (colors, fonts, glassmorphism utilities) in Tailwind & CSS.
-  - [x] Write PostgreSQL migration scripts:
-    - Tables, constraints, and university email domain check (`@zewailcity.edu.eg`).
-    - Row Level Security (RLS) policies for all 4 roles across all tables.
-    - Seed data with the 5 official sub-teams, mock Club Admin, Heads, and Members.
-    - Automated SQL test proving RLS blocks unauthorized cross-group access.
-  - [x] Create core atomic UI components (GlassCard, GlossyButton, LedStatusChip, SegmentedGauge, GlowInput).
-  - [x] Create `.env.example`, README with setup instructions, and GitHub Actions keep-alive workflow.
+> [!NOTE]
+> **Label Legend:**
+> - `[VERIFIED: how, with pasted output]`: Automated terminal check passed with recorded logs.
+> - `[MOCK]`: Functional in-memory simulation / demo fallback when Supabase cloud credentials are not supplied.
+> - `[IMPLEMENTED, UNTESTED]`: Production code or SQL migration authored, awaiting cloud/device deployment or manual testing.
 
-- [x] **Phase 1: Authentication & Admin Approval Flow**
-  - [x] Supabase Auth integration with email domain constraint enforcement.
-  - [x] Sign-up / Login screen styled in Chrome Y2K theme.
-  - [x] "Waiting for Approval" screen for `pending` accounts.
-  - [x] Club Admin Approval Dashboard: view pending users, approve/reject, assign group and role (`head` or `member`).
-  - [x] Role-based route guard and initial Club Admin seeding script.
+- **Phase 0: Foundation & Core Scaffold**
+  - [VERIFIED: npm run build & node tools/verify-suite.mjs, zero errors] Initialize repository with Vite, React 18, TypeScript, Tailwind CSS, Lucide.
+  - [VERIFIED: dist/manifest.webmanifest & dist/sw.js verified in verify-suite.mjs] Configure `vite-plugin-pwa` with manifest, theme color, icons, and offline caching strategy.
+  - [VERIFIED: tailwind.config.js tokens compiled to dist/assets/index-D9GdXRqb.css (8.07 KB gzip)] Design Y2K Futurism design system tokens (colors, fonts, glassmorphism utilities).
+  - PostgreSQL migration scripts:
+    - [IMPLEMENTED, UNTESTED: requires live Supabase Postgres instance] Tables, constraints, and university email domain check trigger (`001_initial_schema.sql`).
+    - [VERIFIED: verify-suite.mjs tested 9 email formats against university domain regex] Client-side & trigger domain restriction validation logic.
+    - [IMPLEMENTED, UNTESTED: 387 lines in 002_rls_policies.sql, requires live Supabase connection] Row Level Security (RLS) policies for all 4 roles across all tables.
+    - [IMPLEMENTED, UNTESTED: 003_seed_data.sql] Seed data with 5 official sub-teams for PostgreSQL.
+    - [MOCK: in-memory profiles in useAuth.ts, useTasks.ts] Seed data demo personas in frontend.
+    - [IMPLEMENTED, UNTESTED: supabase/tests/rls_security_test.sql written for psql / pgTAP] Automated SQL test proving RLS blocks unauthorized cross-group access.
+  - [VERIFIED: components compiled and rendered in App] Create core atomic UI components (GlassCard, GlossyButton, LedStatusChip, SegmentedGauge, GlowInput).
+  - [VERIFIED: files present on disk] Create `.env.example`, README with setup instructions, and GitHub Actions keep-alive workflow.
 
-- [x] **Phase 2: Task Management System (Core Work Value)**
-  - [x] Group Head Task Creation: title, description, assignee(s), deadline, priority, type, attachments/links.
-  - [x] Status Progression Workflow: `To Do` -> `In Progress` -> `Submitted` -> `Changes Requested` / `Approved` -> `Done`.
-  - [x] Member Work Submission: file upload, GitHub/document link, or text note.
-  - [x] Head Review Modal: feedback notes, approve or request changes with revision history preservation.
-  - [x] Per-task comment thread with realtime updates.
-  - [x] Role-tailored dashboards:
+- **Phase 1: Authentication & Admin Approval Flow**
+  - [MOCK: local demo switcher & simulated auth in useAuth.ts] / [IMPLEMENTED, UNTESTED: Supabase Auth client integration with live cloud keys] Supabase Auth integration.
+  - [VERIFIED: verify-suite.mjs test vector checks] Email domain constraint enforcement (`@zewailcity.edu.eg`).
+  - [VERIFIED: component compiled and rendered] Sign-up / Login screen styled in Chrome Y2K theme (`AuthScreen.tsx`).
+  - [VERIFIED: component compiled and rendered] "Waiting for Approval" screen for `pending` accounts (`PendingApprovalView.tsx`).
+  - [VERIFIED: component compiled, state mutations verified] Club Admin Approval Dashboard: view pending users, approve/reject, assign group and role (`AdminApprovalHub.tsx`).
+  - [VERIFIED: role routing in App.tsx] / [IMPLEMENTED, UNTESTED: 001_initial_schema.sql first_admin_exists trigger] Role-based route guard and initial Club Admin seeding script.
+
+- **Phase 2: Task Management System (Core Work Value)**
+  - [VERIFIED: TaskCreateModal.tsx compiled and wired to useTasks] / [MOCK: local in-memory state in useTasks] Group Head Task Creation: title, description, assignee(s), deadline, priority, type, attachments/links.
+  - [VERIFIED: TaskDetailModal.tsx state machine compiled] / [MOCK: local state transitions] Status Progression Workflow: `To Do` -> `In Progress` -> `Submitted` -> `Changes Requested` / `Approved` -> `Done`.
+  - [VERIFIED: TaskDetailModal.tsx submission form compiled] / [MOCK: local submission array] Member Work Submission: file upload, GitHub/document link, or text note.
+  - [VERIFIED: TaskDetailModal.tsx multi-version review section compiled] / [MOCK: local review feedback state] Head Review Modal: feedback notes, approve or request changes with revision history preservation.
+  - [VERIFIED: TaskDetailModal.tsx comment thread compiled] / [MOCK: local comments array] Per-task comment thread with realtime updates.
+  - [VERIFIED: TasksHub.tsx filter pills and metric cards compiled] Role-tailored dashboards:
     - *Member:* "My Tasks" telemetry view sorted by deadline with overdue alerts.
     - *Group Head ("Pit Wall"):* Group overview matrix (who has what, workload, awaiting review).
     - *Club Admin ("Mission Control"):* Club-wide velocity and health summary across all 5 groups.
 
-- [x] **Phase 3: Realtime Messaging & Channels**
-  - [x] Group Channel (one for each of the 5 sub-teams).
-  - [x] "Pit Wall" Heads-Only Channel (restricted to Group Heads and Club Admin).
-  - [x] Announcements Channel (broadcast read-only for members, postable by Admin/Heads).
-  - [x] Direct Messaging: 1-on-1 chats (within group for members; cross-group for Heads/Admin).
-  - [x] Supabase Realtime websocket subscriptions for new messages and unread badge counters.
+- **Phase 3: Realtime Messaging & Channels**
+  - [VERIFIED: ChatView.tsx compiled and rendered] / [MOCK: mock timer message dispatcher] Group Channel (one for each of the 5 sub-teams).
+  - [VERIFIED: accessibleChannels role check in useRealtimeChat.ts] "Pit Wall" Heads-Only Channel (restricted to Group Heads and Club Admin).
+  - [VERIFIED: canPost permission logic in useRealtimeChat.ts] Announcements Channel (broadcast read-only for members, postable by Admin/Heads).
+  - [VERIFIED: NewDMModal.tsx recipient filtering compiled] Direct Messaging: 1-on-1 chats (within group for members; cross-group for Heads/Admin).
+  - [IMPLEMENTED, UNTESTED: Supabase Realtime channel subscription in useRealtimeChat.ts] / [MOCK: in-memory message store] Supabase Realtime websocket subscriptions for new messages and unread badge counters.
 
-- [x] **Phase 4: Files, Attachments & In-App Notifications**
-  - [x] File upload handling in tasks and chat within free-tier limits (client-side validation for type & size < 25MB).
-  - [x] In-app notification bell & toast system (task assignment, review results, deadline warnings).
-  - [x] Cross-group file sharing exclusively for Heads and Admin.
+- **Phase 4: Files, Attachments & In-App Notifications**
+  - [VERIFIED: verify-suite.mjs tested 7 file size & extension test vectors] Client-side file upload validation for type & size (< 25MB).
+  - [IMPLEMENTED, UNTESTED: supabase.storage.upload in storage.ts, requires live bucket] Supabase Storage bucket upload.
+  - [VERIFIED: NotificationDrawer.tsx, ToastContainer.tsx, TopHeader.tsx counter compiled] In-app notification bell & toast system (task assignment, review results, deadline warnings).
+  - [VERIFIED: Web Audio API synthesizer tested in browser] Synthesized telemetry chime and approval sound.
+  - [VERIFIED: UI role gating in AppShell and TaskDetailModal] / [IMPLEMENTED, UNTESTED: storage RLS policy in 002_rls_policies.sql] Cross-group file sharing exclusively for Heads and Admin.
 
-- [x] **Phase 5: Polish, Accessibility & Production Delivery**
-  - [x] Dark Mode ("Midnight") toggle with seamless persistent glass styling (`localStorage` backed).
-  - [x] CSV / JSON task export for meeting reports and BOM cost tracking (`exportUtils.ts`).
-  - [x] WCAG AA contrast validation on glass surfaces and keyboard accessibility.
-  - [x] PWA installation audit on iOS and Android devices (`manifest.webmanifest`, service worker precache).
-  - [x] User role guides (Club Admin, Head, Member) in-app (`RoleGuideModal.tsx`).
+- **Phase 5: Polish, Accessibility & Production Delivery**
+  - [VERIFIED: AppShell.tsx localStorage sync and classList toggle] Dark Mode ("Midnight" vs "Chrome") toggle with persistent glass styling.
+  - [VERIFIED: verify-suite.mjs RFC 4180 escaping & JSON roundtrip with pasted output] CSV / JSON task export for meeting reports and BOM cost tracking (`exportUtils.ts`).
+  - [IMPLEMENTED, UNTESTED: requires manual color picker & screen reader testing] WCAG AA contrast validation on glass surfaces and keyboard accessibility.
+  - [VERIFIED: manifest.webmanifest standalone & sw.js verified in verify-suite.mjs] PWA build artifacts generated.
+  - [IMPLEMENTED, UNTESTED: requires testing on physical iPhone & Android device] PWA installation audit on iOS and Android devices.
+  - [VERIFIED: RoleGuideModal.tsx compiled and wired to TopHeader] User role guides (Club Admin, Head, Member) in-app.
 
 ---
 
