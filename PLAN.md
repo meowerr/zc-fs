@@ -486,7 +486,14 @@ zc-fs/
       7. Member submits revision (v2) and Reviewer approves: status rolls up to `approved`.
       8. Negative security checks: Member blocked from creating tasks in foreign groups; Member blocked from reviewing submissions.
   - **Slice 4: Real Channels, Direct Messages & Realtime Websockets**
-    - [PENDING]
+    - [VERIFIED: node scripts/verify-slice-4.mjs executed against live Supabase] Tested with Admin and Member accounts on live database:
+      1. Channel visibility isolation: Admin sees all 7 channels; Member VD sees 2 channels (own group + announcements). Heads and foreign groups strictly hidden.
+      2. Announcements channel: Admin broadcasts team notice; Member reads notice; Member posting blocked by RLS.
+      3. Heads-Only protection: Member reading from `#ch-pit-wall-heads` returns 0 rows; Member posting blocked by RLS.
+      4. Group channel messaging: Member and Admin post and reply within Vehicle Dynamics group channel.
+      5. Cross-group message isolation: Member VD querying Aero channel messages returns 0 rows.
+      6. Direct messaging: 1-on-1 conversation established; bi-directional messages exchanged and verified in history.
+      7. Realtime websocket check: Postgres CDC insert listeners verified active.
   - **Slice 5: Storage Uploads & Storage RLS Policies**
     - [PENDING]
   - **Slice 6: In-App Notifications, Production Build & Edge Deployment**

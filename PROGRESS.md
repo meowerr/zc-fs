@@ -215,6 +215,15 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
      - Step 6: Admin reviewed v1 requesting changes with engineering feedback; status rolled up to `changes_requested`.
      - Step 7: Member submitted v2 revision and Admin approved; status rolled up to `approved`.
      - Step 8: Negative security tests verified: Member blocked from creating tasks in foreign groups; Member blocked from reviewing submissions.
+5. **Slice 4: Real Channels, Direct Messages & Realtime Websockets:**
+   - [x] [VERIFIED: node scripts/verify-slice-4.mjs executed against live Supabase (all 7 steps passed)]:
+     - Step 1: Channel visibility isolation (Admin sees 7 channels, Member VD sees 2: `#ch-vehicle-dynamics` and `#ch-announcements`).
+     - Step 2: Announcements channel broadcast (Admin posts notice; Member reads notice; Member posting blocked by RLS).
+     - Step 3: Heads-Only protection (Member reading `#ch-pit-wall-heads` returns 0 rows; Member posting blocked by RLS).
+     - Step 4: Group channel messaging (bi-directional messaging between Member and Admin inside Vehicle Dynamics channel).
+     - Step 5: Cross-group message isolation (VD Member reading Aero channel messages returns 0 rows).
+     - Step 6: 1-on-1 direct messaging (DM conversation established, messages exchanged, history verified).
+     - Step 7: Supabase Realtime postgres changes subscription verified active.
 
 ---
 
