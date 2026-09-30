@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, Radio, Sparkles } from 'lucide-react';
+import { Sun, Moon, Radio, Sparkles, Bell } from 'lucide-react';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { UserRole } from '../../lib/database.types';
 
@@ -10,6 +10,8 @@ interface TopHeaderProps {
   isDarkMode: boolean;
   onToggleTheme: () => void;
   onOpenProfile?: () => void;
+  notificationCount?: number;
+  onOpenNotifications?: () => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
@@ -19,6 +21,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   isDarkMode,
   onToggleTheme,
   onOpenProfile,
+  notificationCount = 0,
+  onOpenNotifications,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-white/70 dark:bg-midnight-900/80 border-b border-chrome-300/80 dark:border-white/10 transition-colors">
@@ -48,12 +52,26 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         </div>
 
         {/* Telemetry Live Indicator & Controls */}
-        <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3">
           <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/5 dark:bg-white/5 border border-chrome-300/60 dark:border-white/10 font-mono text-xs">
             <Radio className="w-3.5 h-3.5 text-[#8ED91E] animate-pulse" />
             <span className="text-chrome-900/80 dark:text-white/80">ONLINE</span>
             <span className="text-telemetry-aqua ml-1">@zewailcity.edu.eg</span>
           </div>
+
+          {/* In-App Notification Bell */}
+          <button
+            onClick={onOpenNotifications}
+            aria-label="Open notifications"
+            className="relative w-10 h-10 rounded-full flex items-center justify-center bg-white/80 dark:bg-midnight-800/80 border border-chrome-300 dark:border-white/10 text-chrome-900 dark:text-white hover:border-telemetry-blue transition-all active:scale-95 shadow-sm cursor-pointer"
+          >
+            <Bell className="w-4 h-4" />
+            {notificationCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-telemetry-pink text-white font-mono text-[9px] font-bold flex items-center justify-center shadow-sm animate-pulse">
+                {notificationCount}
+              </span>
+            )}
+          </button>
 
           {/* Light / Dark Mode Toggle */}
           <button

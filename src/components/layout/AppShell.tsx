@@ -13,6 +13,8 @@ interface AppShellProps {
   groupName?: string;
   unreadCount?: number;
   onOpenProfile?: () => void;
+  notificationCount?: number;
+  onOpenNotifications?: () => void;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
@@ -24,6 +26,8 @@ export const AppShell: React.FC<AppShellProps> = ({
   groupName,
   unreadCount = 0,
   onOpenProfile,
+  notificationCount = 0,
+  onOpenNotifications,
 }) => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('zcfs_theme') === 'dark';
@@ -62,6 +66,8 @@ export const AppShell: React.FC<AppShellProps> = ({
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}
         onOpenProfile={onOpenProfile}
+        notificationCount={notificationCount}
+        onOpenNotifications={onOpenNotifications}
       />
 
       {/* Body: Desktop Sidebar + Main Content */}
