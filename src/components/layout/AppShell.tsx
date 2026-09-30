@@ -15,6 +15,7 @@ interface AppShellProps {
   onOpenProfile?: () => void;
   notificationCount?: number;
   onOpenNotifications?: () => void;
+  onOpenGuide?: () => void;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({
@@ -28,6 +29,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   onOpenProfile,
   notificationCount = 0,
   onOpenNotifications,
+  onOpenGuide,
 }) => {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     return localStorage.getItem('zcfs_theme') === 'dark';
@@ -68,6 +70,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         onOpenProfile={onOpenProfile}
         notificationCount={notificationCount}
         onOpenNotifications={onOpenNotifications}
+        onOpenGuide={onOpenGuide}
       />
 
       {/* Body: Desktop Sidebar + Main Content */}

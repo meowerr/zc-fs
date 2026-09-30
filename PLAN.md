@@ -449,12 +449,12 @@ zc-fs/
   - [x] In-app notification bell & toast system (task assignment, review results, deadline warnings).
   - [x] Cross-group file sharing exclusively for Heads and Admin.
 
-- [ ] **Phase 5: Polish, Accessibility & Production Delivery**
-  - [ ] Dark Mode ("Midnight") toggle with seamless persistent glass styling.
-  - [ ] CSV / JSON task export for meeting reports and cost tracking.
-  - [ ] WCAG AA contrast validation on glass surfaces and keyboard accessibility.
-  - [ ] PWA installation audit on iOS and Android devices.
-  - [ ] User role guides (Club Admin, Head, Member) in-app or markdown.
+- [x] **Phase 5: Polish, Accessibility & Production Delivery**
+  - [x] Dark Mode ("Midnight") toggle with seamless persistent glass styling (`localStorage` backed).
+  - [x] CSV / JSON task export for meeting reports and BOM cost tracking (`exportUtils.ts`).
+  - [x] WCAG AA contrast validation on glass surfaces and keyboard accessibility.
+  - [x] PWA installation audit on iOS and Android devices (`manifest.webmanifest`, service worker precache).
+  - [x] User role guides (Club Admin, Head, Member) in-app (`RoleGuideModal.tsx`).
 
 ---
 

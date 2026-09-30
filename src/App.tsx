@@ -9,6 +9,7 @@ import { TasksHub } from './components/tasks/TasksHub';
 import { ChatView } from './components/chat/ChatView';
 import { NotificationDrawer } from './components/notifications/NotificationDrawer';
 import { ToastContainer } from './components/common/ToastContainer';
+import { RoleGuideModal } from './components/common/RoleGuideModal';
 import { useAuth } from './hooks/useAuth';
 import { useTasks } from './hooks/useTasks';
 import { useRealtimeChat } from './hooks/useRealtimeChat';
@@ -18,6 +19,7 @@ import { UserRole, SubmissionReviewStatus, SubmissionType, TaskType, TaskPriorit
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
 
   const {
     currentUser,
@@ -145,6 +147,7 @@ export const App: React.FC = () => {
         onOpenProfile={signOut}
         notificationCount={notifUnreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
+        onOpenGuide={() => setIsGuideOpen(true)}
       >
         {/* View Switching based on active tab & role */}
         {activeTab === 'admin' && currentUser.role === 'admin' ? (
@@ -220,6 +223,13 @@ export const App: React.FC = () => {
 
       {/* Real-time Floating Toast Banners */}
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
+
+      {/* Role Operations Guide Modal */}
+      <RoleGuideModal
+        isOpen={isGuideOpen}
+        onClose={() => setIsGuideOpen(false)}
+        defaultRole={currentUser.role}
+      />
     </>
   );
 };

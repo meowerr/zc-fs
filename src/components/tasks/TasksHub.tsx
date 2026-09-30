@@ -3,14 +3,18 @@ import {
   Plus, 
   Search, 
   Layers, 
-  Gauge
+  Download,
+  FileSpreadsheet
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
+import { GhostButton } from '../common/GhostButton';
+import { EmptyState } from '../common/EmptyState';
 import { TaskCard } from './TaskCard';
 import { TaskCreateModal } from './TaskCreateModal';
 import { TaskDetailModal } from './TaskDetailModal';
 import { SUB_TEAMS } from '../admin/AdminApprovalHub';
+import { exportTasksToCSV, exportTasksToJSON } from '../../lib/exportUtils';
 import { 
   Task, 
   TaskStatus, 
@@ -127,10 +131,30 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Export CSV & JSON */}
+            <GhostButton
+              size="sm"
+              icon={<FileSpreadsheet className="w-3.5 h-3.5" />}
+              onClick={() => exportTasksToCSV(tasks, SUB_TEAMS)}
+              title="Download tasks as CSV spreadsheet for BOM & meeting review"
+            >
+              Export CSV
+            </GhostButton>
+
+            <GhostButton
+              size="sm"
+              icon={<Download className="w-3.5 h-3.5" />}
+              onClick={() => exportTasksToJSON(tasks)}
+              title="Download full JSON telemetry dump"
+            >
+              JSON
+            </GhostButton>
+
             {isHeadOrAdmin && (
               <GlossyButton
                 variant="holo"
+                size="md"
                 icon={<Plus className="w-4 h-4" />}
                 onClick={() => setIsCreateModalOpen(true)}
               >
@@ -223,25 +247,18 @@ export const TasksHub: React.FC<TasksHubProps> = ({
 
       {/* Deliverables Grid */}
       {filteredTasks.length === 0 ? (
-        <GlassCard className="p-12 text-center space-y-3">
-          <div className="w-12 h-12 mx-auto rounded-full bg-telemetry-blue/15 flex items-center justify-center text-telemetry-blue">
-            <Gauge className="w-6 h-6" />
-          </div>
-          <h3 className="font-display font-bold text-base text-chrome-900 dark:text-white">
-            No Deliverables Found
-          </h3>
-          <p className="text-xs text-chrome-900/60 dark:text-white/50 max-w-sm mx-auto">
-            {searchQuery
-              ? 'No deliverables match your search query.'
-              : 'No tasks currently exist under this filter.'}
-          </p>
-          {isHeadOrAdmin && (
-            <div className="pt-2">
-              <GlossyButton size="sm" variant="holo" onClick={() => setIsCreateModalOpen(true)}>
-                + Create First Task
-              </GlossyButton>
-            </div>
-          )}
+        <GlassCard className="p-6">
+          <EmptyState
+            illustration="wheel"
+            title="No Deliverables Found"
+            description={
+              searchQuery
+                ? 'No deliverables match your search criteria. Try a different keyword.'
+                : 'No tasks currently exist in this filter view.'
+            }
+            actionLabel={isHeadOrAdmin ? '+ Create Sub-Team Task' : undefined}
+            onAction={isHeadOrAdmin ? () => setIsCreateModalOpen(true) : undefined}
+          />
         </GlassCard>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
