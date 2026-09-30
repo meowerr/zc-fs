@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { AppShell } from './components/layout/AppShell';
 import { NavTab } from './components/layout/BottomNav';
-import { MissionControlDemo } from './components/dashboard/MissionControlDemo';
+import { MissionControl } from './components/dashboard/MissionControl';
 import { AuthScreen } from './components/auth/AuthScreen';
 import { PendingApprovalView } from './components/auth/PendingApprovalView';
 import { AdminApprovalHub, SUB_TEAMS } from './components/admin/AdminApprovalHub';
@@ -14,8 +14,7 @@ import { useAuth } from './hooks/useAuth';
 import { useTasks } from './hooks/useTasks';
 import { useRealtimeChat } from './hooks/useRealtimeChat';
 import { useNotifications } from './hooks/useNotifications';
-import { UserRole, SubmissionReviewStatus, SubmissionType, TaskType, TaskPriority } from './lib/database.types';
-import { isDemoMode } from './lib/supabase';
+import { SubmissionReviewStatus, SubmissionType, TaskType, TaskPriority } from './lib/database.types';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
@@ -28,7 +27,6 @@ export const App: React.FC = () => {
     signIn,
     signUp,
     signOut,
-    switchDemoPersona,
     approveUser,
     rejectUser,
   } = useAuth();
@@ -73,13 +71,12 @@ export const App: React.FC = () => {
     requestWebPush,
   } = useNotifications(currentUser);
 
-  // 1. Not Authenticated -> Show Auth Screen
+  // 1. Not Authenticated -> Show Auth Screen (strictly Supabase Auth)
   if (!currentUser) {
     return (
       <AuthScreen
         onLogin={signIn}
         onSignup={signUp}
-        onSelectDemoPersona={switchDemoPersona}
       />
     );
   }
@@ -90,7 +87,6 @@ export const App: React.FC = () => {
       <PendingApprovalView
         user={currentUser}
         onSignOut={signOut}
-        onSwitchToAdmin={isDemoMode ? () => switchDemoPersona('admin@zewailcity.edu.eg') : undefined}
       />
     );
   }
@@ -195,16 +191,11 @@ export const App: React.FC = () => {
             onStartDirectMessage={startDirectMessage}
           />
         ) : (
-          <MissionControlDemo
-            currentRole={currentUser.role}
-            onChangeRole={(newRole: UserRole) => {
-              const persona = allProfiles.find((p) => p.role === newRole);
-              if (persona) {
-                switchDemoPersona(persona.email);
-              }
-            }}
-            activeTab={activeTab}
+          <MissionControl
+            currentUser={currentUser}
+            tasks={tasks}
             onNavigateTab={setActiveTab}
+            onCreateTaskClick={() => setActiveTab('tasks')}
           />
         )}
       </AppShell>

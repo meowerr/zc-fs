@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase, isLiveSupabaseConfigured, isDemoMode } from '../lib/supabase';
-import { Profile, UserRole, UserStatus } from '../lib/database.types';
-import { MOCK_PROFILES } from '../lib/demoData';
+import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
+import { Profile, UserRole } from '../lib/database.types';
 
 export const UNIVERSITY_DOMAIN = 'zewailcity.edu.eg';
 
@@ -10,21 +9,12 @@ export function isUniversityEmail(email: string): boolean {
 }
 
 export function useAuth() {
-  const [currentUser, setCurrentUser] = useState<Profile | null>(() => {
-    if (!isDemoMode) return null;
-    const saved = localStorage.getItem('zcfs_demo_user');
-    if (saved && MOCK_PROFILES[saved]) {
-      return MOCK_PROFILES[saved];
-    }
-    return MOCK_PROFILES['kareem.vd@zewailcity.edu.eg'] || null;
-  });
-  const [allProfiles, setAllProfiles] = useState<Profile[]>(() => 
-    isDemoMode ? Object.values(MOCK_PROFILES) : []
-  );
+  const [currentUser, setCurrentUser] = useState<Profile | null>(null);
+  const [allProfiles, setAllProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch all accessible profiles (scoped by RLS)
+  // Fetch all accessible profiles (scoped by database RLS)
   const fetchAllProfiles = useCallback(async () => {
     if (!isLiveSupabaseConfigured) return;
     try {
@@ -45,13 +35,9 @@ export function useAuth() {
     }
   }, []);
 
-  // Fetch or sync user profile
-  const fetchProfile = useCallback(async (userId: string, userEmail: string) => {
+  // Fetch or sync user profile strictly from database
+  const fetchProfile = useCallback(async (userId: string) => {
     if (!isLiveSupabaseConfigured) {
-      const mock = MOCK_PROFILES[userEmail];
-      if (mock) {
-        setCurrentUser(mock);
-      }
       setLoading(false);
       return;
     }
@@ -68,7 +54,7 @@ export function useAuth() {
       }
 
       setCurrentUser(data);
-      // Once current user is resolved, load all accessible profiles
+      // Once current user profile is resolved, load all accessible profiles
       fetchAllProfiles();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to fetch user profile';
@@ -85,25 +71,28 @@ export function useAuth() {
       return;
     }
 
+    // 1. Check existing authenticated session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
-        fetchProfile(session.user.id, session.user.email || '');
+        fetchProfile(session.user.id);
       } else {
         setCurrentUser(null);
         setLoading(false);
       }
     });
 
+    // 2. Subscribe to auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
-        fetchProfile(session.user.id, session.user.email || '');
+        fetchProfile(session.user.id);
       } else {
         setCurrentUser(null);
+        setAllProfiles([]);
         setLoading(false);
       }
     });
 
-    // Realtime listener for profile status changes (e.g. Admin approvals)
+    // 3. Realtime listener for profile changes (e.g. Admin approval / group assignment)
     const profileChannel = supabase
       .channel('public:profiles_realtime')
       .on(
@@ -126,7 +115,7 @@ export function useAuth() {
     };
   }, [fetchProfile, fetchAllProfiles]);
 
-  // Sign In function
+  // Sign In function (strictly Supabase Auth)
   const signIn = async (email: string, password?: string) => {
     setError(null);
     if (!isUniversityEmail(email)) {
@@ -136,30 +125,7 @@ export function useAuth() {
     }
 
     if (!isLiveSupabaseConfigured) {
-      // Demo authentication simulation
-      const found = allProfiles.find((p) => p.email.toLowerCase() === email.toLowerCase());
-      if (found) {
-        setCurrentUser(found);
-        localStorage.setItem('zcfs_demo_user', found.email);
-        return;
-      }
-      // If new email in demo mode, create as pending
-      const newPending: Profile = {
-        id: `mock-${Date.now()}`,
-        email: email.toLowerCase(),
-        full_name: email.split('@')[0].replace('.', ' '),
-        avatar_url: null,
-        phone: null,
-        role: 'pending',
-        group_id: null,
-        status: 'pending',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      setAllProfiles((prev) => [...prev, newPending]);
-      setCurrentUser(newPending);
-      localStorage.setItem('zcfs_demo_user', newPending.email);
-      return;
+      throw new Error('Supabase client is not configured.');
     }
 
     const { error: authErr } = await supabase.auth.signInWithPassword({
@@ -173,7 +139,7 @@ export function useAuth() {
     }
   };
 
-  // Sign Up function
+  // Sign Up function (strictly Supabase Auth with university domain verification)
   const signUp = async (email: string, password: string, fullName: string) => {
     setError(null);
     if (!isUniversityEmail(email)) {
@@ -183,22 +149,7 @@ export function useAuth() {
     }
 
     if (!isLiveSupabaseConfigured) {
-      const newProfile: Profile = {
-        id: `mock-${Date.now()}`,
-        email: email.toLowerCase(),
-        full_name: fullName,
-        avatar_url: null,
-        phone: null,
-        role: 'pending',
-        group_id: null,
-        status: 'pending',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
-      setAllProfiles((prev) => [...prev, newProfile]);
-      setCurrentUser(newProfile);
-      localStorage.setItem('zcfs_demo_user', newProfile.email);
-      return;
+      throw new Error('Supabase client is not configured.');
     }
 
     const { error: authErr } = await supabase.auth.signUp({
@@ -217,10 +168,8 @@ export function useAuth() {
     }
   };
 
-  // Sign Out function
+  // Sign Out function (clears session and browser caches)
   const signOut = async () => {
-    localStorage.removeItem('zcfs_demo_user');
-    // Flush service worker and browser caches on logout
     if (typeof window !== 'undefined' && 'caches' in window) {
       try {
         const cacheKeys = await window.caches.keys();
@@ -229,40 +178,16 @@ export function useAuth() {
         console.warn('Failed to clear cache on logout:', e);
       }
     }
-    if (!isLiveSupabaseConfigured) {
-      setCurrentUser(null);
-      return;
+    if (isLiveSupabaseConfigured) {
+      await supabase.auth.signOut();
     }
-    await supabase.auth.signOut();
     setCurrentUser(null);
-  };
-
-  // Switch demo persona (for instant local testing)
-  const switchDemoPersona = (email: string) => {
-    const target = allProfiles.find((p) => p.email === email) || MOCK_PROFILES[email];
-    if (target) {
-      setCurrentUser(target);
-      localStorage.setItem('zcfs_demo_user', target.email);
-    }
+    setAllProfiles([]);
   };
 
   // Admin approval action: assigns group & role and sets status to 'approved'
   const approveUser = async (userId: string, groupId: string, role: UserRole) => {
-    if (!isLiveSupabaseConfigured) {
-      setAllProfiles((prev) =>
-        prev.map((p) =>
-          p.id === userId
-            ? { ...p, status: 'approved' as UserStatus, group_id: groupId, role }
-            : p
-        )
-      );
-      if (currentUser?.id === userId) {
-        setCurrentUser((prev) =>
-          prev ? { ...prev, status: 'approved', group_id: groupId, role } : null
-        );
-      }
-      return;
-    }
+    if (!isLiveSupabaseConfigured) return;
 
     const { error: updateErr } = await supabase
       .from('profiles')
@@ -281,18 +206,13 @@ export function useAuth() {
     await fetchAllProfiles();
 
     if (currentUser?.id === userId) {
-      fetchProfile(userId, currentUser.email);
+      fetchProfile(userId);
     }
   };
 
   // Admin reject action
   const rejectUser = async (userId: string) => {
-    if (!isLiveSupabaseConfigured) {
-      setAllProfiles((prev) =>
-        prev.map((p) => (p.id === userId ? { ...p, status: 'rejected' as UserStatus } : p))
-      );
-      return;
-    }
+    if (!isLiveSupabaseConfigured) return;
 
     const { error: rejectErr } = await supabase
       .from('profiles')
@@ -317,7 +237,6 @@ export function useAuth() {
     signIn,
     signUp,
     signOut,
-    switchDemoPersona,
     approveUser,
     rejectUser,
     isLiveConfigured: isLiveSupabaseConfigured,

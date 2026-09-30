@@ -246,6 +246,18 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
      - Step 5: Bulk `markAllAsRead`: all remaining unread notifications marked as read; unread count confirmed at 0.
      - Step 6: Realtime CDC notification listener: subscribed to `public.notifications` replication stream.
      - Step 7: PWA Workbox cache policies (`NetworkOnly` for Supabase API, auth denylist), GitHub Actions keep-alive workflow, zero mock data leakage (tree-shaking verified), and total gzipped bundle size 146.00 KB strictly within 200 KB budget.
+8. **Critical Security Audit: Role/Permission System & Complete Persona Switcher Removal:**
+   - [x] [VERIFIED: node scripts/verify-security-audit.mjs executed against live Supabase (all 7 steps passed)]:
+     - Complete elimination of prototype persona switchers, `LIVE PERSONA ROLE` toolbar, `switchDemoPersona`, and `zcfs_demo_user` localStorage state.
+     - Replacement of prototype `MissionControlDemo.tsx` with production `MissionControl.tsx` powered exclusively by live database telemetry.
+     - Step 1: Real session authentication for Admin (`e0a31a4d-...`) and Engineer (`4ba6ac6d-...`).
+     - Step 2: Privilege escalation prevention verified against database engine: Member -> Admin, Member -> Head, Member self-group-change, and Member modifying other profiles all strictly rejected by trigger `prevent_profile_privilege_escalation()`.
+     - Step 3: Pending user quarantine verified: 0 tasks, 0 channels, 0 messages, 0 other profiles accessible; self-approval rejected.
+     - Step 4: Cross-group quarantine verified: Member VD querying Aero tasks returns 0 rows; task creation in foreign group rejected; foreign channel and heads-only channel return 0 rows; posting to announcements blocked.
+     - Step 5: Group Head scope verified: Head authorized for `#ch-pit-wall-heads` and announcements; Head blocked from creating tasks in foreign group; Head blocked from modifying `groups` table; Head -> Admin self-promotion blocked.
+     - Step 6: Reverse group scoping verified: Aero Member querying VD tasks and channel returns 0 rows.
+     - Step 7: Storage cross-group isolation verified: upload to foreign sub-team folder blocked by RLS; legitimate upload to own sub-team folder succeeded.
+     - Production build verified: 0 forbidden strings in `dist/assets/*.js`. Main JS bundle reduced to 29.47 KB gzip. Full audit documented in `SECURITY_AUDIT.md`.
 
 ---
 

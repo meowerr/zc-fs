@@ -1,7 +1,6 @@
 import React from 'react';
-import { Clock, ShieldAlert, LogOut, CheckCircle2 } from 'lucide-react';
+import { Clock, ShieldAlert, LogOut } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
-import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { LedStatusChip } from '../common/LedStatusChip';
 import { Profile } from '../../lib/database.types';
@@ -9,13 +8,11 @@ import { Profile } from '../../lib/database.types';
 interface PendingApprovalViewProps {
   user: Profile;
   onSignOut: () => void;
-  onSwitchToAdmin?: () => void;
 }
 
 export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
   user,
   onSignOut,
-  onSwitchToAdmin,
 }) => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-chrome-100 to-chrome-50 dark:from-midnight-950 dark:to-midnight-900">
@@ -56,24 +53,13 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
             </ul>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="flex items-center justify-center">
             <GhostButton
               icon={<LogOut className="w-4 h-4" />}
               onClick={onSignOut}
             >
               Sign Out
             </GhostButton>
-
-            {onSwitchToAdmin && (
-              <GlossyButton
-                variant="holo"
-                size="md"
-                icon={<CheckCircle2 className="w-4 h-4" />}
-                onClick={onSwitchToAdmin}
-              >
-                Switch to Admin Hub
-              </GlossyButton>
-            )}
           </div>
         </GlassCard>
 
