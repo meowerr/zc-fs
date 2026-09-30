@@ -6,8 +6,10 @@ import { AuthScreen } from './components/auth/AuthScreen';
 import { PendingApprovalView } from './components/auth/PendingApprovalView';
 import { AdminApprovalHub, SUB_TEAMS } from './components/admin/AdminApprovalHub';
 import { TasksHub } from './components/tasks/TasksHub';
+import { ChatView } from './components/chat/ChatView';
 import { useAuth } from './hooks/useAuth';
 import { useTasks } from './hooks/useTasks';
+import { useRealtimeChat } from './hooks/useRealtimeChat';
 import { UserRole } from './lib/database.types';
 
 export const App: React.FC = () => {
@@ -33,6 +35,22 @@ export const App: React.FC = () => {
     reviewSubmission,
     addComment,
   } = useTasks(currentUser);
+
+  const {
+    accessibleChannels,
+    activeChannelId,
+    activeConversationId,
+    setActiveChannel,
+    setActiveConversation,
+    currentChannel,
+    currentConversation,
+    otherParticipant,
+    conversations,
+    currentMessages,
+    sendMessage,
+    startDirectMessage,
+    canPost,
+  } = useRealtimeChat(currentUser, allProfiles);
 
   // 1. Not Authenticated -> Show Auth Screen
   if (!currentUser) {
@@ -69,7 +87,7 @@ export const App: React.FC = () => {
       currentRole={currentUser.role}
       userName={currentUser.full_name}
       groupName={groupDisplayName}
-      unreadCount={2}
+      unreadCount={currentMessages.length > 0 ? 1 : 0}
       onOpenProfile={signOut}
     >
       {/* View Switching based on active tab & role */}
@@ -91,6 +109,24 @@ export const App: React.FC = () => {
           onSubmitWork={submitWork}
           onReviewSubmission={reviewSubmission}
           onAddComment={addComment}
+        />
+      ) : activeTab === 'chat' ? (
+        <ChatView
+          currentUser={currentUser}
+          allProfiles={allProfiles}
+          accessibleChannels={accessibleChannels}
+          activeChannelId={activeChannelId}
+          activeConversationId={activeConversationId}
+          currentChannel={currentChannel}
+          currentConversation={currentConversation}
+          otherParticipant={otherParticipant}
+          conversations={conversations}
+          messages={currentMessages}
+          canPost={canPost}
+          onSelectChannel={setActiveChannel}
+          onSelectConversation={setActiveConversation}
+          onSendMessage={sendMessage}
+          onStartDirectMessage={startDirectMessage}
         />
       ) : (
         <MissionControlDemo
