@@ -29,3 +29,17 @@ jobs:
           else
             echo "Unexpected status code $RESPONSE. Check Supabase status."
           fi
+
+      # Prevent GitHub from disabling scheduled workflows after 60 days of repo inactivity
+      - name: Prevent scheduled workflow auto-disable (Repo Keepalive)
+        uses: gautamkrishnar/keepalive-workflow@v2
+        with:
+          committer_email: "actions@github.com"
+          committer_username: "GitHub Actions"
+          commit_message: "chore: automated repo activity ping [skip ci]"
+
+# Free External Fallback (Zero Credit Card):
+# If repository is ever unmaintained or archived, register a free 72-hour HTTP ping on:
+# https://cron-job.org (Free tier, zero card required)
+# Target URL: https://<project-ref>.supabase.co/rest/v1/groups?select=id&limit=1
+# Header: apikey: <SUPABASE_ANON_KEY>

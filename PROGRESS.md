@@ -73,11 +73,16 @@
   - `[VERIFIED: real PostgreSQL execution on live Supabase project]` Official 5 sub-teams and default communication channels seeded; zero fake users (`supabase/migrations/003_seed_data.sql`).
   - `[VERIFIED: real PostgreSQL execution on live Supabase project]` Consolidated single migration script (`supabase/000_complete_setup.sql`).
   - `[VERIFIED: 7/7 passed on live Supabase instance with output proof]` 7 automated SQL security invariant tests proving cross-group isolation, privilege escalation protection, domain validation, and pending quarantine (`supabase/tests/rls_security_test.sql`).
-- **Slice 2: Real Auth, Email Confirmation, Pending Gateway & Admin Approval** [READY TO START]
-- **Slice 3: Real Tasks, Assignees, Submissions & Review Workflow** [PENDING]
-- **Slice 4: Real Channels, Direct Messages & Realtime Websockets** [PENDING]
-- **Slice 5: Storage Uploads & Storage RLS Policies** [PENDING]
-- **Slice 6: In-App Notifications, Production Build & Edge Deployment** [PENDING]
+- **Slice 2: Real Auth, Email Confirmation, Pending Gateway & Admin Approval**
+  - `[VERIFIED: automated test suite on live Supabase via scripts/verify-slice-2.mjs]` Real user signup, email verification, pending quarantine (0 access to tasks/channels), self-promotion block by DB trigger, and Admin approval into sub-team.
+- **Slice 3: Real Tasks, Assignees, Submissions & Review Workflow**
+  - `[VERIFIED: automated test suite on live Supabase via scripts/verify-slice-3.mjs]` Multi-assignee junction, cross-group task quarantine, v1/v2 submission versioning, review feedback, and real-time task thread comments (8/8 passed).
+- **Slice 4: Real Channels, Direct Messages & Realtime Websockets**
+  - `[VERIFIED: automated test suite on live Supabase via scripts/verify-slice-4.mjs]` Sub-team group channels, heads-only cross-team quarantine, 1:1 direct conversations, sender spoofing block, and Realtime CDC broadcast (7/7 passed).
+- **Slice 5: Storage Uploads & Storage RLS Policies**
+  - `[VERIFIED: automated test suite on live Supabase via scripts/verify-slice-5.mjs]` Buckets `task-attachments` and `chat-media`, sub-team folder quarantine, cross-group upload/download denial, signed URL access, and file deletion (6/6 passed).
+- **Slice 6: In-App Notifications, Production Build & Edge Deployment**
+  - `[VERIFIED: automated test suite on live Supabase via scripts/verify-slice-6.mjs]` Notification lifecycle, unread tracking, cross-user RLS quarantine, single and bulk mark-as-read, PWA Workbox cache policies (NetworkOnly for Supabase), keep-alive workflow, tree-shaking (0 mock data strings leaked), and bundle budget (146.00 KB < 200 KB) (7/7 passed).
 
 ---
 
@@ -232,6 +237,15 @@ VERIFICATION SUMMARY: 39 PASSED, 0 FAILED
      - Step 4: Cross-group read isolation: Member blocked from downloading Aero files and listing foreign sub-team directory.
      - Step 5: Chat media scoped isolation: Member uploaded to own group channel folder; Member upload to Heads-Only chat folder rejected by RLS.
      - Step 6: File deletion and ownership verified.
+7. **Slice 6: In-App Notifications, Production Build & Edge Deployment:**
+   - [x] [VERIFIED: node scripts/verify-slice-6.mjs executed against live Supabase (all 7 steps passed)]:
+     - Step 1: Authenticated real Admin and Engineer test accounts against live Supabase.
+     - Step 2: Dispatched and queried telemetry notifications (`task_assigned`, `task_due_soon`, `review_result`) for Engineer.
+     - Step 3: Strict RLS notification isolation: Admin queried `notifications` and received 0 of Engineer's private notifications (`user_id = auth.uid()` isolation).
+     - Step 4: Single notification `markAsRead`: database `is_read = true` state change verified.
+     - Step 5: Bulk `markAllAsRead`: all remaining unread notifications marked as read; unread count confirmed at 0.
+     - Step 6: Realtime CDC notification listener: subscribed to `public.notifications` replication stream.
+     - Step 7: PWA Workbox cache policies (`NetworkOnly` for Supabase API, auth denylist), GitHub Actions keep-alive workflow, zero mock data leakage (tree-shaking verified), and total gzipped bundle size 146.00 KB strictly within 200 KB budget.
 
 ---
 

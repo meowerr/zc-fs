@@ -503,7 +503,14 @@ zc-fs/
       5. Scoped chat media: Member uploads to own group channel; Member upload to Heads-Only chat folder is blocked by RLS.
       6. Ownership & deletion: Member deletes own file successfully.
   - **Slice 6: In-App Notifications, Production Build & Edge Deployment**
-    - [PENDING]
+    - [VERIFIED: automated test suite on live Supabase via scripts/verify-slice-6.mjs]
+      1. Notification dispatch & lifecycle: Dispatched `task_assigned`, `task_due_soon`, and `review_result` notifications to Engineer; queried and validated unread state.
+      2. Strict RLS isolation: Verified Admin cannot query Engineer's private notifications (`user_id = auth.uid()` isolation).
+      3. Mark as read: Verified `markAsRead` updates `is_read = true` in Supabase.
+      4. Mark all as read: Verified `markAllAsRead` batch updates all unread notifications to `is_read = true`.
+      5. Realtime CDC listener: Verified Postgres replication subscription on `public.notifications` table.
+      6. PWA Workbox cache policies: Verified `NetworkOnly` strategy on Supabase API & denylist on auth/rest endpoints.
+      7. Keep-alive & Production Budget: Verified scheduled keepalive GitHub Actions workflow, tree-shaking (zero mock data strings), and total gzipped bundle size (146.00 KB < 200 KB budget).
 
 ---
 
