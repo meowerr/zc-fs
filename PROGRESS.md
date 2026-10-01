@@ -1,9 +1,18 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Phase: Product Maturity / Workspace Depth Complete (Working Branch: `feature/product-maturity-pass`)
-- **Active Task:** All 15 Product Maturity Objectives verified against live database and automated test suite.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | Gzip bundle: 179.38 KB (< 200 KB) | Main JS: 43.05 KB (< 50 KB).
+- **Current Phase:** Phase: Google OAuth Sign-In (Working Branch: `feature/google-signin`)
+- **Active Slice:** Slice G1: Backend + Tests (Complete)
+- **Verification Status:** 16/16 static checks passed in `scripts/verify-google-signup-db.mjs` | 41/41 tests passing in `scripts/verify-suite.mjs`.
+
+---
+
+## Google OAuth Sign-In (Branch: `feature/google-signin`)
+
+### Slice G1: Backend & Database Invariants
+- `[IMPLEMENTED, UNTESTED: migration supabase/migrations/005_google_auth.sql awaiting SQL Editor execution]` Upgraded `handle_new_user_registration` with strict regex domain validation (`^[a-z0-9._%+-]+@zewailcity\.edu\.eg$`), null-safe name extraction from `name` / `full_name` / email prefix, and safe avatar assignment.
+- `[VERIFIED: node scripts/verify-google-signup-db.mjs (16/16 passed)]` Static SQL analysis and domain regex tests passed for valid, uppercase, spoof variants (subdomains, prefix, double-@), and gmail.
+- `[IMPLEMENTED, UNTESTED: live Admin API execution requires local SUPABASE_SERVICE_ROLE_KEY in .env]` Live DB verification script written in `scripts/verify-google-signup-db.mjs` to test live user creation, gmail rejection, RLS quarantine, and account audit.
 
 ---
 
