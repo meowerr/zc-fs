@@ -271,11 +271,17 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
 
     const trimmed = content.trim();
     const tempId = `temp-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
-    const channelId = activeConversationId ? null : activeChannelId;
-    const conversationId = activeConversationId || null;
+    let channelId = activeConversationId ? null : activeChannelId;
+    let conversationId = activeConversationId || null;
 
     if (!channelId && !conversationId) {
-      throw new Error('No active channel or conversation selected.');
+      const fallbackId = getSmartDefaultChannel(accessibleChannels, currentUser);
+      if (fallbackId) {
+        channelId = fallbackId;
+        setActiveChannelId(fallbackId);
+      } else {
+        throw new Error('No active channel or conversation selected.');
+      }
     }
 
     const optimisticMsg: Message = {
@@ -307,7 +313,6 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
           sender_id: currentUser.id,
           content: trimmed,
           attachment_url: attachment?.url || null,
-          attachment_name: attachment?.name || null,
           attachment_type: attachment?.type || null,
         })
         .select('*, sender:profiles!messages_sender_id_fkey(*)')

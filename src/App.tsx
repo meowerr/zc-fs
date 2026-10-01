@@ -8,6 +8,7 @@ import { PendingApprovalView } from './components/auth/PendingApprovalView';
 import { AdminApprovalHub, SUB_TEAMS } from './components/admin/AdminApprovalHub';
 import { TasksHub } from './components/tasks/TasksHub';
 import { ChatView } from './components/chat/ChatView';
+import { TeamDirectory } from './components/team/TeamDirectory';
 import { NotificationDrawer } from './components/notifications/NotificationDrawer';
 import { ToastContainer } from './components/common/ToastContainer';
 import { RoleGuideModal } from './components/common/RoleGuideModal';
@@ -250,6 +251,15 @@ export const App: React.FC = () => {
               await sendMessage(content, attachment);
             }}
             onStartDirectMessage={startDirectMessage}
+          />
+        ) : activeTab === 'team' ? (
+          <TeamDirectory
+            currentUser={currentUser}
+            allProfiles={allProfiles}
+            allGroups={allGroups}
+            tasks={tasks}
+            onStartDirectMessage={startDirectMessage}
+            onNavigateTab={setActiveTab}
           />
         ) : (
           <MissionControl
