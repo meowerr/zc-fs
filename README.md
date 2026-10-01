@@ -63,8 +63,28 @@ To set up your free Supabase instance without any credit card:
    - `supabase/migrations/001_initial_schema.sql` (Tables, enums, triggers, domain constraint)
    - `supabase/migrations/002_rls_policies.sql` (Declarative Row Level Security policies)
    - `supabase/migrations/003_seed_data.sql` (5 sub-teams & channels seed)
+   - `supabase/migrations/005_google_auth.sql` (Strict domain trigger & OAuth name extraction)
+   - `supabase/migrations/006_product_maturity_schema.sql` (Audit logging & system health schema)
 5. Run the verification test suite in SQL Editor to confirm isolation:
    - `supabase/tests/rls_security_test.sql`
+
+---
+
+## 🔐 Authentication & Domain Security
+
+PitLane enforces strict server-side identity protection for the Zewail City racing organization:
+
+1. **Google OAuth ("Continue with Google"):**
+   - Members sign in with their `@zewailcity.edu.eg` Google account via standard OAuth 2.0 with PKCE authorization code grant.
+   - The `hd: 'zewailcity.edu.eg'` parameter provides a smooth UX hint in Google's account chooser, while PostgreSQL database triggers strictly enforce server-side validation.
+   - Non-university accounts (e.g. `@gmail.com`) or spoofed domain variants are blocked by the database trigger before committing to `auth.users`, leaving zero orphan accounts.
+2. **Account Linking & Role Preservation:**
+   - When an existing email/password user signs in with their matching Google account, Supabase automatically links the identities without altering their `profiles` row, preserving their assigned role, sub-team, and approval status.
+3. **Pending Quarantine Flow:**
+   - Newly authenticated Google users enter a quarantined `pending` state with zero access to sub-team tasks, documents, or chat until approved and assigned to a sub-team roster by the Club Admin.
+4. **Feature Flags:**
+   - `VITE_GOOGLE_AUTH_ENABLED` (`true` by default): Controls the visibility of the "Continue with Google" action.
+   - `VITE_AUTH_EMAIL_ENABLED` (`true` by default): Allows secondary email/password login, enabling zero-downtime pilot transition before disabling legacy email passwords.
 
 ---
 
