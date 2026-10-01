@@ -19,6 +19,15 @@
 - `[IMPLEMENTED, UNTESTED: requires live Google OAuth consent interaction]` Added `signInWithGoogle()` in `useAuth.ts` with `hd: 'zewailcity.edu.eg'`, prompt, and `redirectTo: window.location.origin`.
 - `[IMPLEMENTED, MANUALLY CHECKED]` Built Cyber Racing "Continue with Google" button with official multi-color "G" SVG mark, `>=48px` touch target, double-click guard, error banner with plain-language mapping, and feature flags (`VITE_GOOGLE_AUTH_ENABLED`, `VITE_AUTH_EMAIL_ENABLED`).
 
+### Slice G3: Edge Cases
+- `[SKIPPED per explicit user instruction]`
+
+### Slice G4: Verification & Documentation
+- `[VERIFIED: node scripts/verify-google-auth-config.mjs (24/24 passed)]` Static audit passed: verified Google provider, `hd` domain parameter, `select_account` prompt, origin-only `redirectTo`, PKCE flow, button specs, PWA service worker rules, and zero repository secrets (`GOCSPX`).
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript check passed (0 errors); gzip bundle 181.41 KB (< 200 KB budget); main JS 44.87 KB (< 50 KB budget).
+- `[VERIFIED: node scripts/verify-security-audit.mjs (7/7 passed)]` Live database security audit confirmed RLS invariants, cross-group quarantine, and privilege escalation guards remain strictly active.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Documented Google OAuth architecture, domain restrictions, and feature flags in `README.md`. Prepared manual verification checklist.
+
 ---
 
 ## 1. Product Maturity / Workspace Depth Pass (Branch: `feature/product-maturity-pass`)
