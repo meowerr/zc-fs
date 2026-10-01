@@ -8,6 +8,9 @@ import {
   Radio, 
   Paperclip, 
   ChevronLeft, 
+  ChevronRight,
+  X,
+  AlertCircle,
   Link as LinkIcon
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
@@ -57,6 +60,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
   const [showAttachInput, setShowAttachInput] = useState(false);
   const [isDMModalOpen, setIsDMModalOpen] = useState(false);
   const [showMobileList, setShowMobileList] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to latest message
@@ -64,26 +69,40 @@ export const ChatView: React.FC<ChatViewProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Find user's assigned sub-team channel (for quick-switch prompt)
+  const userTeamChannel = accessibleChannels.find(
+    (c) => c.channel_type === 'group' && c.group_id === currentUser.group_id
+  );
+
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim() && !attachmentUrl.trim()) return;
+    if (isSending) return;
+
+    setErrorMessage(null);
+    setIsSending(true);
+
+    const sentContent = inputText;
+    const sentAttachment = attachmentUrl
+      ? {
+          url: attachmentUrl,
+          name: 'Attached Link / Spec',
+          type: 'link',
+        }
+      : undefined;
 
     try {
-      await onSendMessage(
-        inputText,
-        attachmentUrl
-          ? {
-              url: attachmentUrl,
-              name: 'Attached Link / Spec',
-              type: 'link',
-            }
-          : undefined
-      );
+      await onSendMessage(sentContent, sentAttachment);
       setInputText('');
       setAttachmentUrl('');
       setShowAttachInput(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to send message:', err);
+      setErrorMessage(
+        err?.message || 'Transmission failed. Verify permissions or network connection.'
+      );
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -115,13 +134,22 @@ export const ChatView: React.FC<ChatViewProps> = ({
             <Radio className="w-3.5 h-3.5 text-accent-cyan animate-pulse" />
             <span className="uppercase tracking-wider">PIT WALL // COMMS</span>
           </div>
-          <button
-            onClick={() => setIsDMModalOpen(true)}
-            className="p-1 rounded bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-cyber-border hover:border-accent-cyan text-cyber-secondary hover:text-accent-cyan transition-all cursor-pointer"
-            title="Start Direct Message"
-          >
-            <Plus className="w-3.5 h-3.5" />
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setIsDMModalOpen(true)}
+              className="p-1 rounded bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-cyber-border hover:border-accent-cyan text-cyber-secondary hover:text-accent-cyan transition-all cursor-pointer"
+              title="Start Direct Message"
+            >
+              <Plus className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => setShowMobileList(false)}
+              className="md:hidden p-1 rounded bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-cyber-border text-cyber-secondary hover:text-cyber-primary transition-all cursor-pointer"
+              title="Close Channels List"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Channel & DM List */}
@@ -143,6 +171,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                     onClick={() => {
                       onSelectChannel(channel.id);
                       setShowMobileList(false);
+                      setErrorMessage(null);
                     }}
                     className={`
                       w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer border
@@ -207,6 +236,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       onClick={() => {
                         onSelectConversation(conv.id);
                         setShowMobileList(false);
+                        setErrorMessage(null);
                       }}
                       className={`
                         w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer border
@@ -242,9 +272,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
           <div className="flex items-center gap-2.5 min-w-0">
             <button
               onClick={() => setShowMobileList(true)}
-              className="md:hidden p-1 rounded bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary"
+              className="md:hidden inline-flex items-center gap-1 px-2 py-1 rounded bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary text-xs font-mono cursor-pointer"
+              title="Channels & DMs"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5" />
+              <span>Channels</span>
             </button>
 
             <div className="min-w-0">
@@ -288,12 +320,46 @@ export const ChatView: React.FC<ChatViewProps> = ({
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Chat Input Bar */}
-        <div className="pt-2.5 border-t border-cyber-border flex-shrink-0">
+        {/* Chat Input Bar & Error Feedback */}
+        <div className="pt-2.5 border-t border-cyber-border flex-shrink-0 space-y-2">
+          {/* Error Message Alert */}
+          {errorMessage && (
+            <div className="flex items-center justify-between px-3 py-1.5 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono animate-fade-in">
+              <div className="flex items-center gap-1.5 truncate">
+                <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="truncate">{errorMessage}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setErrorMessage(null)}
+                className="text-accent-red hover:underline text-[10px] ml-2 flex-shrink-0 cursor-pointer uppercase font-bold"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+
           {!canPost ? (
-            <div className="p-2.5 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center text-xs font-mono text-cyber-muted flex items-center justify-center gap-2">
-              <Lock className="w-3.5 h-3.5 text-accent-yellow" />
-              <span>Broadcast Channel: Only Club Admins & Sub-team Heads may post official announcements.</span>
+            <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-xs font-mono space-y-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2 text-cyber-muted">
+                  <Lock className="w-3.5 h-3.5 text-accent-yellow flex-shrink-0" />
+                  <span>Broadcast Channel: Club Admins & Sub-team Heads only.</span>
+                </div>
+                {userTeamChannel && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onSelectChannel(userTeamChannel.id);
+                      setErrorMessage(null);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-accent-cyan/40 hover:border-accent-cyan text-accent-cyan text-[11px] font-mono font-bold transition-all cursor-pointer self-start sm:self-auto"
+                  >
+                    <span>Switch to #{userTeamChannel.name}</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSend} className="space-y-2">
@@ -310,7 +376,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   <button
                     type="button"
                     onClick={() => { setShowAttachInput(false); setAttachmentUrl(''); }}
-                    className="text-xs text-cyber-muted hover:text-accent-red font-mono"
+                    className="text-xs text-cyber-muted hover:text-accent-red font-mono cursor-pointer"
                   >
                     Remove
                   </button>
@@ -346,9 +412,10 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   size="sm"
                   variant="primary"
                   type="submit"
+                  disabled={isSending || (!inputText.trim() && !attachmentUrl.trim())}
                   icon={<Send className="w-3.5 h-3.5" />}
                 >
-                  Send
+                  {isSending ? 'Sending...' : 'Send'}
                 </GlossyButton>
               </div>
             </form>
@@ -365,6 +432,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
         onSelectUser={(userId) => {
           onStartDirectMessage(userId);
           setShowMobileList(false);
+          setErrorMessage(null);
         }}
       />
     </div>

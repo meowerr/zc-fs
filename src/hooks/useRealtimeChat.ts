@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { supabase, isLiveSupabaseConfigured, isDemoMode } from '../lib/supabase';
 import { INITIAL_CHANNELS, INITIAL_MESSAGES } from '../lib/demoData';
 import { 
@@ -28,6 +28,17 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Keep stable refs to avoid tearing down WebSocket subscriptions on profile updates
+  const allProfilesRef = useRef<Profile[]>(allProfiles);
+  useEffect(() => {
+    allProfilesRef.current = allProfiles;
+  }, [allProfiles]);
+
+  const currentUserRef = useRef<Profile | null>(currentUser);
+  useEffect(() => {
+    currentUserRef.current = currentUser;
+  }, [currentUser]);
+
   // Save to localStorage in demo mode
   useEffect(() => {
     if (!isLiveSupabaseConfigured && isDemoMode) {
@@ -36,49 +47,47 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
     }
   }, [messages, conversations]);
 
-  // Load Channels & Conversations from Supabase
-  const loadChatMetadata = useCallback(async () => {
-    if (!isLiveSupabaseConfigured || !currentUser || currentUser.status !== 'approved') return;
+  // Smart default channel selection based on role and group assignment
+  const getSmartDefaultChannel = useCallback((availableChannels: Channel[], user: Profile): string => {
+    if (!availableChannels.length) return '';
 
-    try {
-      // 1. Fetch authorized channels (RLS enforces visibility)
-      const { data: channelData, error: chanErr } = await supabase
-        .from('channels')
-        .select('*')
-        .order('created_at', { ascending: true });
-
-      if (!chanErr && channelData) {
-        setChannels(channelData);
-        // Default to announcements channel if none active
-        if (!activeChannelId && !activeConversationId) {
-          const ann = channelData.find((c) => c.channel_type === 'announcements') || channelData[0];
-          if (ann) setActiveChannelId(ann.id);
-        }
-      }
-
-      // 2. Fetch conversations
-      const { data: convData, error: convErr } = await supabase
-        .from('conversations')
-        .select('*')
-        .order('updated_at', { ascending: false });
-
-      if (!convErr && convData) {
-        const enriched = convData.map((c) => ({
-          ...c,
-          other_participant: allProfiles.find(
-            (p) => p.id === (c.participant_1 === currentUser.id ? c.participant_2 : c.participant_1)
-          ),
-        }));
-        setConversations(enriched);
-      }
-    } catch (err) {
-      console.error('Failed to load chat metadata:', err);
+    // 1. If Member: Prioritize their assigned sub-team group channel (so they can immediately chat!)
+    if (user.role === 'member' && user.group_id) {
+      const memberGroup = availableChannels.find(
+        (c) => c.channel_type === 'group' && c.group_id === user.group_id
+      );
+      if (memberGroup) return memberGroup.id;
     }
-  }, [currentUser, allProfiles, activeChannelId, activeConversationId]);
 
-  useEffect(() => {
-    loadChatMetadata();
-  }, [loadChatMetadata]);
+    // 2. If Head: Prioritize their sub-team group channel, or heads-only channel
+    if (user.role === 'head') {
+      if (user.group_id) {
+        const headGroup = availableChannels.find(
+          (c) => c.channel_type === 'group' && c.group_id === user.group_id
+        );
+        if (headGroup) return headGroup.id;
+      }
+      const headsChan = availableChannels.find((c) => c.channel_type === 'heads_only');
+      if (headsChan) return headsChan.id;
+    }
+
+    // 3. If Admin: Prioritize heads-only or first group channel
+    if (user.role === 'admin') {
+      const headsChan = availableChannels.find((c) => c.channel_type === 'heads_only');
+      if (headsChan) return headsChan.id;
+    }
+
+    // 4. Fallback: First writable channel (where user is allowed to post)
+    const writable = availableChannels.find((c) => {
+      if (c.channel_type === 'announcements') return user.role === 'admin' || user.role === 'head';
+      if (c.channel_type === 'heads_only') return user.role === 'admin' || user.role === 'head';
+      return c.group_id === user.group_id || user.role === 'admin';
+    });
+    if (writable) return writable.id;
+
+    // 5. Final fallback: First available channel
+    return availableChannels[0].id;
+  }, []);
 
   // Compute channels visible to current user (enforcing RLS constraints in UI)
   const accessibleChannels: Channel[] = useMemo(() => {
@@ -101,17 +110,73 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
     });
   }, [currentUser, channels]);
 
-  // If active channel became inaccessible after role switch, auto-switch to first accessible
+  // Demo mode smart default initialization
   useEffect(() => {
-    if (accessibleChannels.length > 0 && !activeConversationId) {
-      const isCurrentValid = accessibleChannels.some((c) => c.id === activeChannelId);
-      if (!isCurrentValid) {
-        setActiveChannelId(accessibleChannels[0].id);
+    if (!isLiveSupabaseConfigured && currentUser && !activeChannelId && !activeConversationId) {
+      if (accessibleChannels.length > 0) {
+        setActiveChannelId(getSmartDefaultChannel(accessibleChannels, currentUser));
       }
     }
-  }, [accessibleChannels, activeChannelId, activeConversationId]);
+  }, [currentUser, accessibleChannels, activeChannelId, activeConversationId, getSmartDefaultChannel]);
 
-  // Realtime Supabase Subscription
+  // Load Channels & Conversations from Supabase (decoupled from activeChannelId/activeConversationId)
+  const loadChatMetadata = useCallback(async () => {
+    if (!isLiveSupabaseConfigured || !currentUser || currentUser.status !== 'approved') return;
+
+    try {
+      // 1. Fetch authorized channels (RLS enforces visibility)
+      const { data: channelData, error: chanErr } = await supabase
+        .from('channels')
+        .select('*')
+        .order('created_at', { ascending: true });
+
+      if (!chanErr && channelData && channelData.length > 0) {
+        setChannels(channelData);
+        // Smart default if none currently active
+        setActiveChannelId((prevId) => {
+          if (prevId) {
+            const exists = channelData.some((c) => c.id === prevId);
+            if (exists) return prevId;
+          }
+          return getSmartDefaultChannel(channelData, currentUser);
+        });
+      }
+
+      // 2. Fetch conversations
+      const { data: convData, error: convErr } = await supabase
+        .from('conversations')
+        .select('*')
+        .order('updated_at', { ascending: false });
+
+      if (!convErr && convData) {
+        const enriched = convData.map((c) => ({
+          ...c,
+          other_participant: allProfilesRef.current.find(
+            (p) => p.id === (c.participant_1 === currentUser.id ? c.participant_2 : c.participant_1)
+          ),
+        }));
+        setConversations(enriched);
+      }
+    } catch (err) {
+      console.error('Failed to load chat metadata:', err);
+    }
+  }, [currentUser?.id, currentUser?.status, currentUser?.role, currentUser?.group_id, getSmartDefaultChannel]);
+
+  useEffect(() => {
+    loadChatMetadata();
+  }, [loadChatMetadata]);
+
+  // If active channel became inaccessible after role or group switch, auto-switch to smart default
+  useEffect(() => {
+    if (accessibleChannels.length > 0 && !activeConversationId && currentUser) {
+      const isCurrentValid = accessibleChannels.some((c) => c.id === activeChannelId);
+      if (!isCurrentValid) {
+        setActiveChannelId(getSmartDefaultChannel(accessibleChannels, currentUser));
+      }
+    }
+  }, [accessibleChannels, activeChannelId, activeConversationId, currentUser, getSmartDefaultChannel]);
+
+  // Realtime Supabase Subscription: Stable lifecycle bound only to currentUser session
   useEffect(() => {
     if (!isLiveSupabaseConfigured || !currentUser || currentUser.status !== 'approved') return;
 
@@ -130,26 +195,50 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
 
     fetchSupabaseMessages();
 
-    // Subscribe to new incoming messages and conversations
+    // Unique channel topic name to avoid socket collision
+    const channelTopic = `chat_${currentUser.id}_${Math.random().toString(36).substring(2, 8)}`;
     const channel = supabase
-      .channel('public:messages_realtime')
+      .channel(channelTopic)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'messages' },
         async (payload) => {
-          const { data: sender } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', payload.new.sender_id)
-            .single();
+          const newMsg = payload.new as any;
+          // Synchronously resolve sender from in-memory profiles or currentUser
+          let sender = (newMsg.sender_id === currentUser.id)
+            ? currentUserRef.current
+            : allProfilesRef.current.find((p) => p.id === newMsg.sender_id);
+
+          // If sender not found in memory, query profile as fallback
+          if (!sender) {
+            const { data: dbSender } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', newMsg.sender_id)
+              .single();
+            if (dbSender) sender = dbSender;
+          }
 
           const incomingMsg: Message = {
-            ...(payload.new as any),
+            ...newMsg,
             sender: sender || undefined,
           };
 
           setMessages((prev) => {
-            if (prev.some((m) => m.id === incomingMsg.id)) return prev;
+            // Reconcile optimistic messages (either by confirmed ID or temp client ID)
+            const existingIndex = prev.findIndex(
+              (m) =>
+                m.id === incomingMsg.id ||
+                (m.id.startsWith('temp-') &&
+                  m.sender_id === incomingMsg.sender_id &&
+                  m.content === incomingMsg.content &&
+                  (m.channel_id === incomingMsg.channel_id || m.conversation_id === incomingMsg.conversation_id))
+            );
+            if (existingIndex !== -1) {
+              const updated = [...prev];
+              updated[existingIndex] = incomingMsg;
+              return updated;
+            }
             return [...prev, incomingMsg];
           });
         }
@@ -161,51 +250,92 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
           loadChatMetadata();
         }
       )
-      .subscribe();
+      .subscribe((status, err) => {
+        if (status === 'CHANNEL_ERROR') {
+          console.warn('Chat realtime channel error:', err);
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [currentUser, loadChatMetadata]);
+  }, [currentUser?.id, currentUser?.status, loadChatMetadata]);
 
-  // Send message function
+  // Send message function with instant optimistic UI update
   const sendMessage = async (
     content: string,
     attachment?: { url: string; name: string; type: string }
   ) => {
     if (!currentUser) throw new Error('Must be logged in to send messages.');
-    if (!content.trim()) return;
+    if (!content.trim() && !attachment?.url) return;
 
     const trimmed = content.trim();
+    const tempId = `temp-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    const channelId = activeConversationId ? null : activeChannelId;
+    const conversationId = activeConversationId || null;
 
-    if (!isLiveSupabaseConfigured) {
-      const newMsg: Message = {
-        id: `msg-${Date.now()}`,
-        channel_id: activeConversationId ? null : activeChannelId,
-        conversation_id: activeConversationId || null,
-        sender_id: currentUser.id,
-        content: trimmed,
-        attachment_url: attachment?.url || null,
-        attachment_name: attachment?.name || null,
-        attachment_type: attachment?.type || null,
-        created_at: new Date().toISOString(),
-        sender: currentUser,
-      };
-      setMessages((prev) => [...prev, newMsg]);
-      return;
+    if (!channelId && !conversationId) {
+      throw new Error('No active channel or conversation selected.');
     }
 
-    const { error } = await supabase.from('messages').insert({
-      channel_id: activeConversationId ? null : activeChannelId,
-      conversation_id: activeConversationId || null,
+    const optimisticMsg: Message = {
+      id: tempId,
+      channel_id: channelId,
+      conversation_id: conversationId,
       sender_id: currentUser.id,
       content: trimmed,
       attachment_url: attachment?.url || null,
       attachment_name: attachment?.name || null,
       attachment_type: attachment?.type || null,
-    });
+      created_at: new Date().toISOString(),
+      sender: currentUser,
+    };
 
-    if (error) throw error;
+    // Optimistically add message to state immediately for zero-lag rendering
+    setMessages((prev) => [...prev, optimisticMsg]);
+
+    if (!isLiveSupabaseConfigured) {
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('messages')
+        .insert({
+          channel_id: channelId,
+          conversation_id: conversationId,
+          sender_id: currentUser.id,
+          content: trimmed,
+          attachment_url: attachment?.url || null,
+          attachment_name: attachment?.name || null,
+          attachment_type: attachment?.type || null,
+        })
+        .select('*, sender:profiles!messages_sender_id_fkey(*)')
+        .single();
+
+      if (error) {
+        // Rollback optimistic message on error
+        setMessages((prev) => prev.filter((m) => m.id !== tempId));
+        throw error;
+      }
+
+      if (data) {
+        // Replace temp message with server record
+        setMessages((prev) => {
+          const idx = prev.findIndex((m) => m.id === tempId || m.id === data.id);
+          if (idx !== -1) {
+            const next = [...prev];
+            next[idx] = data;
+            return next;
+          }
+          return [...prev, data];
+        });
+      }
+    } catch (err) {
+      // Ensure rollback on any exception
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      throw err;
+    }
   };
 
   // Start or get existing DM conversation with target user
@@ -235,7 +365,7 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
         participant_2: p2,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-        other_participant: allProfiles.find((p) => p.id === targetUserId),
+        other_participant: allProfilesRef.current.find((p) => p.id === targetUserId),
       };
       setConversations((prev) => [...prev, newConv]);
       setActiveConversationId(newConv.id);
@@ -260,6 +390,14 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
         .single();
 
       if (existingDb) {
+        const enriched: Conversation = {
+          ...existingDb,
+          other_participant: allProfilesRef.current.find((p) => p.id === targetUserId),
+        };
+        setConversations((prev) => {
+          if (prev.some((c) => c.id === enriched.id)) return prev;
+          return [enriched, ...prev];
+        });
         setActiveConversationId(existingDb.id);
         setActiveChannelId('');
         return existingDb.id;
@@ -268,7 +406,11 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
     }
 
     if (dbConv) {
-      await loadChatMetadata();
+      const enriched: Conversation = {
+        ...dbConv,
+        other_participant: allProfilesRef.current.find((p) => p.id === targetUserId),
+      };
+      setConversations((prev) => [enriched, ...prev]);
       setActiveConversationId(dbConv.id);
       setActiveChannelId('');
       return dbConv.id;
@@ -287,7 +429,7 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
   const currentChannel = accessibleChannels.find((c) => c.id === activeChannelId);
   const currentConversation = conversations.find((c) => c.id === activeConversationId);
   const otherParticipant = currentConversation
-    ? allProfiles.find(
+    ? allProfilesRef.current.find(
         (p) =>
           p.id ===
           (currentConversation.participant_1 === currentUser?.id
@@ -310,6 +452,12 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
     // In heads-only, only Head and Admin can post
     if (currentChannel.channel_type === 'heads_only') {
       return currentUser.role === 'admin' || currentUser.role === 'head';
+    }
+
+    // In group channels: Admins can post anywhere, members can post in their group
+    if (currentChannel.channel_type === 'group') {
+      if (currentUser.role === 'admin') return true;
+      return currentChannel.group_id === currentUser.group_id;
     }
 
     return true;

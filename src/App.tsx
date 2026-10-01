@@ -192,7 +192,7 @@ export const App: React.FC = () => {
         currentRole={currentUser.role}
         userName={currentUser.full_name}
         groupName={groupDisplayName}
-        unreadCount={currentMessages.length > 0 ? 1 : 0}
+        unreadCount={0}
         onOpenProfile={signOut}
         notificationCount={notifUnreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
@@ -248,7 +248,6 @@ export const App: React.FC = () => {
             onSelectConversation={setActiveConversation}
             onSendMessage={async (content, attachment) => {
               await sendMessage(content, attachment);
-              addNotification('mention', 'Message Transmitted', 'Telemetry packet sent.');
             }}
             onStartDirectMessage={startDirectMessage}
           />
