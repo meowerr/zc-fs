@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Layout Redesign: Hybrid Racing Rail Navigation (Branch: `feature/hybrid-racing-rail`)
-- **Active Slice:** Slice 4 (Visual Language & Telemetry Instrumentation) Completed & Verified.
-- **Verification Status:** 15/15 checks passed in `scripts/verify-slice-4-telemetry.mjs` | Bundle: 182.16 KB (< 200 KB) | Main JS: 44.80 KB (< 50 KB).
+- **Active Slice:** Slice 5 (Responsive Pass: Tablet & Mobile Garage Door) Completed & Verified.
+- **Verification Status:** 23/23 checks passed in `scripts/verify-slice-5-responsive.mjs` | Bundle: 183.49 KB (< 200 KB) | Main JS: 45.88 KB (< 50 KB).
 
 ---
 
@@ -15,7 +15,7 @@
 | **Slice 2: Floating Rail Base & Layout Shell** | `[VERIFIED]` | Implemented `HybridRacingRail.tsx` (72px collapsed floating rail, z-30), CSS variables layout system (`--rail-w`, `--rail-gap`, `--rail-offset`), TopHeader realignment (z-20, mobile brand / desktop sub-team breadcrumb), and zero-reflow padding offset in `AppShell.tsx`. Verified instant rollback switch `USE_HYBRID_RACING_RAIL`. Bundle: 180.08 KB / Main JS: 43.10 KB. |
 | **Slice 3: Expansion & Interaction Layer** | `[VERIFIED]` | Added hover intent delay (120ms enter / 250ms leave), keyboard Tab focus navigation, Esc key collapse, and pin dock persistence (`localStorage: zcfs_rail_pinned`) with `html[data-rail-pinned]` layout offset at >=1280px. Zero reflow on hover overlay expansion (z-35, 288px). Bundle: 181.43 KB / Main JS: 44.16 KB. |
 | **Slice 4: Visual Language & Telemetry Instrumentation** | `[VERIFIED]` | Added 2px continuous track lane line, neon cyan lit active lane markers with live pulsating status nodes, dynamic team accent coloring (`userTeamColor`), double-encoded Realtime connection LED (`ONLINE`, `RECONNECTING`, `OFFLINE`), accessible instant cyber tooltips on collapsed rail, and RLS-safe sub-team telemetry (5-team matrix for admin, dedicated team hero for members without misleading 0% metrics). Bundle: 182.16 KB / Main JS: 44.80 KB. |
-| **Slice 5: Responsive Pass (Tablet & Mobile "Garage Door")** | `[PENDING]` | Tablet tap-to-expand, Mobile thumb-arc floating tab + bottom sheet overlay replacing `BottomNav`, viewport-height density tiers. |
+| **Slice 5: Responsive Pass (Tablet & Mobile "Garage Door")** | `[VERIFIED]` | Added Tablet tap-to-expand with single-tap navigation and outside dismissal; built `GarageDoorNav.tsx` replacing `BottomNav` on mobile with 56px thumb-arc pill, 78vh bottom sheet, 2x3 destination grid (64px targets), swipe-to-dismiss gesture, safe area padding, and pb-20 layout. Configured viewport density tiers (600-759px and <600px) eliminating all scrollbars. Bundle: 183.49 KB / Main JS: 45.88 KB. |
 | **Slice 6: Accessibility, /styleguide & Full Verification** | `[PENDING]` | ARIA attributes, reduced motion compliance, StyleGuide showcase, full test suite pass, bundle budget check. |
 
 ---

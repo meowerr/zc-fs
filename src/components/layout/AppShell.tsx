@@ -4,9 +4,10 @@ import { BottomNav } from './BottomNav';
 import { NavTab } from '../../config/navigation';
 import { Sidebar } from './Sidebar';
 import { HybridRacingRail } from './HybridRacingRail';
+import { GarageDoorNav } from './GarageDoorNav';
 import { UserRole, Group, Task } from '../../lib/database.types';
 
-// Instant Rollback Flag: toggle to false if legacy permanent sidebar is needed
+// Instant Rollback Flag: toggle to false if legacy permanent sidebar/bottom-nav is needed
 const USE_HYBRID_RACING_RAIL = true;
 
 interface AppShellProps {
@@ -108,7 +109,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             className="flex-1 flex w-full transition-all duration-200"
             style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
           >
-            <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-24 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden">
+            <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-20 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden">
               {children}
             </main>
           </div>
@@ -133,13 +134,25 @@ export const AppShell: React.FC<AppShellProps> = ({
         </div>
       )}
 
-      {/* Mobile Bottom Navigation Bar (Hidden on md+, replaced by Garage Door in Slice 5) */}
-      <BottomNav
-        activeTab={activeTab}
-        onTabChange={onTabChange}
-        role={currentRole}
-        unreadCount={unreadCount}
-      />
+      {/* Mobile Navigation Bar (Garage Door for Hybrid Rail, BottomNav for Legacy Rollback) */}
+      {USE_HYBRID_RACING_RAIL ? (
+        <GarageDoorNav
+          activeTab={activeTab}
+          onTabChange={onTabChange}
+          role={currentRole}
+          currentGroupName={groupName}
+          userName={userName}
+          unreadCount={unreadCount}
+          onOpenProfile={onOpenProfile}
+        />
+      ) : (
+        <BottomNav
+          activeTab={activeTab}
+          onTabChange={onTabChange}
+          role={currentRole}
+          unreadCount={unreadCount}
+        />
+      )}
     </div>
   );
 };

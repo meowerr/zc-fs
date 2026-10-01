@@ -75,6 +75,19 @@
     }
   }
 
+  /* Viewport-Height Density Tiers (Guarantees Rail Never Has Scrollbar) */
+  @media (max-height: 759px) {
+    .rail-subtitles {
+      display: none !important;
+    }
+  }
+
+  @media (max-height: 599px) {
+    .rail-pips-block {
+      display: none !important;
+    }
+  }
+
   .dark {
     /* Dark Theme (Graphite Cyber Racing) */
     --bg-base: #070A0E;
