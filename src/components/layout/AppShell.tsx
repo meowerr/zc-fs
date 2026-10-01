@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { TopHeader } from './TopHeader';
-import { BottomNav, NavTab } from './BottomNav';
+import { BottomNav } from './BottomNav';
+import { NavTab } from '../../config/navigation';
 import { Sidebar } from './Sidebar';
+import { HybridRacingRail } from './HybridRacingRail';
 import { UserRole, Group, Task } from '../../lib/database.types';
+
+// Instant Rollback Flag: toggle to false if legacy permanent sidebar is needed
+const USE_HYBRID_RACING_RAIL = true;
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -83,25 +88,52 @@ export const AppShell: React.FC<AppShellProps> = ({
         onOpenSearch={onOpenSearch}
       />
 
-      {/* Body: Desktop Sidebar + Main Content */}
-      <div className="flex-1 flex max-w-7xl w-full mx-auto">
-        <Sidebar
-          activeTab={activeTab}
-          onTabChange={onTabChange}
-          role={currentRole}
-          currentGroupName={groupName}
-          unreadCount={unreadCount}
-          groups={groups}
-          tasks={tasks}
-          onOpenStyleGuide={onOpenStyleGuide}
-        />
+      {/* Navigation & Main Content Container */}
+      {USE_HYBRID_RACING_RAIL ? (
+        <>
+          {/* Floating Collapsible Racing Rail (Desktop & Tablet) */}
+          <HybridRacingRail
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+            role={currentRole}
+            currentGroupName={groupName}
+            unreadCount={unreadCount}
+            groups={groups}
+            tasks={tasks}
+            onOpenStyleGuide={onOpenStyleGuide}
+          />
 
-        <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-24 md:pb-8 max-w-full overflow-x-hidden">
-          {children}
-        </main>
-      </div>
+          {/* Body Container with Fixed Rail Offset (Zero Reflow Guarantee) */}
+          <div 
+            className="flex-1 flex w-full transition-all duration-200"
+            style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
+          >
+            <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-24 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden">
+              {children}
+            </main>
+          </div>
+        </>
+      ) : (
+        /* Legacy Layout (Rollback Target) */
+        <div className="flex-1 flex max-w-7xl w-full mx-auto">
+          <Sidebar
+            activeTab={activeTab}
+            onTabChange={onTabChange}
+            role={currentRole}
+            currentGroupName={groupName}
+            unreadCount={unreadCount}
+            groups={groups}
+            tasks={tasks}
+            onOpenStyleGuide={onOpenStyleGuide}
+          />
 
-      {/* Mobile Bottom Navigation Bar (Hidden on md+) */}
+          <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-24 md:pb-8 max-w-full overflow-x-hidden">
+            {children}
+          </main>
+        </div>
+      )}
+
+      {/* Mobile Bottom Navigation Bar (Hidden on md+, replaced by Garage Door in Slice 5) */}
       <BottomNav
         activeTab={activeTab}
         onTabChange={onTabChange}
@@ -111,3 +143,4 @@ export const AppShell: React.FC<AppShellProps> = ({
     </div>
   );
 };
+

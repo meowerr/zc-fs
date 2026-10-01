@@ -31,27 +31,44 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   onOpenSearch,
 }) => {
   return (
-    <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-cyber-surface/90 border-b border-cyber-border transition-colors">
+    <header 
+      className="sticky top-0 z-20 w-full backdrop-blur-md bg-cyber-surface/90 border-b border-cyber-border transition-all duration-200"
+      style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
+    >
       <div className="max-w-7xl mx-auto px-4 h-14 sm:h-16 flex items-center justify-between gap-4">
-        {/* Brand / Motorsport Logo */}
+        {/* Left Section: Mobile Brand or Desktop Sub-Team Telemetry Breadcrumb */}
         <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-cyber-bg border border-accent-cyan/60 shadow-[0_0_10px_rgba(0,217,255,0.2)]">
-            <span className="font-display font-black text-accent-cyan text-sm sm:text-base tracking-tighter">ZC</span>
-            <div className="absolute top-0.5 right-0.5 w-1 h-1 rounded-full bg-accent-cyan animate-pulse" />
+          {/* Mobile-Only Brand Logo */}
+          <div className="md:hidden flex items-center gap-2.5">
+            <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-accent-cyan/60 shadow-[0_0_10px_rgba(0,217,255,0.2)]">
+              <span className="font-display font-black text-accent-cyan text-xs tracking-tighter">ZC</span>
+              <div className="absolute top-0.5 right-0.5 w-1 h-1 rounded-full bg-accent-cyan animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <h1 className="font-display font-black text-xs tracking-widest text-cyber-primary uppercase">
+                  PitLane
+                </h1>
+                <span className="px-1 py-0.2 rounded text-[8px] font-mono font-bold bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
+                  FS-2026
+                </span>
+              </div>
+              <p className="text-[10px] font-mono text-cyber-muted tracking-wider flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse" />
+                <span className="truncate max-w-[120px]">{groupName}</span>
+              </p>
+            </div>
           </div>
-          <div>
+
+          {/* Desktop Sub-Team Context Indicator */}
+          <div className="hidden md:flex items-center gap-2.5 py-1 px-2.5 rounded-lg bg-cyber-surface-elevated/60 border border-cyber-border/70">
+            <span className="font-mono text-accent-cyan text-xs font-bold">//</span>
             <div className="flex items-center gap-2">
-              <h1 className="font-display font-black text-xs sm:text-sm tracking-widest text-cyber-primary uppercase">
-                PitLane
-              </h1>
-              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
-                FS-2026
+              <span className="w-2 h-2 rounded-full bg-accent-lime animate-pulse" />
+              <span className="font-mono text-xs font-semibold tracking-wider text-cyber-primary uppercase">
+                {groupName}
               </span>
             </div>
-            <p className="text-[10px] sm:text-[11px] font-mono text-cyber-muted tracking-wider flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse" />
-              <span className="truncate max-w-[130px] sm:max-w-none">{groupName}</span>
-            </p>
           </div>
         </div>
 

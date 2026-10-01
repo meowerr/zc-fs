@@ -37,7 +37,35 @@
     --team-pt: #B8860B;   /* Powertrain & Drivetrain */
     --team-ops: #0B9E50;  /* Business, Cost & Ops */
 
+    /* Hybrid Racing Rail Navigation Dimensions */
+    --rail-w: 72px;
+    --rail-gap: 12px;
+    --rail-offset: calc(var(--rail-w) + (var(--rail-gap) * 2));
+
     color-scheme: light;
+  }
+
+  @media (min-width: 1280px) {
+    :root {
+      --rail-gap: 16px;
+      --rail-offset: calc(var(--rail-w) + (var(--rail-gap) * 2));
+    }
+  }
+
+  @media (max-width: 1023px) and (min-width: 768px) {
+    :root {
+      --rail-w: 64px;
+      --rail-gap: 10px;
+      --rail-offset: calc(var(--rail-w) + (var(--rail-gap) * 2));
+    }
+  }
+
+  @media (max-width: 767px) {
+    :root {
+      --rail-w: 0px;
+      --rail-gap: 0px;
+      --rail-offset: 0px;
+    }
   }
 
   .dark {
