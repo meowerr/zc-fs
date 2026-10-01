@@ -1,9 +1,22 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Phase: Product Maturity / Workspace Depth Complete (Working Branch: `feature/product-maturity-pass`)
-- **Active Task:** All 15 Product Maturity Objectives verified against live database and automated test suite.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | Gzip bundle: 179.38 KB (< 200 KB) | Main JS: 43.05 KB (< 50 KB).
+- **Current Phase:** Layout Redesign: Hybrid Racing Rail Navigation (Branch: `feature/hybrid-racing-rail`)
+- **Active Slice:** Slice 1 (Navigation Config & Role Parity) Completed & Verified.
+- **Verification Status:** 25/25 checks passed in `scripts/verify-nav-config.mjs` | Strict TypeScript compilation: 0 errors.
+
+---
+
+## Hybrid Racing Rail Navigation Redesign (Branch: `feature/hybrid-racing-rail`)
+
+| Slice | Status | Implementation Details & Proof |
+| :--- | :--- | :--- |
+| **Slice 1: Navigation Config & Role Parity** | `[VERIFIED]` | Created `src/config/navigation.ts` defining `NAV_GROUPS` (`SYSTEM`, `OPERATIONS`, `COMMS`, `ADMIN`) and `NAV_ITEMS` with strictly identical role permissions. Created `scripts/verify-nav-config.mjs` confirming 25/25 checks pass (strict tsc, 6 admin destinations, 5 head/member/pending destinations, zero leakage of admin hub to non-admin roles). |
+| **Slice 2: Floating Rail Base & Layout Shell** | `[PENDING]` | Floating collapsed rail (72px), content offset CSS variables, TopHeader realignment. Old `Sidebar.tsx` and `BottomNav.tsx` kept untouched for rollback safety. |
+| **Slice 3: Expansion & Interaction Layer** | `[PENDING]` | 288px overlay expansion, 120ms hover intent delay, 250ms leave delay, keyboard focus-within, Esc collapse, pin toggle at >=1280px. |
+| **Slice 4: Visual Language & Telemetry Instrumentation** | `[PENDING]` | 2px track lane line, active node indicators, team accent coloring, Realtime connection LED, RLS-respecting sub-team pips. |
+| **Slice 5: Responsive Pass (Tablet & Mobile "Garage Door")** | `[PENDING]` | Tablet tap-to-expand, Mobile thumb-arc floating tab + bottom sheet overlay replacing `BottomNav`, viewport-height density tiers. |
+| **Slice 6: Accessibility, /styleguide & Full Verification** | `[PENDING]` | ARIA attributes, reduced motion compliance, StyleGuide showcase, full test suite pass, bundle budget check. |
 
 ---
 
