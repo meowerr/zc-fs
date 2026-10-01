@@ -106,6 +106,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
           <button
             onClick={() => setIsOpen(true)}
             aria-label="Open PitLane Command Console"
+            aria-expanded={false}
             className="w-full min-h-[56px] px-3.5 py-2 rounded-2xl bg-cyber-surface/95 dark:bg-midnight-900/95 backdrop-blur-md border border-cyber-border shadow-cyber-elevated flex items-center justify-between gap-3 active:scale-[0.98] transition-all cursor-pointer group"
           >
             {/* Left: ZC Motorsport Badge */}
@@ -154,7 +155,12 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
 
       {/* ─── OPEN STATE: GARAGE DOOR OVERLAY PANEL (~70VH BOTTOM SHEET) ─── */}
       {isOpen && (
-        <div className="fixed inset-0 z-40 flex flex-col justify-end">
+        <div 
+          role="dialog"
+          aria-modal="true"
+          aria-label="PitLane Mobile Command Center"
+          className="fixed inset-0 z-40 flex flex-col justify-end"
+        >
           {/* Dimmed Blurred Backdrop */}
           <div 
             onClick={() => setIsOpen(false)}

@@ -199,6 +199,7 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
         onFocusCapture={handleFocus}
         onBlurCapture={handleBlur}
         aria-label="PitLane Control Console"
+        aria-expanded={isOpen}
         style={{ zIndex: isOpen ? 35 : 30 }}
         className={`
           hidden md:flex flex-col fixed top-[var(--rail-gap,12px)] bottom-[var(--rail-gap,12px)] left-[var(--rail-gap,12px)]
@@ -244,6 +245,7 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
               onClick={togglePin}
               title={isPinned ? 'Unpin Navigation Rail (Floating Mode)' : 'Pin Navigation Rail (Docked Mode)'}
               aria-label={isPinned ? 'Unpin Navigation Rail' : 'Pin Navigation Rail'}
+              aria-pressed={isPinned}
               className={`
                 p-1.5 rounded-lg border transition-colors cursor-pointer
                 ${isPinned 
