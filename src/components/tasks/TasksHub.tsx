@@ -190,42 +190,78 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         {/* Telemetry Metric Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mt-5 pt-4 border-t border-cyber-border">
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border">
-            <div className="text-[10px] font-mono text-cyber-muted uppercase flex items-center justify-between">
+            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between font-semibold">
               <span>Total Work</span>
-              <FileCheck className="w-3 h-3 text-cyber-muted" />
+              <FileCheck className="w-3.5 h-3.5 text-cyber-muted" />
             </div>
-            <div className="text-xl sm:text-2xl font-display font-black text-cyber-primary mt-0.5">{tasks.length}</div>
-            <div className="text-[9px] font-mono text-cyber-muted">All Deliverables</div>
+            {tasks.length === 0 ? (
+              <>
+                <div className="text-xl sm:text-2xl font-mono font-bold text-cyber-muted mt-0.5">0</div>
+                <div className="text-[11px] font-mono text-cyber-secondary">No active deliverables</div>
+              </>
+            ) : (
+              <>
+                <div className="text-xl sm:text-2xl font-display font-black text-cyber-primary mt-0.5">{tasks.length}</div>
+                <div className="text-[11px] font-mono text-cyber-secondary">All Deliverables</div>
+              </>
+            )}
           </div>
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow" />
-            <div className="text-[10px] font-mono text-cyber-muted uppercase flex items-center justify-between">
+            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between font-semibold">
               <span>In Review</span>
-              <Clock className="w-3 h-3 text-accent-yellow" />
+              <Clock className="w-3.5 h-3.5 text-accent-yellow" />
             </div>
-            <div className="text-xl sm:text-2xl font-display font-black text-accent-yellow mt-0.5">{inReviewCount}</div>
-            <div className="text-[9px] font-mono text-cyber-muted">Awaiting Head Review</div>
+            {inReviewCount === 0 ? (
+              <>
+                <div className="text-xl sm:text-2xl font-mono font-bold text-cyber-muted mt-0.5">0</div>
+                <div className="text-[11px] font-mono text-cyber-secondary">No reviews pending</div>
+              </>
+            ) : (
+              <>
+                <div className="text-xl sm:text-2xl font-display font-black text-accent-yellow mt-0.5">{inReviewCount}</div>
+                <div className="text-[11px] font-mono text-cyber-secondary">Awaiting Head Review</div>
+              </>
+            )}
           </div>
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red" />
-            <div className="text-[10px] font-mono text-cyber-muted uppercase flex items-center justify-between">
+            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between font-semibold">
               <span>Critical Overdue</span>
-              <AlertTriangle className="w-3 h-3 text-accent-red" />
+              <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
             </div>
-            <div className="text-xl sm:text-2xl font-display font-black text-accent-red mt-0.5">{overdueCount}</div>
-            <div className="text-[9px] font-mono text-cyber-muted">Requires Immediate Action</div>
+            {overdueCount === 0 ? (
+              <>
+                <div className="text-xl sm:text-2xl font-mono font-bold text-cyber-muted mt-0.5">0</div>
+                <div className="text-[11px] font-mono text-cyber-secondary">On schedule</div>
+              </>
+            ) : (
+              <>
+                <div className="text-xl sm:text-2xl font-display font-black text-accent-red mt-0.5">{overdueCount}</div>
+                <div className="text-[11px] font-mono text-cyber-secondary">Requires Immediate Action</div>
+              </>
+            )}
           </div>
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime" />
-            <div className="text-[10px] font-mono text-cyber-muted uppercase flex items-center justify-between">
+            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between font-semibold">
               <span>Verified / Passed</span>
-              <CheckCircle2 className="w-3 h-3 text-accent-lime" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
             </div>
-            <div className="text-xl sm:text-2xl font-display font-black text-accent-lime mt-0.5">{completedCount}</div>
-            <div className="text-[9px] font-mono text-cyber-muted">Deliverables Approved</div>
+            {completedCount === 0 ? (
+              <>
+                <div className="text-xl sm:text-2xl font-mono font-bold text-cyber-muted mt-0.5">0</div>
+                <div className="text-[11px] font-mono text-cyber-secondary">No approved tasks yet</div>
+              </>
+            ) : (
+              <>
+                <div className="text-xl sm:text-2xl font-display font-black text-accent-lime mt-0.5">{completedCount}</div>
+                <div className="text-[11px] font-mono text-cyber-secondary">Deliverables Approved</div>
+              </>
+            )}
           </div>
         </div>
       </GlassCard>

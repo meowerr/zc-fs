@@ -632,6 +632,105 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </div>
         </GlassCard>
       </section>
+
+      {/* ─── 9. HYBRID RACING RAIL & GARAGE DOOR NAVIGATION ─── */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Layers className="w-4 h-4 text-accent-cyan" />
+            <h2 className="font-display font-bold text-lg uppercase tracking-wider">
+              9. Hybrid Racing Rail & Mobile Navigation
+            </h2>
+          </div>
+          <span className="text-[11px] font-mono text-cyber-muted">CONSOLE // ARCHITECTURE</span>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* Rail State Preview */}
+          <GlassCard className="p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-cyber-border pb-3">
+              <span className="text-xs font-mono font-bold text-accent-cyan uppercase">
+                // Desktop Hybrid Racing Rail (72px → 288px)
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
+                OVERLAY Z-35
+              </span>
+            </div>
+
+            <p className="text-xs text-cyber-secondary leading-relaxed">
+              Floating race-engineer console replacing the legacy static sidebar. Reserves a fixed left offset (<code className="text-accent-cyan">--rail-offset</code>) so the main canvas NEVER reflows or squeezes when the command center expands.
+            </p>
+
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="p-3 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-2">
+                <span className="text-[10px] font-mono text-accent-lime font-bold uppercase block">
+                  ● Collapsed (72px)
+                </span>
+                <ul className="text-[11px] font-mono text-cyber-muted space-y-1">
+                  <li>• Lit active track node</li>
+                  <li>• 48px touch targets</li>
+                  <li>• Instant cyber tooltips</li>
+                  <li>• 5-team status pips</li>
+                </ul>
+              </div>
+
+              <div className="p-3 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-2">
+                <span className="text-[10px] font-mono text-accent-cyan font-bold uppercase block">
+                  ● Expanded (288px)
+                </span>
+                <ul className="text-[11px] font-mono text-cyber-muted space-y-1">
+                  <li>• 120ms hover intent delay</li>
+                  <li>• 250ms leave buffer</li>
+                  <li>• Grouped command sections</li>
+                  <li>• Pin dock on ≥1280px</li>
+                </ul>
+              </div>
+            </div>
+          </GlassCard>
+
+          {/* Garage Door Mobile Preview */}
+          <GlassCard className="p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-cyber-border pb-3">
+              <span className="text-xs font-mono font-bold text-accent-orange uppercase">
+                // Mobile "Garage Door" Navigation (&lt;768px)
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent-orange/10 text-accent-orange border border-accent-orange/30">
+                THUMB-ARC TAB
+              </span>
+            </div>
+
+            <p className="text-xs text-cyber-secondary leading-relaxed">
+              Replaces the full-width bottom bar with an edge thumb-arc glass tab (56px) that expands into a 78vh bottom sheet with a 2x3 destination grid. Content gets the full viewport height.
+            </p>
+
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <div className="p-3 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-2">
+                <span className="text-[10px] font-mono text-accent-yellow font-bold uppercase block">
+                  ▲ Floating Tab (56px)
+                </span>
+                <ul className="text-[11px] font-mono text-cyber-muted space-y-1">
+                  <li>• ZC telemetry mark</li>
+                  <li>• Active view name</li>
+                  <li>• Live connection beacon</li>
+                  <li>• Safe area inset aware</li>
+                </ul>
+              </div>
+
+              <div className="p-3 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-2">
+                <span className="text-[10px] font-mono text-accent-red font-bold uppercase block">
+                  ▲ Garage Door Sheet
+                </span>
+                <ul className="text-[11px] font-mono text-cyber-muted space-y-1">
+                  <li>• 2x3 destination grid</li>
+                  <li>• 64px tap targets</li>
+                  <li>• Swipe-down to dismiss</li>
+                  <li>• Sub-team & role info</li>
+                </ul>
+              </div>
+            </div>
+          </GlassCard>
+        </div>
+      </section>
     </div>
   );
 };

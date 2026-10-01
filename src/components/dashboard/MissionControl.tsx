@@ -195,53 +195,74 @@ export const MissionControl: React.FC<MissionControlProps> = ({
           </div>
         </div>
 
-        {/* ─── ROLE-SPECIFIC TELEMETRY CARDS (Objective 4) ─── */}
+        {/* ─── ROLE-SPECIFIC TELEMETRY CARDS (Zero-State & Plain-Language Aware) ─── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-5 border-t border-cyber-border">
           {/* CARD 1 */}
           {currentUser.role === 'admin' ? (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 font-bold">
                   <Sliders className="w-3.5 h-3.5 text-accent-cyan" />
                   Total Tasks
                 </span>
-                <span className="text-[9px] text-cyber-muted tracking-tighter">ALL</span>
+                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">ALL</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">
-                {tasks.length}
-              </div>
-              <div className="text-[10px] font-mono text-cyber-muted mt-0.5">5 Sub-Teams Combined</div>
+              {tasks.length === 0 ? (
+                <>
+                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No active deliverables</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{tasks.length}</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">5 Sub-Teams Combined</div>
+                </>
+              )}
             </div>
           ) : currentUser.role === 'head' ? (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 font-bold">
                   <Sliders className="w-3.5 h-3.5 text-accent-cyan" />
                   Team Queue
                 </span>
-                <span className="text-[9px] text-cyber-muted tracking-tighter">SUB-TEAM</span>
+                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">SUB-TEAM</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">
-                {tasks.length}
-              </div>
-              <div className="text-[10px] font-mono text-cyber-muted mt-0.5">Active Deliverables</div>
+              {tasks.length === 0 ? (
+                <>
+                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No queue deliverables</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{tasks.length}</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Active Deliverables</div>
+                </>
+              )}
             </div>
           ) : (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 font-bold">
                   <Activity className="w-3.5 h-3.5 text-accent-cyan" />
                   My Tasks
                 </span>
-                <span className="text-[9px] text-cyber-muted tracking-tighter">ASSIGNED</span>
+                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">ASSIGNED</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">
-                {myTasks.length}
-              </div>
-              <div className="text-[10px] font-mono text-cyber-muted mt-0.5">Assigned to Me</div>
+              {myTasks.length === 0 ? (
+                <>
+                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No tasks assigned</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{myTasks.length}</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Assigned to Me</div>
+                </>
+              )}
             </div>
           )}
 
@@ -253,16 +274,23 @@ export const MissionControl: React.FC<MissionControlProps> = ({
             >
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 font-bold">
                   <Users className="w-3.5 h-3.5 text-accent-yellow" />
                   Registrations
                 </span>
-                <span className="text-[9px] text-accent-yellow tracking-tighter font-bold">ACTION</span>
+                <span className="text-[11px] font-mono text-accent-yellow tracking-tighter font-bold">ACTION</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">
-                {pendingRegistrations.length}
-              </div>
-              <div className="text-[10px] font-mono text-cyber-muted mt-0.5">Pending Approval</div>
+              {pendingRegistrations.length === 0 ? (
+                <>
+                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">All caught up</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">{pendingRegistrations.length}</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Pending Approval</div>
+                </>
+              )}
             </div>
           ) : currentUser.role === 'head' ? (
             <div
@@ -271,31 +299,45 @@ export const MissionControl: React.FC<MissionControlProps> = ({
             >
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-orange opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 font-bold">
                   <FileCheck className="w-3.5 h-3.5 text-accent-orange" />
                   Needs Review
                 </span>
-                <span className="text-[9px] text-accent-orange tracking-tighter font-bold">LEAD</span>
+                <span className="text-[11px] font-mono text-accent-orange tracking-tighter font-bold">LEAD</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-black text-accent-orange mt-1">
-                {needsReviewTasks.length}
-              </div>
-              <div className="text-[10px] font-mono text-cyber-muted mt-0.5">Submissions Awaiting You</div>
+              {needsReviewTasks.length === 0 ? (
+                <>
+                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No reviews pending</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-orange mt-1">{needsReviewTasks.length}</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Submissions Awaiting You</div>
+                </>
+              )}
             </div>
           ) : (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 font-bold">
                   <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
                   Revisions
                 </span>
-                <span className="text-[9px] text-accent-red tracking-tighter font-bold">FEEDBACK</span>
+                <span className="text-[11px] font-mono text-accent-red tracking-tighter font-bold">FEEDBACK</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">
-                {changesRequestedTasks.length}
-              </div>
-              <div className="text-[10px] font-mono text-cyber-muted mt-0.5">Changes Requested</div>
+              {changesRequestedTasks.length === 0 ? (
+                <>
+                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No changes requested</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">{changesRequestedTasks.length}</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Changes Requested</div>
+                </>
+              )}
             </div>
           )}
 
@@ -304,31 +346,47 @@ export const MissionControl: React.FC<MissionControlProps> = ({
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 font-bold">
                   <Clock className="w-3.5 h-3.5 text-accent-yellow" />
                   Due Soon
                 </span>
-                <span className="text-[9px] text-cyber-muted tracking-tighter">&lt;72H</span>
+                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">&lt;72H</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">
-                {dueSoonTasks.length}
-              </div>
-              <div className="text-[10px] font-mono text-cyber-muted mt-0.5">Upcoming Deadlines</div>
+              {dueSoonTasks.length === 0 ? (
+                <>
+                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No upcoming deadlines</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">{dueSoonTasks.length}</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Upcoming Deadlines</div>
+                </>
+              )}
             </div>
           ) : (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-lime/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 font-bold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
                   Completed
                 </span>
-                <span className="text-[9px] text-cyber-muted tracking-tighter">DONE</span>
+                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">DONE</span>
               </div>
-              <div className="text-2xl sm:text-3xl font-display font-black text-accent-lime mt-1">
-                {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length}
-              </div>
-              <div className="text-[10px] font-mono text-cyber-muted mt-0.5">Approved Deliverables</div>
+              {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length === 0 ? (
+                <>
+                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No approved tasks yet</div>
+                </>
+              ) : (
+                <>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-lime mt-1">
+                    {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length}
+                  </div>
+                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Approved Deliverables</div>
+                </>
+              )}
             </div>
           )}
 
@@ -336,16 +394,23 @@ export const MissionControl: React.FC<MissionControlProps> = ({
           <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
             <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 font-bold">
                 <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
                 Overdue
               </span>
-              <span className="text-[9px] text-accent-red tracking-tighter font-bold">ALERT</span>
+              <span className="text-[11px] font-mono text-accent-red tracking-tighter font-bold">ALERT</span>
             </div>
-            <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">
-              {overdueTasks.length}
-            </div>
-            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">Past Target Deadline</div>
+            {overdueTasks.length === 0 ? (
+              <>
+                <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
+                <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">On schedule</div>
+              </>
+            ) : (
+              <>
+                <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">{overdueTasks.length}</div>
+                <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Past Target Deadline</div>
+              </>
+            )}
           </div>
         </div>
       </GlassCard>

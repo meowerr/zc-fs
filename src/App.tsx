@@ -266,6 +266,7 @@ export const App: React.FC = () => {
         onTabChange={setActiveTab}
         currentRole={currentUser.role}
         userName={currentUser.full_name}
+        userEmail={currentUser.email}
         groupName={groupDisplayName}
         unreadCount={0}
         onOpenProfile={signOut}
