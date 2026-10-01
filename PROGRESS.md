@@ -14,6 +14,11 @@
 - `[VERIFIED: node scripts/verify-google-signup-db.mjs (16/16 passed)]` Static SQL analysis and domain regex tests passed for valid, uppercase, spoof variants (subdomains, prefix, double-@), and gmail.
 - `[IMPLEMENTED, UNTESTED: live Admin API execution requires local SUPABASE_SERVICE_ROLE_KEY in .env]` Live DB verification script written in `scripts/verify-google-signup-db.mjs` to test live user creation, gmail rejection, RLS quarantine, and account audit.
 
+### Slice G2: Frontend Sign-In
+- `[VERIFIED: npx tsc --noEmit && npm run build (code 0, gzip: 181.41 KB < 200 KB, main JS: 44.87 KB < 50 KB)]` Configured `flowType: 'pkce'`, OAuth URL error and code param stripping, and authenticating loading screen in `App.tsx`.
+- `[IMPLEMENTED, UNTESTED: requires live Google OAuth consent interaction]` Added `signInWithGoogle()` in `useAuth.ts` with `hd: 'zewailcity.edu.eg'`, prompt, and `redirectTo: window.location.origin`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Built Cyber Racing "Continue with Google" button with official multi-color "G" SVG mark, `>=48px` touch target, double-click guard, error banner with plain-language mapping, and feature flags (`VITE_GOOGLE_AUTH_ENABLED`, `VITE_AUTH_EMAIL_ENABLED`).
+
 ---
 
 ## 1. Product Maturity / Workspace Depth Pass (Branch: `feature/product-maturity-pass`)
