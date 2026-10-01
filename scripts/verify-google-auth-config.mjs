@@ -157,13 +157,14 @@ try {
   let leakedSecret = false;
 
   try {
-    const gocspxOutput = execSync('git grep -i "GOCSPX"', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+    // Search for actual Google Client Secret pattern (GOCSPX-<secret-characters>)
+    const gocspxOutput = execSync('git grep -E "GOCSPX-[A-Za-z0-9_-]{10,}"', { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
     if (gocspxOutput.trim().length > 0) {
       console.error('  ❌ Leaked GOCSPX secret detected:\n', gocspxOutput);
       leakedSecret = true;
     }
   } catch (e) {
-    // Exit code 1 means pattern not found (which is good)
+    // Exit code 1 means pattern not found (which is clean and expected)
   }
 
   assert(!leakedSecret, 'Zero occurrences of Google client secret (GOCSPX) in repo');

@@ -115,11 +115,16 @@ export function useAuth() {
         const errLower = oAuthErr.toLowerCase();
 
         if (
+          descLower.includes('unable to exchange external code') ||
+          descLower.includes('invalid_client') ||
+          descLower.includes('invalid_grant')
+        ) {
+          setError('Unable to authenticate with Google: Client secret or redirect URI mismatch in Supabase configuration.');
+        } else if (
           descLower.includes('registration denied') ||
           descLower.includes('domain') ||
           descLower.includes('zewailcity') ||
-          descLower.includes('database error saving new user') ||
-          errLower.includes('server_error')
+          descLower.includes('database error saving new user')
         ) {
           setError('Use your @zewailcity.edu.eg Google account');
         } else if (
