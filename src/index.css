@@ -68,6 +68,13 @@
     }
   }
 
+  /* Pinned Rail Dock at >=1280px */
+  @media (min-width: 1280px) {
+    html[data-rail-pinned="true"] {
+      --rail-offset: calc(288px + (var(--rail-gap) * 2));
+    }
+  }
+
   .dark {
     /* Dark Theme (Graphite Cyber Racing) */
     --bg-base: #070A0E;
