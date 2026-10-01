@@ -28,10 +28,12 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
   unreadCount = 0,
   onOpenProfile,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const touchStartYRef = useRef<number | null>(null);
   const isDraggingRef = useRef(false);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const visibleItems = getVisibleNavItems(role);
   const activeItem = visibleItems.find((item) => item.id === activeTab) || visibleItems[0];
@@ -44,20 +46,45 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
     return matched?.color_accent || '#00D9FF';
   }, [currentGroupName]);
 
+  const openGarage = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setIsMounted(true);
+    // Double requestAnimationFrame guarantees the DOM mounts offscreen before transitioning in
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsVisible(true);
+      });
+    });
+  };
+
+  const closeGarage = () => {
+    setIsVisible(false);
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+    }
+    closeTimerRef.current = setTimeout(() => {
+      setIsMounted(false);
+      setDragOffset(0);
+    }, 240);
+  };
+
   // Escape key closes sheet
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+      if (e.key === 'Escape' && isVisible) {
+        closeGarage();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
+  }, [isVisible]);
 
-  // Prevent background scroll when Garage Door is open
+  // Prevent background scroll when Garage Door is open/mounted
   useEffect(() => {
-    if (isOpen) {
+    if (isMounted) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -65,7 +92,16 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isOpen]);
+  }, [isMounted]);
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, []);
 
   // Touch Drag-to-Dismiss Handlers
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -84,16 +120,17 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
 
   const handleTouchEnd = () => {
     if (dragOffset > 70) {
-      setIsOpen(false);
+      closeGarage();
+    } else {
+      setDragOffset(0);
     }
-    setDragOffset(0);
     touchStartYRef.current = null;
     isDraggingRef.current = false;
   };
 
   const handleSelectTab = (tabId: NavTab) => {
     onTabChange(tabId);
-    setIsOpen(false);
+    closeGarage();
   };
 
   const ActiveIcon = activeItem.icon;
@@ -101,12 +138,15 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
   return (
     <aside className="md:hidden" aria-label="Mobile Navigation Command Console">
       {/* ─── CLOSED STATE: THUMB-ARC FLOATING GLASS PILL ─── */}
-      {!isOpen && (
-        <div className="fixed bottom-3 inset-x-3 sm:inset-x-6 z-40 max-w-md mx-auto pb-[env(safe-area-inset-bottom)] pointer-events-auto">
-          <button
-            onClick={() => setIsOpen(true)}
-            aria-label="Open PitLane Command Console"
-            aria-expanded={false}
+      <div 
+        className={`fixed bottom-3 inset-x-3 sm:inset-x-6 z-40 max-w-md mx-auto pb-[env(safe-area-inset-bottom)] pointer-events-auto transition-all duration-200 ease-out ${
+          isMounted ? 'opacity-0 pointer-events-none translate-y-3' : 'opacity-100 pointer-events-auto translate-y-0'
+        }`}
+      >
+        <button
+          onClick={openGarage}
+          aria-label="Open PitLane Command Console"
+          aria-expanded={isVisible}
             className="w-full min-h-[56px] px-3.5 py-2 rounded-2xl bg-cyber-surface/95 dark:bg-midnight-900/95 backdrop-blur-md border border-cyber-border shadow-cyber-elevated flex items-center justify-between gap-3 active:scale-[0.98] transition-all cursor-pointer group"
           >
             {/* Left: ZC Motorsport Badge */}
@@ -151,10 +191,9 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
             </div>
           </button>
         </div>
-      )}
 
       {/* ─── OPEN STATE: GARAGE DOOR OVERLAY PANEL (~70VH BOTTOM SHEET) ─── */}
-      {isOpen && (
+      {isMounted && (
         <div 
           role="dialog"
           aria-modal="true"
@@ -163,24 +202,42 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
         >
           {/* Dimmed Blurred Backdrop */}
           <div 
-            onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-200"
+            onClick={closeGarage}
+            className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ease-out ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
             aria-hidden="true"
           />
 
           {/* Rising Garage Door Sheet */}
           <div
-            style={{ transform: dragOffset > 0 ? `translateY(${dragOffset}px)` : undefined }}
-            className="relative z-50 w-full max-h-[78vh] bg-cyber-surface dark:bg-midnight-950 border-t border-cyber-border-strong rounded-t-3xl shadow-2xl flex flex-col transition-transform duration-150 overflow-hidden"
+            style={
+              dragOffset > 0
+                ? { transform: `translateY(${dragOffset}px)`, transition: 'none' }
+                : undefined
+            }
+            className={`
+              relative z-50 w-full max-h-[78vh] bg-cyber-surface dark:bg-midnight-950 border-t border-cyber-border-strong rounded-t-3xl shadow-2xl flex flex-col overflow-hidden
+              ${
+                dragOffset > 0
+                  ? ''
+                  : isVisible
+                  ? 'garage-door-sheet translate-y-0'
+                  : 'garage-door-sheet-closing translate-y-full'
+              }
+            `}
           >
+            {/* Hydraulic Shutter Top Laser Rim */}
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-accent-cyan to-transparent shadow-[0_0_12px_rgba(0,217,255,0.8)] opacity-90" />
+
             {/* Drag Handle Bar */}
             <div 
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
-              className="pt-3 pb-2 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing shrink-0"
+              className="pt-3 pb-2 flex flex-col items-center justify-center cursor-grab active:cursor-grabbing shrink-0 select-none"
             >
-              <div className="w-12 h-1.5 rounded-full bg-cyber-border-strong/80" />
+              <div className="w-12 h-1.5 rounded-full bg-cyber-border-strong/80 hover:bg-accent-cyan/60 transition-colors" />
             </div>
 
             {/* Garage Door Header */}
@@ -200,7 +257,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
               </div>
 
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={closeGarage}
                 aria-label="Close Mobile Navigation"
                 className="w-8 h-8 rounded-lg flex items-center justify-center bg-cyber-surface-elevated text-cyber-muted hover:text-cyber-primary border border-cyber-border transition-colors cursor-pointer"
               >
@@ -285,7 +342,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                 <button
                   onClick={() => {
                     onOpenProfile();
-                    setIsOpen(false);
+                    closeGarage();
                   }}
                   className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyber-surface border border-cyber-border text-xs font-mono text-cyber-primary hover:border-accent-cyan transition-colors cursor-pointer shrink-0"
                 >
