@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Layout Redesign: Hybrid Racing Rail Navigation (Branch: `feature/hybrid-racing-rail`)
-- **Active Slice:** Slice 3 (Expansion & Interaction Layer) Completed & Verified.
-- **Verification Status:** 16/16 checks passed in `scripts/verify-slice-3-expansion.mjs` | Bundle: 181.43 KB (< 200 KB) | Main JS: 44.16 KB (< 50 KB).
+- **Active Slice:** Slice 4 (Visual Language & Telemetry Instrumentation) Completed & Verified.
+- **Verification Status:** 15/15 checks passed in `scripts/verify-slice-4-telemetry.mjs` | Bundle: 182.16 KB (< 200 KB) | Main JS: 44.80 KB (< 50 KB).
 
 ---
 
@@ -14,7 +14,7 @@
 | **Slice 1: Navigation Config & Role Parity** | `[VERIFIED]` | Created `src/config/navigation.ts` defining `NAV_GROUPS` (`SYSTEM`, `OPERATIONS`, `COMMS`, `ADMIN`) and `NAV_ITEMS` with strictly identical role permissions. Created `scripts/verify-nav-config.mjs` confirming 25/25 checks pass (strict tsc, 6 admin destinations, 5 head/member/pending destinations, zero leakage of admin hub to non-admin roles). |
 | **Slice 2: Floating Rail Base & Layout Shell** | `[VERIFIED]` | Implemented `HybridRacingRail.tsx` (72px collapsed floating rail, z-30), CSS variables layout system (`--rail-w`, `--rail-gap`, `--rail-offset`), TopHeader realignment (z-20, mobile brand / desktop sub-team breadcrumb), and zero-reflow padding offset in `AppShell.tsx`. Verified instant rollback switch `USE_HYBRID_RACING_RAIL`. Bundle: 180.08 KB / Main JS: 43.10 KB. |
 | **Slice 3: Expansion & Interaction Layer** | `[VERIFIED]` | Added hover intent delay (120ms enter / 250ms leave), keyboard Tab focus navigation, Esc key collapse, and pin dock persistence (`localStorage: zcfs_rail_pinned`) with `html[data-rail-pinned]` layout offset at >=1280px. Zero reflow on hover overlay expansion (z-35, 288px). Bundle: 181.43 KB / Main JS: 44.16 KB. |
-| **Slice 4: Visual Language & Telemetry Instrumentation** | `[PENDING]` | 2px track lane line, active node indicators, team accent coloring, Realtime connection LED, RLS-respecting sub-team pips. |
+| **Slice 4: Visual Language & Telemetry Instrumentation** | `[VERIFIED]` | Added 2px continuous track lane line, neon cyan lit active lane markers with live pulsating status nodes, dynamic team accent coloring (`userTeamColor`), double-encoded Realtime connection LED (`ONLINE`, `RECONNECTING`, `OFFLINE`), accessible instant cyber tooltips on collapsed rail, and RLS-safe sub-team telemetry (5-team matrix for admin, dedicated team hero for members without misleading 0% metrics). Bundle: 182.16 KB / Main JS: 44.80 KB. |
 | **Slice 5: Responsive Pass (Tablet & Mobile "Garage Door")** | `[PENDING]` | Tablet tap-to-expand, Mobile thumb-arc floating tab + bottom sheet overlay replacing `BottomNav`, viewport-height density tiers. |
 | **Slice 6: Accessibility, /styleguide & Full Verification** | `[PENDING]` | ARIA attributes, reduced motion compliance, StyleGuide showcase, full test suite pass, bundle budget check. |
 

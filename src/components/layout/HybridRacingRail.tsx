@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Palette, Pin, PinOff, Radio, Flag } from 'lucide-react';
 import { UserRole, Group, Task } from '../../lib/database.types';
 import { NavTab, getVisibleNavItems, getNavGroupsForRole, getNavItemsByGroup } from '../../config/navigation';
@@ -43,9 +43,27 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
     return typeof window !== 'undefined' && window.innerWidth >= 1280;
   });
 
+  // Realtime Connection Status (online / reconnecting / offline)
+  const [connectionStatus, setConnectionStatus] = useState<'online' | 'reconnecting' | 'offline'>(() => {
+    return typeof navigator !== 'undefined' && !navigator.onLine ? 'offline' : 'online';
+  });
+
   const enterTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const leaveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const railRef = useRef<HTMLElement | null>(null);
+
+  // Monitor online / offline network state
+  useEffect(() => {
+    const handleOnline = () => setConnectionStatus('online');
+    const handleOffline = () => setConnectionStatus('offline');
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Monitor viewport width for pin availability (only active at >= 1280px)
   useEffect(() => {
@@ -130,6 +148,14 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
       return next;
     });
   };
+
+  // Current user's team color
+  const userTeamColor = useMemo(() => {
+    const matched = sourceGroups.find(
+      (g) => currentGroupName.includes(g.name.replace(/^Technical - |^Operations - /, '')) || currentGroupName === g.name
+    );
+    return matched?.color_accent || '#00D9FF';
+  }, [sourceGroups, currentGroupName]);
 
   const isOpen = isExpanded || (isPinned && isWideScreen);
 
@@ -233,8 +259,8 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                         aria-label={item.label}
                         aria-current={isActive ? 'page' : undefined}
                         className={`
-                          w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-left transition-all duration-150 cursor-pointer
-                          focus:outline-none focus:ring-1 focus:ring-accent-cyan
+                          relative w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-left transition-all duration-150 cursor-pointer
+                          focus:outline-none focus:ring-1 focus:ring-accent-cyan group
                           ${
                             isActive
                               ? 'bg-cyber-surface-elevated text-cyber-primary border-l-2 border-l-accent-cyan border-y border-r border-cyber-border shadow-cyber-sm'
@@ -242,10 +268,15 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                           }
                         `}
                       >
+                        {/* Lit Active Node for Expanded View */}
+                        {isActive && (
+                          <span className="absolute right-2 w-1.5 h-1.5 rounded-full bg-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.9)] animate-pulse" />
+                        )}
+
                         <div className={`p-1.5 rounded shrink-0 ${isActive ? 'bg-accent-cyan/15 text-accent-cyan' : 'text-cyber-muted'}`}>
                           <Icon className="w-4 h-4" />
                         </div>
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 pr-3">
                           <div className="flex items-center justify-between">
                             <span className={`font-display text-xs tracking-wider truncate ${isActive ? 'font-bold text-accent-cyan' : 'font-medium'}`}>
                               {item.label}
@@ -268,7 +299,7 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
             })}
           </nav>
         ) : (
-          /* ─── COLLAPSED FLOATING RAIL (ICONS ONLY) ─── */
+          /* ─── COLLAPSED FLOATING RAIL (ICONS + LIT NODES + INSTANT CYBER TOOLTIPS) ─── */
           <nav aria-label="Primary Navigation" className="px-2 flex flex-col items-center gap-1.5">
             {visibleItems.map((item) => {
               const Icon = item.icon;
@@ -281,7 +312,6 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                   onClick={() => onTabChange(item.id)}
                   aria-label={item.label}
                   aria-current={isActive ? 'page' : undefined}
-                  title={`${item.label} // ${item.subtitle}`}
                   className={`
                     relative flex items-center justify-center w-12 h-12 rounded-lg transition-all duration-150 cursor-pointer
                     focus:outline-none focus:ring-1 focus:ring-accent-cyan group
@@ -292,9 +322,12 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                     }
                   `}
                 >
-                  {/* Active Lane Marker Line */}
+                  {/* Lit Active Node Lane Indicator */}
                   {isActive && (
-                    <div className="absolute left-0 inset-y-2 w-[3px] bg-accent-cyan rounded-r-full shadow-[0_0_8px_rgba(0,217,255,0.8)]" />
+                    <>
+                      <div className="absolute left-0 inset-y-2 w-[3px] bg-accent-cyan rounded-r-full shadow-[0_0_10px_rgba(0,217,255,0.9)]" />
+                      <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-accent-cyan shadow-[0_0_6px_rgba(0,217,255,0.9)] animate-pulse" />
+                    </>
                   )}
 
                   {/* Icon Container */}
@@ -308,13 +341,31 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                       </span>
                     )}
                   </div>
+
+                  {/* Instant Cyber Tooltip (Visible in Collapsed Mode on hover) */}
+                  <div 
+                    role="tooltip"
+                    className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-cyber-surface-elevated/95 dark:bg-midnight-950/95 border border-cyber-border-strong shadow-cyber-elevated pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap hidden md:block"
+                  >
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-display text-xs font-bold text-cyber-primary">
+                        {item.label}
+                      </span>
+                      <span className="font-mono text-[9px] text-accent-cyan uppercase px-1 py-0.2 rounded bg-cyber-bg border border-accent-cyan/30">
+                        {item.group}
+                      </span>
+                    </div>
+                    <div className="font-mono text-[9px] text-cyber-muted text-left">
+                      {item.subtitle}
+                    </div>
+                  </div>
                 </button>
               );
             })}
           </nav>
         )}
 
-        {/* ─── BOTTOM AREA: TELEMETRY & SUB-TEAM MONITOR ─── */}
+        {/* ─── BOTTOM AREA: TELEMETRY & SUB-TEAM MONITOR (RLS RESPECTED) ─── */}
         <div className="pt-2 border-t border-cyber-border/80 px-2 space-y-2 shrink-0">
           {isOpen ? (
             /* Expanded Telemetry & Sub-team Overview */
@@ -322,38 +373,82 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
               <div className="px-2 flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-cyber-muted">
                 <span className="flex items-center gap-1.5">
                   <Flag className="w-3 h-3 text-accent-cyan" />
-                  <span>TEAM STATUS</span>
+                  <span>SUB-TEAM TELEMETRY</span>
                 </span>
-                <span className="text-[9px] text-accent-lime font-bold">ONLINE</span>
+                <span className="text-[9px] text-accent-cyan font-mono">
+                  {role === 'admin' ? '5 TEAMS ACTIVE' : 'ASSIGNED'}
+                </span>
               </div>
 
-              {/* Sub-team accent chip */}
-              <div className="p-2 rounded-lg bg-cyber-bg-alt border border-cyber-border flex items-center justify-between">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="w-2 h-2 rounded-full bg-accent-lime animate-pulse shrink-0" />
-                  <span className="font-mono text-xs font-semibold text-cyber-primary truncate">
-                    {currentGroupName}
+              {/* Admin: 5-Team Mini Matrix | Non-Admin: Assigned Team Hero Card (RLS-Safe) */}
+              {role === 'admin' ? (
+                <div className="grid grid-cols-5 gap-1 p-2 rounded-lg bg-cyber-bg-alt border border-cyber-border">
+                  {sourceGroups.slice(0, 5).map((team) => {
+                    const teamTasks = tasks.filter((t) => t.group_id === team.id);
+                    const completed = teamTasks.filter((t) => t.status === 'done' || t.status === 'approved').length;
+                    const pct = teamTasks.length > 0 ? Math.round((completed / teamTasks.length) * 100) : 0;
+                    return (
+                      <button
+                        key={team.id || team.slug}
+                        onClick={() => onSelectGroup?.(team.slug)}
+                        title={`${team.name}: ${pct}% completed (${completed}/${teamTasks.length} tasks)`}
+                        className="flex flex-col items-center gap-1 p-1 rounded hover:bg-cyber-surface transition-colors cursor-pointer group"
+                      >
+                        <span
+                          className="w-2 h-2 rounded-full transition-transform group-hover:scale-125"
+                          style={{ backgroundColor: team.color_accent || '#00D9FF' }}
+                        />
+                        <span className="text-[8px] font-mono text-cyber-muted group-hover:text-cyber-primary truncate w-full text-center">
+                          {team.slug.slice(0, 3).toUpperCase()}
+                        </span>
+                        <span className="text-[8px] font-mono font-bold" style={{ color: team.color_accent }}>
+                          {pct}%
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div 
+                  className="p-2.5 rounded-lg bg-cyber-bg-alt border border-cyber-border flex items-center justify-between transition-colors"
+                  style={{ borderLeftWidth: '3px', borderLeftColor: userTeamColor }}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span 
+                      className="w-2.5 h-2.5 rounded-full shrink-0 animate-pulse"
+                      style={{ backgroundColor: userTeamColor }}
+                    />
+                    <div className="min-w-0">
+                      <div className="font-mono text-xs font-semibold text-cyber-primary truncate">
+                        {currentGroupName}
+                      </div>
+                      <div className="text-[9px] font-mono text-cyber-muted">
+                        {tasks.length} sub-team {tasks.length === 1 ? 'task' : 'tasks'}
+                      </div>
+                    </div>
+                  </div>
+                  <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-cyber-surface text-cyber-secondary border border-cyber-border uppercase font-semibold">
+                    {role}
                   </span>
                 </div>
-                <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-cyber-surface text-cyber-muted border border-cyber-border uppercase">
-                  {role}
-                </span>
-              </div>
+              )}
             </div>
           ) : (
-            /* Collapsed Telemetry Pips */
+            /* Collapsed Telemetry Pips (RLS-Safe Double Encoded) */
             <div className="flex flex-col items-center gap-1" title="5 Formula Student Sub-Teams Telemetry Status">
               <div className="flex items-center gap-1">
                 {sourceGroups.slice(0, 5).map((team) => {
                   const isUserTeam = currentGroupName.includes(team.name.replace(/^Technical - |^Operations - /, '')) || currentGroupName === team.name;
                   const isHighlighted = role === 'admin' || isUserTeam;
-                  const teamTasks = tasks.filter((t) => t.group_id === team.id);
 
                   return (
                     <button
                       key={team.id || team.slug}
                       onClick={() => onSelectGroup?.(team.slug)}
-                      title={`${team.name} (${teamTasks.length} tasks)`}
+                      title={role === 'admin' 
+                        ? `${team.name} (Sub-Team Telemetry)`
+                        : isUserTeam ? `${team.name} (Assigned Sub-Team)` : `${team.name} (Formula Student Sub-Team)`
+                      }
                       aria-label={team.name}
                       className={`
                         w-1.5 h-3.5 rounded-full transition-all duration-150 cursor-pointer
@@ -371,7 +466,7 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
             </div>
           )}
 
-          {/* Console Status / Realtime LED */}
+          {/* Bottom Console Telemetry Status (Double Encoded: Icon + Color + Text) */}
           <div className="flex items-center justify-between pt-1 text-[10px] font-mono">
             {onOpenStyleGuide && (
               <button
@@ -384,11 +479,32 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
               </button>
             )}
 
-            <div className="flex items-center gap-1.5 ml-auto cursor-default" title="Telemetry Realtime: Active">
-              <Radio className="w-3 h-3 text-accent-lime animate-pulse" />
-              <span className="text-accent-lime font-bold text-[9px]">
-                {isOpen ? 'SYSTEM ONLINE' : 'LIVE'}
-              </span>
+            <div 
+              className="flex items-center gap-1.5 ml-auto cursor-default px-2 py-0.5 rounded bg-cyber-bg/80 border border-cyber-border" 
+              title={`Telemetry Status: ${connectionStatus.toUpperCase()} (@zewailcity.edu.eg)`}
+            >
+              {connectionStatus === 'online' ? (
+                <>
+                  <Radio className="w-3 h-3 text-accent-lime animate-pulse" />
+                  <span className="text-accent-lime font-bold text-[9px]">
+                    {isOpen ? 'SYSTEM ONLINE' : 'LIVE'}
+                  </span>
+                </>
+              ) : connectionStatus === 'reconnecting' ? (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-accent-yellow animate-ping" />
+                  <span className="text-accent-yellow font-bold text-[9px]">
+                    {isOpen ? 'RECONNECTING' : 'SYNC'}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span className="w-2 h-2 rounded-full bg-accent-red" />
+                  <span className="text-accent-red font-bold text-[9px]">
+                    {isOpen ? 'SYSTEM OFFLINE' : 'OFF'}
+                  </span>
+                </>
+              )}
             </div>
           </div>
         </div>
