@@ -93,11 +93,68 @@ export function useAuth() {
       return;
     }
 
+    // Parse OAuth return parameters (errors or PKCE code)
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      const queryParams = url.searchParams;
+      const hashString = window.location.hash.startsWith('#')
+        ? window.location.hash.substring(1)
+        : '';
+      const hashParams = new URLSearchParams(hashString);
+
+      const oAuthErr = queryParams.get('error') || hashParams.get('error');
+      const oAuthErrDesc =
+        queryParams.get('error_description') ||
+        hashParams.get('error_description') ||
+        queryParams.get('error_code') ||
+        '';
+
+      if (oAuthErr) {
+        console.error('OAuth sign-in error:', { error: oAuthErr, description: oAuthErrDesc });
+        const descLower = oAuthErrDesc.toLowerCase();
+        const errLower = oAuthErr.toLowerCase();
+
+        if (
+          descLower.includes('registration denied') ||
+          descLower.includes('domain') ||
+          descLower.includes('zewailcity') ||
+          descLower.includes('database error saving new user') ||
+          errLower.includes('server_error')
+        ) {
+          setError('Use your @zewailcity.edu.eg Google account');
+        } else if (
+          errLower.includes('access_denied') ||
+          descLower.includes('cancel') ||
+          descLower.includes('denied') ||
+          descLower.includes('closed')
+        ) {
+          setError('Sign-in cancelled');
+        } else {
+          setError('Authentication failed. Please try again.');
+        }
+
+        // Clean auth error params from URL without page reload
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+
     // Initial fetch of groups and session
     fetchAllGroups();
 
     // 1. Check existing authenticated session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error: sessionErr }) => {
+      if (typeof window !== 'undefined' && window.location.search.includes('code=')) {
+        // Strip PKCE code from URL once session resolution completes
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      if (sessionErr) {
+        console.error('Session retrieval error:', sessionErr);
+        setError('Authentication failed. Please try again.');
+        setLoading(false);
+        return;
+      }
+
       if (session?.user) {
         fetchProfile(session.user.id);
       } else {
@@ -108,6 +165,10 @@ export function useAuth() {
 
     // 2. Subscribe to auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (typeof window !== 'undefined' && window.location.search.includes('code=')) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
       if (session?.user) {
         fetchProfile(session.user.id);
       } else {
@@ -152,6 +213,32 @@ export function useAuth() {
       supabase.removeChannel(groupChannel);
     };
   }, [fetchProfile, fetchAllProfiles, fetchAllGroups]);
+
+  // Sign In with Google OAuth (strictly domain-restricted to zewailcity.edu.eg)
+  const signInWithGoogle = async () => {
+    setError(null);
+    if (!isLiveSupabaseConfigured) {
+      throw new Error('Supabase client is not configured.');
+    }
+
+    const { error: oAuthErr } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin,
+        queryParams: {
+          hd: UNIVERSITY_DOMAIN,
+          prompt: 'select_account',
+        },
+      },
+    });
+
+    if (oAuthErr) {
+      setError(oAuthErr.message);
+      throw oAuthErr;
+    }
+  };
+
+  const clearError = () => setError(null);
 
   // Sign In function (strictly Supabase Auth)
   const signIn = async (email: string, password?: string) => {
@@ -437,8 +524,10 @@ export function useAuth() {
     loading,
     error,
     signIn,
+    signInWithGoogle,
     signUp,
     signOut,
+    clearError,
     approveUser,
     rejectUser,
     createGroup,

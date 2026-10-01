@@ -70,9 +70,13 @@ export const App: React.FC = () => {
     currentUser,
     allProfiles,
     allGroups,
+    loading,
+    error: authError,
     signIn,
+    signInWithGoogle,
     signUp,
     signOut,
+    clearError,
     approveUser,
     rejectUser,
     createGroup,
@@ -159,17 +163,46 @@ export const App: React.FC = () => {
     );
   }
 
-  // 1. Not Authenticated -> Show Auth Screen (strictly Supabase Auth)
+  // 1. Authenticating Screen (Prevents flash of login screen during PKCE code exchange)
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative">
+        <div 
+          className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
+          style={{
+            backgroundImage: `radial-gradient(currentColor 1px, transparent 1px)`,
+            backgroundSize: '20px 20px'
+          }}
+        />
+        <div className="w-full max-w-sm text-center space-y-4 relative z-10">
+          <div className="w-12 h-12 rounded-full border-2 border-accent-cyan border-t-transparent animate-spin mx-auto shadow-[0_0_15px_rgba(0,217,255,0.3)]" />
+          <div className="space-y-1">
+            <h2 className="font-display font-black text-lg text-cyber-primary uppercase tracking-wider">
+              Authenticating...
+            </h2>
+            <p className="font-mono text-xs text-cyber-muted">
+              Synchronizing telemetry session with PitLane
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Not Authenticated -> Show Auth Screen (Google primary, email secondary)
   if (!currentUser) {
     return (
       <AuthScreen
         onLogin={signIn}
         onSignup={signUp}
+        onGoogleSignIn={signInWithGoogle}
+        authError={authError}
+        onClearError={clearError}
       />
     );
   }
 
-  // 2. Authenticated but Pending Approval -> Show Pending Screen
+  // 3. Authenticated but Pending Approval -> Show Pending Screen
   if (currentUser.status === 'pending') {
     return (
       <PendingApprovalView
