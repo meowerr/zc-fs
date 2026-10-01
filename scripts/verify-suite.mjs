@@ -227,6 +227,7 @@ const migrationFiles = [
   'supabase/migrations/001_initial_schema.sql',
   'supabase/migrations/002_rls_policies.sql',
   'supabase/migrations/003_seed_data.sql',
+  'supabase/migrations/006_product_maturity_schema.sql',
   'supabase/tests/rls_security_test.sql'
 ];
 

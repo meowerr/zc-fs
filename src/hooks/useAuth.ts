@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
-import { Profile, UserRole, Group } from '../lib/database.types';
+import { Profile, UserRole, UserStatus, Group } from '../lib/database.types';
 
 export const UNIVERSITY_DOMAIN = 'zewailcity.edu.eg';
 
@@ -308,17 +308,21 @@ export function useAuth() {
     return newGroup as Group;
   };
 
-  // Admin remove member from group (sets to pending, releases from group scope while keeping history)
-  const removeMemberFromGroup = async (userId: string) => {
+  // Admin remove / unassign member from group (retains approved account status, clears group scope)
+  const unassignMember = async (userId: string) => {
     if (!isLiveSupabaseConfigured) return;
     if (currentUser?.role !== 'admin') {
       throw new Error('Unauthorized: Only Club Administrators may manage sub-team rosters.');
     }
 
+    if (currentUser?.id === userId) {
+      throw new Error('Action Denied: You cannot unassign your own Administrator account.');
+    }
+
     const { error: updateErr } = await supabase
       .from('profiles')
       .update({
-        status: 'pending',
+        status: 'approved',
         role: 'pending',
         group_id: null,
         updated_at: new Date().toISOString(),
@@ -327,12 +331,104 @@ export function useAuth() {
 
     if (updateErr) throw updateErr;
 
+    // Optional audit log capture
+    try {
+      await supabase.from('activity_logs').insert({
+        actor_id: currentUser.id,
+        action: 'member_unassigned',
+        entity_type: 'member',
+        entity_id: userId,
+        group_id: null,
+        details: { action: 'Unassigned member from sub-team' }
+      });
+    } catch {
+      // Table may not yet be created or accessible
+    }
+
     await fetchAllProfiles();
 
     if (currentUser?.id === userId) {
       fetchProfile(userId);
     }
   };
+
+  // Reassign member to another sub-team and/or change role
+  const reassignMember = async (userId: string, targetGroupId: string | null, targetRole: UserRole) => {
+    if (!isLiveSupabaseConfigured) return;
+    if (currentUser?.role !== 'admin') {
+      throw new Error('Unauthorized: Only Club Administrators may reassign team members.');
+    }
+
+    // Validation: if role is head or member, targetGroupId must not be null
+    if ((targetRole === 'head' || targetRole === 'member') && !targetGroupId) {
+      throw new Error('Cannot assign role "head" or "member" without a target sub-team.');
+    }
+
+    // Safety check: prevent demoting sole admin
+    if (currentUser?.id === userId && targetRole !== 'admin') {
+      throw new Error('Safety Guard: You cannot demote your own Administrator account.');
+    }
+
+    const updatePayload: Record<string, any> = {
+      role: targetRole,
+      group_id: targetGroupId,
+      status: 'approved',
+      updated_at: new Date().toISOString(),
+    };
+
+    const { error: updateErr } = await supabase
+      .from('profiles')
+      .update(updatePayload)
+      .eq('id', userId);
+
+    if (updateErr) throw updateErr;
+
+    try {
+      await supabase.from('activity_logs').insert({
+        actor_id: currentUser.id,
+        action: 'member_reassigned',
+        entity_type: 'member',
+        entity_id: userId,
+        group_id: targetGroupId,
+        details: { new_role: targetRole, new_group_id: targetGroupId }
+      });
+    } catch {
+      // Table may not yet be created
+    }
+
+    await fetchAllProfiles();
+
+    if (currentUser?.id === userId) {
+      fetchProfile(userId);
+    }
+  };
+
+  // Update account status (approved, pending, rejected)
+  const updateUserStatus = async (userId: string, newStatus: UserStatus) => {
+    if (!isLiveSupabaseConfigured) return;
+    if (currentUser?.role !== 'admin') {
+      throw new Error('Unauthorized: Only Club Administrators may update account statuses.');
+    }
+
+    if (currentUser?.id === userId && newStatus !== 'approved') {
+      throw new Error('Safety Guard: You cannot deactivate or reject your own account.');
+    }
+
+    const { error: updateErr } = await supabase
+      .from('profiles')
+      .update({
+        status: newStatus,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', userId);
+
+    if (updateErr) throw updateErr;
+
+    await fetchAllProfiles();
+  };
+
+  // Backward compatibility alias for removeMemberFromGroup
+  const removeMemberFromGroup = unassignMember;
 
   return {
     currentUser,
@@ -347,7 +443,11 @@ export function useAuth() {
     rejectUser,
     createGroup,
     removeMemberFromGroup,
+    unassignMember,
+    reassignMember,
+    updateUserStatus,
     fetchAllGroups,
+    fetchAllProfiles,
     isLiveConfigured: isLiveSupabaseConfigured,
   };
 }

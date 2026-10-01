@@ -52,6 +52,8 @@ interface TasksHubProps {
   onReviewSubmission: (submissionId: string, taskId: string, status: SubmissionReviewStatus, feedback: string) => Promise<void>;
   onAddComment: (taskId: string, content: string) => Promise<void>;
   onDeleteTask: (taskId: string) => Promise<void>;
+  initialTaskId?: string | null;
+  onClearInitialTaskId?: () => void;
 }
 
 export const TasksHub: React.FC<TasksHubProps> = ({
@@ -67,12 +69,24 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   onReviewSubmission,
   onAddComment,
   onDeleteTask,
+  initialTaskId,
+  onClearInitialTaskId,
 }) => {
   const [filter, setFilter] = useState<'all' | 'my_tasks' | 'submitted' | 'in_progress' | 'approved' | 'overdue'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('all');
+
+  // Sync initialTaskId if passed from Search or Notifications
+  React.useEffect(() => {
+    if (initialTaskId) {
+      const found = tasks.find((t) => t.id === initialTaskId);
+      if (found) {
+        setSelectedTask(found);
+      }
+    }
+  }, [initialTaskId, tasks]);
 
   const isHeadOrAdmin = currentUser.role === 'admin' || currentUser.role === 'head';
   const now = new Date();
@@ -321,7 +335,10 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         <TaskDetailModal
           task={selectedTask}
           isOpen={Boolean(selectedTask)}
-          onClose={() => setSelectedTask(null)}
+          onClose={() => {
+            setSelectedTask(null);
+            onClearInitialTaskId?.();
+          }}
           currentUser={currentUser}
           submissions={submissions[selectedTask.id] || []}
           comments={comments[selectedTask.id] || []}

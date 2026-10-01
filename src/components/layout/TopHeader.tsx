@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon, Radio, Bell, BookOpen, Palette } from 'lucide-react';
+import { Sun, Moon, Radio, Bell, BookOpen, Palette, Search } from 'lucide-react';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { UserRole } from '../../lib/database.types';
 
@@ -14,6 +14,7 @@ interface TopHeaderProps {
   onOpenNotifications?: () => void;
   onOpenGuide?: () => void;
   onOpenStyleGuide?: () => void;
+  onOpenSearch?: () => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
@@ -27,6 +28,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   onOpenNotifications,
   onOpenGuide,
   onOpenStyleGuide,
+  onOpenSearch,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-cyber-surface/90 border-b border-cyber-border transition-colors">
@@ -82,6 +84,22 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           >
             <BookOpen className="w-4 h-4" />
           </button>
+
+          {/* Global Telemetry Search (Ctrl+K) */}
+          {onOpenSearch && (
+            <button
+              onClick={onOpenSearch}
+              aria-label="Search Workspace"
+              title="Search Deliverables, Engineers, Comms (Ctrl+K)"
+              className="flex items-center gap-2 h-9 sm:h-10 px-2.5 sm:px-3 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-accent-cyan hover:border-accent-cyan/50 transition-all active:scale-95 shadow-cyber-sm cursor-pointer"
+            >
+              <Search className="w-4 h-4 text-accent-cyan" />
+              <span className="hidden xl:inline text-xs font-mono text-cyber-muted">Search...</span>
+              <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-border font-mono text-[9px] text-cyber-muted">
+                ⌘K
+              </kbd>
+            </button>
+          )}
 
           {/* In-App Notification Bell */}
           <button

@@ -134,3 +134,55 @@ export interface NotificationItem {
   is_read: boolean;
   created_at: string;
 }
+
+export type ActivityAction =
+  | 'task_created'
+  | 'task_status_changed'
+  | 'task_deleted'
+  | 'submission_created'
+  | 'submission_reviewed'
+  | 'comment_added'
+  | 'member_approved'
+  | 'member_reassigned'
+  | 'member_unassigned'
+  | 'role_changed'
+  | 'group_created'
+  | 'document_uploaded'
+  | 'document_deleted';
+
+export type ActivityEntityType = 'task' | 'submission' | 'member' | 'group' | 'document' | 'system';
+
+export interface ActivityLog {
+  id: string;
+  actor_id: string | null;
+  action: ActivityAction | string;
+  entity_type: ActivityEntityType | string;
+  entity_id: string;
+  group_id: string | null;
+  details: Record<string, any>;
+  created_at: string;
+  actor?: Profile;
+  group?: Group;
+}
+
+export type DocumentCategory = 'spec' | 'rulebook' | 'cad' | 'report' | 'checklist' | 'telemetry';
+export type DocumentFileType = 'cad' | 'pdf' | 'spreadsheet' | 'code' | 'archive' | 'other';
+
+export interface DocumentItem {
+  id: string;
+  group_id: string | null;
+  uploader_id: string;
+  title: string;
+  description: string | null;
+  file_url: string;
+  file_name: string;
+  file_size: number;
+  file_type: DocumentFileType | string;
+  category: DocumentCategory | string;
+  version: string;
+  created_at: string;
+  updated_at: string;
+  uploader?: Profile;
+  group?: Group;
+}
+

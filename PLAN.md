@@ -87,6 +87,10 @@ erDiagram
     PROFILES ||--o{ CONVERSATIONS : "participates (p1 / p2)"
     
     PROFILES ||--o{ NOTIFICATIONS : "receives"
+    PROFILES ||--o{ ACTIVITY_LOGS : "acts"
+    GROUPS ||--o{ ACTIVITY_LOGS : "contains"
+    PROFILES ||--o{ DOCUMENTS : "uploads"
+    GROUPS ||--o{ DOCUMENTS : "archives"
     
     GROUPS {
         uuid id PK
@@ -194,6 +198,33 @@ erDiagram
         text link
         boolean is_read
         timestamp created_at
+    }
+
+    ACTIVITY_LOGS {
+        uuid id PK
+        uuid actor_id FK
+        text action
+        text entity_type
+        uuid entity_id
+        uuid group_id FK
+        jsonb details
+        timestamp created_at
+    }
+
+    DOCUMENTS {
+        uuid id PK
+        uuid group_id FK
+        uuid uploader_id FK
+        text title
+        text description
+        text file_url
+        text file_name
+        bigint file_size
+        text file_type
+        text category
+        text version
+        timestamp created_at
+        timestamp updated_at
     }
 ```
 

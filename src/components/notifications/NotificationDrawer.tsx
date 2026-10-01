@@ -24,6 +24,7 @@ interface NotificationDrawerProps {
   onMarkAsRead: (id: string) => void;
   onMarkAllAsRead: () => void;
   onRequestWebPush: () => void;
+  onSelectNotification?: (notification: NotificationItem) => void;
 }
 
 export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
@@ -36,6 +37,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
   onMarkAsRead,
   onMarkAllAsRead,
   onRequestWebPush,
+  onSelectNotification,
 }) => {
   if (!isOpen) return null;
 
@@ -121,12 +123,17 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
             notifications.map((notif) => (
               <div
                 key={notif.id}
-                onClick={() => onMarkAsRead(notif.id)}
+                onClick={() => {
+                  if (!notif.is_read) {
+                    onMarkAsRead(notif.id);
+                  }
+                  onSelectNotification?.(notif);
+                }}
                 className={`
-                  p-3 rounded-xl transition-all cursor-pointer border space-y-1
+                  p-3 rounded-xl transition-all cursor-pointer border space-y-1.5 hover:border-accent-cyan/60
                   ${
                     notif.is_read
-                      ? 'bg-cyber-surface/60 border-cyber-border opacity-70'
+                      ? 'bg-cyber-surface/60 border-cyber-border opacity-75'
                       : 'bg-cyber-surface-elevated border-accent-cyan/30 shadow-sm'
                   }
                 `}
@@ -143,6 +150,12 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                 <p className="text-xs text-cyber-secondary pl-6 leading-relaxed font-sans">
                   {notif.message}
                 </p>
+                {onSelectNotification && (
+                  <div className="pl-6 flex items-center gap-1 text-[10px] font-mono text-accent-cyan font-bold pt-0.5">
+                    <span>Inspect Target</span>
+                    <span className="text-xs">→</span>
+                  </div>
+                )}
               </div>
             ))
           )}

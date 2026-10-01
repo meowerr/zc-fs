@@ -3,6 +3,7 @@ import {
   LayoutDashboard, 
   CheckSquare, 
   MessageSquare, 
+  FileText,
   Users, 
   ShieldAlert, 
   Gauge, 
@@ -40,6 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'dashboard' as NavTab, label: 'Mission Control', subtitle: 'Overview & Velocity', icon: LayoutDashboard },
     { id: 'tasks' as NavTab, label: 'Tasks Telemetry', subtitle: 'Review & Deliverables', icon: CheckSquare },
     { id: 'chat' as NavTab, label: 'Pit Wall Chat', subtitle: 'Channels & DMs', icon: MessageSquare, badge: unreadCount },
+    { id: 'docs' as NavTab, label: 'Engineering Hub', subtitle: 'CAD & Specs Library', icon: FileText },
     { id: 'team' as NavTab, label: 'Team Directory', subtitle: '5 Sub-Teams & Roles', icon: Users },
     ...(role === 'admin' ? [{ id: 'admin' as NavTab, label: 'Admin Hub', subtitle: 'Approvals & Access', icon: ShieldAlert }] : []),
   ];

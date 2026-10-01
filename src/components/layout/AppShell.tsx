@@ -17,6 +17,7 @@ interface AppShellProps {
   onOpenNotifications?: () => void;
   onOpenGuide?: () => void;
   onOpenStyleGuide?: () => void;
+  onOpenSearch?: () => void;
   groups?: Group[];
   tasks?: Task[];
 }
@@ -34,6 +35,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   onOpenNotifications,
   onOpenGuide,
   onOpenStyleGuide,
+  onOpenSearch,
   groups,
   tasks,
 }) => {
@@ -78,6 +80,7 @@ export const AppShell: React.FC<AppShellProps> = ({
         onOpenNotifications={onOpenNotifications}
         onOpenGuide={onOpenGuide}
         onOpenStyleGuide={onOpenStyleGuide}
+        onOpenSearch={onOpenSearch}
       />
 
       {/* Body: Desktop Sidebar + Main Content */}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   X, 
   Clock, 
@@ -9,7 +9,8 @@ import {
   Sparkles,
   Link as LinkIcon,
   Trash2,
-  AlertTriangle
+  AlertTriangle,
+  GitCommit
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
@@ -54,7 +55,108 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   onAddComment,
   onDeleteTask,
 }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'submissions' | 'discussion'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'submissions' | 'discussion' | 'timeline'>('overview');
+
+  // Timeline events calculation (Objective 6: Task Timeline / History)
+  const timelineEvents = useMemo(() => {
+    if (!task) return [];
+    const list: Array<{
+      id: string;
+      type: 'created' | 'assignment' | 'submission' | 'review' | 'comment';
+      title: string;
+      actor: string;
+      timestamp: string;
+      details?: string;
+      color: string;
+      badgeText: string;
+    }> = [];
+
+    // 1. Task Dispatched
+    list.push({
+      id: `created-${task.id}`,
+      type: 'created',
+      title: 'Task Dispatched',
+      actor: task.creator?.full_name || 'Sub-Team Lead / Admin',
+      timestamp: task.created_at,
+      details: `Dispatched with priority ${task.priority.toUpperCase()} and type ${task.task_type.toUpperCase()}`,
+      color: '#00D9FF',
+      badgeText: 'CREATED',
+    });
+
+    // 2. Assignees Allocated
+    if (task.assignees && task.assignees.length > 0) {
+      list.push({
+        id: `assignees-${task.id}`,
+        type: 'assignment',
+        title: 'Engineers Allocated',
+        actor: task.assignees.map((a) => a.full_name).join(', '),
+        timestamp: task.created_at,
+        details: `${task.assignees.length} engineer(s) allocated to deliverable`,
+        color: '#2F6BFF',
+        badgeText: 'ASSIGNED',
+      });
+    }
+
+    // 3. Submissions & Reviews
+    submissions.forEach((sub) => {
+      list.push({
+        id: `sub-${sub.id}`,
+        type: 'submission',
+        title: `Work Deliverable v${sub.version_number} (${sub.submission_type.toUpperCase()})`,
+        actor: sub.submitter?.full_name || 'Engineer',
+        timestamp: sub.created_at,
+        details: sub.notes ? `"${sub.notes}"` : `Content: ${sub.content}`,
+        color: '#FF6A00',
+        badgeText: `REV v${sub.version_number}`,
+      });
+
+      if (sub.review_status !== 'pending') {
+        const isApproved = sub.review_status === 'approved';
+        list.push({
+          id: `rev-${sub.id}`,
+          type: 'review',
+          title: `Deliverable v${sub.version_number} Review`,
+          actor: sub.reviewed_by ? 'Reviewer' : 'Group Head',
+          timestamp: sub.reviewed_at || sub.created_at,
+          details: sub.review_feedback
+            ? `Feedback: "${sub.review_feedback}"`
+            : (isApproved ? 'Approved without revisions' : 'Changes requested by review lead'),
+          color: isApproved ? '#10E57A' : '#FF304F',
+          badgeText: isApproved ? 'APPROVED' : 'CHANGES REQ',
+        });
+      }
+    });
+
+    // 4. Comments
+    comments.forEach((c) => {
+      list.push({
+        id: `comm-${c.id}`,
+        type: 'comment',
+        title: 'Telemetry Discussion Note',
+        actor: c.author?.full_name || 'Team Member',
+        timestamp: c.created_at,
+        details: c.content,
+        color: '#B0B8C2',
+        badgeText: 'NOTE',
+      });
+    });
+
+    return list.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  }, [task, submissions, comments]);
+
+  const getDeltaTime = (eventTime: string, startTime: string) => {
+    const diffMs = new Date(eventTime).getTime() - new Date(startTime).getTime();
+    if (diffMs <= 0) return 'T+00h 00m';
+    const totalMinutes = Math.floor(diffMs / (1000 * 60));
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    if (hours >= 24) {
+      const days = Math.floor(hours / 24);
+      const remHours = hours % 24;
+      return `T+${days}d ${remHours}h`;
+    }
+    return `T+${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`;
+  };
   
   // Delete task state
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
@@ -196,6 +298,17 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           >
             <MessageSquare className="w-3.5 h-3.5" />
             Thread ({comments.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('timeline')}
+            className={`flex-1 py-1.5 px-3 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              activeTab === 'timeline'
+                ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
+                : 'text-cyber-muted hover:text-cyber-primary'
+            }`}
+          >
+            <GitCommit className="w-3.5 h-3.5" />
+            Timeline ({timelineEvents.length})
           </button>
         </div>
 
@@ -559,6 +672,69 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   Reply
                 </GlossyButton>
               </form>
+            </div>
+          )}
+
+          {/* TAB 4: UNIFIED TELEMETRY TIMELINE (Objective 6) */}
+          {activeTab === 'timeline' && (
+            <div className="space-y-4 py-1">
+              <div className="flex items-center justify-between text-xs font-mono text-cyber-muted pb-2 border-b border-cyber-border">
+                <span>// CHRONOLOGICAL AUDIT TRAIL</span>
+                <span>{timelineEvents.length} TOTAL EVENTS</span>
+              </div>
+
+              <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-cyber-border">
+                {timelineEvents.map((evt) => (
+                  <div key={evt.id} className="relative group">
+                    {/* Node circle on timeline spine */}
+                    <div
+                      className="absolute -left-6 top-1.5 w-4 h-4 rounded-full border-2 border-cyber-bg-alt flex items-center justify-center transition-transform group-hover:scale-125 shadow-sm"
+                      style={{ backgroundColor: evt.color }}
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-white" />
+                    </div>
+
+                    <div className="p-3.5 rounded-xl bg-cyber-surface border border-cyber-border group-hover:border-cyber-border-strong transition-all space-y-1.5">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="text-[9px] font-mono font-bold px-2 py-0.5 rounded border uppercase"
+                            style={{
+                              backgroundColor: `${evt.color}15`,
+                              borderColor: `${evt.color}40`,
+                              color: evt.color,
+                            }}
+                          >
+                            {evt.badgeText}
+                          </span>
+                          <span className="font-sans font-bold text-xs text-cyber-primary">
+                            {evt.title}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 font-mono text-[10px] text-cyber-muted">
+                          <span className="text-accent-cyan font-bold">
+                            {getDeltaTime(evt.timestamp, task.created_at)}
+                          </span>
+                          <span>•</span>
+                          <span>{new Date(evt.timestamp).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                      </div>
+
+                      <div className="text-xs font-mono text-cyber-secondary">
+                        <span className="text-cyber-muted">Actor: </span>
+                        <span className="text-cyber-primary font-bold">{evt.actor}</span>
+                      </div>
+
+                      {evt.details && (
+                        <p className="text-xs text-cyber-secondary leading-relaxed bg-cyber-bg-alt p-2.5 rounded border border-cyber-border/40 font-sans">
+                          {evt.details}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>

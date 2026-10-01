@@ -1,8 +1,8 @@
 import React from 'react';
-import { LayoutDashboard, CheckSquare, MessageSquare, Users, ShieldAlert } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, MessageSquare, FileText, Users, ShieldAlert } from 'lucide-react';
 import { UserRole } from '../../lib/database.types';
 
-export type NavTab = 'dashboard' | 'tasks' | 'chat' | 'team' | 'admin';
+export type NavTab = 'dashboard' | 'tasks' | 'chat' | 'docs' | 'team' | 'admin';
 
 interface BottomNavProps {
   activeTab: NavTab;
@@ -21,6 +21,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
     { id: 'dashboard' as NavTab, label: 'Control', icon: LayoutDashboard },
     { id: 'tasks' as NavTab, label: 'Tasks', icon: CheckSquare },
     { id: 'chat' as NavTab, label: 'Pit Wall', icon: MessageSquare, badge: unreadCount },
+    { id: 'docs' as NavTab, label: 'Docs', icon: FileText },
     { id: 'team' as NavTab, label: 'Team', icon: Users },
     ...(role === 'admin' ? [{ id: 'admin' as NavTab, label: 'Admin', icon: ShieldAlert }] : []),
   ];
