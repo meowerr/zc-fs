@@ -16,6 +16,7 @@ interface AppShellProps {
   onTabChange: (tab: NavTab) => void;
   currentRole: UserRole;
   userName: string;
+  userEmail?: string;
   groupName?: string;
   unreadCount?: number;
   onOpenProfile?: () => void;
@@ -34,6 +35,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   onTabChange,
   currentRole,
   userName,
+  userEmail,
   groupName,
   unreadCount = 0,
   onOpenProfile,
@@ -78,6 +80,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       <TopHeader
         currentRole={currentRole}
         userName={userName}
+        userEmail={userEmail}
         groupName={groupName}
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}

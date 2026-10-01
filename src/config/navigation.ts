@@ -58,7 +58,7 @@ export const NAV_ITEMS: readonly NavItemConfig[] = [
   {
     id: 'docs',
     label: 'Engineering Hub',
-    shortLabel: 'Docs',
+    shortLabel: 'Documents',
     subtitle: 'CAD & Specs Library',
     group: 'OPERATIONS',
     icon: FileText,
@@ -67,7 +67,7 @@ export const NAV_ITEMS: readonly NavItemConfig[] = [
   {
     id: 'team',
     label: 'Team Directory',
-    shortLabel: 'Team',
+    shortLabel: 'Directory',
     subtitle: '5 Sub-Teams & Roles',
     group: 'OPERATIONS',
     icon: Users,
@@ -86,7 +86,7 @@ export const NAV_ITEMS: readonly NavItemConfig[] = [
   {
     id: 'admin',
     label: 'Admin Hub',
-    shortLabel: 'Admin',
+    shortLabel: 'Admin Hub',
     subtitle: 'Approvals & Access',
     group: 'ADMIN',
     icon: ShieldAlert,

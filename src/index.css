@@ -99,7 +99,7 @@
     --border-strong: #39434F;
     --text-primary: #F2F4F7;
     --text-secondary: #B0B8C2;
-    --text-muted: #737D89;
+    --text-muted: #8A96A4;
     --chrome: #C8CED6;
     --chrome-dark: #707986;
 
@@ -324,7 +324,7 @@
 
 .micro-label {
   font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Sun, Moon, Radio, Bell, BookOpen, Palette, Search } from 'lucide-react';
+import { Sun, Moon, Bell, BookOpen, Palette, Search } from 'lucide-react';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { UserRole } from '../../lib/database.types';
 
 interface TopHeaderProps {
   currentRole: UserRole;
   userName: string;
+  userEmail?: string;
   groupName?: string;
   isDarkMode: boolean;
   onToggleTheme: () => void;
@@ -20,6 +21,7 @@ interface TopHeaderProps {
 export const TopHeader: React.FC<TopHeaderProps> = ({
   currentRole,
   userName,
+  userEmail,
   groupName = 'Vehicle Dynamics',
   isDarkMode,
   onToggleTheme,
@@ -49,11 +51,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 <h1 className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase leading-tight truncate">
                   PitLane
                 </h1>
-                <span className="hidden xs:inline-block px-1 py-0.2 rounded text-[8px] font-mono font-bold bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
+                <span className="hidden xs:inline-block px-1 py-0.2 rounded text-[11px] font-mono font-bold bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
                   FS-2026
                 </span>
               </div>
-              <p className="text-[10px] font-mono text-cyber-muted tracking-wider flex items-center gap-1 truncate">
+              <p className="text-[11px] font-mono text-cyber-secondary tracking-wider flex items-center gap-1 truncate">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse shrink-0" />
                 <span className="truncate max-w-[85px] sm:max-w-[120px]">{groupName}</span>
               </p>
@@ -74,11 +76,12 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
         {/* Telemetry Live Indicator & Controls */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyber-bg-alt border border-cyber-border font-mono text-xs">
-            <Radio className="w-3.5 h-3.5 text-accent-lime animate-pulse" />
-            <span className="text-cyber-secondary">ONLINE</span>
-            <span className="text-accent-cyan ml-1 text-[11px]">@zewailcity.edu.eg</span>
-          </div>
+          {/* User Email Context Pill (replaces duplicate static online indicator) */}
+          {userEmail && (
+            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyber-bg-alt border border-cyber-border font-mono text-[11px] text-cyber-secondary truncate max-w-[220px]" title={userEmail}>
+              <span className="text-accent-cyan font-bold truncate">{userEmail}</span>
+            </div>
+          )}
 
           {/* Design System Style Guide Shortcut (Desktop Only) */}
           {onOpenStyleGuide && (
@@ -112,7 +115,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             >
               <Search className="w-4 h-4 text-accent-cyan" />
               <span className="hidden xl:inline text-xs font-mono text-cyber-muted ml-2">Search...</span>
-              <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-border font-mono text-[9px] text-cyber-muted ml-2">
+              <kbd className="hidden lg:inline-flex items-center px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-border font-mono text-[11px] text-cyber-secondary ml-2">
                 ⌘K
               </kbd>
             </button>
@@ -126,7 +129,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           >
             <Bell className="w-4 h-4" />
             {notificationCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded bg-accent-red text-white font-mono text-[9px] font-bold flex items-center justify-center shadow-sm animate-pulse">
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded bg-accent-red text-white font-mono text-[11px] font-bold flex items-center justify-center shadow-sm animate-pulse">
                 {notificationCount}
               </span>
             )}
@@ -155,7 +158,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
               <div className="text-xs font-semibold text-cyber-primary leading-tight truncate max-w-[120px]">
                 {userName}
               </div>
-              <div className="text-[10px] font-mono text-accent-cyan uppercase tracking-wider">
+              <div className="text-[11px] font-mono text-accent-cyan uppercase tracking-wider font-semibold">
                 {currentRole}
               </div>
             </div>

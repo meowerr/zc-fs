@@ -18,6 +18,19 @@
 | **Slice 5: Responsive Pass (Tablet & Mobile "Garage Door")** | `[VERIFIED]` | Added Tablet tap-to-expand with single-tap navigation and outside dismissal; built `GarageDoorNav.tsx` replacing `BottomNav` on mobile with 56px thumb-arc pill, 78vh bottom sheet, 2x3 destination grid (64px targets), swipe-to-dismiss gesture, safe area padding, and pb-20 layout. Configured viewport density tiers (600-759px and <600px) eliminating all scrollbars. Bundle: 183.49 KB / Main JS: 45.88 KB. |
 | **Slice 6: Accessibility, /styleguide & Full Verification** | `[VERIFIED]` | Added ARIA roles (`role="dialog"`, `role="tooltip"`, `aria-expanded`, `aria-current="page"`, `aria-pressed`, `aria-modal`), verified global `prefers-reduced-motion: reduce`, integrated Section 9 in `StyleGuide.tsx` showcasing component states, and passed full verification suite (41/41 global tests + 6 slice test suites). Bundle: 184.33 KB / Main JS: 45.92 KB. |
 
+### Architectural Decision Record: Mobile Navigation ("Garage Door" Modal Bottom Sheet vs Right-Edge Side Drawer)
+- **Status:** Documented decision under review; architecture preserved pending user confirmation.
+- **Context & Intent:**
+  The original specification outlined a right-edge "Garage Door" tab opening a side panel over the mobile app. During Slice 5 development, this was adapted into an ergonomic bottom sheet console with a floating thumb-arc pill trigger.
+- **Rationale for Bottom Sheet Adaptation:**
+  1. **Thumb-Zone Ergonomics:** On modern mobile screens (6.1" to 6.7"+), reaching a tab midway up the right screen edge requires either two hands or an awkward grip shift. Bottom-anchored controls sit directly inside the primary ergonomic thumb arc.
+  2. **Touch Target Dimensions:** A 2-column bottom sheet layout supports full-width cards with >=64px height and >=140px width, accommodating double-encoded icons, uppercase titles, and descriptive subtitles without horizontal truncation or text stacking. A narrow right drawer squeezed portrait viewports.
+  3. **Zero Content Reflow Guarantee:** The bottom sheet rises upward as a GPU-accelerated modal sheet (`will-change: transform; translate-y-0`) over the page with a solid dark scrim (`bg-black/75`), ensuring the underlying page never resizes or shifts.
+- **CLOSED State Specification:**
+  - **Trigger & Position:** Floating glass pill (`min-h-[56px]`) anchored at `bottom-3` inset horizontally (`inset-x-3 sm:inset-x-6`), elevated at `z-40`, with `pb-[env(safe-area-inset-bottom)]`.
+  - **Contents:** Left features the ZC racing badge with live pulsating LED, current tab icon, uppercase title, and subtitle. Right displays the unread chat badge pill, real-time connection status (`LIVE`), and an upward expansion chevron.
+  - **Bottom Bar Status:** Zero bottom bar remains. The legacy `BottomNav` is completely removed (`USE_HYBRID_RACING_RAIL`). Content reclaims the full viewport height (`pb-20`).
+
 ---
 
 ## 1. Product Maturity / Workspace Depth Pass (Branch: `feature/product-maturity-pass`)

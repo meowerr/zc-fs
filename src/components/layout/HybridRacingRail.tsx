@@ -200,10 +200,15 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
         onBlurCapture={handleBlur}
         aria-label="PitLane Control Console"
         aria-expanded={isOpen}
-        style={{ zIndex: isOpen ? 35 : 30 }}
+        style={{
+          top: 'var(--rail-gap)',
+          bottom: 'var(--rail-gap)',
+          left: 'var(--rail-gap)',
+          zIndex: isOpen ? 35 : 30,
+        }}
         className={`
-          hidden md:flex flex-col fixed top-[var(--rail-gap,12px)] bottom-[var(--rail-gap,12px)] left-[var(--rail-gap,12px)]
-          ${isOpen ? 'w-72 shadow-cyber-elevated' : 'w-[var(--rail-w,72px)] shadow-cyber'}
+          hidden md:flex flex-col fixed
+          ${isOpen ? 'w-72 shadow-cyber-elevated' : 'w-[var(--rail-w)] shadow-cyber'}
           bg-cyber-surface/95 dark:bg-midnight-900/95 backdrop-blur-md border border-cyber-border rounded-xl
           transition-all duration-200 ease-out select-none overflow-hidden
         `}
@@ -228,11 +233,11 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                   <span className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase">
                     PitLane
                   </span>
-                  <span className="text-[9px] font-mono text-accent-cyan font-bold tracking-tight">
+                  <span className="text-[11px] font-mono text-accent-cyan font-bold tracking-tight">
                     // NAV
                   </span>
                 </div>
-                <span className="text-[9px] font-mono text-cyber-muted tracking-widest uppercase">
+                <span className="text-[11px] font-mono text-cyber-secondary tracking-widest uppercase">
                   CONTROL CONSOLE
                 </span>
               </div>
@@ -259,25 +264,32 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
           )}
         </div>
 
-        {/* ─── 2PX TRACK LANE LINE ─── */}
+        {/* ─── 2PX TRACK LANE LINE (HEADER DIVIDER) ─── */}
         <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-accent-cyan/40 to-transparent shrink-0" />
 
         {/* ─── NAVIGATION CONTENT AREA ─── */}
         <div className="flex-1 py-2 flex flex-col justify-between overflow-hidden">
           {isOpen ? (
-            /* ─── EXPANDED COMMAND CENTER (GROUPED SECTIONS) ─── */
-            <nav aria-label="Command Center Navigation" className="space-y-2.5 px-2 overflow-hidden">
-              {activeGroups.map((groupId) => {
-                const groupItems = getNavItemsByGroup(groupId, role);
-                if (groupItems.length === 0) return null;
+            /* ─── EXPANDED COMMAND CENTER (GROUPED SECTIONS WITH CONTINUOUS LANE LINE) ─── */
+            <div className="relative flex-1 overflow-hidden px-2">
+              {/* Continuous Vertical Track Lane Line in Expanded Mode */}
+              <div 
+                className="absolute top-2 bottom-2 left-[21px] w-[2px] bg-cyber-border/70 pointer-events-none z-0" 
+                aria-hidden="true"
+              />
 
-                return (
-                  <div key={groupId} className="space-y-1">
-                    {/* Group Label */}
-                    <div className="px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-accent-cyan/80 flex items-center gap-1">
-                      <span>//</span>
-                      <span>{groupId}</span>
-                    </div>
+              <nav aria-label="Command Center Navigation" className="relative z-10 space-y-2.5 overflow-hidden">
+                {activeGroups.map((groupId) => {
+                  const groupItems = getNavItemsByGroup(groupId, role);
+                  if (groupItems.length === 0) return null;
+
+                  return (
+                    <div key={groupId} className="space-y-1">
+                      {/* Group Label */}
+                      <div className="px-2 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wider text-accent-cyan flex items-center gap-1">
+                        <span>//</span>
+                        <span>{groupId}</span>
+                      </div>
 
                     {/* Group Items */}
                     {groupItems.map((item) => {
@@ -331,71 +343,86 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                 );
               })}
             </nav>
+          </div>
           ) : (
             /* ─── COLLAPSED FLOATING RAIL (ICONS + LIT NODES + INSTANT CYBER TOOLTIPS) ─── */
-            <nav aria-label="Primary Navigation" className="px-2 flex flex-col items-center gap-1.5 overflow-hidden">
-              {visibleItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeTab === item.id;
-                const showBadge = item.badgeKey === 'chat' && unreadCount > 0;
+            <div className="relative w-full flex flex-col items-center overflow-hidden">
+              {/* Continuous 2px Vertical Track Lane Line in Collapsed Mode */}
+              <div 
+                className="absolute top-2 bottom-2 left-1/2 -translate-x-1/2 w-[2px] bg-cyber-border/70 pointer-events-none z-0" 
+                aria-hidden="true"
+              />
 
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => handleItemClick(item.id)}
-                    aria-label={item.label}
-                    aria-current={isActive ? 'page' : undefined}
-                    className={`
-                      relative flex items-center justify-center w-12 h-11 rounded-lg transition-all duration-150 cursor-pointer
-                      focus:outline-none focus:ring-1 focus:ring-accent-cyan group
-                      ${
-                        isActive
-                          ? 'bg-cyber-surface-elevated text-accent-cyan border border-accent-cyan/50 shadow-cyber-sm'
-                          : 'text-cyber-muted hover:text-cyber-primary hover:bg-cyber-surface-hover border border-transparent'
-                      }
-                    `}
-                  >
-                    {/* Lit Active Node Lane Indicator */}
-                    {isActive && (
-                      <>
-                        <div className="absolute left-0 inset-y-1.5 w-[3px] bg-accent-cyan rounded-r-full shadow-[0_0_10px_rgba(0,217,255,0.9)]" />
-                        <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-accent-cyan shadow-[0_0_6px_rgba(0,217,255,0.9)] animate-pulse" />
-                      </>
-                    )}
+              <nav aria-label="Primary Navigation" className="relative z-10 px-2 flex flex-col items-center gap-1.5 overflow-hidden w-full">
+                {visibleItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeTab === item.id;
+                  const showBadge = item.badgeKey === 'chat' && unreadCount > 0;
 
-                    {/* Icon Container */}
-                    <div className="relative">
-                      <Icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive ? 'scale-105' : ''}`} />
-
-                      {/* Notification Unread Badge */}
-                      {showBadge && (
-                        <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-mono font-bold bg-accent-red text-white flex items-center justify-center shadow-sm animate-pulse">
-                          {unreadCount > 99 ? '99+' : unreadCount}
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Instant Cyber Tooltip (Visible in Collapsed Mode on hover) */}
-                    <div 
-                      role="tooltip"
-                      className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-cyber-surface-elevated/95 dark:bg-midnight-950/95 border border-cyber-border-strong shadow-cyber-elevated pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap hidden md:block"
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleItemClick(item.id)}
+                      aria-label={item.label}
+                      aria-current={isActive ? 'page' : undefined}
+                      className={`
+                        relative flex items-center justify-center w-12 h-11 rounded-lg transition-all duration-150 cursor-pointer
+                        focus:outline-none focus:ring-1 focus:ring-accent-cyan group
+                        ${
+                          isActive
+                            ? 'bg-cyber-surface-elevated text-accent-cyan border border-accent-cyan/50 shadow-cyber-sm'
+                            : 'text-cyber-muted hover:text-cyber-primary hover:bg-cyber-surface-hover border border-transparent'
+                        }
+                      `}
                     >
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-display text-xs font-bold text-cyber-primary">
-                          {item.label}
-                        </span>
-                        <span className="font-mono text-[9px] text-accent-cyan uppercase px-1 py-0.2 rounded bg-cyber-bg border border-accent-cyan/30">
-                          {item.group}
-                        </span>
+                      {/* Lit Active Node Lane Indicator */}
+                      {isActive && (
+                        <>
+                          <div 
+                            className="absolute left-0 inset-y-1.5 w-[3px] rounded-r-full shadow-[0_0_10px_rgba(0,217,255,0.9)]" 
+                            style={{ backgroundColor: userTeamColor }}
+                          />
+                          <span 
+                            className="absolute top-1 right-1 w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,217,255,0.9)] animate-pulse" 
+                            style={{ backgroundColor: userTeamColor }}
+                          />
+                        </>
+                      )}
+
+                      {/* Icon Container */}
+                      <div className="relative">
+                        <Icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive ? 'scale-105' : ''}`} />
+
+                        {/* Notification Unread Badge */}
+                        {showBadge && (
+                          <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full text-[11px] font-mono font-bold bg-accent-red text-white flex items-center justify-center shadow-sm animate-pulse">
+                            {unreadCount > 99 ? '99+' : unreadCount}
+                          </span>
+                        )}
                       </div>
-                      <div className="font-mono text-[9px] text-cyber-muted text-left">
-                        {item.subtitle}
+
+                      {/* Instant Cyber Tooltip (Visible in Collapsed Mode on hover) */}
+                      <div 
+                        role="tooltip"
+                        className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg bg-cyber-surface-elevated/95 dark:bg-midnight-950/95 border border-cyber-border-strong shadow-cyber-elevated pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-50 whitespace-nowrap hidden md:block"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-display text-xs font-bold text-cyber-primary">
+                            {item.label}
+                          </span>
+                          <span className="font-mono text-[11px] text-accent-cyan uppercase px-1 py-0.2 rounded bg-cyber-bg border border-accent-cyan/30">
+                            {item.group}
+                          </span>
+                        </div>
+                        <div className="font-mono text-[11px] text-cyber-secondary text-left">
+                          {item.subtitle}
+                        </div>
                       </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </nav>
+                    </button>
+                  );
+                })}
+              </nav>
+            </div>
           )}
 
           {/* ─── BOTTOM AREA: TELEMETRY & SUB-TEAM MONITOR (RLS RESPECTED) ─── */}
@@ -403,12 +430,12 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
             {isOpen ? (
               /* Expanded Telemetry & Sub-team Overview */
               <div className="space-y-2">
-                <div className="px-2 flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-cyber-muted">
+                <div className="px-2 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-cyber-secondary font-semibold">
                   <span className="flex items-center gap-1.5">
                     <Flag className="w-3 h-3 text-accent-cyan" />
                     <span>SUB-TEAM TELEMETRY</span>
                   </span>
-                  <span className="text-[9px] text-accent-cyan font-mono">
+                  <span className="text-[11px] text-accent-cyan font-mono font-bold">
                     {role === 'admin' ? '5 TEAMS ACTIVE' : 'ASSIGNED'}
                   </span>
                 </div>
@@ -431,10 +458,10 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                             className="w-2 h-2 rounded-full transition-transform group-hover:scale-125"
                             style={{ backgroundColor: team.color_accent || '#00D9FF' }}
                           />
-                          <span className="text-[8px] font-mono text-cyber-muted group-hover:text-cyber-primary truncate w-full text-center">
+                          <span className="text-[11px] font-mono text-cyber-secondary group-hover:text-cyber-primary truncate w-full text-center">
                             {team.slug.slice(0, 3).toUpperCase()}
                           </span>
-                          <span className="text-[8px] font-mono font-bold" style={{ color: team.color_accent }}>
+                          <span className="text-[11px] font-mono font-bold" style={{ color: team.color_accent }}>
                             {pct}%
                           </span>
                         </button>
@@ -455,12 +482,12 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                         <div className="font-mono text-xs font-semibold text-cyber-primary truncate">
                           {currentGroupName}
                         </div>
-                        <div className="text-[9px] font-mono text-cyber-muted">
+                        <div className="text-[11px] font-mono text-cyber-secondary">
                           {tasks.length} sub-team {tasks.length === 1 ? 'task' : 'tasks'}
                         </div>
                       </div>
                     </div>
-                    <span className="font-mono text-[9px] px-1.5 py-0.5 rounded bg-cyber-surface text-cyber-secondary border border-cyber-border uppercase font-semibold">
+                    <span className="font-mono text-[11px] px-1.5 py-0.5 rounded bg-cyber-surface text-cyber-secondary border border-cyber-border uppercase font-semibold">
                       {role}
                     </span>
                   </div>
@@ -493,14 +520,14 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                     );
                   })}
                 </div>
-                <span className="text-[8px] font-mono text-cyber-muted tracking-tighter uppercase">
+                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter uppercase font-bold">
                   5 TEAMS
                 </span>
               </div>
             )}
 
             {/* Bottom Console Telemetry Status (Double Encoded: Icon + Color + Text) */}
-            <div className="flex items-center justify-between pt-1 text-[10px] font-mono">
+            <div className="flex items-center justify-between pt-1 text-[11px] font-mono">
               {onOpenStyleGuide && (
                 <button
                   onClick={onOpenStyleGuide}
@@ -514,26 +541,26 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
 
               <div 
                 className="flex items-center gap-1.5 ml-auto cursor-default px-2 py-0.5 rounded bg-cyber-bg/80 border border-cyber-border" 
-                title={`Telemetry Status: ${connectionStatus.toUpperCase()} (@zewailcity.edu.eg)`}
+                title={`Telemetry Status: ${connectionStatus.toUpperCase()}`}
               >
                 {connectionStatus === 'online' ? (
                   <>
                     <Radio className="w-3 h-3 text-accent-lime animate-pulse" />
-                    <span className="text-accent-lime font-bold text-[9px]">
+                    <span className="text-accent-lime font-bold text-[11px]">
                       {isOpen ? 'SYSTEM ONLINE' : 'LIVE'}
                     </span>
                   </>
                 ) : connectionStatus === 'reconnecting' ? (
                   <>
                     <span className="w-2 h-2 rounded-full bg-accent-yellow animate-ping" />
-                    <span className="text-accent-yellow font-bold text-[9px]">
+                    <span className="text-accent-yellow font-bold text-[11px]">
                       {isOpen ? 'RECONNECTING' : 'SYNC'}
                     </span>
                   </>
                 ) : (
                   <>
                     <span className="w-2 h-2 rounded-full bg-accent-red" />
-                    <span className="text-accent-red font-bold text-[9px]">
+                    <span className="text-accent-red font-bold text-[11px]">
                       {isOpen ? 'SYSTEM OFFLINE' : 'OFF'}
                     </span>
                   </>
