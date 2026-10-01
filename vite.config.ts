@@ -42,6 +42,7 @@ export default defineConfig({
         skipWaiting: true,
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         navigateFallbackDenylist: [/^\/rest\//, /^\/auth\//, /supabase\.co/],
+        ignoreURLParametersMatching: [/.*/],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.hostname.includes('supabase.co'),

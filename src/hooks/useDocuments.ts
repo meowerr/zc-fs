@@ -107,7 +107,11 @@ export function useDocuments(currentUser: Profile | null) {
   }) => {
     if (!currentUser) throw new Error('Authentication required');
 
-    const folder = params.groupId ? `groups/${params.groupId}` : 'club-wide';
+    // Comply with storage RLS: split_part(name, '/', 1) = public.get_auth_group()::text
+    const targetFolder = currentUser.role === 'admin'
+      ? (params.groupId || 'club-wide')
+      : (currentUser.group_id || params.groupId || 'club-wide');
+    const folder = `${targetFolder}/documents`;
     const uploadResult = await uploadFile(params.file, 'task-attachments', folder);
 
     if (!isLiveSupabaseConfigured) {

@@ -263,17 +263,16 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
         {/* D. The F1 Car Sprite */}
         {carVisible && (
           <div
-            className="absolute will-change-transform"
+            className="absolute will-change-transform w-[clamp(160px,46vw,220px)] sm:w-[clamp(280px,34vw,560px)]"
             style={{
               top: centerY,
               left: `${carX}vw`,
               transform: 'translate(-50%, -50%)',
-              width: 'clamp(280px, 34vw, 560px)',
             }}
           >
             {/* Aerodynamic wake aura */}
             <div 
-              className="absolute -inset-4 rounded-full blur-md opacity-70 pointer-events-none"
+              className="absolute -inset-2.5 sm:-inset-4 rounded-full blur-md opacity-70 pointer-events-none"
               style={{
                 background: isLTR
                   ? 'radial-gradient(circle at 20% 50%, rgba(34, 228, 240, 0.8), rgba(47, 107, 255, 0.4) 60%, transparent 80%)'
@@ -298,11 +297,9 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
 
             {/* Exhaust Sparks / Particle Tail */}
             <div 
-              className="absolute top-1/2 -translate-y-1/2 pointer-events-none"
+              className="absolute top-1/2 -translate-y-1/2 pointer-events-none w-8 sm:w-14 h-1.5 sm:h-2"
               style={{
-                [isLTR ? 'left' : 'right']: '-20px',
-                width: '60px',
-                height: '8px',
+                [isLTR ? 'left' : 'right']: '-14px',
                 background: 'linear-gradient(to left, rgba(255, 79, 163, 0.9), transparent)',
                 filter: 'blur(2px)',
               }}

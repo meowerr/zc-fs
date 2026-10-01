@@ -59,6 +59,12 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    if (currentUser.role !== 'admin' && currentUser.group_id) {
+      setUploadGroupId(currentUser.group_id);
+    }
+  }, [currentUser.role, currentUser.group_id]);
+
   const effectiveGroups = groups.length > 0 ? groups : SUB_TEAMS;
 
   const categories: Array<{ id: string; label: string; icon: any; color: string }> = [
@@ -135,6 +141,16 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
       return;
     }
 
+    // Role-based group validation
+    if (currentUser.role === 'member' && !currentUser.group_id) {
+      setUploadError('You must be assigned to an active sub-team by a Club Admin to upload engineering assets.');
+      return;
+    }
+
+    const effectiveGroupId = currentUser.role === 'member'
+      ? (currentUser.group_id || null)
+      : (uploadGroupId ? uploadGroupId : null);
+
     try {
       setIsUploading(true);
       setUploadError(null);
@@ -143,7 +159,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
         title: uploadTitle.trim(),
         description: uploadDesc.trim() || undefined,
         category: uploadCategory,
-        groupId: uploadGroupId ? uploadGroupId : null,
+        groupId: effectiveGroupId,
       });
 
       // Reset and close
@@ -152,7 +168,12 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
       setUploadDesc('');
       setIsUploadModalOpen(false);
     } catch (err: any) {
-      setUploadError(err.message || 'Upload failed');
+      const msg = err.message || 'Upload failed';
+      if (msg.toLowerCase().includes('row-level security') || msg.toLowerCase().includes('violates')) {
+        setUploadError('Security policy restriction: You can only upload assets within your assigned sub-team repository.');
+      } else {
+        setUploadError(msg);
+      }
     } finally {
       setIsUploading(false);
     }
