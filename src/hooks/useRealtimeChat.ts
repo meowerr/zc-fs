@@ -39,6 +39,21 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
     currentUserRef.current = currentUser;
   }, [currentUser]);
 
+  // Keep ref to shared broadcast realtime channel
+  const realtimeChannelRef = useRef<any>(null);
+
+  // Track latest message timestamp for lightweight background polling fallback
+  const latestCreatedAtRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (messages.length > 0) {
+      const confirmed = messages.filter((m) => !m.id.startsWith('temp-') && m.created_at);
+      if (confirmed.length > 0) {
+        const lastMsg = confirmed[confirmed.length - 1];
+        latestCreatedAtRef.current = lastMsg.created_at;
+      }
+    }
+  }, [messages]);
+
   // Save to localStorage in demo mode
   useEffect(() => {
     if (!isLiveSupabaseConfigured && isDemoMode) {
@@ -51,7 +66,7 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
   const getSmartDefaultChannel = useCallback((availableChannels: Channel[], user: Profile): string => {
     if (!availableChannels.length) return '';
 
-    // 1. If Member: Prioritize their assigned sub-team group channel (so they can immediately chat!)
+    // 1. If Member: Prioritize their assigned sub-team group channel
     if (user.role === 'member' && user.group_id) {
       const memberGroup = availableChannels.find(
         (c) => c.channel_type === 'group' && c.group_id === user.group_id
@@ -176,12 +191,43 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
     }
   }, [accessibleChannels, activeChannelId, activeConversationId, currentUser, getSmartDefaultChannel]);
 
-  // Realtime Supabase Subscription: Stable lifecycle bound only to currentUser session
+  // Incremental background message fetcher (for catching any dropped messages without page reload)
+  const fetchLatestMessages = useCallback(async () => {
+    if (!isLiveSupabaseConfigured || !currentUserRef.current || currentUserRef.current.status !== 'approved') return;
+
+    try {
+      const latest = latestCreatedAtRef.current;
+      let query = supabase
+        .from('messages')
+        .select('*, sender:profiles!messages_sender_id_fkey(*)')
+        .order('created_at', { ascending: true });
+
+      if (latest) {
+        query = query.gt('created_at', latest);
+      } else {
+        query = query.limit(200);
+      }
+
+      const { data, error } = await query;
+      if (!error && data && data.length > 0) {
+        setMessages((prev) => {
+          const existingIds = new Set(prev.map((m) => m.id));
+          const newItems = data.filter((m) => !existingIds.has(m.id));
+          if (newItems.length === 0) return prev;
+          return [...prev, ...newItems];
+        });
+      }
+    } catch (err) {
+      console.warn('Background message sync note:', err);
+    }
+  }, []);
+
+  // Realtime Supabase Subscription: Multi-layer (Broadcast + Postgres CDC + Background Interval)
   useEffect(() => {
     if (!isLiveSupabaseConfigured || !currentUser || currentUser.status !== 'approved') return;
 
-    // Load initial messages from Supabase
-    const fetchSupabaseMessages = async () => {
+    // Load initial 200 messages from Supabase
+    const fetchInitialMessages = async () => {
       const { data, error } = await supabase
         .from('messages')
         .select('*, sender:profiles!messages_sender_id_fkey(*)')
@@ -193,23 +239,53 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
       }
     };
 
-    fetchSupabaseMessages();
+    fetchInitialMessages();
 
-    // Unique channel topic name to avoid socket collision
-    const channelTopic = `chat_${currentUser.id}_${Math.random().toString(36).substring(2, 8)}`;
-    const channel = supabase
-      .channel(channelTopic)
+    // Shared global room topic for instant WebSocket broadcast across all connected engineers
+    const channel = supabase.channel('pitlane_realtime_chat', {
+      config: {
+        broadcast: { ack: false, self: false },
+      },
+    });
+
+    realtimeChannelRef.current = channel;
+
+    channel
+      // 1. Instant WebSocket Broadcast from peers (<50ms delivery)
+      .on(
+        'broadcast',
+        { event: 'new_message' },
+        (event) => {
+          const incomingMsg = event.payload as Message;
+          if (!incomingMsg || !incomingMsg.id) return;
+
+          setMessages((prev) => {
+            const existingIndex = prev.findIndex(
+              (m) =>
+                m.id === incomingMsg.id ||
+                (m.id.startsWith('temp-') &&
+                  m.sender_id === incomingMsg.sender_id &&
+                  m.content === incomingMsg.content)
+            );
+            if (existingIndex !== -1) {
+              const updated = [...prev];
+              updated[existingIndex] = incomingMsg;
+              return updated;
+            }
+            return [...prev, incomingMsg];
+          });
+        }
+      )
+      // 2. PostgreSQL CDC (WAL replication if enabled)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'messages' },
         async (payload) => {
           const newMsg = payload.new as any;
-          // Synchronously resolve sender from in-memory profiles or currentUser
           let sender = (newMsg.sender_id === currentUser.id)
             ? currentUserRef.current
             : allProfilesRef.current.find((p) => p.id === newMsg.sender_id);
 
-          // If sender not found in memory, query profile as fallback
           if (!sender) {
             const { data: dbSender } = await supabase
               .from('profiles')
@@ -225,14 +301,12 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
           };
 
           setMessages((prev) => {
-            // Reconcile optimistic messages (either by confirmed ID or temp client ID)
             const existingIndex = prev.findIndex(
               (m) =>
                 m.id === incomingMsg.id ||
                 (m.id.startsWith('temp-') &&
                   m.sender_id === incomingMsg.sender_id &&
-                  m.content === incomingMsg.content &&
-                  (m.channel_id === incomingMsg.channel_id || m.conversation_id === incomingMsg.conversation_id))
+                  m.content === incomingMsg.content)
             );
             if (existingIndex !== -1) {
               const updated = [...prev];
@@ -256,12 +330,28 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
         }
       });
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [currentUser?.id, currentUser?.status, loadChatMetadata]);
+    // 3. Guaranteed background sync interval (every 4 seconds) to catch any offline / background drops
+    const pollInterval = setInterval(() => {
+      fetchLatestMessages();
+    }, 4000);
 
-  // Send message function with instant optimistic UI update
+    // 4. Tab visibility sync: immediately pull fresh messages when returning to the tab
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchLatestMessages();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(pollInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      supabase.removeChannel(channel);
+      realtimeChannelRef.current = null;
+    };
+  }, [currentUser?.id, currentUser?.status, loadChatMetadata, fetchLatestMessages]);
+
+  // Send message function with instant optimistic UI update + instant peer broadcast
   const sendMessage = async (
     content: string,
     attachment?: { url: string; name: string; type: string }
@@ -335,6 +425,17 @@ export function useRealtimeChat(currentUser: Profile | null, allProfiles: Profil
           }
           return [...prev, data];
         });
+
+        // Instant peer-to-peer WebSocket broadcast to all connected team members
+        try {
+          realtimeChannelRef.current?.send({
+            type: 'broadcast',
+            event: 'new_message',
+            payload: data,
+          });
+        } catch (bErr) {
+          console.warn('Realtime broadcast notice:', bErr);
+        }
       }
     } catch (err) {
       // Ensure rollback on any exception
