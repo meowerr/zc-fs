@@ -207,7 +207,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/80 backdrop-blur-md animate-fade-in">
       <div 
-        className="w-full max-w-2xl rounded-2xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-2xl overflow-hidden flex flex-col max-h-[75vh]"
+        className="w-full max-w-2xl rounded-2xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-2xl overflow-hidden flex flex-col max-h-[75dvh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Header Input */}

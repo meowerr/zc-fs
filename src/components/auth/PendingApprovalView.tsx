@@ -16,7 +16,7 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
   onSignOut,
 }) => {
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative overflow-hidden">
+    <div className="min-h-dvh flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative overflow-hidden">
       {/* Background Subtle Tech-Grid Texture */}
       <div 
         className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"

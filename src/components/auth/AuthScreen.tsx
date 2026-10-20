@@ -132,7 +132,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-hidden bg-cyber-bg text-cyber-primary">
+    <div className="min-h-dvh flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-y-auto bg-cyber-bg text-cyber-primary">
       {/* Background Subtle Tech-Grid Texture */}
       <div 
         className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"

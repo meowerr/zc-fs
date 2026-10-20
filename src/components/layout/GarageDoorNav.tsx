@@ -218,7 +218,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                 : undefined
             }
             className={`
-              relative z-50 w-full max-h-[78vh] bg-cyber-surface dark:bg-midnight-950 border-t border-cyber-border-strong rounded-t-3xl shadow-2xl flex flex-col overflow-hidden
+              relative z-50 w-full max-h-[78dvh] bg-cyber-surface dark:bg-midnight-950 border-t border-cyber-border-strong rounded-t-3xl shadow-2xl flex flex-col overflow-hidden
               ${
                 dragOffset > 0
                   ? ''
@@ -268,7 +268,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
             </div>
 
             {/* 2x3 Grid of Navigation Destinations (Odd Last Tile Spanned) */}
-            <div className="p-3.5 overflow-y-auto max-h-[50vh]">
+            <div className="p-3.5 overflow-y-auto max-h-[50dvh]">
               <div className="grid grid-cols-2 gap-2.5">
                 {visibleItems.map((item, index) => {
                   const Icon = item.icon;
@@ -308,7 +308,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                             {item.shortLabel || item.label}
                           </span>
                           {showBadge && (
-                            <span className="px-1.5 py-0.2 rounded-full text-label font-mono font-medium bg-accent-red text-white shadow-sm">
+                            <span className="px-1.5 py-0.5 rounded-full text-label font-mono font-medium bg-accent-red text-white shadow-sm">
                               {unreadCount > 99 ? '99+' : unreadCount}
                             </span>
                           )}

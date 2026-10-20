@@ -179,7 +179,7 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
       )`;
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-chrome-100 dark:bg-midnight-950">
+    <div className="relative w-full min-h-dvh overflow-hidden bg-chrome-100 dark:bg-midnight-950">
       {/* ─── Layer 1: Outgoing Frozen Login Screen Canvas / Backdrop ─── */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden bg-gradient-to-b from-chrome-100 via-chrome-50 to-chrome-100 dark:from-midnight-950 dark:via-midnight-900 dark:to-midnight-950"

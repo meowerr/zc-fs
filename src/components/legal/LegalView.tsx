@@ -58,7 +58,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
   const items = activeTab === 'privacy' ? PRIVACY_ITEMS : TERMS_ITEMS;
 
   return (
-    <div className="min-h-screen bg-cyber-bg text-cyber-primary p-4 sm:p-6 md:p-8 relative">
+    <div className="min-h-dvh bg-cyber-bg text-cyber-primary p-4 sm:p-6 md:p-8 relative">
       <div 
         className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
         style={{

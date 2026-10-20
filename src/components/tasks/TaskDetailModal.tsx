@@ -225,7 +225,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[92vh] flex flex-col p-4 sm:p-6 my-auto border-cyber-border-strong shadow-cyber-elevated overflow-hidden">
+      <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[92dvh] flex flex-col p-4 sm:p-6 my-auto border-cyber-border-strong shadow-cyber-elevated overflow-hidden">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-cyber-border flex-shrink-0">
           <div className="space-y-1 min-w-0">

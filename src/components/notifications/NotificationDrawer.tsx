@@ -58,7 +58,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
     <div className="fixed inset-0 z-50 flex items-start justify-end p-4 sm:p-6 bg-black/75 backdrop-blur-md">
       <GlassCard
         variant="elevated"
-        className="w-full max-w-sm sm:max-w-md max-h-[85vh] flex flex-col p-5 border-cyber-border-strong shadow-2xl space-y-3"
+        className="w-full max-w-sm sm:max-w-md max-h-[85dvh] flex flex-col p-5 border-cyber-border-strong shadow-2xl space-y-3"
       >
         {/* Drawer Header */}
         <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">

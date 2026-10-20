@@ -690,7 +690,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-xs text-cyber-primary truncate">{member.full_name}</span>
                           {isSelf && (
-                            <span className="text-label font-mono px-1.5 py-0.2 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
+                            <span className="text-label font-mono px-1.5 py-0.5 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
                               YOU
                             </span>
                           )}

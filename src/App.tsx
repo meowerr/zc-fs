@@ -198,7 +198,7 @@ export const App: React.FC = () => {
   // 1. Authenticating Screen (Prevents flash of login screen during PKCE code exchange)
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative">
+      <div className="min-h-dvh flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative">
         <div 
           className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
           style={{

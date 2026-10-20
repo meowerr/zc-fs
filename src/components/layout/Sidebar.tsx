@@ -111,7 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     {item.label}
                   </span>
                   {Boolean(item.badge && item.badge > 0) && (
-                    <span className="px-1.5 py-0.2 rounded text-label font-mono font-medium bg-accent-red text-white">
+                    <span className="px-1.5 py-0.5 rounded text-label font-mono font-medium bg-accent-red text-white">
                       {item.badge}
                     </span>
                   )}

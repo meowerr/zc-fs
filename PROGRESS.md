@@ -34,6 +34,14 @@
   - `AuthScreen.tsx`: mode toggles expanded to `py-3 text-sm min-h-[44px]`, domain/legal links with touch padding.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total assets gzip: 199.89 KB < 200 KB, main JS gzip: 45.01 KB < 50 KB)]` Full test suite passing with strict TypeScript verification (0 errors).
 
+### Phase 3: Layout, Safe Areas & Viewport Units
+- `[IMPLEMENTED, MANUALLY CHECKED]` TopHeader notch padding added: `pt-[env(safe-area-inset-top)]` and `.safe-header-pad` (`padding-left: max(0.625rem, env(safe-area-inset-left))` / `padding-right: max(0.625rem, env(safe-area-inset-right))`) ensuring content respects iPhone dynamic island / notches with zero clipping.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Main content bottom nav clearance: `<main>` upgraded with `.safe-main-bottom` (`padding-bottom: calc(6.5rem + env(safe-area-inset-bottom))`) guaranteeing content never sits under the floating navigation pill on notched devices.
+- `[VERIFIED: node scratch/mobile-metrics.mjs]` Migrated all mobile viewport units from `vh` to `dvh` (`App.tsx`, `AuthScreen.tsx`, `PendingApprovalView.tsx`, `ChatView.tsx`, `GlobalSearchModal.tsx`, `RoleGuideModal.tsx`, `GarageDoorNav.tsx`, `LegalView.tsx`, `NotificationDrawer.tsx`, `StyleGuide.tsx`, `TaskDetailModal.tsx`, `F1HorizontalTransition.tsx`), leaving desktop `Sidebar.tsx` intact.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Auth screen keyboard fix: Changed outer wrapper to `overflow-y-auto` while preserving tech-grid background texture pinned, allowing full access to submit button when virtual keyboard deploys.
+- `[VERIFIED: scripts/verify-suite.mjs & dist output]` Added `<link rel="apple-touch-icon" href="/icon-192.png" />` in `index.html`, dynamic theme-color meta synchronization in `AppShell.tsx` (`#070A0E` / `#F3F6FA`), PWA manifest `background_color: '#070A0E'` in `vite.config.ts`, and eliminated all remaining invalid `py-0.2` classes across the codebase.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total bundle gzip: 199.82 KB < 200 KB, main JS gzip: 45.10 KB < 50 KB)]` Full test suite passing with strict TypeScript verification (0 errors).
+
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 
 ### Slice B1: Asset Pipeline & PWA Icon Set

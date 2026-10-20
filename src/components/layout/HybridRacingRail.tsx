@@ -332,7 +332,7 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                                 {item.label}
                               </span>
                               {showBadge && (
-                                <span className="px-1.5 py-0.2 rounded text-label font-mono font-medium bg-accent-red text-white shadow-sm">
+                                <span className="px-1.5 py-0.5 rounded text-label font-mono font-medium bg-accent-red text-white shadow-sm">
                                   {unreadCount > 99 ? '99+' : unreadCount}
                                 </span>
                               )}
@@ -415,7 +415,7 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                           <span className="font-display text-xs font-bold text-cyber-primary">
                             {item.label}
                           </span>
-                          <span className="font-mono text-label text-accent-cyan uppercase px-1 py-0.2 rounded bg-cyber-bg border border-accent-cyan/30">
+                          <span className="font-mono text-label text-accent-cyan uppercase px-1 py-0.5 rounded bg-cyber-bg border border-accent-cyan/30">
                             {item.group}
                           </span>
                         </div>

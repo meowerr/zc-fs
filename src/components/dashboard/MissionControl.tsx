@@ -607,7 +607,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                           {t.task_type} // {t.priority}
                         </span>
                         {isMine && (
-                          <span className="text-label font-mono px-1.5 py-0.2 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
+                          <span className="text-label font-mono px-1.5 py-0.5 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
                             ASSIGNED TO YOU
                           </span>
                         )}

@@ -17,7 +17,7 @@ export default defineConfig({
         short_name: 'PitLane',
         description: 'Zewail City Formula Student Telemetry & Project Workspace',
         theme_color: '#0B1B3A',
-        background_color: '#EAF4FF',
+        background_color: '#070A0E',
         display: 'standalone',
         orientation: 'portrait-primary',
         icons: [

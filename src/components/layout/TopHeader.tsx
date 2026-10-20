@@ -35,10 +35,10 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 }) => {
   return (
     <header 
-      className="sticky top-0 z-20 w-full backdrop-blur-md bg-cyber-surface/90 border-b border-cyber-border transition-all duration-200 overflow-x-clip"
+      className="sticky top-0 z-20 w-full backdrop-blur-md bg-cyber-surface/90 border-b border-cyber-border transition-all duration-200 overflow-x-clip pt-[env(safe-area-inset-top)]"
       style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
     >
-      <div className="max-w-7xl mx-auto px-2.5 sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto safe-header-pad sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
         {/* Left Section: Mobile Brand or Desktop Sub-Team Telemetry Breadcrumb */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           {/* Mobile-Only Brand Logo */}

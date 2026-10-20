@@ -57,29 +57,29 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
   };
 
   const foundationColors = [
-    { name: 'Background', hex: '#070A0E', desc: 'Main canvas' },
-    { name: 'Background Alt', hex: '#0B0F14', desc: 'Sidebars' },
-    { name: 'Surface', hex: '#11161D', desc: 'Card base' },
-    { name: 'Elevated', hex: '#181E26', desc: 'Modals' },
-    { name: 'Hover', hex: '#202731', desc: 'Interactive' },
-    { name: 'Border', hex: '#2A323C', desc: '1px boundary' },
-    { name: 'Border Strong', hex: '#39434F', desc: 'Structural edge' },
-    { name: 'Text Primary', hex: '#F2F4F7', desc: 'Headlines' },
-    { name: 'Text Secondary', hex: '#B0B8C2', desc: 'Body copy' },
-    { name: 'Text Muted', hex: '#737D89', desc: 'Captions' },
-  ];
+    ['Background', '#070A0E', 'Main canvas'],
+    ['Background Alt', '#0B0F14', 'Sidebars'],
+    ['Surface', '#11161D', 'Card base'],
+    ['Elevated', '#181E26', 'Modals'],
+    ['Hover', '#202731', 'Interactive'],
+    ['Border', '#2A323C', '1px boundary'],
+    ['Border Strong', '#39434F', 'Structural edge'],
+    ['Text Primary', '#F2F4F7', 'Headlines'],
+    ['Text Secondary', '#B0B8C2', 'Body copy'],
+    ['Text Muted', '#737D89', 'Captions'],
+  ] as const;
 
   const accentColors = [
-    { name: 'Electric Cyan', hex: '#00D9FF', role: 'In-Progress Tasks' },
-    { name: 'Cyber Violet', hex: '#A855F7', role: 'Reviews & Electronics' },
-    { name: 'Racing Yellow', hex: '#FFD43B', role: 'Due Soon, Caution' },
-    { name: 'Racing Red', hex: '#FF304F', role: 'Urgent, Overdue' },
-    { name: 'Racing Lime', hex: '#10E57A', role: 'Approved, Nominal' },
-    { name: 'ZFS Brand Orange', hex: '#E07212', role: 'Official Team Mark' },
-  ];
+    ['Electric Cyan', '#00D9FF', 'In-Progress Tasks'],
+    ['Cyber Violet', '#A855F7', 'Reviews & Electronics'],
+    ['Racing Yellow', '#FFD43B', 'Due Soon, Caution'],
+    ['Racing Red', '#FF304F', 'Urgent, Overdue'],
+    ['Racing Lime', '#10E57A', 'Approved, Nominal'],
+    ['ZFS Brand Orange', '#E07212', 'Official Team Mark'],
+  ] as const;
 
   return (
-    <div className="min-h-screen bg-cyber-bg text-cyber-primary p-4 sm:p-6 lg:p-8 space-y-10 max-w-7xl mx-auto selection:bg-accent-cyan selection:text-black">
+    <div className="min-h-dvh bg-cyber-bg text-cyber-primary p-4 sm:p-6 lg:p-8 space-y-10 max-w-7xl mx-auto selection:bg-accent-cyan selection:text-black">
       {/* ─── Top Telemetry Banner ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-cyber-border">
         <div className="space-y-1.5">
@@ -131,17 +131,17 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {foundationColors.map((color) => (
+          {foundationColors.map(([name, hex, desc]) => (
             <div
-              key={color.name}
-              onClick={() => copyToClipboard(color.hex)}
+              key={name}
+              onClick={() => copyToClipboard(hex)}
               className="p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-accent-cyan/40 transition-all cursor-pointer group space-y-2 relative"
             >
               <div 
                 className="w-full h-12 rounded-lg border border-white/10 shadow-inner flex items-center justify-center font-mono text-label font-medium"
-                style={{ backgroundColor: color.hex }}
+                style={{ backgroundColor: hex }}
               >
-                {copiedColor === color.hex && (
+                {copiedColor === hex && (
                   <span className="bg-black/80 px-2 py-0.5 rounded text-accent-cyan text-label flex items-center gap-1">
                     <Check className="w-3 h-3" /> Copied
                   </span>
@@ -150,12 +150,12 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               <div>
                 <div className="flex items-center justify-between">
                   <div className="font-bold text-xs text-cyber-primary group-hover:text-accent-cyan transition-colors">
-                    {color.name}
+                    {name}
                   </div>
                   <Copy className="w-3 h-3 text-cyber-muted opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="font-mono text-label text-cyber-muted">{color.hex}</div>
-                <p className="text-label text-cyber-secondary mt-1">{color.desc}</p>
+                <div className="font-mono text-label text-cyber-muted">{hex}</div>
+                <p className="text-label text-cyber-secondary mt-1">{desc}</p>
               </div>
             </div>
           ))}
@@ -175,21 +175,21 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {accentColors.map((acc) => (
+          {accentColors.map(([name, hex, role]) => (
             <div
-              key={acc.name}
-              onClick={() => copyToClipboard(acc.hex)}
+              key={name}
+              onClick={() => copyToClipboard(hex)}
               className="p-3.5 rounded-xl bg-cyber-surface border border-cyber-border hover:border-cyber-border-strong transition-all cursor-pointer group space-y-2"
-              style={{ borderTopColor: acc.hex, borderTopWidth: '3px' }}
+              style={{ borderTopColor: hex, borderTopWidth: '3px' }}
             >
               <div className="flex items-center justify-between">
-                <span className="font-display font-black text-sm tracking-wider" style={{ color: acc.hex }}>
-                  {acc.name}
+                <span className="font-display font-black text-sm tracking-wider" style={{ color: hex }}>
+                  {name}
                 </span>
-                <span className="font-mono text-label text-cyber-muted">{acc.hex}</span>
+                <span className="font-mono text-label text-cyber-muted">{hex}</span>
               </div>
               <p className="text-xs text-cyber-secondary leading-snug">
-                {acc.role}
+                {role}
               </p>
             </div>
           ))}
@@ -557,53 +557,31 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {[
-              {
-                theme: 'dark' as const,
-                title: 'MIDNIGHT SURFACE (#070B0E)',
-                tag: 'DEFAULT THEME',
-                bg: 'bg-cyber-bg border-white/15 text-brand-white',
-                card: 'bg-white/[0.02] border-white/5',
-                titleCls: 'text-brand-orange',
-                subCls: 'text-cyber-muted',
-                dot: 'bg-brand-orange animate-ping',
-                tagCls: 'bg-white/10 text-brand-white',
-                glow: true,
-              },
-              {
-                theme: 'light' as const,
-                title: 'CHROME LIGHT SURFACE (#FFFFFF)',
-                tag: 'HIGH-CONTRAST INK',
-                bg: 'bg-white border-slate-200 text-slate-900 shadow-xl',
-                card: 'bg-slate-50 border-slate-100',
-                titleCls: 'text-brand-light-orange',
-                subCls: 'text-slate-500',
-                dot: 'bg-brand-light-orange',
-                tagCls: 'bg-slate-100 text-slate-700',
-                glow: false,
-              },
-            ].map((surf) => (
-              <div key={surf.theme} className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${surf.bg}`}>
+            {([
+              ['dark', 'MIDNIGHT (#070B0E)', 'DEFAULT', 'bg-cyber-bg border-white/15 text-brand-white', 'text-brand-orange', true, 'Full Lockup', 'w-full max-w-xs h-auto'],
+              ['light', 'CHROME (#FFFFFF)', 'INK', 'bg-white border-slate-200 text-slate-900 shadow-xl', 'text-brand-light-orange', false, 'Horizontal', 'w-44 h-auto'],
+            ] as const).map(([theme, title, tag, bg, titleCls, glow, sub, logoCls]) => (
+              <div key={theme} className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${bg}`}>
                 <div className="flex items-center justify-between border-b border-cyber-border/40 pb-3">
-                  <span className={`text-xs font-mono font-medium flex items-center gap-1.5 ${surf.titleCls}`}>
-                    <span className={`w-2 h-2 rounded-full ${surf.dot}`} />
-                    {surf.title}
+                  <span className={`text-xs font-mono font-medium flex items-center gap-1.5 ${titleCls}`}>
+                    <span className="w-2 h-2 rounded-full bg-brand-orange" />
+                    {title}
                   </span>
-                  <span className={`text-label font-mono px-2 py-0.5 rounded ${surf.tagCls}`}>
-                    {surf.tag}
+                  <span className="text-label font-mono px-2 py-0.5 rounded bg-white/10">
+                    {tag}
                   </span>
                 </div>
 
-                <div className={`flex flex-col items-center justify-center p-5 rounded-xl border space-y-2 ${surf.card}`}>
-                  <span className={`text-label font-mono uppercase tracking-widest ${surf.subCls}`}>
-                    // {surf.theme === 'dark' ? 'Full Lockup' : 'Compact Horizontal'}
+                <div className="flex flex-col items-center justify-center p-5 rounded-xl border border-white/5 space-y-2">
+                  <span className="text-label font-mono uppercase tracking-widest text-cyber-muted">
+                    // {sub}
                   </span>
-                  <ZfsLogo variant={surf.theme === 'dark' ? 'full' : 'horizontal'} theme={surf.theme} glow={surf.glow} className={surf.theme === 'dark' ? 'w-full max-w-xs h-auto' : 'w-44 h-auto'} />
+                  <ZfsLogo variant={theme === 'dark' ? 'full' : 'horizontal'} theme={theme} glow={glow} className={logoCls} />
                 </div>
 
-                <div className={`flex flex-col items-center justify-center p-3 rounded-xl border space-y-1.5 ${surf.card}`}>
-                  <span className={`text-label font-mono uppercase tracking-widest ${surf.subCls}`}>// Monogram Glyph</span>
-                  <ZfsLogo variant="monogram" theme={surf.theme} glow={surf.glow} className="w-16 h-auto" />
+                <div className="flex flex-col items-center justify-center p-3 rounded-xl border border-white/5 space-y-1.5">
+                  <span className="text-label font-mono uppercase tracking-widest text-cyber-muted">// Monogram</span>
+                  <ZfsLogo variant="monogram" theme={theme} glow={glow} className="w-16 h-auto" />
                 </div>
               </div>
             ))}

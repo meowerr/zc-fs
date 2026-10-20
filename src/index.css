@@ -327,6 +327,16 @@
   }
 }
 
+@layer utilities {
+  .safe-header-pad {
+    padding-left: max(0.625rem, env(safe-area-inset-left));
+    padding-right: max(0.625rem, env(safe-area-inset-right));
+  }
+  .safe-main-bottom {
+    padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+  }
+}
+
 @layer components {
   .tap-target {
     @apply inline-flex min-h-[44px] min-w-[44px] items-center justify-center;

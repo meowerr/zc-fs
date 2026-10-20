@@ -32,7 +32,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[90vh] flex flex-col p-6 border-cyber-border-strong shadow-2xl my-auto overflow-hidden">
+      <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[90dvh] flex flex-col p-6 border-cyber-border-strong shadow-2xl my-auto overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
           <div className="flex items-center gap-2.5">
