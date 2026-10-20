@@ -195,7 +195,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-xs text-accent-cyan font-bold uppercase tracking-widest flex items-center gap-1.5">
+              <span className="font-mono text-xs text-accent-cyan font-medium uppercase tracking-widest flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
                 Formula Student Repository
               </span>
@@ -238,7 +238,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`
-                  flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono transition-all shrink-0 cursor-pointer border
+                  flex items-center gap-2 min-h-[40px] px-3.5 py-2 rounded-lg text-label font-mono transition-all shrink-0 cursor-pointer border
                   ${
                     isActive
                       ? 'bg-cyber-surface-elevated text-cyber-primary border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.2)] font-bold'
@@ -323,7 +323,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                   {/* Card Header: Category & Team Badge */}
                   <div className="flex items-center justify-between gap-2 mb-2">
                     <span
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label font-mono font-medium uppercase tracking-wider"
                       style={{
                         backgroundColor: `${catMeta.color}15`,
                         color: catMeta.color,
@@ -334,7 +334,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                       {catMeta.label}
                     </span>
 
-                    <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-secondary truncate max-w-[130px]">
+                    <span className="font-mono text-label px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-secondary truncate max-w-[130px]">
                       {teamName}
                     </span>
                   </div>
@@ -346,13 +346,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
 
                   {/* Description */}
                   {doc.description && (
-                    <p className="text-xs text-cyber-secondary mt-1 font-sans line-clamp-2 leading-relaxed">
+                    <p className="text-body sm:text-xs text-cyber-secondary mt-1 font-sans line-clamp-2 leading-relaxed">
                       {doc.description}
                     </p>
                   )}
 
                   {/* File Metadata telemetry bar */}
-                  <div className="mt-3 p-2 rounded-lg bg-cyber-bg/80 border border-cyber-border/70 flex items-center justify-between text-[11px] font-mono">
+                  <div className="mt-3 p-2 rounded-lg bg-cyber-bg/80 border border-cyber-border/70 flex items-center justify-between text-label font-mono">
                     <span className="text-cyber-primary truncate max-w-[180px]" title={doc.file_name}>
                       {doc.file_name}
                     </span>
@@ -369,7 +369,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                       name={doc.uploader?.full_name || 'ZC Engineer'}
                       size="sm"
                     />
-                    <div className="text-[10px] font-mono text-cyber-muted">
+                    <div className="text-label font-mono text-cyber-muted">
                       <div className="text-cyber-secondary font-sans truncate max-w-[90px]">
                         {doc.uploader?.full_name || 'Engineer'}
                       </div>
@@ -393,7 +393,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                       target="_blank"
                       rel="noopener noreferrer"
                       download={doc.file_name}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan text-xs font-mono font-bold transition-all cursor-pointer"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan text-xs font-mono font-medium transition-all cursor-pointer"
                       title="Download or open asset"
                     >
                       <Download className="w-3.5 h-3.5" />
@@ -423,7 +423,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                   <h3 className="font-display font-bold text-base text-cyber-primary">
                     Upload Engineering Asset
                   </h3>
-                  <span className="font-mono text-[10px] text-cyber-muted uppercase tracking-wider">
+                  <span className="font-mono text-label text-cyber-muted uppercase tracking-wider">
                     Formula Student Knowledge Repository
                   </span>
                 </div>
@@ -451,10 +451,10 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                 <input
                   type="file"
                   onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                  className="w-full text-xs text-cyber-primary file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-mono file:font-bold file:bg-accent-cyan/20 file:text-accent-cyan hover:file:bg-accent-cyan/30 cursor-pointer bg-cyber-surface p-2 rounded-lg border border-cyber-border"
+                  className="w-full text-xs text-cyber-primary file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-mono file:font-medium file:bg-accent-cyan/20 file:text-accent-cyan hover:file:bg-accent-cyan/30 cursor-pointer bg-cyber-surface p-2 rounded-lg border border-cyber-border"
                 />
                 {uploadFile && (
-                  <div className="mt-1 text-[11px] font-mono text-accent-cyan">
+                  <div className="mt-1 text-label font-mono text-accent-cyan">
                     Selected: {uploadFile.name} ({formatFileSize(uploadFile.size)})
                   </div>
                 )}

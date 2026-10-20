@@ -22,6 +22,18 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` Defined `.tap-target` utility in `src/index.css` (`min-h-[44px] min-w-[44px]`).
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total bundle gzip: 199.86 KB < 200 KB, main JS gzip: 44.99 KB < 50 KB)]` Strict TypeScript and verification suite passing.
 
+### Phase 2: Type Floor & Touch-Target Sweep
+- `[VERIFIED: node scratch/mobile-metrics.mjs]` Eliminated all 285 instances of sub-12px text (`text-[8..11px]`: 285 -> **0**). Sub-12px text is now completely absent from source code.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Promoted reading body text sizes across mobile: `TaskCard.tsx` title `text-body-lg sm:text-sm` and description `text-body sm:text-xs`, `MessageBubble.tsx` body `text-body-lg sm:text-sm`, `DocumentHub.tsx` description `text-body sm:text-xs`, buttons (`GlossyButton`, `GhostButton`) standardized to `text-sm` across all sizes.
+- `[VERIFIED: node scratch/count-mono-bold.mjs]` Eliminated faux bolding on single-weight Share Tech Mono: 137 instances of `font-mono` with `font-bold`/`font-semibold` cleaned up to `font-medium` (for telemetry/counters) or `font-sans font-semibold` (for informational text). Remaining count: **0**.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Expanded interactive controls to touch target floor (>= 44px on mobile):
+  - `TopHeader.tsx`: search, notifications, theme toggle, and profile/avatar upgraded to `tap-target` (44px min-h/min-w).
+  - Modal close buttons: `TaskCreateModal`, `TaskDetailModal`, `FileUploadModal`, `RoleGuideModal`, `NewDMModal`, `NotificationDrawer`, `GarageDoorNav` close buttons upgraded to `tap-target`.
+  - Filter chips: `TasksHub.tsx`, `TeamDirectory.tsx`, `DocumentHub.tsx` filter chips upgraded to `min-h-[40px] px-3.5 py-2 text-label`.
+  - `ChatView.tsx`: channel/DM rows expanded to `py-3 text-body`, composer input to `min-h-[44px]`, attach button to `tap-target`.
+  - `AuthScreen.tsx`: mode toggles expanded to `py-3 text-sm min-h-[44px]`, domain/legal links with touch padding.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total assets gzip: 199.89 KB < 200 KB, main JS gzip: 45.01 KB < 50 KB)]` Full test suite passing with strict TypeScript verification (0 errors).
+
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 
 ### Slice B1: Asset Pipeline & PWA Icon Set

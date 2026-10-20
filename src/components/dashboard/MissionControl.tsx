@@ -121,7 +121,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
         <div className="p-4 rounded-xl bg-accent-yellow/10 border border-accent-yellow/30 text-cyber-primary flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-accent-yellow shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <h4 className="font-bold text-xs uppercase font-mono text-accent-yellow">
+            <h4 className="font-medium text-xs uppercase font-mono text-accent-yellow">
               Awaiting Sub-Team Assignment
             </h4>
             <p className="text-xs text-cyber-secondary font-sans leading-relaxed">
@@ -137,14 +137,14 @@ export const MissionControl: React.FC<MissionControlProps> = ({
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
               <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-[11px]">
+              <span className="text-cyber-secondary uppercase tracking-widest text-label">
                 {currentUser.role === 'admin' 
                   ? 'CLUB // RACE CONTROL HQ' 
                   : currentUser.role === 'head'
                   ? `SUB-TEAM LEAD // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'PIT WALL'}`
                   : `ENGINEERING COCKPIT // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'WORKSPACE'}`}
               </span>
-              <span className="text-accent-lime text-[10px]">● LIVE</span>
+              <span className="text-accent-lime text-label">● LIVE</span>
             </div>
 
             <h2 className="font-display font-black text-xl sm:text-2xl lg:text-3xl text-cyber-primary tracking-wider uppercase">
@@ -201,66 +201,66 @@ export const MissionControl: React.FC<MissionControlProps> = ({
           {currentUser.role === 'admin' ? (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
                   <Sliders className="w-3.5 h-3.5 text-accent-cyan" />
                   Total Tasks
                 </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">ALL</span>
+                <span className="text-label font-mono text-cyber-secondary tracking-tighter">ALL</span>
               </div>
               {tasks.length === 0 ? (
                 <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No active deliverables</div>
+                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No active deliverables</div>
                 </>
               ) : (
                 <>
                   <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{tasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">5 Sub-Teams Combined</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">5 Sub-Teams Combined</div>
                 </>
               )}
             </div>
           ) : currentUser.role === 'head' ? (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
                   <Sliders className="w-3.5 h-3.5 text-accent-cyan" />
                   Team Queue
                 </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">SUB-TEAM</span>
+                <span className="text-label font-mono text-cyber-secondary tracking-tighter">SUB-TEAM</span>
               </div>
               {tasks.length === 0 ? (
                 <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No queue deliverables</div>
+                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No queue deliverables</div>
                 </>
               ) : (
                 <>
                   <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{tasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Active Deliverables</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Active Deliverables</div>
                 </>
               )}
             </div>
           ) : (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
                   <Activity className="w-3.5 h-3.5 text-accent-cyan" />
                   My Tasks
                 </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">ASSIGNED</span>
+                <span className="text-label font-mono text-cyber-secondary tracking-tighter">ASSIGNED</span>
               </div>
               {myTasks.length === 0 ? (
                 <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No tasks assigned</div>
+                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No tasks assigned</div>
                 </>
               ) : (
                 <>
                   <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{myTasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Assigned to Me</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Assigned to Me</div>
                 </>
               )}
             </div>
@@ -273,22 +273,22 @@ export const MissionControl: React.FC<MissionControlProps> = ({
               className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors cursor-pointer"
             >
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
                   <Users className="w-3.5 h-3.5 text-accent-yellow" />
                   Registrations
                 </span>
-                <span className="text-[11px] font-mono text-accent-yellow tracking-tighter font-bold">ACTION</span>
+                <span className="text-label font-mono text-accent-yellow tracking-tighter font-medium">ACTION</span>
               </div>
               {pendingRegistrations.length === 0 ? (
                 <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">All caught up</div>
+                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">All caught up</div>
                 </>
               ) : (
                 <>
                   <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">{pendingRegistrations.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Pending Approval</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Pending Approval</div>
                 </>
               )}
             </div>
@@ -298,44 +298,44 @@ export const MissionControl: React.FC<MissionControlProps> = ({
               className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-purple-500/40 transition-colors cursor-pointer"
             >
               <div className="absolute top-0 inset-x-0 h-[2px] bg-purple-500 opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
                   <FileCheck className="w-3.5 h-3.5 text-purple-400" />
                   Needs Review
                 </span>
-                <span className="text-[11px] font-mono text-purple-400 tracking-tighter font-bold">LEAD</span>
+                <span className="text-label font-mono text-purple-400 tracking-tighter font-medium">LEAD</span>
               </div>
               {needsReviewTasks.length === 0 ? (
                 <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No reviews pending</div>
+                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No reviews pending</div>
                 </>
               ) : (
                 <>
                   <div className="text-2xl sm:text-3xl font-display font-black text-purple-400 mt-1">{needsReviewTasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Submissions Awaiting You</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Submissions Awaiting You</div>
                 </>
               )}
             </div>
           ) : (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
                   <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
                   Revisions
                 </span>
-                <span className="text-[11px] font-mono text-accent-red tracking-tighter font-bold">FEEDBACK</span>
+                <span className="text-label font-mono text-accent-red tracking-tighter font-medium">FEEDBACK</span>
               </div>
               {changesRequestedTasks.length === 0 ? (
                 <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No changes requested</div>
+                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No changes requested</div>
                 </>
               ) : (
                 <>
                   <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">{changesRequestedTasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Changes Requested</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Changes Requested</div>
                 </>
               )}
             </div>
@@ -345,46 +345,46 @@ export const MissionControl: React.FC<MissionControlProps> = ({
           {currentUser.role === 'member' ? (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
                   <Clock className="w-3.5 h-3.5 text-accent-yellow" />
                   Due Soon
                 </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">&lt;72H</span>
+                <span className="text-label font-mono text-cyber-secondary tracking-tighter">&lt;72H</span>
               </div>
               {dueSoonTasks.length === 0 ? (
                 <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No upcoming deadlines</div>
+                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No upcoming deadlines</div>
                 </>
               ) : (
                 <>
                   <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">{dueSoonTasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Upcoming Deadlines</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Upcoming Deadlines</div>
                 </>
               )}
             </div>
           ) : (
             <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-lime/40 transition-colors">
               <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
                   <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
                   Completed
                 </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">DONE</span>
+                <span className="text-label font-mono text-cyber-secondary tracking-tighter">DONE</span>
               </div>
               {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length === 0 ? (
                 <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No approved tasks yet</div>
+                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No approved tasks yet</div>
                 </>
               ) : (
                 <>
                   <div className="text-2xl sm:text-3xl font-display font-black text-accent-lime mt-1">
                     {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length}
                   </div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Approved Deliverables</div>
+                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Approved Deliverables</div>
                 </>
               )}
             </div>
@@ -393,22 +393,22 @@ export const MissionControl: React.FC<MissionControlProps> = ({
           {/* CARD 4 */}
           <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
+            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
               <span className="flex items-center gap-1.5 font-bold">
                 <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
                 Overdue
               </span>
-              <span className="text-[11px] font-mono text-accent-red tracking-tighter font-bold">ALERT</span>
+              <span className="text-label font-mono text-accent-red tracking-tighter font-medium">ALERT</span>
             </div>
             {overdueTasks.length === 0 ? (
               <>
-                <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">On schedule</div>
+                <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
+                <div className="text-label font-mono text-cyber-secondary mt-0.5">On schedule</div>
               </>
             ) : (
               <>
                 <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">{overdueTasks.length}</div>
-                <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Past Target Deadline</div>
+                <div className="text-label font-mono text-cyber-secondary mt-0.5">Past Target Deadline</div>
               </>
             )}
           </div>
@@ -450,13 +450,13 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                         {group.name.replace(/Technical - |Operations - /, '')}
                       </span>
                     </div>
-                    <span className="font-mono text-[10px] text-cyber-muted">
+                    <span className="font-mono text-label text-cyber-muted">
                       {groupMembers.length} eng
                     </span>
                   </div>
 
                   <div className="space-y-1">
-                    <div className="flex justify-between text-[10px] font-mono text-cyber-muted">
+                    <div className="flex justify-between text-label font-mono text-cyber-muted">
                       <span>PROGRESS</span>
                       <span className="text-cyber-primary font-bold">{pct}%</span>
                     </div>
@@ -471,7 +471,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex justify-between text-[10px] font-mono text-cyber-secondary pt-1 border-t border-cyber-border/40">
+                  <div className="flex justify-between text-label font-mono text-cyber-secondary pt-1 border-t border-cyber-border/40">
                     <span>Active: {groupTasks.length}</span>
                     <span>Delivered: {groupApproved}</span>
                   </div>
@@ -492,7 +492,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 Awaiting Lead Review ({needsReviewTasks.length})
               </h3>
             </div>
-            <span className="text-[10px] font-mono text-purple-400 uppercase px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30">
+            <span className="text-label font-mono text-purple-400 uppercase px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30">
               ACTION REQUIRED
             </span>
           </div>
@@ -505,17 +505,17 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 className="p-3.5 rounded-xl bg-cyber-surface-elevated border border-purple-500/30 hover:border-purple-400 transition-all space-y-2 cursor-pointer group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 font-bold">
+                  <span className="font-mono text-label uppercase px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 font-medium">
                     SUBMITTED FOR REVIEW
                   </span>
-                  <span className="font-mono text-[10px] text-cyber-muted">
+                  <span className="font-mono text-label text-cyber-muted">
                     {new Date(t.updated_at).toLocaleDateString()}
                   </span>
                 </div>
                 <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-purple-400 transition-colors truncate">
                   {t.title}
                 </h4>
-                <div className="text-[11px] font-mono text-cyber-secondary flex items-center justify-between pt-1 border-t border-cyber-border">
+                <div className="text-label font-mono text-cyber-secondary flex items-center justify-between pt-1 border-t border-cyber-border">
                   <span>Assignees: {t.assignees?.map(a => a.full_name).join(', ') || 'Unassigned'}</span>
                   <span className="text-accent-cyan flex items-center gap-0.5">
                     REVIEW <ArrowUpRight className="w-3 h-3" />
@@ -541,7 +541,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
 
           <div className="flex items-center gap-2">
             {currentUser.role === 'member' && (
-              <div className="flex items-center p-0.5 rounded-lg bg-cyber-bg-alt border border-cyber-border text-[11px] font-mono">
+              <div className="flex items-center p-0.5 rounded-lg bg-cyber-bg-alt border border-cyber-border text-label font-mono">
                 <button
                   onClick={() => setMemberView('my_work')}
                   className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
@@ -603,11 +603,11 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-0.5 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-mono text-[9px] uppercase tracking-wider text-cyber-muted">
+                        <span className="font-mono text-label uppercase tracking-wider text-cyber-muted">
                           {t.task_type} // {t.priority}
                         </span>
                         {isMine && (
-                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
+                          <span className="text-label font-mono px-1.5 py-0.2 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
                             ASSIGNED TO YOU
                           </span>
                         )}
@@ -625,7 +625,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                     </p>
                   )}
 
-                  <div className="flex items-center justify-between pt-2 border-t border-cyber-border text-[11px] font-mono">
+                  <div className="flex items-center justify-between pt-2 border-t border-cyber-border text-label font-mono">
                     <span className={deadlineInfo.isOverdue ? 'text-accent-red font-bold' : 'text-cyber-muted'}>
                       {deadlineInfo.text}
                     </span>

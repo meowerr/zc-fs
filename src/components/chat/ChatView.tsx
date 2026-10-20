@@ -130,7 +130,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
         `}
       >
         <div className="flex items-center justify-between pb-2.5 border-b border-cyber-border">
-          <div className="flex items-center gap-1.5 font-mono text-xs text-cyber-primary font-bold">
+          <div className="flex items-center gap-1.5 font-mono text-xs text-cyber-primary font-medium">
             <Radio className="w-3.5 h-3.5 text-accent-cyan animate-pulse" />
             <span className="uppercase tracking-wider">PIT WALL // COMMS</span>
           </div>
@@ -156,7 +156,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
         <div className="flex-1 overflow-y-auto space-y-3.5 py-2.5 pr-1">
           {/* Section: Channels */}
           <div>
-            <div className="text-[10px] font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
+            <div className="text-label font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
               // CHANNELS
             </div>
             <div className="space-y-1">
@@ -174,7 +174,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       setErrorMessage(null);
                     }}
                     className={`
-                      w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer border
+                      w-full flex items-center gap-2 px-3 py-3 rounded-lg text-left transition-all cursor-pointer border
                       ${
                         isActive
                           ? 'bg-cyber-surface-elevated text-accent-cyan border-l-2 border-l-accent-cyan border-y border-r border-cyber-border font-bold shadow-cyber-sm'
@@ -202,11 +202,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
           {/* Section: Direct Messages */}
           <div>
-            <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
+            <div className="flex items-center justify-between text-label font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
               <span>// DIRECT COMMS</span>
               <button
                 onClick={() => setIsDMModalOpen(true)}
-                className="text-accent-cyan hover:underline cursor-pointer lowercase font-mono text-[10px]"
+                className="text-accent-cyan hover:underline cursor-pointer lowercase font-mono text-label"
               >
                 + new
               </button>
@@ -214,7 +214,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
             <div className="space-y-1">
               {conversations.length === 0 ? (
-                <div className="px-2 py-2 text-[10px] font-mono text-cyber-muted italic">
+                <div className="px-2 py-2 text-label font-mono text-cyber-muted italic">
                   No active DMs. Click + to transmit.
                 </div>
               ) : (
@@ -239,7 +239,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                         setErrorMessage(null);
                       }}
                       className={`
-                        w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer border
+                        w-full flex items-center gap-2 px-3 py-3 rounded-lg text-left transition-all cursor-pointer border
                         ${
                           isActive
                             ? 'bg-cyber-surface-elevated text-accent-cyan border-l-2 border-l-accent-cyan border-y border-r border-cyber-border font-bold shadow-cyber-sm'
@@ -283,7 +283,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
               <h3 className="font-display font-bold text-xs sm:text-sm text-cyber-primary truncate uppercase tracking-wider">
                 {getChatTitle()}
               </h3>
-              <p className="text-[10px] sm:text-[11px] font-mono text-cyber-muted truncate max-w-xs sm:max-w-md">
+              <p className="text-label sm:text-label font-mono text-cyber-muted truncate max-w-xs sm:max-w-md">
                 {getChatSubtitle()}
               </p>
             </div>
@@ -332,7 +332,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
               <button
                 type="button"
                 onClick={() => setErrorMessage(null)}
-                className="text-accent-red hover:underline text-[10px] ml-2 flex-shrink-0 cursor-pointer uppercase font-bold"
+                className="text-accent-red hover:underline text-label ml-2 flex-shrink-0 cursor-pointer uppercase font-bold"
               >
                 Dismiss
               </button>
@@ -353,7 +353,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       onSelectChannel(userTeamChannel.id);
                       setErrorMessage(null);
                     }}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-accent-cyan/40 hover:border-accent-cyan text-accent-cyan text-[11px] font-mono font-bold transition-all cursor-pointer self-start sm:self-auto"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-accent-cyan/40 hover:border-accent-cyan text-accent-cyan text-label font-mono font-medium transition-all cursor-pointer self-start sm:self-auto"
                   >
                     <span>Switch to #{userTeamChannel.name}</span>
                     <ChevronRight className="w-3.5 h-3.5" />
@@ -388,7 +388,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   type="button"
                   onClick={() => setShowAttachInput((prev) => !prev)}
                   className={`
-                    p-2 rounded-lg border transition-all cursor-pointer
+                    tap-target rounded-lg border transition-all cursor-pointer
                     ${
                       showAttachInput
                         ? 'bg-accent-cyan text-black border-accent-cyan'
@@ -405,7 +405,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   placeholder={`Transmit message to ${getChatTitle()}...`}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  className="flex-1 h-9 px-3 rounded-lg text-xs sm:text-sm bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+                  className="flex-1 min-h-[44px] px-3 rounded-lg text-body bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
                 />
 
                 <GlossyButton

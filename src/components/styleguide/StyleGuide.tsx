@@ -84,7 +84,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-cyber-border">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-[11px] font-mono font-bold tracking-widest uppercase">
+            <span className="px-2 py-0.5 rounded bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-label font-mono font-medium tracking-widest uppercase">
               // SPECIFICATION: CYBER-RACING-Y2K
             </span>
             <span className="font-mono text-xs text-cyber-muted">BUILD v2.40</span>
@@ -100,7 +100,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         <div className="flex items-center gap-3">
           <button
             onClick={toggleGuideTheme}
-            className="px-3.5 py-2 rounded-lg bg-cyber-surface-elevated border border-cyber-border hover:border-accent-cyan/50 text-xs font-mono font-bold uppercase flex items-center gap-2 cursor-pointer transition-all"
+            className="px-3.5 py-2 rounded-lg bg-cyber-surface-elevated border border-cyber-border hover:border-accent-cyan/50 text-xs font-mono font-medium uppercase flex items-center gap-2 cursor-pointer transition-all"
             title="Toggle Light/Dark preview mode"
           >
             {isDark ? <Sun className="w-4 h-4 text-accent-yellow" /> : <Moon className="w-4 h-4 text-accent-cyan" />}
@@ -127,7 +127,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               1. Foundation Neutrals (Graphite & Dark Base)
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">90% OF INTERFACE FOUNDATION</span>
+          <span className="text-label font-mono text-cyber-muted">90% OF INTERFACE FOUNDATION</span>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
@@ -138,11 +138,11 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               className="p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-accent-cyan/40 transition-all cursor-pointer group space-y-2 relative"
             >
               <div 
-                className="w-full h-12 rounded-lg border border-white/10 shadow-inner flex items-center justify-center font-mono text-[11px] font-bold"
+                className="w-full h-12 rounded-lg border border-white/10 shadow-inner flex items-center justify-center font-mono text-label font-medium"
                 style={{ backgroundColor: color.hex }}
               >
                 {copiedColor === color.hex && (
-                  <span className="bg-black/80 px-2 py-0.5 rounded text-accent-cyan text-[10px] flex items-center gap-1">
+                  <span className="bg-black/80 px-2 py-0.5 rounded text-accent-cyan text-label flex items-center gap-1">
                     <Check className="w-3 h-3" /> Copied
                   </span>
                 )}
@@ -154,8 +154,8 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                   </div>
                   <Copy className="w-3 h-3 text-cyber-muted opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="font-mono text-[10px] text-cyber-muted">{color.hex}</div>
-                <p className="text-[10px] text-cyber-secondary mt-1">{color.desc}</p>
+                <div className="font-mono text-label text-cyber-muted">{color.hex}</div>
+                <p className="text-label text-cyber-secondary mt-1">{color.desc}</p>
               </div>
             </div>
           ))}
@@ -171,7 +171,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               2. Controlled Semantic Accents
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">USED WITH INTENT & RESTRAINT</span>
+          <span className="text-label font-mono text-cyber-muted">USED WITH INTENT & RESTRAINT</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
@@ -186,7 +186,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 <span className="font-display font-black text-sm tracking-wider" style={{ color: acc.hex }}>
                   {acc.name}
                 </span>
-                <span className="font-mono text-[11px] text-cyber-muted">{acc.hex}</span>
+                <span className="font-mono text-label text-cyber-muted">{acc.hex}</span>
               </div>
               <p className="text-xs text-cyber-secondary leading-snug">
                 {acc.role}
@@ -205,7 +205,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               3. Sub-Team Technical Identifiers
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">5 DISTINCT ENGINEERING DISCIPLINES</span>
+          <span className="text-label font-mono text-cyber-muted">5 DISTINCT ENGINEERING DISCIPLINES</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -221,7 +221,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                     className="w-2.5 h-2.5 rounded-full shrink-0"
                     style={{ backgroundColor: team.color_accent || '#00D9FF' }}
                   />
-                  <span className="font-mono text-[10px] text-cyber-muted uppercase tracking-wider">
+                  <span className="font-mono text-label text-cyber-muted uppercase tracking-wider">
                     {team.slug}
                   </span>
                 </div>
@@ -230,7 +230,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 </h4>
               </div>
 
-              <div className="pt-2 border-t border-cyber-border flex items-center justify-between text-[10px] font-mono">
+              <div className="pt-2 border-t border-cyber-border flex items-center justify-between text-label font-mono">
                 <span className="text-cyber-muted">Accent</span>
                 <span className="font-bold" style={{ color: team.color_accent || '#00D9FF' }}>{team.color_accent}</span>
               </div>
@@ -248,7 +248,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               4. Button Hierarchy & Variants
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">SHARP, RESTRAINED, 48PX TOUCH TARGETS</span>
+          <span className="text-label font-mono text-cyber-muted">SHARP, RESTRAINED, 48PX TOUCH TARGETS</span>
         </div>
 
         <GlassCard variant="elevated" className="p-6 space-y-6">
@@ -270,7 +270,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 const IconComp = btn.icon;
                 return (
                   <div key={btn.label} className="space-y-1.5">
-                    <span className="font-mono text-[11px] text-cyber-muted uppercase block">{btn.label}</span>
+                    <span className="font-mono text-label text-cyber-muted uppercase block">{btn.label}</span>
                     <GlossyButton variant={btn.variant} icon={<IconComp className="w-4 h-4" />}>
                       {btn.text}
                     </GlossyButton>
@@ -278,7 +278,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 );
               })}
               <div className="space-y-1.5">
-                <span className="font-mono text-[11px] text-cyber-muted uppercase block">// Ghost (Low Weight)</span>
+                <span className="font-mono text-label text-cyber-muted uppercase block">// Ghost (Low Weight)</span>
                 <GhostButton icon={<ArrowLeft className="w-4 h-4" />}>
                   Cancel Op
                 </GhostButton>
@@ -321,7 +321,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               5. Status Chips & Telemetry Badges
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">DOUBLE-ENCODED (COLOR + ICON + LABEL)</span>
+          <span className="text-label font-mono text-cyber-muted">DOUBLE-ENCODED (COLOR + ICON + LABEL)</span>
         </div>
 
         <GlassCard className="p-6 space-y-4">
@@ -335,7 +335,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               { label: 'Completed', status: 'done' as const },
             ].map((chip) => (
               <div key={chip.label} className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
-                <span className="text-[10px] font-mono text-cyber-muted uppercase block">{chip.label}</span>
+                <span className="text-label font-mono text-cyber-muted uppercase block">{chip.label}</span>
                 <div className="flex justify-center"><LedStatusChip status={chip.status} /></div>
               </div>
             ))}
@@ -352,7 +352,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               6. Inputs & Form Controls
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">CLEAN BORDERS, CYAN FOCUS RINGS</span>
+          <span className="text-label font-mono text-cyber-muted">CLEAN BORDERS, CYAN FOCUS RINGS</span>
         </div>
 
         <GlassCard className="p-6 space-y-4">
@@ -366,7 +366,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             />
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 <span className="text-accent-cyan font-bold mr-1.5">//</span>
                 Sub-Team Select Dropdown
               </label>
@@ -410,7 +410,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               7. Segmented Gauges & Telemetry Instruments
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">PRECISION ENGINEERING DATA READOUTS</span>
+          <span className="text-label font-mono text-cyber-muted">PRECISION ENGINEERING DATA READOUTS</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -421,10 +421,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             <GlassCard key={g.title} className="p-5 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="font-mono text-xs text-cyber-secondary uppercase">{g.title}</span>
-                <span className={`font-mono font-bold text-sm ${g.color}`}>{g.val}</span>
+                <span className={`font-mono font-medium text-sm ${g.color}`}>{g.val}</span>
               </div>
               <SegmentedGauge value={g.gauge} totalSegments={10} accentColor={g.hex} />
-              <span className="text-[11px] font-mono block pt-1 text-cyber-muted">
+              <span className="text-label font-mono block pt-1 text-cyber-muted">
                 {g.note}
               </span>
             </GlassCard>
@@ -441,24 +441,24 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               8. Typography Hierarchy
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">ORBITRON + EXO 2 + SHARE TECH MONO</span>
+          <span className="text-label font-mono text-cyber-muted">ORBITRON + EXO 2 + SHARE TECH MONO</span>
         </div>
 
         <GlassCard className="p-6 space-y-4">
           <div className="space-y-1 border-b border-cyber-border pb-3">
-            <span className="text-[10px] font-mono text-accent-cyan uppercase block">// Orbitron — Headers & Badges</span>
+            <span className="text-label font-mono text-accent-cyan uppercase block">// Orbitron — Headers & Badges</span>
             <div className="text-2xl font-display font-black tracking-wider uppercase">ZEWAIL FORMULA STUDENT</div>
           </div>
 
           <div className="space-y-1 border-b border-cyber-border pb-3">
-            <span className="text-[10px] font-mono text-brand-orange uppercase block">// Exo 2 — Body & Interface Text</span>
+            <span className="text-label font-mono text-brand-orange uppercase block">// Exo 2 — Body & Interface Text</span>
             <p className="text-xs sm:text-sm font-sans text-cyber-primary leading-relaxed">
               Motorsport telemetry meets clean cyber-optimism.
             </p>
           </div>
 
           <div className="space-y-1">
-            <span className="text-[10px] font-mono text-accent-yellow uppercase block">// Share Tech Mono — Numbers & Telemetry</span>
+            <span className="text-label font-mono text-accent-yellow uppercase block">// Share Tech Mono — Numbers & Telemetry</span>
             <div className="font-mono text-xs text-cyber-secondary">
               // SYS.ID: ZCFS-2026-CHASSIS-004 // 384.2V // 142.5A // 210 N·m
             </div>
@@ -475,23 +475,23 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               9. Hybrid Racing Rail & Mobile Navigation
             </h2>
           </div>
-          <span className="text-[11px] font-mono text-cyber-muted">CONSOLE // ARCHITECTURE</span>
+          <span className="text-label font-mono text-cyber-muted">CONSOLE // ARCHITECTURE</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <GlassCard className="p-5 space-y-3">
             <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
-              <span className="text-xs font-mono font-bold text-accent-cyan uppercase">
+              <span className="text-xs font-mono font-medium text-accent-cyan uppercase">
                 // Desktop Hybrid Racing Rail (72px → 288px)
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
+              <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
                 OVERLAY Z-35
               </span>
             </div>
             <p className="text-xs text-cyber-secondary leading-relaxed">
               Floating race-engineer console reserving fixed left offset (<code className="text-accent-cyan">--rail-offset</code>). Content canvas never squeezes when expanded.
             </p>
-            <div className="flex gap-2 text-[10px] font-mono text-cyber-muted">
+            <div className="flex gap-2 text-label font-mono text-cyber-muted">
               <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-accent-lime">Collapsed 72px</span>
               <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-accent-cyan">Expanded 288px</span>
               <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">≥1280px Docking</span>
@@ -500,17 +500,17 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
 
           <GlassCard className="p-5 space-y-3">
             <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
-              <span className="text-xs font-mono font-bold text-brand-orange uppercase">
+              <span className="text-xs font-mono font-medium text-brand-orange uppercase">
                 // Mobile "Garage Door" Navigation (&lt;768px)
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/30">
+              <span className="text-label font-mono px-2 py-0.5 rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/30">
                 THUMB-ARC TAB
               </span>
             </div>
             <p className="text-xs text-cyber-secondary leading-relaxed">
               Replaces full-width bottom bar with edge thumb-arc glass tab (56px) opening into a 78vh bottom sheet with 2x3 destination grid. Full viewport content height.
             </p>
-            <div className="flex gap-2 text-[10px] font-mono text-cyber-muted">
+            <div className="flex gap-2 text-label font-mono text-cyber-muted">
               <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-accent-yellow">Floating Tab (56px)</span>
               <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-brand-orange">78vh Sheet</span>
               <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">Swipe Dismiss</span>
@@ -528,10 +528,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono font-bold text-brand-orange tracking-widest uppercase">
+                <span className="text-label font-mono font-medium text-brand-orange tracking-widest uppercase">
                   // SLICE B2 APPROVAL GATE
                 </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
+                <span className="px-2 py-0.5 rounded text-label font-mono font-medium bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
                   WCAG AA VERIFIED
                 </span>
               </div>
@@ -548,10 +548,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         {/* 10.1 Vector Lockups Showcase */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-bold text-brand-orange uppercase">
+            <span className="text-xs font-mono font-medium text-brand-orange uppercase">
               // 10.1 Vector Mark Lockups (SVG &lt;= 6.3 KB)
             </span>
-            <span className="text-[11px] font-mono text-cyber-muted">
+            <span className="text-label font-mono text-cyber-muted">
               PURE INLINE VECTORS • ZERO RASTER LATENCY
             </span>
           </div>
@@ -585,24 +585,24 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             ].map((surf) => (
               <div key={surf.theme} className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${surf.bg}`}>
                 <div className="flex items-center justify-between border-b border-cyber-border/40 pb-3">
-                  <span className={`text-xs font-mono font-bold flex items-center gap-1.5 ${surf.titleCls}`}>
+                  <span className={`text-xs font-mono font-medium flex items-center gap-1.5 ${surf.titleCls}`}>
                     <span className={`w-2 h-2 rounded-full ${surf.dot}`} />
                     {surf.title}
                   </span>
-                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded ${surf.tagCls}`}>
+                  <span className={`text-label font-mono px-2 py-0.5 rounded ${surf.tagCls}`}>
                     {surf.tag}
                   </span>
                 </div>
 
                 <div className={`flex flex-col items-center justify-center p-5 rounded-xl border space-y-2 ${surf.card}`}>
-                  <span className={`text-[10px] font-mono uppercase tracking-widest ${surf.subCls}`}>
+                  <span className={`text-label font-mono uppercase tracking-widest ${surf.subCls}`}>
                     // {surf.theme === 'dark' ? 'Full Lockup' : 'Compact Horizontal'}
                   </span>
                   <ZfsLogo variant={surf.theme === 'dark' ? 'full' : 'horizontal'} theme={surf.theme} glow={surf.glow} className={surf.theme === 'dark' ? 'w-full max-w-xs h-auto' : 'w-44 h-auto'} />
                 </div>
 
                 <div className={`flex flex-col items-center justify-center p-3 rounded-xl border space-y-1.5 ${surf.card}`}>
-                  <span className={`text-[10px] font-mono uppercase tracking-widest ${surf.subCls}`}>// Monogram Glyph</span>
+                  <span className={`text-label font-mono uppercase tracking-widest ${surf.subCls}`}>// Monogram Glyph</span>
                   <ZfsLogo variant="monogram" theme={surf.theme} glow={surf.glow} className="w-16 h-auto" />
                 </div>
               </div>
@@ -613,39 +613,39 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         {/* 10.2 Brand Palette Tokens */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-bold text-brand-orange uppercase">
+            <span className="text-xs font-mono font-medium text-brand-orange uppercase">
               // 10.2 Official Brand Tokens (Tailwind + CSS Variables)
             </span>
-            <span className="text-[11px] font-mono text-cyber-muted">CLICK SWATCH TO COPY HEX</span>
+            <span className="text-label font-mono text-cyber-muted">CLICK SWATCH TO COPY HEX</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
-            {[
-              { name: 'Brand Orange', hex: '#E07212', text: 'text-black', role: 'Primary Accent' },
-              { name: 'Orange Hover', hex: '#ED7D0D', text: 'text-black', role: 'Surface Hover' },
-              { name: 'Orange Pressed', hex: '#C6620A', text: 'text-white', role: 'Active State' },
-              { name: 'Light Orange', hex: '#C2410C', text: 'text-white', role: '5.53:1 Text' },
-              { name: 'Brand Ink', hex: '#070B0E', text: 'text-white', role: 'Backdrop / Text' },
-              { name: 'Brand White', hex: '#F2F4F7', text: 'text-black', role: 'Body Outline' },
-              { name: 'Orange Soft', hex: 'rgba(224,114,18,0.12)', text: 'text-brand-orange', role: 'Tinted Badges' },
-            ].map((token) => (
+            {([
+              ['Brand Orange', '#E07212', 'text-black', 'Primary Accent'],
+              ['Orange Hover', '#ED7D0D', 'text-black', 'Surface Hover'],
+              ['Orange Pressed', '#C6620A', 'text-white', 'Active State'],
+              ['Light Orange', '#C2410C', 'text-white', '5.53:1 Text'],
+              ['Brand Ink', '#070B0E', 'text-white', 'Backdrop / Text'],
+              ['Brand White', '#F2F4F7', 'text-black', 'Body Outline'],
+              ['Orange Soft', 'rgba(224,114,18,0.12)', 'text-brand-orange', 'Tinted Badges'],
+            ] as const).map(([name, hex, text, role]) => (
               <button
-                key={token.name}
-                onClick={() => copyToClipboard(token.hex)}
+                key={name}
+                onClick={() => copyToClipboard(hex)}
                 className="group p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-brand-orange/50 transition-all text-left space-y-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-orange"
               >
                 <div
-                  style={{ backgroundColor: token.hex }}
-                  className={`w-full h-12 rounded-lg flex items-center justify-center font-mono text-[10px] font-bold ${token.text} shadow-sm group-hover:scale-[1.02] transition-transform`}
+                  style={{ backgroundColor: hex }}
+                  className={`w-full h-12 rounded-lg flex items-center justify-center font-mono text-label font-medium ${text} shadow-sm group-hover:scale-[1.02] transition-transform`}
                 >
-                  {copiedColor === token.hex ? 'COPIED!' : token.hex}
+                  {copiedColor === hex ? 'COPIED!' : hex}
                 </div>
                 <div>
                   <div className="font-display font-bold text-xs text-cyber-primary group-hover:text-brand-orange transition-colors">
-                    {token.name}
+                    {name}
                   </div>
-                  <div className="text-[10px] font-mono text-cyber-muted">
-                    {token.role}
+                  <div className="text-label font-mono text-cyber-muted">
+                    {role}
                   </div>
                 </div>
               </button>
@@ -657,10 +657,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <GlassCard className="p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-cyber-border pb-3">
-              <span className="text-xs font-mono font-bold text-brand-orange uppercase">
+              <span className="text-xs font-mono font-medium text-brand-orange uppercase">
                 // 10.3 Brand Action Controls &amp; Focus Ring
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
+              <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
                 5.23:1 RATIO (AA)
               </span>
             </div>
@@ -693,10 +693,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           {/* 10.4 Status Semantics Collision Re-Map */}
           <GlassCard className="p-6 space-y-4">
             <div className="flex items-center justify-between border-b border-cyber-border pb-3">
-              <span className="text-xs font-mono font-bold text-accent-cyan uppercase">
+              <span className="text-xs font-mono font-medium text-accent-cyan uppercase">
                 // 10.4 Status Semantics Collision Re-Map
               </span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30">
+              <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30">
                 PROPOSED B3
               </span>
             </div>
@@ -717,11 +717,11 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 const IconComponent = item.icon;
                 return (
                   <div key={item.label} className={`p-2.5 rounded-lg border space-y-1 ${item.style}`}>
-                    <div className="flex items-center gap-1.5 text-[11px] font-mono font-bold">
+                    <div className="flex items-center gap-1.5 text-label font-mono font-medium">
                       <IconComponent className={`w-3.5 h-3.5 ${item.iconClass || ''}`} />
                       {item.label}
                     </div>
-                    <div className="text-[10px] font-mono text-cyber-muted">{item.hex}</div>
+                    <div className="text-label font-mono text-cyber-muted">{item.hex}</div>
                   </div>
                 );
               })}
@@ -732,10 +732,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         {/* 10.5 Sub-Team Palette Isolation */}
         <GlassCard className="p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
-            <span className="text-xs font-mono font-bold text-cyber-primary uppercase">
+            <span className="text-xs font-mono font-medium text-cyber-primary uppercase">
               // 10.5 Sub-Team Scoped Palette (All 5 Sub-Teams Side-by-Side)
             </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-400 border border-purple-500/30">
+            <span className="text-label font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-400 border border-purple-500/30">
               LOW-VOLTAGE RE-MAPPED
             </span>
           </div>
@@ -755,12 +755,12 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               <div key={st.id} className="p-3.5 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-2">
                 <div className="flex items-center justify-between">
                   <span style={{ backgroundColor: st.hex }} className="w-3 h-3 rounded-full shadow-[0_0_8px_currentColor]" />
-                  <span className="text-[10px] font-mono text-cyber-muted">{st.hex}</span>
+                  <span className="text-label font-mono text-cyber-muted">{st.hex}</span>
                 </div>
                 <div className="font-display font-bold text-xs text-cyber-primary leading-tight">
                   {st.name}
                 </div>
-                <div className="text-[9px] font-mono text-cyber-muted tracking-wider">
+                <div className="text-label font-mono text-cyber-muted tracking-wider">
                   {st.tag}
                 </div>
               </div>
@@ -771,10 +771,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         {/* 10.6 WCAG 2.1 AA Contrast Verification Matrix */}
         <GlassCard className="p-6 space-y-4">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
-            <span className="text-xs font-mono font-bold text-brand-orange uppercase">
+            <span className="text-xs font-mono font-medium text-brand-orange uppercase">
               // 10.6 WCAG 2.1 AA Computed Contrast Ratios Matrix
             </span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
+            <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
               AUDITED COMPLIANCE
             </span>
           </div>
@@ -782,7 +782,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           <div className="overflow-x-auto">
             <table className="w-full text-left font-mono text-xs">
               <thead>
-                <tr className="border-b border-cyber-border text-cyber-muted text-[11px] uppercase">
+                <tr className="border-b border-cyber-border text-cyber-muted text-label uppercase">
                   <th className="py-2.5 px-3">UI Element &amp; Pairing</th>
                   <th className="py-2.5 px-3">Foreground</th>
                   <th className="py-2.5 px-3">Background</th>
@@ -793,12 +793,12 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               </thead>
               <tbody className="divide-y border-cyber-border/40">
                 {[
-                  ['Primary Brand Button Text', '#070B0E (Brand Ink)', '#E07212 (Brand Orange)', '5.23 : 1', '>= 4.5:1 (Normal Text)', 'PASS AA', false],
-                  ['Prohibited Button Text (White on Orange)', '#FFFFFF (White)', '#E07212 (Brand Orange)', '3.18 : 1', '>= 4.5:1 (Normal Text)', 'FAIL (PROHIBITED)', true],
-                  ['Light Theme Text / Links', '#C2410C (Light Orange)', '#FFFFFF (Pure White)', '5.53 : 1', '>= 4.5:1 (Normal Text)', 'PASS AA', false],
-                  ['Light Theme Chrome Surface', '#C2410C (Light Orange)', '#F8FBFF (Chrome 50)', '5.39 : 1', '>= 4.5:1 (Normal Text)', 'PASS AA', false],
-                  ['Dark Theme Body & Car Outline', '#F2F4F7 (Brand White)', '#070B0E (Brand Ink)', '17.84 : 1', '>= 7.0:1 (AAA Standard)', 'PASS AAA', false],
-                  ['Brand Focus Rings & UI Components', '#E07212 (Brand Orange)', '#070B0E (Canvas)', '5.23 : 1', '>= 3.0:1 (UI Components)', 'PASS AA', false],
+                  ['Brand Button', '#070B0E', '#E07212', '5.23:1', '>=4.5:1', 'PASS AA', false],
+                  ['Prohibited White/Orange', '#FFFFFF', '#E07212', '3.18:1', '>=4.5:1', 'FAIL', true],
+                  ['Light Links', '#C2410C', '#FFFFFF', '5.53:1', '>=4.5:1', 'PASS AA', false],
+                  ['Chrome Surface', '#C2410C', '#F8FBFF', '5.39:1', '>=4.5:1', 'PASS AA', false],
+                  ['Dark Body', '#F2F4F7', '#070B0E', '17.84:1', '>=7.0:1', 'PASS AAA', false],
+                  ['Focus Rings', '#E07212', '#070B0E', '5.23:1', '>=3.0:1', 'PASS AA', false],
                 ].map(([elem, fg, bg, ratio, std, verdict, isFail]) => (
                   <tr key={elem as string} className={`hover:bg-white/[0.02] ${isFail ? 'bg-red-500/5' : ''}`}>
                     <td className="py-3 px-3 font-sans font-medium text-cyber-primary">{elem}</td>

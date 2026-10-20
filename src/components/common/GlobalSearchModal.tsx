@@ -232,7 +232,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-surface border border-cyber-border font-mono text-[10px] text-cyber-muted">
+          <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-surface border border-cyber-border font-mono text-label text-cyber-muted">
             ESC to close
           </span>
         </div>
@@ -300,7 +300,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           {!query.trim() ? (
             <div className="py-12 text-center text-xs font-mono text-cyber-muted">
               Start typing to search cross-subteam deliverables, personnel, and telemetry channels.
-              <div className="mt-2 text-[10px] text-cyber-secondary flex items-center justify-center gap-3">
+              <div className="mt-2 text-label text-cyber-secondary flex items-center justify-center gap-3">
                 <span><kbd className="px-1 py-0.5 rounded bg-cyber-bg border border-cyber-border">↑</kbd> <kbd className="px-1 py-0.5 rounded bg-cyber-bg border border-cyber-border">↓</kbd> to navigate</span>
                 <span><kbd className="px-1 py-0.5 rounded bg-cyber-bg border border-cyber-border">↵</kbd> to select</span>
               </div>
@@ -339,7 +339,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       <div className="font-bold text-xs text-cyber-primary truncate">
                         {item.title}
                       </div>
-                      <div className="font-mono text-[11px] text-cyber-secondary truncate">
+                      <div className="font-mono text-label text-cyber-secondary truncate">
                         {item.subtitle}
                       </div>
                     </div>
@@ -348,7 +348,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                   <div className="flex items-center gap-2 shrink-0">
                     {item.badge && (
                       <span
-                        className="text-[9px] font-mono font-bold px-2 py-0.5 rounded border uppercase"
+                        className="text-label font-mono font-medium px-2 py-0.5 rounded border uppercase"
                         style={{
                           backgroundColor: `${item.badgeColor || '#00D9FF'}15`,
                           borderColor: `${item.badgeColor || '#00D9FF'}40`,
@@ -369,7 +369,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="px-4 py-2 bg-cyber-bg-alt border-t border-cyber-border text-[10px] font-mono text-cyber-muted flex items-center justify-between">
+        <div className="px-4 py-2 bg-cyber-bg-alt border-t border-cyber-border text-label font-mono text-cyber-muted flex items-center justify-between">
           <span>Formula Student Command Telemetry</span>
           <span>{results.length} result(s)</span>
         </div>

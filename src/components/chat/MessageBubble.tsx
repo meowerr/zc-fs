@@ -30,9 +30,9 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
       <div className={`max-w-[85%] sm:max-w-[70%] space-y-1 ${isOwn ? 'items-end' : 'items-start'}`}>
         {/* Sender Name & Role Header (Incoming only) */}
         {!isOwn && (
-          <div className="flex items-center gap-1.5 px-1 text-[11px] font-mono">
-            <span className="font-bold text-cyber-primary">{senderName}</span>
-            <span className="text-[9px] uppercase px-1 rounded bg-cyber-surface-elevated border border-cyber-border text-accent-cyan font-bold">
+          <div className="flex items-center gap-1.5 px-1 text-label font-mono">
+            <span className="font-semibold text-cyber-primary font-sans">{senderName}</span>
+            <span className="text-label uppercase px-1 rounded bg-cyber-surface-elevated border border-cyber-border text-accent-cyan font-bold">
               {senderRole}
             </span>
           </div>
@@ -41,7 +41,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
         {/* Message Bubble Surface */}
         <div
           className={`
-            p-3 rounded-lg text-xs sm:text-sm font-sans leading-relaxed transition-all shadow-cyber-sm
+            p-3 rounded-lg text-body-lg sm:text-sm font-sans leading-relaxed transition-all shadow-cyber-sm
             ${
               isOwn
                 ? 'bg-cyber-surface-elevated text-cyber-primary rounded-br-none border border-accent-cyan/40 shadow-[0_1px_8px_rgba(0,217,255,0.15)]'
@@ -69,7 +69,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
           )}
 
           {/* Timestamp footer in bubble */}
-          <div className="mt-1 text-[9px] font-mono text-right select-none text-cyber-muted">
+          <div className="mt-1 text-label font-mono text-right select-none text-cyber-muted">
             {timeFormatted}
           </div>
         </div>

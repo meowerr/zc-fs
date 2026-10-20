@@ -90,7 +90,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('privacy')}
-              className={`px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-all cursor-pointer ${
                 activeTab === 'privacy'
                   ? 'bg-brand-orange text-brand-ink shadow-cyber-sm'
                   : 'text-cyber-muted hover:text-cyber-primary'
@@ -101,7 +101,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('terms')}
-              className={`px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-xs font-mono font-medium transition-all cursor-pointer ${
                 activeTab === 'terms'
                   ? 'bg-brand-orange text-brand-ink shadow-cyber-sm'
                   : 'text-cyber-muted hover:text-cyber-primary'
@@ -115,7 +115,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
         <GlassCard variant="elevated" className="p-6 sm:p-8 space-y-6 text-sm leading-relaxed border-cyber-border">
           <article className="space-y-6">
             <div className="space-y-2 pb-4 border-b border-cyber-border">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-brand-orange/15 text-brand-light-orange border border-brand-orange/30 font-mono text-xs font-bold uppercase">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-brand-orange/15 text-brand-light-orange border border-brand-orange/30 font-mono text-xs font-medium uppercase">
                 {activeTab === 'privacy' ? <Lock className="w-3.5 h-3.5" /> : <FileText className="w-3.5 h-3.5" />}
                 {activeTab === 'privacy' ? 'DATA PROTECTION & SECURITY PROTOCOL' : 'MOTORSPORT TEAM AGREEMENT'}
               </div>

@@ -51,13 +51,13 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
                 You're in the queue, ZFS will approve you soon
               </h2>
               <p className="text-xs sm:text-sm font-sans text-cyber-secondary leading-relaxed">
-                Welcome to the team, <strong className="text-cyber-primary">{user.full_name}</strong>. Your university email (<span className="font-mono text-accent-cyan font-semibold">{user.email}</span>) has been authenticated. A Club Administrator will assign your sub-team division shortly.
+                Welcome to the team, <strong className="text-cyber-primary">{user.full_name}</strong>. Your university email (<span className="font-mono text-accent-cyan font-medium">{user.email}</span>) has been authenticated. A Club Administrator will assign your sub-team division shortly.
               </p>
             </div>
 
             {/* Security & Access Scope Info */}
             <div className="p-3.5 rounded-xl bg-cyber-bg-alt border border-cyber-border text-left space-y-2">
-              <div className="flex items-center gap-2 text-xs font-mono font-bold text-cyber-primary uppercase">
+              <div className="flex items-center gap-2 text-xs font-mono font-medium text-cyber-primary uppercase">
                 <ShieldAlert className="w-4 h-4 text-accent-yellow shrink-0" />
                 <span>Data Isolation & Protection Active:</span>
               </div>
@@ -69,7 +69,7 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
             </div>
 
             <div className="pt-2 flex items-center justify-center gap-3">
-              <div className="flex items-center gap-1 text-[11px] font-mono text-accent-lime">
+              <div className="flex items-center gap-1 text-label font-mono text-accent-lime">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Identity Verified</span>
               </div>
@@ -86,7 +86,7 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
         </div>
 
         {/* Technical Footer */}
-        <div className="text-center font-mono text-[10px] text-cyber-muted uppercase tracking-widest">
+        <div className="text-center font-mono text-label text-cyber-muted uppercase tracking-widest">
           Built for Zewail Formula Team // PitLane Workspace
         </div>
       </div>

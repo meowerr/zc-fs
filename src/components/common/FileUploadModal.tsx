@@ -87,7 +87,7 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
+            className="tap-target rounded-full hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -128,7 +128,7 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
             <div className="font-sans font-bold text-sm text-cyber-primary truncate">
               {selectedFile ? selectedFile.name : 'Click to select CAD model or document'}
             </div>
-            <p className="text-[11px] font-mono text-cyber-muted">
+            <p className="text-label font-mono text-cyber-muted">
               {selectedFile ? `${fileSizeMb} MB selected` : 'STEP, IGES, PDF, ZIP, code, or images (25 MB max)'}
             </p>
           </div>
@@ -137,7 +137,7 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
         {/* File Quota Telemetry Gauge */}
         {selectedFile && (
           <div className="space-y-1.5 p-3 rounded-xl bg-cyber-surface border border-cyber-border">
-            <div className="flex items-center justify-between text-[11px] font-mono">
+            <div className="flex items-center justify-between text-label font-mono">
               <span className="text-cyber-muted">Quota Usage:</span>
               <span className="font-bold text-accent-cyan">
                 {fileSizeMb} MB / 25 MB max

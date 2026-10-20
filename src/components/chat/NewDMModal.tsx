@@ -70,7 +70,7 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
+            className="tap-target rounded-full hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -113,13 +113,13 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
                       <div className="font-bold text-xs text-cyber-primary truncate">
                         {user.full_name}
                       </div>
-                      <div className="font-mono text-[10px] text-cyber-muted truncate">
+                      <div className="font-mono text-label text-cyber-muted truncate">
                         {team ? team.name.replace('Technical - ', '') : 'Club Leadership'} • {user.role.toUpperCase()}
                       </div>
                     </div>
                   </div>
 
-                  <span className="font-mono text-[10px] text-accent-cyan font-bold flex-shrink-0">
+                  <span className="font-mono text-label text-accent-cyan font-medium flex-shrink-0">
                     Chat &rarr;
                   </span>
                 </button>

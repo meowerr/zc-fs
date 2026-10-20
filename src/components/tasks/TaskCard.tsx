@@ -55,11 +55,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
                 title={groupName}
               />
             )}
-            <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold uppercase border ${typeColorClasses[task.task_type] || typeColorClasses.other}`}>
+            <span className={`px-1.5 py-0.5 rounded text-label font-mono font-medium uppercase border ${typeColorClasses[task.task_type] || typeColorClasses.other}`}>
               {task.task_type}
             </span>
             {groupName && (
-              <span className="text-[10px] font-mono text-cyber-muted truncate max-w-[130px]">
+              <span className="text-label font-mono text-cyber-muted truncate max-w-[130px]">
                 {groupName}
               </span>
             )}
@@ -70,11 +70,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
 
         {/* Task Title & Description Snippet */}
         <div>
-          <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-2 leading-snug">
+          <h4 className="font-sans font-bold text-body-lg sm:text-sm text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-2 leading-snug">
             {task.title}
           </h4>
           {task.description && (
-            <p className="text-xs text-cyber-secondary line-clamp-2 mt-1 leading-relaxed">
+            <p className="text-body sm:text-xs text-cyber-secondary line-clamp-2 mt-1 leading-relaxed">
               {task.description}
             </p>
           )}
@@ -90,19 +90,19 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
                   <ChromeAvatar key={a.id} name={a.full_name} role={a.role} size="sm" />
                 ))}
                 {task.assignees.length > 3 && (
-                  <span className="w-5 h-5 rounded bg-cyber-surface-elevated border border-cyber-border text-[9px] font-mono flex items-center justify-center font-bold text-cyber-secondary">
+                  <span className="w-5 h-5 rounded bg-cyber-surface-elevated border border-cyber-border text-label font-mono flex items-center justify-center font-medium text-cyber-secondary">
                     +{task.assignees.length - 3}
                   </span>
                 )}
               </div>
             ) : (
-              <span className="text-[10px] font-mono text-cyber-muted italic">
+              <span className="text-label font-mono text-cyber-muted italic">
                 Unassigned
               </span>
             )}
 
             {task.links && task.links.length > 0 && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono text-cyber-muted">
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono text-cyber-muted">
                 <Paperclip className="w-3 h-3" /> {task.links.length}
               </span>
             )}
@@ -112,7 +112,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
           <div className="flex items-center gap-1">
             <span
               className={`
-                inline-flex items-center gap-1 font-mono text-[10px] font-semibold px-1.5 py-0.5 rounded
+                inline-flex items-center gap-1 font-mono text-label font-medium px-1.5 py-0.5 rounded
                 ${
                   isOverdue
                     ? 'bg-accent-red/10 text-accent-red border border-accent-red/30 animate-pulse'

@@ -142,7 +142,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover transition-colors text-cyber-muted hover:text-cyber-primary cursor-pointer"
+            className="tap-target rounded-full hover:bg-cyber-surface-hover transition-colors text-cyber-muted hover:text-cyber-primary cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -164,7 +164,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           />
 
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+            <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
               Description & Specifications
             </label>
             <textarea
@@ -179,7 +179,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           {/* Sub-Team Selection (If Admin) */}
           {isAdmin && (
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Assign to Sub-Team
               </label>
               <select
@@ -199,13 +199,13 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           {/* Type & Priority Row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Task Type
               </label>
               <select
                 value={taskType}
                 onChange={(e) => setTaskType(e.target.value as TaskType)}
-                className="w-full h-11 px-3 rounded-xl text-xs font-mono font-bold uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full h-11 px-3 rounded-xl text-xs font-mono font-medium uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 <option value="design" className="bg-cyber-surface text-cyber-primary">Design (CAD/FEA)</option>
                 <option value="code" className="bg-cyber-surface text-cyber-primary">Code (Firmware/Sim)</option>
@@ -217,13 +217,13 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Priority
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                className="w-full h-11 px-3 rounded-xl text-xs font-mono font-bold uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full h-11 px-3 rounded-xl text-xs font-mono font-medium uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 <option value="low" className="bg-cyber-surface text-cyber-primary">Low Priority</option>
                 <option value="medium" className="bg-cyber-surface text-cyber-primary">Medium Priority</option>
@@ -236,7 +236,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           {/* Deadline Row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1">
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5 text-accent-cyan" /> Deadline Date
               </label>
               <input
@@ -249,7 +249,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Time (UTC+2)
               </label>
               <input
@@ -264,7 +264,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
 
           {/* Assignees Selector */}
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1.5">
               <UserPlus className="w-3.5 h-3.5 text-accent-cyan" /> Assign Team Members
             </label>
             <div className="max-h-28 overflow-y-auto p-2 rounded-xl bg-cyber-surface border border-cyber-border space-y-1.5">
@@ -287,7 +287,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
                     <span className="font-semibold text-cyber-primary">
                       {member.full_name}
                     </span>
-                    <span className="text-[10px] font-mono text-cyber-muted">
+                    <span className="text-label font-mono text-cyber-muted">
                       ({member.role})
                     </span>
                   </label>
@@ -298,7 +298,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
 
           {/* Reference Links */}
           <div className="space-y-2">
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary flex items-center gap-1.5">
+            <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary flex items-center gap-1.5">
               <LinkIcon className="w-3.5 h-3.5 text-accent-cyan" /> Reference CAD / Repo Links
             </label>
 
@@ -308,19 +308,19 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
                 placeholder="Title (e.g. Onshape CAD)"
                 value={linkTitle}
                 onChange={(e) => setLinkTitle(e.target.value)}
-                className="w-1/3 h-9 px-3 rounded-lg text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted"
+                className="w-1/3 min-h-[44px] sm:min-h-0 sm:h-9 px-3 rounded-lg text-base sm:text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted"
               />
               <input
                 type="url"
                 placeholder="https://..."
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
-                className="flex-1 h-9 px-3 rounded-lg text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted"
+                className="flex-1 min-h-[44px] sm:min-h-0 sm:h-9 px-3 rounded-lg text-base sm:text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted"
               />
               <button
                 type="button"
                 onClick={handleAddLink}
-                className="h-9 px-3 rounded-lg bg-cyber-surface-hover hover:bg-cyber-border border border-cyber-border text-xs font-mono font-bold text-cyber-primary cursor-pointer transition-colors"
+                className="min-h-[44px] h-10 px-3.5 rounded-lg bg-cyber-surface-hover hover:bg-cyber-border border border-cyber-border text-label font-mono font-medium text-cyber-primary cursor-pointer transition-colors"
               >
                 Add
               </button>

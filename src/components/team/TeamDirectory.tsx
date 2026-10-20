@@ -109,10 +109,10 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-cyber-border">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-accent-cyan tracking-widest uppercase bg-accent-cyan/10 px-2 py-0.5 rounded border border-accent-cyan/20 font-bold">
+            <span className="text-label font-mono text-accent-cyan tracking-widest uppercase bg-accent-cyan/10 px-2 py-0.5 rounded border border-accent-cyan/20 font-medium">
               // TELEMETRY ROSTER
             </span>
-            <span className="text-[10px] font-mono text-cyber-muted">
+            <span className="text-label font-mono text-cyber-muted">
               5 SUB-TEAMS • ACTIVE DIRECTORY
             </span>
           </div>
@@ -148,53 +148,53 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
       {/* ─── Telemetry HUD Metrics Cards ─── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
+          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
             <span>ACTIVE ROSTER</span>
             <Users className="w-3.5 h-3.5 text-accent-cyan" />
           </div>
-          <div className="font-mono text-2xl font-bold text-cyber-primary">
+          <div className="font-mono text-2xl font-medium text-cyber-primary">
             {totalEngineers.toString().padStart(2, '0')}
           </div>
-          <div className="text-[10px] font-mono text-cyber-secondary mt-0.5">
+          <div className="text-label font-mono text-cyber-secondary mt-0.5">
             Verified university engineers
           </div>
         </GlassCard>
 
         <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
+          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
             <span>SUB-TEAMS</span>
             <Layers className="w-3.5 h-3.5 text-accent-cyan" />
           </div>
-          <div className="font-mono text-2xl font-bold text-cyber-primary">
+          <div className="font-mono text-2xl font-medium text-cyber-primary">
             {groupsList.length.toString().padStart(2, '0')}
           </div>
-          <div className="text-[10px] font-mono text-cyber-secondary mt-0.5">
+          <div className="text-label font-mono text-cyber-secondary mt-0.5">
             Specialized engineering divisions
           </div>
         </GlassCard>
 
         <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
+          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
             <span>GROUP HEADS</span>
             <Award className="w-3.5 h-3.5 text-accent-yellow" />
           </div>
-          <div className="font-mono text-2xl font-bold text-cyber-primary">
+          <div className="font-mono text-2xl font-medium text-cyber-primary">
             {totalHeads.toString().padStart(2, '0')}
           </div>
-          <div className="text-[10px] font-mono text-cyber-secondary mt-0.5">
+          <div className="text-label font-mono text-cyber-secondary mt-0.5">
             Sub-team leads & reviewers
           </div>
         </GlassCard>
 
         <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
+          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
             <span>CLUB ADVISORY</span>
             <Shield className="w-3.5 h-3.5 text-accent-lime" />
           </div>
-          <div className="font-mono text-2xl font-bold text-cyber-primary">
+          <div className="font-mono text-2xl font-medium text-cyber-primary">
             {totalAdmins.toString().padStart(2, '0')}
           </div>
-          <div className="text-[10px] font-mono text-cyber-secondary mt-0.5">
+          <div className="text-label font-mono text-cyber-secondary mt-0.5">
             System overseers & faculty
           </div>
         </GlassCard>
@@ -202,7 +202,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
 
       {/* ─── 5 Sub-Teams Quick Filter Overview ─── */}
       <GlassCard className="p-3.5 space-y-2.5">
-        <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-cyber-muted">
+        <div className="flex items-center justify-between text-label font-mono uppercase tracking-wider text-cyber-muted">
           <span className="flex items-center gap-1.5 font-bold text-cyber-primary">
             <Layers className="w-3.5 h-3.5 text-accent-cyan" />
             <span>SUB-TEAM DIVISIONS</span>
@@ -224,12 +224,12 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
             `}
           >
             <div className="flex items-center justify-between w-full">
-              <span className="text-[10px] font-mono uppercase font-bold">ALL TEAMS</span>
-              <span className="text-[10px] font-mono px-1 rounded bg-cyber-surface border border-cyber-border">
+              <span className="text-label font-mono uppercase font-medium">ALL TEAMS</span>
+              <span className="text-label font-mono px-1 rounded bg-cyber-surface border border-cyber-border">
                 {approvedProfiles.length}
               </span>
             </div>
-            <span className="text-[11px] font-sans truncate font-medium mt-1">Full Roster</span>
+            <span className="text-label font-sans truncate font-medium mt-1">Full Roster</span>
           </button>
 
           {/* Individual Sub-teams */}
@@ -267,15 +267,15 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       className="w-2 h-2 rounded-full flex-shrink-0"
                       style={{ backgroundColor: accent }}
                     />
-                    <span className="text-[9px] font-mono uppercase truncate text-cyber-muted">
+                    <span className="text-label font-mono uppercase truncate text-cyber-muted">
                       {g.slug}
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono px-1 rounded bg-cyber-surface border border-cyber-border">
+                  <span className="text-label font-mono px-1 rounded bg-cyber-surface border border-cyber-border">
                     {count}
                   </span>
                 </div>
-                <span className="text-[11px] font-sans truncate font-medium mt-1">
+                <span className="text-label font-sans truncate font-medium mt-1">
                   {shortName}
                 </span>
               </button>
@@ -294,13 +294,13 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
             placeholder="Search engineers by name, email, or role..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full h-9 pl-9 pr-3 rounded-lg text-xs font-sans bg-cyber-bg-alt border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan transition-colors"
+            className="w-full min-h-[44px] sm:min-h-0 sm:h-9 pl-9 pr-3 rounded-lg text-base sm:text-xs font-sans bg-cyber-bg-alt border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan transition-colors"
           />
         </div>
 
         {/* Role Filter Chips */}
         <div className="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-          <span className="text-[10px] font-mono text-cyber-muted uppercase tracking-wider mr-1 hidden sm:inline">
+          <span className="text-label font-mono text-cyber-muted uppercase tracking-wider mr-1 hidden sm:inline">
             ROLE:
           </span>
           {[
@@ -315,10 +315,10 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                 key={r.id}
                 onClick={() => setSelectedRole(r.id)}
                 className={`
-                  px-2.5 py-1 rounded text-xs font-mono uppercase tracking-wider transition-all cursor-pointer border whitespace-nowrap
+                  min-h-[40px] px-3.5 py-2 rounded text-label font-mono font-medium uppercase tracking-wider transition-all cursor-pointer border whitespace-nowrap
                   ${
                     isSelected
-                      ? 'bg-accent-cyan text-black font-bold border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)]'
+                      ? 'bg-accent-cyan text-black font-medium border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)]'
                       : 'bg-cyber-surface-elevated border-cyber-border text-cyber-secondary hover:text-cyber-primary hover:border-cyber-border-strong'
                   }
                 `}
@@ -390,12 +390,12 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                             {person.full_name}
                           </h4>
                           {isSelf && (
-                            <span className="text-[9px] font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 font-bold">
+                            <span className="text-label font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 font-medium">
                               YOU
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 text-[11px] font-mono text-cyber-muted truncate mt-0.5">
+                        <div className="flex items-center gap-1 text-label font-mono text-cyber-muted truncate mt-0.5">
                           <Mail className="w-3 h-3 flex-shrink-0" />
                           <span className="truncate">{person.email}</span>
                         </div>
@@ -405,17 +405,17 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                     {/* Role Chip */}
                     <div className="flex-shrink-0">
                       {person.role === 'admin' ? (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase font-medium bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30">
                           <Shield className="w-3 h-3" />
                           <span>Admin</span>
                         </span>
                       ) : person.role === 'head' ? (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-accent-yellow/15 text-accent-yellow border border-accent-yellow/30">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase font-medium bg-accent-yellow/15 text-accent-yellow border border-accent-yellow/30">
                           <Award className="w-3 h-3" />
                           <span>Lead</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-cyber-surface text-cyber-secondary border border-cyber-border">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase font-medium bg-cyber-surface text-cyber-secondary border border-cyber-border">
                           <span>Engineer</span>
                         </span>
                       )}
@@ -434,7 +434,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[10px] font-mono text-cyber-muted flex-shrink-0">
+                    <div className="flex items-center gap-1 text-label font-mono text-cyber-muted flex-shrink-0">
                       <CheckSquare className="w-3 h-3 text-accent-cyan" />
                       <span>{taskCount} {taskCount === 1 ? 'task' : 'tasks'}</span>
                     </div>
@@ -443,7 +443,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
 
                 {/* Action Footer */}
                 <div className="pt-2 border-t border-cyber-border flex items-center justify-between gap-2">
-                  <div className="text-[10px] font-mono text-cyber-muted">
+                  <div className="text-label font-mono text-cyber-muted">
                     STATUS: <span className="text-accent-lime font-bold">ONLINE</span>
                   </div>
 

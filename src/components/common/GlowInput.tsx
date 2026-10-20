@@ -17,7 +17,7 @@ export const GlowInput = React.forwardRef<HTMLInputElement, GlowInputProps>(
               <span className="text-accent-cyan opacity-80 font-bold">//</span>
               {label}
             </span>
-            {hint && <span className="text-[10px] font-mono text-cyber-muted">{hint}</span>}
+            {hint && <span className="text-label font-mono text-cyber-muted">{hint}</span>}
           </label>
         )}
 
@@ -49,7 +49,7 @@ export const GlowInput = React.forwardRef<HTMLInputElement, GlowInputProps>(
         </div>
 
         {error && (
-          <span className="text-[11px] font-mono text-accent-red tracking-wide flex items-center gap-1">
+          <span className="text-label font-mono text-accent-red tracking-wide flex items-center gap-1">
             ⚠ {error}
           </span>
         )}

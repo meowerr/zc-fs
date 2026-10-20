@@ -166,7 +166,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                   <span className="font-display font-bold text-xs tracking-wider text-cyber-primary uppercase leading-tight">
                     {activeItem.label}
                   </span>
-                  <span className="font-mono text-[11px] text-cyber-secondary tracking-tight truncate max-w-[150px]">
+                  <span className="font-mono text-label text-cyber-secondary tracking-tight truncate max-w-[150px]">
                     {activeItem.subtitle}
                   </span>
                 </div>
@@ -176,12 +176,12 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
             {/* Right: Unread Chat Badge + Status LED + Garage Door Open Chevron */}
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
-                <span className="px-1.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-accent-red text-white flex items-center justify-center shadow-sm animate-pulse">
+                <span className="px-1.5 py-0.5 rounded-full text-label font-mono font-medium bg-accent-red text-white flex items-center justify-center shadow-sm animate-pulse">
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
               )}
 
-              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-border font-mono text-[11px] text-accent-lime font-bold">
+              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-border font-mono text-label text-accent-lime font-medium">
                 <Radio className="w-2.5 h-2.5 animate-pulse" />
                 <span>LIVE</span>
               </div>
@@ -252,7 +252,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                   <h2 className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase">
                     PitLane // Mobile Command
                   </h2>
-                  <p className="text-[11px] font-mono text-cyber-secondary">
+                  <p className="text-label font-mono text-cyber-secondary">
                     Telemetry & Navigation Dock
                   </p>
                 </div>
@@ -261,7 +261,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
               <button
                 onClick={closeGarage}
                 aria-label="Close Mobile Navigation"
-                className="w-8 h-8 rounded-lg flex items-center justify-center bg-cyber-surface-elevated text-cyber-muted hover:text-cyber-primary border border-cyber-border transition-colors cursor-pointer"
+                className="tap-target rounded-lg flex items-center justify-center bg-cyber-surface-elevated text-cyber-muted hover:text-cyber-primary border border-cyber-border transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -308,12 +308,12 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                             {item.shortLabel || item.label}
                           </span>
                           {showBadge && (
-                            <span className="px-1.5 py-0.2 rounded-full text-[11px] font-mono font-bold bg-accent-red text-white shadow-sm">
+                            <span className="px-1.5 py-0.2 rounded-full text-label font-mono font-medium bg-accent-red text-white shadow-sm">
                               {unreadCount > 99 ? '99+' : unreadCount}
                             </span>
                           )}
                         </div>
-                        <span className="font-mono text-[11px] text-cyber-secondary block truncate">
+                        <span className="font-mono text-label text-cyber-secondary block truncate">
                           {item.subtitle}
                         </span>
                       </div>
@@ -332,10 +332,10 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                   style={{ backgroundColor: userTeamColor }}
                 />
                 <div className="truncate">
-                  <div className="text-[11px] font-mono font-semibold text-cyber-primary truncate">
+                  <div className="text-label font-mono font-medium text-cyber-primary truncate">
                     {currentGroupName}
                   </div>
-                  <div className="text-[11px] font-mono text-cyber-secondary">
+                  <div className="text-label font-mono text-cyber-secondary">
                     ROLE: {role.toUpperCase()}
                   </div>
                 </div>
@@ -354,7 +354,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                   <span className="truncate max-w-[80px]">{userName}</span>
                 </button>
               ) : (
-                <div className="flex items-center gap-1 font-mono text-[11px] text-accent-lime font-bold">
+                <div className="flex items-center gap-1 font-mono text-label text-accent-lime font-medium">
                   <Radio className="w-3 h-3 animate-pulse" />
                   <span>ONLINE</span>
                 </div>

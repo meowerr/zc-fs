@@ -25,7 +25,7 @@ export const SegmentedGauge: React.FC<SegmentedGaugeProps> = ({
       {(label || showPercent) && (
         <div className="flex items-center justify-between text-xs font-mono">
           {label && (
-            <span className="text-cyber-secondary uppercase tracking-wider text-[11px]">
+            <span className="text-cyber-secondary uppercase tracking-wider text-label">
               {label}
             </span>
           )}

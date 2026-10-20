@@ -17,8 +17,8 @@ export const GhostButton: React.FC<GhostButtonProps> = ({
   ...props
 }) => {
   const sizeStyles = {
-    sm: 'h-8 px-2.5 text-xs',
-    md: 'min-h-[44px] h-9 px-3.5 text-xs sm:text-sm',
+    sm: 'min-h-[44px] sm:min-h-0 sm:h-8 px-2.5 text-sm',
+    md: 'min-h-[44px] h-10 sm:h-9 px-3.5 text-sm',
     lg: 'min-h-[48px] h-11 px-5 text-sm sm:text-base',
   };
 

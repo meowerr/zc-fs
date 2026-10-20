@@ -237,11 +237,11 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                     <span className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase">
                       PitLane
                     </span>
-                    <span className="text-[10px] font-mono text-brand-light-orange font-bold tracking-tight">
+                    <span className="text-label font-mono text-brand-light-orange font-medium tracking-tight">
                       // OS
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-cyber-secondary tracking-wider uppercase">
+                  <span className="text-label font-mono text-cyber-secondary tracking-wider uppercase">
                     COMMAND CONSOLE
                   </span>
                 </div>
@@ -291,7 +291,7 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                   return (
                     <div key={groupId} className="space-y-1">
                       {/* Group Label */}
-                      <div className="px-2 py-0.5 font-mono text-[11px] font-bold uppercase tracking-wider text-accent-cyan flex items-center gap-1">
+                      <div className="px-2 py-0.5 font-mono text-label font-medium uppercase tracking-wider text-accent-cyan flex items-center gap-1">
                         <span>//</span>
                         <span>{groupId}</span>
                       </div>
@@ -332,12 +332,12 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                                 {item.label}
                               </span>
                               {showBadge && (
-                                <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-accent-red text-white shadow-sm">
+                                <span className="px-1.5 py-0.2 rounded text-label font-mono font-medium bg-accent-red text-white shadow-sm">
                                   {unreadCount > 99 ? '99+' : unreadCount}
                                 </span>
                               )}
                             </div>
-                            <div className="text-[10px] font-mono text-cyber-muted truncate rail-subtitles">
+                            <div className="text-label font-mono text-cyber-muted truncate rail-subtitles">
                               {item.subtitle}
                             </div>
                           </div>
@@ -400,7 +400,7 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
 
                         {/* Notification Unread Badge */}
                         {showBadge && (
-                          <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full text-[11px] font-mono font-bold bg-accent-red text-white flex items-center justify-center shadow-sm animate-pulse">
+                          <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full text-label font-mono font-medium bg-accent-red text-white flex items-center justify-center shadow-sm animate-pulse">
                             {unreadCount > 99 ? '99+' : unreadCount}
                           </span>
                         )}
@@ -415,11 +415,11 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                           <span className="font-display text-xs font-bold text-cyber-primary">
                             {item.label}
                           </span>
-                          <span className="font-mono text-[11px] text-accent-cyan uppercase px-1 py-0.2 rounded bg-cyber-bg border border-accent-cyan/30">
+                          <span className="font-mono text-label text-accent-cyan uppercase px-1 py-0.2 rounded bg-cyber-bg border border-accent-cyan/30">
                             {item.group}
                           </span>
                         </div>
-                        <div className="font-mono text-[11px] text-cyber-secondary text-left">
+                        <div className="font-mono text-label text-cyber-secondary text-left">
                           {item.subtitle}
                         </div>
                       </div>
@@ -435,12 +435,12 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
             {isOpen ? (
               /* Expanded Telemetry & Sub-team Overview */
               <div className="space-y-2">
-                <div className="px-2 flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-cyber-secondary font-semibold">
+                <div className="px-2 flex items-center justify-between text-label font-mono uppercase tracking-wider text-cyber-secondary font-medium">
                   <span className="flex items-center gap-1.5">
                     <Flag className="w-3 h-3 text-accent-cyan" />
                     <span>SUB-TEAM TELEMETRY</span>
                   </span>
-                  <span className="text-[11px] text-accent-cyan font-mono font-bold">
+                  <span className="text-label text-accent-cyan font-mono font-medium">
                     {role === 'admin' ? '5 TEAMS ACTIVE' : 'ASSIGNED'}
                   </span>
                 </div>
@@ -463,10 +463,10 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                             className="w-2 h-2 rounded-full transition-transform group-hover:scale-125"
                             style={{ backgroundColor: team.color_accent || '#00D9FF' }}
                           />
-                          <span className="text-[11px] font-mono text-cyber-secondary group-hover:text-cyber-primary truncate w-full text-center">
+                          <span className="text-label font-mono text-cyber-secondary group-hover:text-cyber-primary truncate w-full text-center">
                             {team.slug.slice(0, 3).toUpperCase()}
                           </span>
-                          <span className="text-[11px] font-mono font-bold" style={{ color: team.color_accent }}>
+                          <span className="text-label font-mono font-medium" style={{ color: team.color_accent }}>
                             {pct}%
                           </span>
                         </button>
@@ -484,15 +484,15 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                         style={{ backgroundColor: userTeamColor }}
                       />
                       <div className="min-w-0">
-                        <div className="font-mono text-xs font-semibold text-cyber-primary truncate">
+                        <div className="font-mono text-xs font-medium text-cyber-primary truncate">
                           {currentGroupName}
                         </div>
-                        <div className="text-[11px] font-mono text-cyber-secondary">
+                        <div className="text-label font-mono text-cyber-secondary">
                           {tasks.length} sub-team {tasks.length === 1 ? 'task' : 'tasks'}
                         </div>
                       </div>
                     </div>
-                    <span className="font-mono text-[11px] px-1.5 py-0.5 rounded bg-cyber-surface text-cyber-secondary border border-cyber-border uppercase font-semibold">
+                    <span className="font-mono text-label px-1.5 py-0.5 rounded bg-cyber-surface text-cyber-secondary border border-cyber-border uppercase font-medium">
                       {role}
                     </span>
                   </div>
@@ -525,14 +525,14 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                     );
                   })}
                 </div>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter uppercase font-bold">
+                <span className="text-label font-mono text-cyber-secondary tracking-tighter uppercase font-medium">
                   5 TEAMS
                 </span>
               </div>
             )}
 
             {/* Bottom Console Telemetry Status (Double Encoded: Icon + Color + Text) */}
-            <div className="flex items-center justify-between pt-1 text-[11px] font-mono">
+            <div className="flex items-center justify-between pt-1 text-label font-mono">
               {onOpenStyleGuide && (
                 <button
                   onClick={onOpenStyleGuide}
@@ -551,21 +551,21 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                 {connectionStatus === 'online' ? (
                   <>
                     <Radio className="w-3 h-3 text-accent-lime animate-pulse" />
-                    <span className="text-accent-lime font-bold text-[11px]">
+                    <span className="text-accent-lime font-bold text-label">
                       {isOpen ? 'SYSTEM ONLINE' : 'LIVE'}
                     </span>
                   </>
                 ) : connectionStatus === 'reconnecting' ? (
                   <>
                     <span className="w-2 h-2 rounded-full bg-accent-yellow animate-ping" />
-                    <span className="text-accent-yellow font-bold text-[11px]">
+                    <span className="text-accent-yellow font-bold text-label">
                       {isOpen ? 'RECONNECTING' : 'SYNC'}
                     </span>
                   </>
                 ) : (
                   <>
                     <span className="w-2 h-2 rounded-full bg-accent-red" />
-                    <span className="text-accent-red font-bold text-[11px]">
+                    <span className="text-accent-red font-bold text-label">
                       {isOpen ? 'SYSTEM OFFLINE' : 'OFF'}
                     </span>
                   </>

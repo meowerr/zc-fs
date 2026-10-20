@@ -403,7 +403,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
           <div className="space-y-1">
             <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
               <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-[11px]">ADMIN COMMAND HQ</span>
+              <span className="text-cyber-secondary uppercase tracking-widest text-label">ADMIN COMMAND HQ</span>
             </div>
             <h2 className="font-display font-black text-xl sm:text-2xl text-cyber-primary uppercase tracking-wider">
               Club Administration & Personnel
@@ -415,15 +415,15 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
           <div className="flex items-center gap-2.5">
             <div className="p-2.5 sm:p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center min-w-[70px]">
-              <div className="font-mono text-[9px] text-cyber-muted uppercase">Pending</div>
+              <div className="font-mono text-label text-cyber-muted uppercase">Pending</div>
               <div className="font-display font-black text-lg sm:text-xl text-accent-yellow">{pendingUsers.length}</div>
             </div>
             <div className="p-2.5 sm:p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center min-w-[70px]">
-              <div className="font-mono text-[9px] text-cyber-muted uppercase">Sub-Teams</div>
+              <div className="font-mono text-label text-cyber-muted uppercase">Sub-Teams</div>
               <div className="font-display font-black text-lg sm:text-xl text-accent-cyan">{effectiveGroups.length}</div>
             </div>
             <div className="p-2.5 sm:p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center min-w-[70px]">
-              <div className="font-mono text-[9px] text-cyber-muted uppercase">Engineers</div>
+              <div className="font-mono text-label text-cyber-muted uppercase">Engineers</div>
               <div className="font-display font-black text-lg sm:text-xl text-accent-lime">{approvedUsers.length}</div>
             </div>
           </div>
@@ -433,7 +433,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
         <div className="flex items-center gap-1.5 mt-5 pt-3.5 border-t border-cyber-border overflow-x-auto pb-1">
           <button
             onClick={() => setActiveSubTab('approvals')}
-            className={`px-3 py-1.5 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer border whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap ${
               activeSubTab === 'approvals'
                 ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
                 : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
@@ -443,7 +443,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
           </button>
           <button
             onClick={() => setActiveSubTab('people')}
-            className={`px-3 py-1.5 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer border whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap ${
               activeSubTab === 'people'
                 ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
                 : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
@@ -453,7 +453,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
           </button>
           <button
             onClick={() => setActiveSubTab('teams')}
-            className={`px-3 py-1.5 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer border whitespace-nowrap ${
+            className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap ${
               activeSubTab === 'teams'
                 ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
                 : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
@@ -463,7 +463,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
           </button>
           <button
             onClick={() => setActiveSubTab('health')}
-            className={`px-3 py-1.5 rounded text-xs font-mono font-bold uppercase transition-all cursor-pointer border whitespace-nowrap flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap flex items-center gap-1.5 ${
               activeSubTab === 'health'
                 ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
                 : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
@@ -519,7 +519,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                     <div>
                       <div className="font-bold text-sm text-cyber-primary">{user.full_name}</div>
                       <div className="font-mono text-xs text-cyber-secondary">{user.email}</div>
-                      <div className="font-mono text-[10px] text-cyber-muted mt-0.5">
+                      <div className="font-mono text-label text-cyber-muted mt-0.5">
                         Applied: {new Date(user.created_at).toLocaleDateString()}
                       </div>
                     </div>
@@ -528,12 +528,12 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                   <div className="flex flex-wrap items-center gap-2.5">
                     {/* Sub-Team Dropdown */}
                     <div className="flex flex-col">
-                      <label className="text-[9px] font-mono uppercase text-cyber-muted mb-0.5">Assign Sub-Team</label>
+                      <label className="text-label font-mono uppercase text-cyber-muted mb-0.5">Assign Sub-Team</label>
                       <select
                         aria-label="Assign Sub-Team"
                         value={selectedGroups[user.id] || effectiveGroups[0]?.id || ''}
                         onChange={(e) => handleGroupSelect(user.id, e.target.value)}
-                        className="h-8 px-2.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs text-cyber-primary font-sans focus:outline-none focus:border-accent-cyan"
+                        className="min-h-[44px] sm:min-h-0 sm:h-9 px-2.5 rounded bg-cyber-bg-alt border border-cyber-border text-base sm:text-xs text-cyber-primary font-sans focus:outline-none focus:border-accent-cyan"
                       >
                         {effectiveGroups.map((g) => (
                           <option key={g.id} value={g.id}>
@@ -545,12 +545,12 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
                     {/* Role Dropdown */}
                     <div className="flex flex-col">
-                      <label className="text-[9px] font-mono uppercase text-cyber-muted mb-0.5">Assign Role</label>
+                      <label className="text-label font-mono uppercase text-cyber-muted mb-0.5">Assign Role</label>
                       <select
                         aria-label="Assign Role"
                         value={selectedRoles[user.id] || 'member'}
                         onChange={(e) => handleRoleSelect(user.id, e.target.value as UserRole)}
-                        className="h-8 px-2.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs text-cyber-primary font-sans focus:outline-none focus:border-accent-cyan"
+                        className="min-h-[44px] sm:min-h-0 sm:h-9 px-2.5 rounded bg-cyber-bg-alt border border-cyber-border text-base sm:text-xs text-cyber-primary font-sans focus:outline-none focus:border-accent-cyan"
                       >
                         <option value="member">Member</option>
                         <option value="head">Group Head</option>
@@ -564,7 +564,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                         size="sm"
                         onClick={() => handleApprove(user)}
                         disabled={processingId === user.id}
-                        className="h-8 px-3"
+                        className="min-h-[44px] sm:min-h-0 px-3"
                       >
                         <Check className="w-3.5 h-3.5 mr-1" />
                         Approve
@@ -575,7 +575,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                         size="sm"
                         onClick={() => handleReject(user.id)}
                         disabled={processingId === user.id}
-                        className="h-8 px-3"
+                        className="min-h-[44px] sm:min-h-0 px-3"
                       >
                         <X className="w-3.5 h-3.5 mr-1" />
                         Reject
@@ -608,7 +608,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                 placeholder="Search name, email, group..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-8 pl-8 pr-3 text-xs bg-cyber-surface border border-cyber-border rounded-lg text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan font-sans"
+                className="w-full min-h-[44px] sm:min-h-0 sm:h-9 pl-8 pr-3 text-base sm:text-xs bg-cyber-surface border border-cyber-border rounded-lg text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan font-sans"
               />
             </div>
           </div>
@@ -617,12 +617,12 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono">
             {/* Filter by Sub-Team */}
             <div>
-              <label className="block text-[10px] uppercase text-cyber-muted mb-1">Sub-Team</label>
+              <label className="block text-label uppercase text-cyber-muted mb-1">Sub-Team</label>
               <select
                 aria-label="Filter by Sub-Team"
                 value={teamFilter}
                 onChange={(e) => setTeamFilter(e.target.value)}
-                className="w-full h-8 px-2 rounded bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full min-h-[44px] sm:min-h-0 sm:h-9 px-2 rounded bg-cyber-surface border border-cyber-border text-base sm:text-xs text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 <option value="all">All Sub-Teams</option>
                 <option value="unassigned">Unassigned Only</option>
@@ -636,12 +636,12 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
             {/* Filter by Role */}
             <div>
-              <label className="block text-[10px] uppercase text-cyber-muted mb-1">Role</label>
+              <label className="block text-label uppercase text-cyber-muted mb-1">Role</label>
               <select
                 aria-label="Filter by Role"
                 value={roleFilter}
                 onChange={(e) => setRoleFilter(e.target.value)}
-                className="w-full h-8 px-2 rounded bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full min-h-[44px] sm:min-h-0 sm:h-9 px-2 rounded bg-cyber-surface border border-cyber-border text-base sm:text-xs text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 <option value="all">All Roles</option>
                 <option value="admin">Club Admin</option>
@@ -653,12 +653,12 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
             {/* Filter by Status */}
             <div>
-              <label className="block text-[10px] uppercase text-cyber-muted mb-1">Status</label>
+              <label className="block text-label uppercase text-cyber-muted mb-1">Status</label>
               <select
                 aria-label="Filter by Status"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full h-8 px-2 rounded bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full min-h-[44px] sm:min-h-0 sm:h-9 px-2 rounded bg-cyber-surface border border-cyber-border text-base sm:text-xs text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 <option value="all">All Statuses</option>
                 <option value="approved">Approved</option>
@@ -690,18 +690,18 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-xs text-cyber-primary truncate">{member.full_name}</span>
                           {isSelf && (
-                            <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
+                            <span className="text-label font-mono px-1.5 py-0.2 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
                               YOU
                             </span>
                           )}
                         </div>
-                        <div className="font-mono text-[11px] text-cyber-secondary truncate">{member.email}</div>
+                        <div className="font-mono text-label text-cyber-secondary truncate">{member.email}</div>
                         <div className="flex items-center gap-2 mt-1">
                           <span
                             className="inline-block w-2 h-2 rounded-full"
                             style={{ backgroundColor: team?.color_accent || '#737D89' }}
                           />
-                          <span className="font-mono text-[10px] text-cyber-muted truncate">
+                          <span className="font-mono text-label text-cyber-muted truncate">
                             {team ? team.name.replace('Technical - ', '').replace('Operations - ', '') : 'Unassigned'}
                           </span>
                         </div>
@@ -710,7 +710,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
                     <div className="flex flex-wrap items-center gap-2 self-end sm:self-center">
                       {/* Role Chip */}
-                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
+                      <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
                         member.role === 'admin'
                           ? 'bg-accent-cyan/10 border-accent-cyan/30 text-accent-cyan font-bold'
                           : member.role === 'head'
@@ -721,7 +721,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                       </span>
 
                       {/* Status Chip */}
-                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
+                      <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
                         member.status === 'approved'
                           ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
                           : member.status === 'pending'
@@ -786,7 +786,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                 variant="primary"
                 size="sm"
                 onClick={() => setIsCreateGroupOpen(true)}
-                className="h-8 px-3 text-xs"
+                className="min-h-[44px] sm:min-h-0 px-3"
               >
                 <Plus className="w-3.5 h-3.5 mr-1" />
                 Add Sub-Team
@@ -823,7 +823,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                     </p>
                   )}
 
-                  <div className="pt-2 border-t border-cyber-border flex items-center justify-between text-[11px] font-mono text-cyber-muted">
+                  <div className="pt-2 border-t border-cyber-border flex items-center justify-between text-label font-mono text-cyber-muted">
                     <span>Slug: #{group.slug}</span>
                     <span className="text-cyber-secondary">{headCount > 0 ? `${headCount} Team Lead` : 'No Head assigned'}</span>
                   </div>
@@ -844,7 +844,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                 <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
                   Platform Telemetry & Infrastructure Health
                 </h3>
-                <p className="text-[11px] font-mono text-cyber-muted">
+                <p className="text-label font-mono text-cyber-muted">
                   Live verification of Supabase PostgreSQL, GoTrue Auth, Storage, and Realtime CDC.
                 </p>
               </div>
@@ -855,7 +855,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               size="sm"
               onClick={runSystemDiagnostics}
               disabled={healthLoading}
-              className="h-8 px-3 text-xs"
+              className="min-h-[44px] sm:min-h-0 px-3"
             >
               <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${healthLoading ? 'animate-spin' : ''}`} />
               Run Health Ping
@@ -866,11 +866,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
             {/* Database Health Card */}
             <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-cyber-primary font-bold text-xs uppercase font-mono">
+                <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
                   <Database className="w-4 h-4 text-accent-cyan" />
                   <span>PostgreSQL DB</span>
                 </div>
-                <span className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
+                <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
                   dbHealth.status === 'operational'
                     ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
                     : dbHealth.status === 'checking'
@@ -883,7 +883,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               <div className="font-mono text-xl font-black text-cyber-primary">
                 {dbHealth.latencyMs !== undefined ? `${dbHealth.latencyMs} ms` : '--'}
               </div>
-              <p className="text-[10px] font-mono text-cyber-muted truncate">
+              <p className="text-label font-mono text-cyber-muted truncate">
                 {dbHealth.message || 'Testing connection...'}
               </p>
             </div>
@@ -891,11 +891,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
             {/* Auth Service Card */}
             <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-cyber-primary font-bold text-xs uppercase font-mono">
+                <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
                   <Shield className="w-4 h-4 text-accent-lime" />
                   <span>GoTrue Auth</span>
                 </div>
-                <span className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
+                <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
                   authHealth.status === 'operational'
                     ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
                     : authHealth.status === 'checking'
@@ -908,7 +908,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               <div className="font-mono text-xl font-black text-cyber-primary">
                 {authHealth.latencyMs !== undefined ? `${authHealth.latencyMs} ms` : '--'}
               </div>
-              <p className="text-[10px] font-mono text-cyber-muted truncate">
+              <p className="text-label font-mono text-cyber-muted truncate">
                 {authHealth.message || 'Verifying JWT session...'}
               </p>
             </div>
@@ -916,11 +916,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
             {/* Storage Card */}
             <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-cyber-primary font-bold text-xs uppercase font-mono">
+                <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
                   <HardDrive className="w-4 h-4 text-accent-cyan" />
                   <span>Storage Buckets</span>
                 </div>
-                <span className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
+                <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
                   storageHealth.status === 'operational'
                     ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
                     : storageHealth.status === 'checking'
@@ -933,7 +933,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               <div className="font-mono text-xl font-black text-cyber-primary">
                 {storageHealth.latencyMs !== undefined ? `${storageHealth.latencyMs} ms` : '--'}
               </div>
-              <p className="text-[10px] font-mono text-cyber-muted truncate">
+              <p className="text-label font-mono text-cyber-muted truncate">
                 {storageHealth.message || 'Checking task-attachments...'}
               </p>
             </div>
@@ -941,11 +941,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
             {/* Realtime Engine Card */}
             <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-cyber-primary font-bold text-xs uppercase font-mono">
+                <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
                   <Activity className="w-4 h-4 text-accent-yellow" />
                   <span>Realtime CDC</span>
                 </div>
-                <span className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
+                <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
                   realtimeHealth.status === 'operational'
                     ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
                     : realtimeHealth.status === 'checking'
@@ -958,14 +958,14 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               <div className="font-mono text-xl font-black text-cyber-primary">
                 {realtimeHealth.latencyMs !== undefined ? `${realtimeHealth.latencyMs} ms` : '--'}
               </div>
-              <p className="text-[10px] font-mono text-cyber-muted truncate">
+              <p className="text-label font-mono text-cyber-muted truncate">
                 {realtimeHealth.message || 'Connecting websocket...'}
               </p>
             </div>
           </div>
 
           {lastHealthCheck && (
-            <div className="text-[10px] font-mono text-cyber-muted text-right">
+            <div className="text-label font-mono text-cyber-muted text-right">
               Telemetry ping timestamp: {lastHealthCheck.toLocaleTimeString()} (UTC {lastHealthCheck.toISOString()})
             </div>
           )}
@@ -996,7 +996,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               <div className="min-w-0">
                 <div className="font-bold text-sm text-cyber-primary">{inspectedMember.full_name}</div>
                 <div className="font-mono text-xs text-cyber-secondary truncate">{inspectedMember.email}</div>
-                <div className="font-mono text-[10px] text-cyber-muted mt-0.5">
+                <div className="font-mono text-label text-cyber-muted mt-0.5">
                   ID: <span className="select-all">{inspectedMember.id}</span>
                 </div>
               </div>
@@ -1026,7 +1026,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
             {/* Quick Status Toggles for Admin */}
             {currentUser?.id !== inspectedMember.id && onUpdateUserStatus && (
               <div className="pt-2 border-t border-cyber-border space-y-2">
-                <span className="text-[10px] font-mono uppercase text-cyber-muted block">Status Management</span>
+                <span className="text-label font-mono uppercase text-cyber-muted block">Status Management</span>
                 <div className="flex items-center gap-2">
                   {inspectedMember.status !== 'approved' && (
                     <GlossyButton
@@ -1086,11 +1086,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
             <div className="space-y-3">
               <div>
-                <label className="block text-[10px] font-mono uppercase text-cyber-muted mb-1">Target Sub-Team *</label>
+                <label className="block text-label font-mono uppercase text-cyber-muted mb-1">Target Sub-Team *</label>
                 <select
                   value={transferGroupId}
                   onChange={(e) => setTransferGroupId(e.target.value)}
-                  className="w-full h-9 px-3 rounded-lg text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                  className="w-full min-h-[44px] sm:min-h-0 sm:h-9 px-3 rounded-lg text-base sm:text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
                 >
                   {effectiveGroups.map((g) => (
                     <option key={g.id} value={g.id}>
@@ -1101,11 +1101,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] font-mono uppercase text-cyber-muted mb-1">Target Role *</label>
+                <label className="block text-label font-mono uppercase text-cyber-muted mb-1">Target Role *</label>
                 <select
                   value={transferRole}
                   onChange={(e) => setTransferRole(e.target.value as UserRole)}
-                  className="w-full h-9 px-3 rounded-lg text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                  className="w-full min-h-[44px] sm:min-h-0 sm:h-9 px-3 rounded-lg text-base sm:text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
                 >
                   <option value="member">Member (Regular Engineer)</option>
                   <option value="head">Group Head (Sub-Team Lead)</option>
@@ -1144,7 +1144,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
             <p className="text-xs font-sans text-cyber-secondary">
               Are you sure you want to unassign <strong className="text-cyber-primary">{memberToRemove.full_name}</strong> from their sub-team?
             </p>
-            <p className="text-[11px] font-mono text-cyber-muted bg-cyber-bg-alt p-2.5 rounded border border-cyber-border">
+            <p className="text-label font-mono text-cyber-muted bg-cyber-bg-alt p-2.5 rounded border border-cyber-border">
               Their university account will remain <strong>APPROVED</strong>, but they will be moved to the unassigned member pool until reassigned to another team.
             </p>
 
@@ -1186,7 +1186,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
             <form onSubmit={handleCreateGroupSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-[10px] font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                <label className="block text-label font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                   Sub-Team Official Name *
                 </label>
                 <input
@@ -1205,7 +1205,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                <label className="block text-label font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                   Sub-Team Slug (URL & Channels) *
                 </label>
                 <input
@@ -1219,7 +1219,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                <label className="block text-label font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                   Scope & Engineering Description
                 </label>
                 <textarea
@@ -1232,7 +1232,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </div>
 
               <div>
-                <label className="block text-[10px] font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                <label className="block text-label font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                   Telemetry Accent Color
                 </label>
                 <div className="flex items-center gap-2">

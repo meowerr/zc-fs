@@ -310,7 +310,7 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
         {/* E. Accessibility Skip Escape Hatch */}
         <button
           onClick={finish}
-          className="absolute bottom-6 right-6 px-3 py-1.5 rounded-lg border border-white/20 bg-black/40 text-white/60 hover:text-white hover:border-white/50 text-[11px] font-mono uppercase tracking-wider backdrop-blur-md cursor-pointer pointer-events-auto transition-all"
+          className="absolute bottom-6 right-6 px-3 py-1.5 rounded-lg border border-white/20 bg-black/40 text-white/60 hover:text-white hover:border-white/50 text-label font-mono uppercase tracking-wider backdrop-blur-md cursor-pointer pointer-events-auto transition-all"
           aria-label="Skip transition"
         >
           Skip ⏭

@@ -143,7 +143,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
           <div className="space-y-1">
             <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
               <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-[11px]">DELIVERABLES // TELEMETRY</span>
+              <span className="text-cyber-secondary uppercase tracking-widest text-label">DELIVERABLES // TELEMETRY</span>
             </div>
             <h2 className="font-display font-black text-xl sm:text-2xl text-cyber-primary uppercase tracking-wider">
               {currentUser.role === 'admin'
@@ -190,76 +190,76 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         {/* Telemetry Metric Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mt-5 pt-4 border-t border-cyber-border">
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border">
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between font-semibold">
+            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between font-medium">
               <span>Total Work</span>
               <FileCheck className="w-3.5 h-3.5 text-cyber-muted" />
             </div>
             {tasks.length === 0 ? (
               <>
-                <div className="text-xl sm:text-2xl font-mono font-bold text-cyber-muted mt-0.5">0</div>
-                <div className="text-[11px] font-mono text-cyber-secondary">No active deliverables</div>
+                <div className="text-xl sm:text-2xl font-mono font-medium text-cyber-muted mt-0.5">0</div>
+                <div className="text-label font-mono text-cyber-secondary">No active deliverables</div>
               </>
             ) : (
               <>
                 <div className="text-xl sm:text-2xl font-display font-black text-cyber-primary mt-0.5">{tasks.length}</div>
-                <div className="text-[11px] font-mono text-cyber-secondary">All Deliverables</div>
+                <div className="text-label font-mono text-cyber-secondary">All Deliverables</div>
               </>
             )}
           </div>
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between font-semibold">
+            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between font-medium">
               <span>In Review</span>
               <Clock className="w-3.5 h-3.5 text-accent-yellow" />
             </div>
             {inReviewCount === 0 ? (
               <>
-                <div className="text-xl sm:text-2xl font-mono font-bold text-cyber-muted mt-0.5">0</div>
-                <div className="text-[11px] font-mono text-cyber-secondary">No reviews pending</div>
+                <div className="text-xl sm:text-2xl font-mono font-medium text-cyber-muted mt-0.5">0</div>
+                <div className="text-label font-mono text-cyber-secondary">No reviews pending</div>
               </>
             ) : (
               <>
                 <div className="text-xl sm:text-2xl font-display font-black text-accent-yellow mt-0.5">{inReviewCount}</div>
-                <div className="text-[11px] font-mono text-cyber-secondary">Awaiting Head Review</div>
+                <div className="text-label font-mono text-cyber-secondary">Awaiting Head Review</div>
               </>
             )}
           </div>
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between font-semibold">
+            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between font-medium">
               <span>Critical Overdue</span>
               <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
             </div>
             {overdueCount === 0 ? (
               <>
-                <div className="text-xl sm:text-2xl font-mono font-bold text-cyber-muted mt-0.5">0</div>
-                <div className="text-[11px] font-mono text-cyber-secondary">On schedule</div>
+                <div className="text-xl sm:text-2xl font-mono font-medium text-cyber-muted mt-0.5">0</div>
+                <div className="text-label font-mono text-cyber-secondary">On schedule</div>
               </>
             ) : (
               <>
                 <div className="text-xl sm:text-2xl font-display font-black text-accent-red mt-0.5">{overdueCount}</div>
-                <div className="text-[11px] font-mono text-cyber-secondary">Requires Immediate Action</div>
+                <div className="text-label font-mono text-cyber-secondary">Requires Immediate Action</div>
               </>
             )}
           </div>
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between font-semibold">
+            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between font-medium">
               <span>Verified / Passed</span>
               <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
             </div>
             {completedCount === 0 ? (
               <>
-                <div className="text-xl sm:text-2xl font-mono font-bold text-cyber-muted mt-0.5">0</div>
-                <div className="text-[11px] font-mono text-cyber-secondary">No approved tasks yet</div>
+                <div className="text-xl sm:text-2xl font-mono font-medium text-cyber-muted mt-0.5">0</div>
+                <div className="text-label font-mono text-cyber-secondary">No approved tasks yet</div>
               </>
             ) : (
               <>
                 <div className="text-xl sm:text-2xl font-display font-black text-accent-lime mt-0.5">{completedCount}</div>
-                <div className="text-[11px] font-mono text-cyber-secondary">Deliverables Approved</div>
+                <div className="text-label font-mono text-cyber-secondary">Deliverables Approved</div>
               </>
             )}
           </div>
@@ -277,7 +277,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
               placeholder="Search deliverables by title, note, or engineer..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-9 pl-9 pr-3.5 rounded-lg text-xs font-sans bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+              className="w-full min-h-[44px] sm:min-h-0 sm:h-9 pl-9 pr-3.5 rounded-lg text-base sm:text-xs font-sans bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
             />
           </div>
 
@@ -286,7 +286,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             <select
               value={selectedGroupFilter}
               onChange={(e) => setSelectedGroupFilter(e.target.value)}
-              className="h-9 px-3 rounded-lg text-xs font-mono bg-cyber-surface-elevated border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+              className="h-10 sm:h-9 min-h-[44px] sm:min-h-0 px-3 rounded-lg text-base sm:text-xs font-mono bg-cyber-surface-elevated border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
             >
               <option value="all">ALL SUB-TEAMS ({effectiveGroups.length})</option>
               {effectiveGroups.map((team) => (
@@ -312,7 +312,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
               key={pill.id}
               onClick={() => setFilter(pill.id as any)}
               className={`
-                px-2.5 py-1 rounded-md text-[11px] font-mono font-bold uppercase transition-all cursor-pointer border
+                min-h-[40px] px-3.5 py-2 rounded-md text-label font-mono font-medium uppercase transition-all cursor-pointer border
                 ${
                   filter === pill.id
                     ? 'bg-accent-cyan text-black border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)]'

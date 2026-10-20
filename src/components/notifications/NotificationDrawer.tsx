@@ -70,7 +70,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
               <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
                 Telemetry Notifications
               </h3>
-              <span className="text-[10px] font-mono text-cyber-muted">
+              <span className="text-label font-mono text-cyber-muted">
                 {unreadCount} UNREAD ALERTS
               </span>
             </div>
@@ -88,7 +88,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-cyber-surface-hover text-cyber-secondary hover:text-cyber-primary cursor-pointer"
+              className="tap-target rounded-lg hover:bg-cyber-surface-hover text-cyber-secondary hover:text-cyber-primary cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -100,14 +100,14 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
           <button
             onClick={onMarkAllAsRead}
             disabled={unreadCount === 0}
-            className="flex items-center gap-1 font-mono text-[11px] text-accent-cyan hover:underline disabled:opacity-30 cursor-pointer"
+            className="flex items-center gap-1 font-mono text-label text-accent-cyan hover:underline disabled:opacity-30 cursor-pointer"
           >
             <CheckCheck className="w-3.5 h-3.5" /> Mark all read
           </button>
 
           <button
             onClick={onRequestWebPush}
-            className="font-mono text-[10px] text-cyber-muted hover:text-cyber-primary hover:underline cursor-pointer"
+            className="font-mono text-label text-cyber-muted hover:text-cyber-primary hover:underline cursor-pointer"
           >
             Enable Web Push
           </button>
@@ -143,7 +143,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                     {getTypeIcon(notif.type)}
                     <span>{notif.title}</span>
                   </div>
-                  <span className="font-mono text-[9px] text-cyber-muted">
+                  <span className="font-mono text-label text-cyber-muted">
                     {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
@@ -151,7 +151,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                   {notif.message}
                 </p>
                 {onSelectNotification && (
-                  <div className="pl-6 flex items-center gap-1 text-[10px] font-mono text-accent-cyan font-bold pt-0.5">
+                  <div className="pl-6 flex items-center gap-1 text-label font-mono text-accent-cyan font-medium pt-0.5">
                     <span>Inspect Target</span>
                     <span className="text-xs">→</span>
                   </div>

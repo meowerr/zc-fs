@@ -51,7 +51,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
+            className="tap-target rounded-full hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -63,7 +63,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
             <button
               key={r}
               onClick={() => setSelectedRole(r)}
-              className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
+              className={`flex-1 min-h-[40px] py-2 px-3 rounded-lg text-label font-mono font-medium uppercase transition-all cursor-pointer ${
                 selectedRole === r
                   ? 'bg-accent-cyan text-black font-bold shadow-sm'
                   : 'text-cyber-secondary hover:text-cyber-primary'

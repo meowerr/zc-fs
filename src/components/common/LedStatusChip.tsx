@@ -110,12 +110,12 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
   };
 
   const { label, colorClasses, dotColor, icon } = getStatusConfig();
-  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 text-xs';
+  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-label' : 'px-2.5 py-1 text-xs';
 
   return (
     <span
       className={`
-        inline-flex items-center gap-1.5 rounded font-mono font-bold tracking-wider border
+        inline-flex items-center gap-1.5 rounded font-mono font-medium tracking-wider border
         select-none transition-all
         ${sizeClasses}
         ${colorClasses}
