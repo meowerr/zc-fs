@@ -422,3 +422,8 @@
     scroll-behavior: auto !important;
   }
 }
+
+
+html[data-hide-mobile-nav="true"] .garage-door-pill {
+  display: none !important;
+}

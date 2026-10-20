@@ -177,6 +177,18 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   // Comment state
   const [newComment, setNewComment] = useState('');
 
+  React.useEffect(() => {
+    if (!isOpen || !task) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [isOpen, task, onClose]);
+
   if (!isOpen || !task) return null;
 
   const isHeadOrAdmin = currentUser.role === 'admin' || (currentUser.role === 'head' && currentUser.group_id === task.group_id);
@@ -224,8 +236,8 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[92dvh] flex flex-col p-4 sm:p-6 my-auto border-cyber-border-strong shadow-cyber-elevated overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm overflow-hidden" role="dialog" aria-modal="true" onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()} className="w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[85dvh] flex flex-col rounded-t-2xl sm:rounded-2xl p-4 sm:p-6 border border-cyber-border-strong shadow-cyber-elevated overflow-hidden bg-cyber-surface">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-cyber-border flex-shrink-0">
           <div className="space-y-1 min-w-0">
@@ -266,7 +278,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-1 my-3 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border flex-shrink-0">
+        <div className="flex items-center gap-1 my-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0 sticky top-0 z-10">
           <button
             onClick={() => setActiveTab('overview')}
             className={`flex-1 min-h-[40px] py-2 px-3 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer ${
@@ -454,7 +466,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   )}
 
                   <form onSubmit={handleWorkSubmit} className="space-y-3">
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                       {(['link', 'note', 'file'] as SubmissionType[]).map((t) => (
                         <button
                           key={t}
@@ -738,7 +750,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             </div>
           )}
         </div>
-      </GlassCard>
+      </div>
 
       {/* Delete Task Confirmation Modal */}
       {isConfirmingDelete && (

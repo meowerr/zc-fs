@@ -10,7 +10,6 @@ import {
   CheckCircle2, 
   AlertCircle 
 } from 'lucide-react';
-import { GlassCard } from '../common/GlassCard';
 import { GhostButton } from '../common/GhostButton';
 import { NotificationItem, NotificationType } from '../../lib/database.types';
 
@@ -55,11 +54,8 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end p-4 sm:p-6 bg-black/75 backdrop-blur-md">
-      <GlassCard
-        variant="elevated"
-        className="w-full max-w-sm sm:max-w-md max-h-[85dvh] flex flex-col p-5 border-cyber-border-strong shadow-2xl space-y-3"
-      >
+    <div className="fixed inset-0 z-50 flex items-end sm:items-start justify-end p-0 sm:p-6 bg-black/75 backdrop-blur-md" role="dialog" aria-modal="true" onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()} className="w-full sm:max-w-md max-h-[85dvh] flex flex-col p-4 sm:p-5 border border-cyber-border-strong rounded-t-2xl sm:rounded-2xl shadow-2xl space-y-3 bg-cyber-surface">
         {/* Drawer Header */}
         <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
           <div className="flex items-center gap-2">
@@ -161,12 +157,12 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
           )}
         </div>
 
-        <div className="pt-2 border-t border-cyber-border flex justify-end flex-shrink-0">
+        <div className="pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:pb-0 border-t border-cyber-border flex justify-end shrink-0">
           <GhostButton size="sm" onClick={onClose}>
             Close
           </GhostButton>
         </div>
-      </GlassCard>
+      </div>
     </div>
   );
 };

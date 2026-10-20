@@ -57,25 +57,25 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
   };
 
   const foundationColors = [
-    ['Background', '#070A0E', 'Main canvas'],
-    ['Background Alt', '#0B0F14', 'Sidebars'],
+    ['Canvas', '#070A0E', 'Main canvas'],
+    ['Sidebars', '#0B0F14', 'Nav panels'],
     ['Surface', '#11161D', 'Card base'],
     ['Elevated', '#181E26', 'Modals'],
-    ['Hover', '#202731', 'Interactive'],
+    ['Hover', '#202731', 'Active hover'],
     ['Border', '#2A323C', '1px boundary'],
-    ['Border Strong', '#39434F', 'Structural edge'],
-    ['Text Primary', '#F2F4F7', 'Headlines'],
-    ['Text Secondary', '#B0B8C2', 'Body copy'],
-    ['Text Muted', '#737D89', 'Captions'],
+    ['Border St.', '#39434F', 'Edge frame'],
+    ['Primary', '#F2F4F7', 'Headings'],
+    ['Secondary', '#B0B8C2', 'Body text'],
+    ['Muted', '#737D89', 'Captions'],
   ] as const;
 
   const accentColors = [
-    ['Electric Cyan', '#00D9FF', 'In-Progress Tasks'],
-    ['Cyber Violet', '#A855F7', 'Reviews & Electronics'],
-    ['Racing Yellow', '#FFD43B', 'Due Soon, Caution'],
-    ['Racing Red', '#FF304F', 'Urgent, Overdue'],
-    ['Racing Lime', '#10E57A', 'Approved, Nominal'],
-    ['ZFS Brand Orange', '#E07212', 'Official Team Mark'],
+    ['Cyan', '#00D9FF', 'In-Progress'],
+    ['Violet', '#A855F7', 'Reviews'],
+    ['Yellow', '#FFD43B', 'Caution'],
+    ['Red', '#FF304F', 'Urgent'],
+    ['Lime', '#10E57A', 'Approved'],
+    ['Orange', '#E07212', 'Brand Mark'],
   ] as const;
 
   return (
@@ -93,7 +93,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             PitLane Design System
           </h1>
           <p className="text-xs sm:text-sm text-cyber-secondary font-sans max-w-2xl leading-relaxed">
-            Motorsport telemetry instrumentation meets clean early-2000s cyber-optimism. Dark neutral foundation with controlled, purposeful accent hierarchy.
+            Motorsport telemetry meets clean cyber-optimism. Dark neutral foundation with purposeful accent hierarchy.
           </p>
         </div>
 
@@ -259,13 +259,13 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {[
-                { label: '// Primary (Cyan)', variant: 'primary' as const, icon: Activity, text: 'Launch Sequence' },
-                { label: '// Secondary (Elevated)', variant: 'secondary' as const, icon: Layers, text: 'Inspect Specs' },
-                { label: '// Outline (Wireframe)', variant: 'outline' as const, icon: Activity, text: 'Telemetry View' },
-                { label: '// Action (Orange)', variant: 'action' as const, icon: Flame, text: 'Execute Task' },
-                { label: '// Warning (Yellow)', variant: 'warning' as const, icon: Clock, text: 'Review Queue' },
-                { label: '// Danger (Red)', variant: 'danger' as const, icon: Trash2, text: 'Delete Item' },
-                { label: '// Metallic (Machined Alloy)', variant: 'metallic' as const, icon: Sliders, text: 'Hardware Switch' },
+                { label: '// Primary', variant: 'primary' as const, icon: Activity, text: 'Launch Seq' },
+                { label: '// Secondary', variant: 'secondary' as const, icon: Layers, text: 'Inspect' },
+                { label: '// Outline', variant: 'outline' as const, icon: Activity, text: 'Telemetry' },
+                { label: '// Action', variant: 'action' as const, icon: Flame, text: 'Execute' },
+                { label: '// Warning', variant: 'warning' as const, icon: Clock, text: 'Review' },
+                { label: '// Danger', variant: 'danger' as const, icon: Trash2, text: 'Delete' },
+                { label: '// Metallic', variant: 'metallic' as const, icon: Sliders, text: 'Hardware' },
               ].map((btn) => {
                 const IconComp = btn.icon;
                 return (
@@ -327,12 +327,12 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         <GlassCard className="p-6 space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
             {[
-              { label: 'To Do / Queued', status: 'todo' as const },
+              { label: 'To Do', status: 'todo' as const },
               { label: 'In Progress', status: 'in_progress' as const },
-              { label: 'Submitted / Review', status: 'submitted' as const },
-              { label: 'Approved / Done', status: 'approved' as const },
-              { label: 'Revisions Req.', status: 'changes_requested' as const },
-              { label: 'Completed', status: 'done' as const },
+              { label: 'Submitted', status: 'submitted' as const },
+              { label: 'Approved', status: 'approved' as const },
+              { label: 'Revisions', status: 'changes_requested' as const },
+              { label: 'Done', status: 'done' as const },
             ].map((chip) => (
               <div key={chip.label} className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
                 <span className="text-label font-mono text-cyber-muted uppercase block">{chip.label}</span>
@@ -489,7 +489,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               </span>
             </div>
             <p className="text-xs text-cyber-secondary leading-relaxed">
-              Floating race-engineer console reserving fixed left offset (<code className="text-accent-cyan">--rail-offset</code>). Content canvas never squeezes when expanded.
+              Console reserving fixed left offset (<code className="text-accent-cyan">--rail-offset</code>).
             </p>
             <div className="flex gap-2 text-label font-mono text-cyber-muted">
               <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-accent-lime">Collapsed 72px</span>
@@ -508,7 +508,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               </span>
             </div>
             <p className="text-xs text-cyber-secondary leading-relaxed">
-              Replaces full-width bottom bar with edge thumb-arc glass tab (56px) opening into a 78vh bottom sheet with 2x3 destination grid. Full viewport content height.
+              Edge thumb-arc glass tab opening into responsive navigation sheet.
             </p>
             <div className="flex gap-2 text-label font-mono text-cyber-muted">
               <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-accent-yellow">Floating Tab (56px)</span>
@@ -599,13 +599,13 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             {([
-              ['Brand Orange', '#E07212', 'text-black', 'Primary Accent'],
-              ['Orange Hover', '#ED7D0D', 'text-black', 'Surface Hover'],
-              ['Orange Pressed', '#C6620A', 'text-white', 'Active State'],
-              ['Light Orange', '#C2410C', 'text-white', '5.53:1 Text'],
-              ['Brand Ink', '#070B0E', 'text-white', 'Backdrop / Text'],
-              ['Brand White', '#F2F4F7', 'text-black', 'Body Outline'],
-              ['Orange Soft', 'rgba(224,114,18,0.12)', 'text-brand-orange', 'Tinted Badges'],
+              ['Orange', '#E07212', 'text-black', 'Primary'],
+              ['Hover', '#ED7D0D', 'text-black', 'Hover'],
+              ['Pressed', '#C6620A', 'text-white', 'Active'],
+              ['Light', '#C2410C', 'text-white', '5.5:1 AA'],
+              ['Ink', '#070B0E', 'text-white', 'Dark Base'],
+              ['White', '#F2F4F7', 'text-black', 'Outline'],
+              ['Soft', 'rgba(224,114,18,0.12)', 'text-brand-orange', 'Tint'],
             ] as const).map(([name, hex, text, role]) => (
               <button
                 key={name}
@@ -644,7 +644,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
 
             <p className="text-xs text-cyber-secondary leading-relaxed">
-              Motorsport actions use <code className="text-brand-orange">#E07212</code> with <code className="text-cyber-primary">#070B0E</code> Brand Ink, delivering <strong className="text-brand-white">5.23:1 contrast</strong> (WCAG AA).
+              Actions use <code className="text-brand-orange">#E07212</code>, delivering <strong className="text-brand-white">5.23:1 contrast</strong> (WCAG AA).
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -680,17 +680,17 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
 
             <p className="text-xs text-cyber-secondary leading-relaxed">
-              In-Progress status re-mapped to <strong className="text-accent-cyan">Electric Cyan</strong> and <strong className="text-purple-400">Cyber Violet</strong> so brand orange remains exclusive to team identity.
+              Status colors re-mapped so brand orange remains exclusive to team identity.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
               {[
-                { label: 'IN PROGRESS', hex: '#00D9FF', icon: Play, style: 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400', iconClass: 'fill-current' },
-                { label: 'NEEDS REVIEW', hex: '#A855F7', icon: Clock, style: 'bg-purple-500/10 border-purple-500/30 text-purple-400' },
+                { label: 'PROGRESS', hex: '#00D9FF', icon: Play, style: 'bg-accent-cyan/10 border-accent-cyan/30 text-accent-cyan', iconClass: 'fill-current' },
+                { label: 'REVIEW', hex: '#A855F7', icon: Clock, style: 'bg-purple-500/10 border-purple-500/30 text-purple-400' },
                 { label: 'DUE SOON', hex: '#FFD43B', icon: AlertCircle, style: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400' },
                 { label: 'OVERDUE', hex: '#FF304F', icon: AlertTriangle, style: 'bg-red-500/10 border-red-500/30 text-red-400' },
-                { label: 'DONE / APPROVED', hex: '#10E57A', icon: CheckCircle2, style: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' },
-                { label: 'ZFS IDENTITY', hex: '#E07212', icon: Sparkles, style: 'bg-brand-orange/15 border-brand-orange/40 text-brand-orange' },
+                { label: 'APPROVED', hex: '#10E57A', icon: CheckCircle2, style: 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime' },
+                { label: 'IDENTITY', hex: '#E07212', icon: Sparkles, style: 'bg-brand-orange/15 border-brand-orange/40 text-brand-orange' },
               ].map((item) => {
                 const IconComponent = item.icon;
                 return (
@@ -719,16 +719,16 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </div>
 
           <p className="text-xs text-cyber-secondary leading-relaxed">
-            <strong>Low-Voltage Electronics</strong> is re-mapped to <strong className="text-purple-400">Cyber Violet (#A855F7)</strong> to prevent sub-team confusion with ZFS brand orange.
+            <strong>Low-Voltage</strong> is re-mapped to <strong className="text-purple-400">Cyber Violet</strong> to prevent confusion with brand orange.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
             {[
-              { id: 'vd', name: 'Vehicle Dynamics', hex: '#00D9FF', tag: 'AERODYNAMICS & CHASSIS' },
-              { id: 'aero', name: 'Aerodynamics', hex: '#FF304F', tag: 'WINGS & DOWNFORCE' },
-              { id: 'elec', name: 'Low-Voltage Electronics', hex: '#A855F7', tag: 'TELEMETRY & SENSORS' },
-              { id: 'pt', name: 'Powertrain & Drivetrain', hex: '#FFD43B', tag: 'INVERTER & MOTOR' },
-              { id: 'ops', name: 'Business, Cost & Ops', hex: '#10E57A', tag: 'FINANCE & MEDIA' },
+              { id: 'vd', name: 'Vehicle Dynamics', hex: '#00D9FF', tag: 'CHASSIS' },
+              { id: 'aero', name: 'Aerodynamics', hex: '#FF304F', tag: 'WINGS' },
+              { id: 'elec', name: 'Low-Voltage Electronics', hex: '#A855F7', tag: 'SENSORS' },
+              { id: 'pt', name: 'Powertrain & Drivetrain', hex: '#FFD43B', tag: 'MOTOR' },
+              { id: 'ops', name: 'Business & Ops', hex: '#10E57A', tag: 'MEDIA' },
             ].map((st) => (
               <div key={st.id} className="p-3.5 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-2">
                 <div className="flex items-center justify-between">
@@ -772,9 +772,9 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               <tbody className="divide-y border-cyber-border/40">
                 {[
                   ['Brand Button', '#070B0E', '#E07212', '5.23:1', '>=4.5:1', 'PASS AA', false],
-                  ['Prohibited White/Orange', '#FFFFFF', '#E07212', '3.18:1', '>=4.5:1', 'FAIL', true],
+                  ['Prohibited', '#FFFFFF', '#E07212', '3.18:1', '>=4.5:1', 'FAIL', true],
                   ['Light Links', '#C2410C', '#FFFFFF', '5.53:1', '>=4.5:1', 'PASS AA', false],
-                  ['Chrome Surface', '#C2410C', '#F8FBFF', '5.39:1', '>=4.5:1', 'PASS AA', false],
+                  ['Chrome', '#C2410C', '#F8FBFF', '5.39:1', '>=4.5:1', 'PASS AA', false],
                   ['Dark Body', '#F2F4F7', '#070B0E', '17.84:1', '>=7.0:1', 'PASS AAA', false],
                   ['Focus Rings', '#E07212', '#070B0E', '5.23:1', '>=3.0:1', 'PASS AA', false],
                 ].map(([elem, fg, bg, ratio, std, verdict, isFail]) => (

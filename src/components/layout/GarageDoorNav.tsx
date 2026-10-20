@@ -140,7 +140,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
     <aside className="md:hidden" aria-label="Mobile Navigation Command Console">
       {/* ─── CLOSED STATE: THUMB-ARC FLOATING GLASS PILL ─── */}
       <div 
-        className={`fixed bottom-3 inset-x-3 sm:inset-x-6 z-40 max-w-md mx-auto pb-[env(safe-area-inset-bottom)] pointer-events-auto transition-all duration-200 ease-out ${
+        className={`fixed bottom-3 inset-x-3 sm:inset-x-6 z-40 max-w-md mx-auto pb-[env(safe-area-inset-bottom)] pointer-events-auto transition-all duration-200 ease-out garage-door-pill ${
           isMounted ? 'opacity-0 pointer-events-none translate-y-3' : 'opacity-100 pointer-events-auto translate-y-0'
         }`}
       >

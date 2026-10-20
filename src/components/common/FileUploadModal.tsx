@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { X, UploadCloud, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
-import { GlassCard } from './GlassCard';
+import { UploadCloud, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ModalShell } from './ModalShell';
 import { GlossyButton } from './GlossyButton';
 import { GhostButton } from './GhostButton';
 import { SegmentedGauge } from './SegmentedGauge';
@@ -26,8 +26,6 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  if (!isOpen) return null;
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
@@ -72,27 +70,32 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
   const fileSizeMb = (fileSizeBytes / (1024 * 1024)).toFixed(2);
   const sizePercentage = Math.min(100, Math.round((fileSizeBytes / MAX_FILE_SIZE_BYTES) * 100));
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <GlassCard variant="elevated" className="w-full max-w-md p-6 border-cyber-border-strong shadow-2xl space-y-4">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-cyber-border">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">
-              <UploadCloud className="w-5 h-5" />
-            </div>
-            <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
-              Upload Telemetry File
-            </h3>
-          </div>
-          <button
-            onClick={onClose}
-            className="tap-target rounded-full hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+  const modalFooter = (
+    <div className="flex items-center justify-end gap-2">
+      <GhostButton size="sm" onClick={onClose} disabled={isUploading}>
+        Cancel
+      </GhostButton>
+      <GlossyButton
+        size="sm"
+        variant="primary"
+        disabled={!selectedFile || isUploading}
+        onClick={handleUpload}
+        icon={<CheckCircle2 className="w-4 h-4" />}
+      >
+        {isUploading ? 'Transferring...' : 'Attach File'}
+      </GlossyButton>
+    </div>
+  );
 
+  return (
+    <ModalShell
+      open={isOpen}
+      onClose={onClose}
+      title="Upload Telemetry File"
+      footer={modalFooter}
+      maxWidth="md:max-w-md"
+    >
+      <div className="space-y-4">
         {error && (
           <div className="p-3 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono flex items-center gap-2">
             <AlertCircle className="w-4 h-4 flex-shrink-0" />
@@ -136,7 +139,7 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
 
         {/* File Quota Telemetry Gauge */}
         {selectedFile && (
-          <div className="space-y-1.5 p-3 rounded-xl bg-cyber-surface border border-cyber-border">
+          <div className="space-y-1.5 p-3 rounded-xl bg-cyber-surface-elevated border border-cyber-border">
             <div className="flex items-center justify-between text-label font-mono">
               <span className="text-cyber-muted">Quota Usage:</span>
               <span className="font-bold text-accent-cyan">
@@ -162,23 +165,7 @@ export const FileUploadModal: React.FC<FileUploadModalProps> = ({
             </div>
           </div>
         )}
-
-        {/* Footer Actions */}
-        <div className="flex items-center justify-end gap-2 pt-2 border-t border-cyber-border">
-          <GhostButton size="sm" onClick={onClose} disabled={isUploading}>
-            Cancel
-          </GhostButton>
-          <GlossyButton
-            size="sm"
-            variant="primary"
-            disabled={!selectedFile || isUploading}
-            onClick={handleUpload}
-            icon={<CheckCircle2 className="w-4 h-4" />}
-          >
-            {isUploading ? 'Transferring...' : 'Attach File'}
-          </GlossyButton>
-        </div>
-      </GlassCard>
-    </div>
+      </div>
+    </ModalShell>
   );
 };

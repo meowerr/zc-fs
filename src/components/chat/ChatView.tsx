@@ -62,6 +62,18 @@ export const ChatView: React.FC<ChatViewProps> = ({
   const [showMobileList, setShowMobileList] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+  React.useEffect(() => {
+    if (!showMobileList) {
+      document.documentElement.setAttribute('data-hide-mobile-nav', 'true');
+    } else {
+      document.documentElement.removeAttribute('data-hide-mobile-nav');
+    }
+    return () => {
+      document.documentElement.removeAttribute('data-hide-mobile-nav');
+    };
+  }, [showMobileList]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to latest message
@@ -93,7 +105,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
     try {
       await onSendMessage(sentContent, sentAttachment);
-      setInputText('');
+      setInputText(''); if (textareaRef.current) textareaRef.current.style.height = 'auto';
       setAttachmentUrl('');
       setShowAttachInput(false);
     } catch (err: any) {
@@ -383,12 +395,12 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 </div>
               )}
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-end gap-2 pb-[env(safe-area-inset-bottom)]">
                 <button
                   type="button"
                   onClick={() => setShowAttachInput((prev) => !prev)}
                   className={`
-                    tap-target rounded-lg border transition-all cursor-pointer
+                    tap-target rounded-lg border transition-all cursor-pointer shrink-0
                     ${
                       showAttachInput
                         ? 'bg-accent-cyan text-black border-accent-cyan'
@@ -400,12 +412,23 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   <Paperclip className="w-4 h-4" />
                 </button>
 
-                <input
-                  type="text"
+                <textarea
+                  ref={textareaRef}
+                  rows={1}
                   placeholder={`Transmit message to ${getChatTitle()}...`}
                   value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
-                  className="flex-1 min-h-[44px] px-3 rounded-lg text-body bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+                  onChange={(e) => {
+                    setInputText(e.target.value);
+                    e.currentTarget.style.height = 'auto';
+                    e.currentTarget.style.height = Math.min(e.currentTarget.scrollHeight, 120) + 'px';
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey && window.innerWidth >= 768) {
+                      e.preventDefault();
+                      handleSend(e as any);
+                    }
+                  }}
+                  className="flex-1 min-h-[44px] max-h-[120px] px-3 py-2.5 rounded-lg resize-none text-base sm:text-xs bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan font-sans"
                 />
 
                 <GlossyButton
@@ -414,6 +437,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   type="submit"
                   disabled={isSending || (!inputText.trim() && !attachmentUrl.trim())}
                   icon={<Send className="w-3.5 h-3.5" />}
+                  className="shrink-0"
                 >
                   {isSending ? 'Sending...' : 'Send'}
                 </GlossyButton>

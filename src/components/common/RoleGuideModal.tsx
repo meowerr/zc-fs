@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  X, 
-  BookOpen, 
   ShieldCheck, 
   CheckCircle2, 
   Users, 
@@ -9,7 +7,7 @@ import {
   MessageSquare,
   Sparkles
 } from 'lucide-react';
-import { GlassCard } from './GlassCard';
+import { ModalShell } from './ModalShell';
 import { GhostButton } from './GhostButton';
 import { UserRole } from '../../lib/database.types';
 
@@ -28,37 +26,25 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
     defaultRole === 'pending' ? 'member' : defaultRole
   );
 
-  if (!isOpen) return null;
+  const modalFooter = (
+    <div className="flex justify-end">
+      <GhostButton size="sm" onClick={onClose}>
+        Close Guide
+      </GhostButton>
+    </div>
+  );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[90dvh] flex flex-col p-6 border-cyber-border-strong shadow-2xl my-auto overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">
-              <BookOpen className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-display font-black text-lg text-cyber-primary uppercase tracking-wider">
-                PitLane Engineering Protocol
-              </h3>
-              <p className="text-xs font-mono text-cyber-muted">
-                Formula Student Role Operations Guide
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="tap-target rounded-full hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
+    <ModalShell
+      open={isOpen}
+      onClose={onClose}
+      title="Engineering Protocol Guide"
+      footer={modalFooter}
+      maxWidth="md:max-w-2xl"
+    >
+      <div className="space-y-4">
         {/* Role Selector Tabs */}
-        <div className="flex items-center gap-1.5 my-3 p-1 rounded-xl bg-cyber-surface border border-cyber-border flex-shrink-0">
+        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-cyber-bg-alt border border-cyber-border">
           {(['member', 'head', 'admin'] as UserRole[]).map((r) => (
             <button
               key={r}
@@ -75,10 +61,10 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
         </div>
 
         {/* Role Guide Content */}
-        <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs sm:text-sm font-sans leading-relaxed">
+        <div className="space-y-4 text-xs sm:text-sm font-sans leading-relaxed">
           {selectedRole === 'member' && (
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+            <div className="space-y-3">
+              <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
                   <Layers className="w-4 h-4 text-accent-cyan" />
                   <span>1. Working on Sub-Team Deliverables</span>
@@ -88,7 +74,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+              <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
                   <CheckCircle2 className="w-4 h-4 text-accent-lime" />
                   <span>2. Submitting Deliverables & Multi-Version History</span>
@@ -98,103 +84,77 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+              <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
-                  <MessageSquare className="w-4 h-4 text-accent-cyan" />
-                  <span>3. Sub-Team Chat & Direct Messages</span>
+                  <MessageSquare className="w-4 h-4 text-purple-400" />
+                  <span>3. Communication Scope</span>
                 </div>
                 <p className="text-cyber-secondary">
-                  In <strong className="text-cyber-primary">Pit Wall</strong>, you have full realtime access to your sub-team's channel, read access to club announcements, and direct messaging with your teammates and Club Admins.
+                  You have access to your own sub-team's chat channel, the team-wide announcements channel, and can direct-message teammates within your sub-team or reach out to Club Admins.
                 </p>
               </div>
             </div>
           )}
 
           {selectedRole === 'head' && (
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+            <div className="space-y-3">
+              <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
-                  <Layers className="w-4 h-4 text-accent-cyan" />
-                  <span>1. Task Delegation & Creation</span>
+                  <Sparkles className="w-4 h-4 text-accent-cyan" />
+                  <span>1. Sub-Team Leadership & Task Assignment</span>
                 </div>
                 <p className="text-cyber-secondary">
-                  As Sub-Team Head, you have complete authority over deliverables in your group. Use <strong className="text-cyber-primary">'+ Create Task'</strong> to assign engineers, set deadlines, and specify technical acceptance criteria.
+                  As a Group Head, you can create tasks for your sub-team, assign engineers, set deadlines, and manage telemetry benchmarks. You cannot modify tasks belonging to other engineering groups.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+              <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
                   <CheckCircle2 className="w-4 h-4 text-accent-lime" />
-                  <span>2. Reviewing Work & Feedback Loops</span>
+                  <span>2. Reviewing Work & Approval Gates</span>
                 </div>
                 <p className="text-cyber-secondary">
-                  When members submit work, the task moves to <code className="text-accent-yellow">Submitted</code>. Open the task, inspect the submission, and click <strong className="text-accent-lime">"Approve Work"</strong> or <strong className="text-accent-red">"Request Changes"</strong> with written feedback.
+                  When engineers submit deliverables, they move to <code className="text-purple-400">In Review</code>. You can review submitted CAD models or documents, provide feedback notes, and mark them as <strong className="text-accent-lime">Approved</strong> or <strong className="text-accent-red">Changes Requested</strong>.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+              <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
-                  <Users className="w-4 h-4 text-purple-400" />
-                  <span>3. Cross-Group "Pit Wall" Leadership Channel</span>
+                  <Users className="w-4 h-4 text-brand-orange" />
+                  <span>3. Cross-Team Leadership Channel</span>
                 </div>
                 <p className="text-cyber-secondary">
-                  You have exclusive access to the <strong className="text-cyber-primary">#pit-wall-heads</strong> channel to coordinate cross-team dependencies (e.g. Aerodynamics waiting for Vehicle Dynamics suspension geometry) and can direct message other Sub-team Heads.
+                  You participate in the exclusive <code className="text-accent-cyan">#heads-only</code> channel to coordinate inter-disciplinary work with other sub-team leads and club leadership.
                 </p>
               </div>
             </div>
           )}
 
           {selectedRole === 'admin' && (
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+            <div className="space-y-3">
+              <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
-                  <ShieldCheck className="w-4 h-4 text-accent-red" />
-                  <span>1. University Registration Approvals</span>
+                  <ShieldCheck className="w-4 h-4 text-accent-cyan" />
+                  <span>1. Member Registration & Division Assignment</span>
                 </div>
                 <p className="text-cyber-secondary">
-                  Newly registered <code className="text-accent-cyan">@zewailcity.edu.eg</code> students enter a locked <code className="text-accent-yellow">pending</code> state with zero access to team data. In the <strong className="text-cyber-primary">Admin Hub</strong>, assign each student to one of the 5 sub-teams and designate them as Member or Head.
+                  Club Admins oversee registrations in the <strong className="text-cyber-primary">Admin Hub</strong>. Newly registered accounts start in <code className="text-accent-yellow">Pending</code> status with zero data access until approved and assigned to a sub-team division.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+              <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
-                  <Layers className="w-4 h-4 text-accent-cyan" />
-                  <span>2. Full Visibility & CSV/JSON Reports</span>
+                  <Layers className="w-4 h-4 text-accent-lime" />
+                  <span>2. Full Telemetry Oversight & Sub-Team Management</span>
                 </div>
                 <p className="text-cyber-secondary">
-                  You have full cross-group visibility across all 5 sub-teams. Use the <strong className="text-cyber-primary">"Export CSV"</strong> button in Tasks to download deliverable logs for Formula Student BOM cost tracking and advisor review.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
-                <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
-                  <Sparkles className="w-4 h-4 text-brand-orange" />
-                  <span>3. Official Announcements</span>
-                </div>
-                <p className="text-cyber-secondary">
-                  You can post broadcast alerts in <strong className="text-cyber-primary">#announcements</strong>, which pushes notifications to all team members across all 5 sub-teams.
+                  Admins can view all 5 sub-teams, manage sub-team definitions, create tasks across any group, export full telemetry data to CSV/JSON, and run diagnostic health pings.
                 </p>
               </div>
             </div>
           )}
-
-          {/* RLS Security Footnote */}
-          <div className="p-3 rounded-xl bg-cyber-surface border border-cyber-border text-xs font-mono text-cyber-muted space-y-1">
-            <span className="font-bold text-accent-cyan flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5" /> Database-Level Row Level Security (RLS):
-            </span>
-            <p className="text-cyber-secondary">
-              All role permissions and sub-team isolation boundaries are strictly enforced by PostgreSQL RLS policies in the database engine, ensuring total data security at all times.
-            </p>
-          </div>
         </div>
-
-        <div className="pt-3 border-t border-cyber-border flex justify-end flex-shrink-0">
-          <GhostButton size="sm" onClick={onClose}>
-            Close Protocol Guide
-          </GhostButton>
-        </div>
-      </GlassCard>
-    </div>
+      </div>
+    </ModalShell>
   );
 };

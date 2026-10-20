@@ -42,6 +42,20 @@
 - `[VERIFIED: scripts/verify-suite.mjs & dist output]` Added `<link rel="apple-touch-icon" href="/icon-192.png" />` in `index.html`, dynamic theme-color meta synchronization in `AppShell.tsx` (`#070A0E` / `#F3F6FA`), PWA manifest `background_color: '#070A0E'` in `vite.config.ts`, and eliminated all remaining invalid `py-0.2` classes across the codebase.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total bundle gzip: 199.82 KB < 200 KB, main JS gzip: 45.10 KB < 50 KB)]` Full test suite passing with strict TypeScript verification (0 errors).
 
+### Phase 4: Modals Become Sheets; Chat Composer Polish
+- `[IMPLEMENTED, MANUALLY CHECKED]` Built unified reusable [`src/components/common/ModalShell.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/ModalShell.tsx) rendering as a full-width bottom sheet on mobile (`rounded-t-2xl max-h-[92dvh] animate-fade-in`) and centered dialog on desktop (`md:rounded-2xl md:max-h-[85dvh]`). Includes sticky header (`h-14`), scrollable body, safe-area-aware sticky footer (`pb-[calc(0.75rem+env(safe-area-inset-bottom))]`), Escape key listener, and backdrop click dismiss with body scroll lock.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Migrated dialog modals to `ModalShell`:
+  - [`FileUploadModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/FileUploadModal.tsx): standard header, quota gauge, sticky footer actions.
+  - [`NewDMModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/NewDMModal.tsx): user selection list inside bottom sheet.
+  - [`RoleGuideModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/RoleGuideModal.tsx): scrollable roles guide with sticky close button.
+  - [`TaskCreateModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TaskCreateModal.tsx): form single-column responsive layout (`grid-cols-1 sm:grid-cols-2`), sticky footer submit button bound via `form="task-create-form"`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Converted [`TaskDetailModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TaskDetailModal.tsx) and [`NotificationDrawer.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/notifications/NotificationDrawer.tsx) into responsive bottom sheets with sticky headers, single-column responsive grids on phones, Escape key support, backdrop dismiss, and body scroll lock.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Polished [`GlobalSearchModal.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/GlobalSearchModal.tsx) with safe-area top padding, full-width mobile container, and tap-target close action.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Chat keyboard & nav collision resolution in [`ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx):
+  - Upgraded input from `<input>` to auto-growing `<textarea>` (`min-h-[44px] max-h-32 leading-relaxed`) with Enter to send / Shift+Enter for newline.
+  - Auto-hides mobile navigation pill during active conversation by toggling `html[data-hide-mobile-nav="true"]` whenever `!showMobileList`, completely eliminating bottom nav overlapping the chat input.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total assets gzip: 199.89 KB < 200 KB, main JS gzip: 45.29 KB < 50 KB)]` Full test suite passing with zero TypeScript errors or warnings.
+
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 
 ### Slice B1: Asset Pipeline & PWA Icon Set

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { X, Search, MessageSquare } from 'lucide-react';
-import { GlassCard } from '../common/GlassCard';
+import { Search } from 'lucide-react';
+import { ModalShell } from '../common/ModalShell';
 import { GhostButton } from '../common/GhostButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { Profile } from '../../lib/database.types';
@@ -22,8 +22,6 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
   onSelectUser,
 }) => {
   const [search, setSearch] = useState('');
-
-  if (!isOpen) return null;
 
   // Filter users permitted for DM based on role & sub-team
   const permittedUsers = allProfiles.filter((p) => {
@@ -56,26 +54,23 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
     return p.full_name.toLowerCase().includes(q) || p.email.toLowerCase().includes(q);
   });
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <GlassCard variant="elevated" className="w-full max-w-md p-5 sm:p-6 border-cyber-border-strong shadow-2xl space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-cyber-border">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">
-              <MessageSquare className="w-5 h-5" />
-            </div>
-            <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
-              Start Direct Message
-            </h3>
-          </div>
-          <button
-            onClick={onClose}
-            className="tap-target rounded-full hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
+  const modalFooter = (
+    <div className="flex justify-end">
+      <GhostButton size="sm" onClick={onClose}>
+        Cancel
+      </GhostButton>
+    </div>
+  );
 
+  return (
+    <ModalShell
+      open={isOpen}
+      onClose={onClose}
+      title="Start Direct Message"
+      footer={modalFooter}
+      maxWidth="md:max-w-md"
+    >
+      <div className="space-y-3">
         {/* Search */}
         <div className="relative">
           <Search className="w-4 h-4 absolute left-3 top-3 text-cyber-muted" />
@@ -84,12 +79,12 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
             placeholder="Search engineers by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-10 pl-9 pr-4 rounded-xl text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted font-sans"
+            className="w-full min-h-[44px] pl-9 pr-4 rounded-xl text-sm bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted font-sans"
           />
         </div>
 
         {/* User list */}
-        <div className="max-h-60 overflow-y-auto space-y-1.5 pr-1">
+        <div className="max-h-64 overflow-y-auto space-y-1.5 pr-1">
           {filtered.length === 0 ? (
             <div className="py-8 text-center text-xs font-mono text-cyber-muted italic">
               No matching engineers found in your permitted communication scope.
@@ -105,12 +100,12 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
                     onSelectUser(user.id);
                     onClose();
                   }}
-                  className="w-full p-2.5 rounded-xl flex items-center justify-between gap-3 text-left hover:bg-cyber-surface-hover transition-all cursor-pointer border border-cyber-border/40 hover:border-accent-cyan/40 bg-cyber-surface"
+                  className="w-full p-2.5 rounded-xl flex items-center justify-between gap-3 text-left hover:bg-cyber-surface-hover transition-all cursor-pointer border border-cyber-border/40 hover:border-accent-cyan/40 bg-cyber-surface min-h-[48px]"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
                     <ChromeAvatar name={user.full_name} role={user.role} size="sm" />
                     <div className="min-w-0">
-                      <div className="font-bold text-xs text-cyber-primary truncate">
+                      <div className="font-bold text-xs sm:text-sm text-cyber-primary truncate">
                         {user.full_name}
                       </div>
                       <div className="font-mono text-label text-cyber-muted truncate">
@@ -127,13 +122,7 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
             })
           )}
         </div>
-
-        <div className="pt-2 border-t border-cyber-border flex justify-end">
-          <GhostButton size="sm" onClick={onClose}>
-            Cancel
-          </GhostButton>
-        </div>
-      </GlassCard>
-    </div>
+      </div>
+    </ModalShell>
   );
 };
