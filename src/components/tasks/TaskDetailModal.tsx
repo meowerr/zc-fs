@@ -106,7 +106,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
         actor: sub.submitter?.full_name || 'Engineer',
         timestamp: sub.created_at,
         details: sub.notes ? `"${sub.notes}"` : `Content: ${sub.content}`,
-        color: '#FF6A00',
+        color: '#A855F7',
         badgeText: `REV v${sub.version_number}`,
       });
 

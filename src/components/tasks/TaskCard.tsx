@@ -31,7 +31,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
 
   const typeColorClasses: Record<string, string> = {
     design: 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/30',
-    code: 'bg-accent-orange/10 text-accent-orange border-accent-orange/30',
+    code: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
     report: 'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/30',
     read: 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border',
     research: 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border',

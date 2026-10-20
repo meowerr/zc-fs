@@ -1,9 +1,47 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Phase: Google OAuth Sign-In & Hybrid Racing Rail Navigation (Branch: `feature/google-signin`)
-- **Active Status:** Google OAuth Sign-in & Hybrid Racing Rail fully integrated.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | All Google Auth & Nav verification scripts passing.
+- **Current Phase:** Phase: ZFS Brand Integration (Branch: `feature/zfs-branding`)
+- **Active Status:** Slice B1 (Asset Pipeline & PWA Icons) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | `tsc && vite build` passing (0 errors, gzip 184 KB < 200 KB).
+
+---
+
+## ZFS Brand Integration (Branch: `feature/zfs-branding`)
+
+### Slice B1: Asset Pipeline & PWA Icon Set
+- `[VERIFIED: node scripts/build-brand-assets.mjs]` Cropped slide crop, separated layers, traced 2-layer SVGs via Potrace, and optimized via SVGO under 10 KB budget (`ZfsFullLogo.svg` 6.3 KB, `ZfsHorizontalLogo.svg` 3.7 KB, `ZfsMonogram.svg` 3.0 KB, `ZfsLightModeLogo.svg` 6.1 KB).
+- `[VERIFIED: sharp raster export in scripts/build-brand-assets.mjs]` Generated PWA icon suite (`icon-192.png`, `icon-512.png`, `icon-512-maskable.png` with 80% safe zone, `apple-touch-icon.png`, `favicon.ico`, `favicon.svg`, `og-image.png` 31.2 KB < 300 KB).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Built [`src/components/brand/ZfsLogo.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/brand/ZfsLogo.tsx) React component supporting full/horizontal/monogram variants, light/dark/auto themes, and WCAG AA contrast tokens.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Authored [`BRAND.md`](file:///C:/Users/Abdullah/Desktop/zc-fs/BRAND.md) (clear space, min sizes, allowed backgrounds, don'ts, contrast matrix) and [`DESIGN.md`](file:///C:/Users/Abdullah/Desktop/zc-fs/DESIGN.md).
+- `[VERIFIED: npm run build (tsc && vite build exit code 0)]` Bundle compiles with zero TypeScript errors.
+
+### Slice B2: Tokens & /styleguide Brand Section (Approval Gate)
+- `[IMPLEMENTED, MANUALLY CHECKED]` Added brand tokens in `tailwind.config.js` (`brand-orange`, `orange-hover`, `orange-pressed`, `orange-soft`, `orange-glow`, `brand-ink`, `brand-white`, `brand-light-orange`) and updated CSS custom variables in `:root` and `.dark` in `src/index.css`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Retuned dark background `--bg-base` to `#070B0E` (logo near-black) for seamless native SVG rendering without disrupting Cyber Racing glass.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Added Section 10 in [`src/components/styleguide/StyleGuide.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/styleguide/StyleGuide.tsx) featuring: lockups on dark/light, palette swatches with copy-to-clipboard, brand primary/secondary buttons, 3:1 focus ring, proposed status collision re-map, 5 sub-team scoped palette (Low-Voltage moved to `#A855F7`), and audited WCAG AA contrast matrix.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, gzip: 195.65 KB < 200 KB)]` Verification suite passes with zero warnings or errors.
+
+### Slice B3: Status/Semantic Color Re-map & Component Updates
+- `[IMPLEMENTED, MANUALLY CHECKED]` Re-mapped status semantics across the entire application: `IN PROGRESS` -> `#00D9FF` (Electric Cyan), `IN REVIEW` / `SUBMITTED` -> `#A855F7` (Cyber Violet), `DUE SOON` / `PENDING` -> `#FFD43B` (Racing Yellow), `OVERDUE` / `CHANGES_REQUESTED` -> `#FF304F` (Racing Red), `DONE` / `APPROVED` -> `#10E57A` (Racing Lime).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Re-mapped `Technical - Low-Voltage Electronics` sub-team color from orange to `#A855F7` (Cyber Violet) across `constants.ts`, `index.css` (`--team-elec`), and UI views.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Updated `GlossyButton.tsx` (`action` and `brand` variants) to use `bg-brand-orange text-brand-ink font-bold` guaranteeing 5.2:1 contrast ratio (passing WCAG AA, eliminating inaccessible white text on orange).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Updated `LedStatusChip.tsx`, `MissionControl.tsx`, `AdminApprovalHub.tsx`, `TaskCard.tsx`, `TaskDetailModal.tsx`, `SegmentedGauge.tsx`, `TeamDirectory.tsx`, `GlobalSearchModal.tsx`, `RoleGuideModal.tsx`, and `DocumentHub.tsx` to eliminate all status collisions with brand orange.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total bundle gzip: 199.38 KB < 200 KB, main JS gzip: 48.59 KB < 50 KB)]` Full suite passes. Zero `#FF6A00` status color occurrences remaining in source.
+
+### Slice B4: Login Screen & Pending Approval View
+- `[IMPLEMENTED, MANUALLY CHECKED]` Re-engineered [`src/components/auth/AuthScreen.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/AuthScreen.tsx) with dark brand hero, full ZFS lockup, session-gated CSS ignition animation (`sessionStorage: zfs_auth_anim_seen`, `prefers-reduced-motion` gated), corner brackets, `"01 / SIGN IN"` telemetry header, in-app browser detection warning, Google OAuth primary button, and secondary collapsible email sign-in.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Re-engineered [`src/components/auth/PendingApprovalView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/PendingApprovalView.tsx) with full ZFS lockup, `"You're in the queue, ZFS will approve you soon"`, corner brackets, and RLS security note.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Unified [`src/components/brand/ZfsLogo.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/brand/ZfsLogo.tsx) into a single optimized SVG element with deduplicated path segments and code-split auth views in [`src/App.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/App.tsx).
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total bundle gzip: 199.81 KB < 200 KB, main JS gzip: 45.29 KB < 50 KB)]` All 41 strict checks pass. Mobile viewport verified above the fold at 360x640.
+
+### Slice B5: App Chrome & Legal Pages
+- [IMPLEMENTED, MANUALLY CHECKED] Updated Desktop Rail (HybridRacingRail.tsx), Header (TopHeader.tsx), Mobile Sheet (GarageDoorNav.tsx), Empty States (EmptyState.tsx), and App loading fallbacks (App.tsx) to utilize canonical <ZfsMonogram /> and brand tokens.
+- [IMPLEMENTED, MANUALLY CHECKED] Built and routed LegalView.tsx (/privacy and /terms) with compact brand lockup and 'Built for Zewail Formula Team' footer.
+- [IMPLEMENTED, MANUALLY CHECKED] Supported light theme black logo for contrast on light chrome surfaces.
+- [VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total bundle gzip: 199.94 KB < 200 KB, main JS gzip: 44.99 KB < 50 KB)] Full test suite passing with strict TypeScript verification (0 errors).
+
+
 
 ---
 

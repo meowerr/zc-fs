@@ -295,15 +295,15 @@ export const MissionControl: React.FC<MissionControlProps> = ({
           ) : currentUser.role === 'head' ? (
             <div
               onClick={() => onNavigateTab('tasks')}
-              className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-orange/40 transition-colors cursor-pointer"
+              className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-purple-500/40 transition-colors cursor-pointer"
             >
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-orange opacity-70" />
+              <div className="absolute top-0 inset-x-0 h-[2px] bg-purple-500 opacity-70" />
               <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
-                  <FileCheck className="w-3.5 h-3.5 text-accent-orange" />
+                  <FileCheck className="w-3.5 h-3.5 text-purple-400" />
                   Needs Review
                 </span>
-                <span className="text-[11px] font-mono text-accent-orange tracking-tighter font-bold">LEAD</span>
+                <span className="text-[11px] font-mono text-purple-400 tracking-tighter font-bold">LEAD</span>
               </div>
               {needsReviewTasks.length === 0 ? (
                 <>
@@ -312,7 +312,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 </>
               ) : (
                 <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-orange mt-1">{needsReviewTasks.length}</div>
+                  <div className="text-2xl sm:text-3xl font-display font-black text-purple-400 mt-1">{needsReviewTasks.length}</div>
                   <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Submissions Awaiting You</div>
                 </>
               )}
@@ -484,15 +484,15 @@ export const MissionControl: React.FC<MissionControlProps> = ({
 
       {/* ─── GROUP HEAD: DELIVERABLES REQUIRING REVIEW ─── */}
       {currentUser.role === 'head' && needsReviewTasks.length > 0 && (
-        <GlassCard className="p-5 sm:p-6 space-y-3.5 border-accent-orange/40">
+        <GlassCard className="p-5 sm:p-6 space-y-3.5 border-purple-500/40">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
-              <FileCheck className="w-5 h-5 text-accent-orange" />
+              <FileCheck className="w-5 h-5 text-purple-400" />
               <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
                 Awaiting Lead Review ({needsReviewTasks.length})
               </h3>
             </div>
-            <span className="text-[10px] font-mono text-accent-orange uppercase px-2 py-0.5 rounded bg-accent-orange/10 border border-accent-orange/30">
+            <span className="text-[10px] font-mono text-purple-400 uppercase px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30">
               ACTION REQUIRED
             </span>
           </div>
@@ -502,17 +502,17 @@ export const MissionControl: React.FC<MissionControlProps> = ({
               <div
                 key={t.id}
                 onClick={() => onNavigateTab('tasks')}
-                className="p-3.5 rounded-xl bg-cyber-surface-elevated border border-accent-orange/30 hover:border-accent-orange transition-all space-y-2 cursor-pointer group"
+                className="p-3.5 rounded-xl bg-cyber-surface-elevated border border-purple-500/30 hover:border-purple-400 transition-all space-y-2 cursor-pointer group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded bg-accent-orange/10 text-accent-orange font-bold">
+                  <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 font-bold">
                     SUBMITTED FOR REVIEW
                   </span>
                   <span className="font-mono text-[10px] text-cyber-muted">
                     {new Date(t.updated_at).toLocaleDateString()}
                   </span>
                 </div>
-                <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-accent-orange transition-colors truncate">
+                <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-purple-400 transition-colors truncate">
                   {t.title}
                 </h4>
                 <div className="text-[11px] font-mono text-cyber-secondary flex items-center justify-between pt-1 border-t border-cyber-border">

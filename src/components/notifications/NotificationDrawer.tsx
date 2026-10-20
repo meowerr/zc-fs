@@ -48,7 +48,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
       case 'task_due_soon':
         return <AlertCircle className="w-4 h-4 text-accent-yellow" />;
       case 'announcement':
-        return <Sparkles className="w-4 h-4 text-accent-orange" />;
+        return <Sparkles className="w-4 h-4 text-brand-orange" />;
       default:
         return <Clock className="w-4 h-4 text-accent-cyan" />;
     }

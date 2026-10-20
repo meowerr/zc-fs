@@ -714,7 +714,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                         member.role === 'admin'
                           ? 'bg-accent-cyan/10 border-accent-cyan/30 text-accent-cyan font-bold'
                           : member.role === 'head'
-                          ? 'bg-accent-orange/10 border-accent-orange/30 text-accent-orange font-bold'
+                          ? 'bg-purple-500/10 border-purple-500/30 text-purple-400 font-bold'
                           : 'bg-cyber-surface border-cyber-border text-cyber-secondary'
                       }`}>
                         {member.role}
@@ -744,7 +744,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                       {!isSelf && (
                         <button
                           onClick={() => openReassignModal(member)}
-                          className="p-1.5 rounded-lg text-cyber-secondary hover:text-accent-orange hover:bg-cyber-surface border border-cyber-border hover:border-accent-orange/40 transition-all cursor-pointer"
+                          className="p-1.5 rounded-lg text-cyber-secondary hover:text-accent-cyan hover:bg-cyber-surface border border-cyber-border hover:border-accent-cyan/40 transition-all cursor-pointer"
                           title="Transfer Sub-Team or Change Role"
                         >
                           <ArrowRightLeft className="w-4 h-4" />
@@ -917,7 +917,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
             <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-cyber-primary font-bold text-xs uppercase font-mono">
-                  <HardDrive className="w-4 h-4 text-accent-orange" />
+                  <HardDrive className="w-4 h-4 text-accent-cyan" />
                   <span>Storage Buckets</span>
                 </div>
                 <span className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase ${
@@ -1067,7 +1067,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
           <div className="w-full max-w-md p-6 rounded-2xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-cyber-border pb-3">
               <div className="flex items-center gap-2">
-                <ArrowRightLeft className="w-5 h-5 text-accent-orange" />
+                <ArrowRightLeft className="w-5 h-5 text-accent-cyan" />
                 <h3 className="font-display font-black text-lg uppercase tracking-wider text-cyber-primary">
                   Transfer Member
                 </h3>

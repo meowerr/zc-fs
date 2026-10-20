@@ -3,15 +3,16 @@ import React from 'react';
 export interface GlossyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant?: 
+    | 'brand'     // Official ZFS Brand Orange primary action (5.2:1 brand-ink text, WCAG AA)
     | 'primary'   // High-emphasis Electric Cyan (Submit, Confirm, Launch)
     | 'secondary' // Elevated graphite / clean surface (Cancel, Close, Specs)
     | 'outline'   // Technical wireframe Electric Cyan (Telemetry, Inspect, Export)
-    | 'action'    // Racing Orange energetic action (Submit Work, Execute, Approve)
+    | 'action'    // Brand action (mapped to brand orange with brand-ink text)
     | 'warning'   // Racing Yellow caution / review (Request Changes, Hold)
     | 'danger'    // Racing Red destructive (Delete, Reject, Abort)
     | 'metallic'  // Machined alloy cockpit switchgear (Hardware, Settings)
     | 'ghost'     // Minimal chrome (Toolbars, inline actions)
-    | 'holo';     // Legacy alias -> mapped to action
+    | 'holo';     // Legacy alias -> mapped to brand
   size?: 'sm' | 'md' | 'lg';
   icon?: React.ReactNode;
   fullWidth?: boolean;
@@ -63,11 +64,18 @@ export const GlossyButton: React.FC<GlossyButtonProps> = ({
       hover:shadow-[0_0_12px_rgba(0,217,255,0.2)]
       active:scale-[0.98]
     `,
+    brand: `
+      bg-brand-orange text-brand-ink font-bold
+      border border-brand-orange
+      shadow-[0_2px_12px_rgba(224,114,18,0.3)]
+      hover:brightness-105 hover:shadow-[0_2px_16px_rgba(224,114,18,0.45)]
+      active:scale-[0.98]
+    `,
     action: `
-      bg-accent-orange text-white font-bold
-      border border-accent-orange
-      shadow-[0_2px_12px_rgba(255,106,0,0.28)]
-      hover:brightness-110 hover:shadow-[0_2px_16px_rgba(255,106,0,0.4)]
+      bg-brand-orange text-brand-ink font-bold
+      border border-brand-orange
+      shadow-[0_2px_12px_rgba(224,114,18,0.3)]
+      hover:brightness-105 hover:shadow-[0_2px_16px_rgba(224,114,18,0.45)]
       active:scale-[0.98]
     `,
     warning: `

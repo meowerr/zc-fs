@@ -89,7 +89,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
             title: t.title,
             subtitle: `${t.task_type.toUpperCase()} • Priority: ${t.priority.toUpperCase()} • Status: ${t.status.toUpperCase()}`,
             badge: t.status.toUpperCase(),
-            badgeColor: t.status === 'approved' ? '#10E57A' : t.status === 'in_progress' ? '#FF6A00' : '#00D9FF',
+            badgeColor: t.status === 'approved' ? '#10E57A' : t.status === 'submitted' ? '#A855F7' : t.status === 'in_progress' ? '#00D9FF' : '#737D89',
             original: t,
           });
         }
@@ -110,7 +110,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
             title: p.full_name,
             subtitle: `${p.email} • Role: ${p.role.toUpperCase()}`,
             badge: p.role.toUpperCase(),
-            badgeColor: p.role === 'admin' ? '#00D9FF' : p.role === 'head' ? '#FF6A00' : '#10E57A',
+            badgeColor: p.role === 'admin' ? '#00D9FF' : p.role === 'head' ? '#A855F7' : '#10E57A',
             original: p,
           });
         }
@@ -331,7 +331,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                     <div className="p-2 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0">
                       {item.category === 'task' && <CheckSquare className="w-4 h-4 text-accent-cyan" />}
                       {item.category === 'person' && <Users className="w-4 h-4 text-accent-lime" />}
-                      {item.category === 'channel' && <MessageSquare className="w-4 h-4 text-accent-orange" />}
+                      {item.category === 'channel' && <MessageSquare className="w-4 h-4 text-purple-400" />}
                       {item.category === 'document' && <FileCode className="w-4 h-4 text-accent-yellow" />}
                     </div>
 

@@ -84,7 +84,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
                   <span>1. Working on Sub-Team Deliverables</span>
                 </div>
                 <p className="text-cyber-secondary">
-                  You belong to exactly one official sub-team (e.g., Vehicle Dynamics). In the <strong className="text-cyber-primary">Tasks</strong> tab, you can view your assigned tasks, review CAD/code references, and update status from <code className="text-accent-yellow">To Do</code> to <code className="text-accent-orange">In Progress</code>.
+                  You belong to exactly one official sub-team (e.g., Vehicle Dynamics). In the <strong className="text-cyber-primary">Tasks</strong> tab, you can view your assigned tasks, review CAD/code references, and update status from <code className="text-accent-yellow">To Do</code> to <code className="text-accent-cyan">In Progress</code>.
                 </p>
               </div>
 
@@ -134,7 +134,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
 
               <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
-                  <Users className="w-4 h-4 text-accent-orange" />
+                  <Users className="w-4 h-4 text-purple-400" />
                   <span>3. Cross-Group "Pit Wall" Leadership Channel</span>
                 </div>
                 <p className="text-cyber-secondary">
@@ -168,7 +168,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
 
               <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
-                  <Sparkles className="w-4 h-4 text-accent-orange" />
+                  <Sparkles className="w-4 h-4 text-brand-orange" />
                   <span>3. Official Announcements</span>
                 </div>
                 <p className="text-cyber-secondary">

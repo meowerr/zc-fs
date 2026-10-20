@@ -112,8 +112,16 @@ export const AppShell: React.FC<AppShellProps> = ({
             className="flex-1 flex w-full transition-all duration-200"
             style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
           >
-            <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-20 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden">
-              {children}
+            <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-20 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden flex flex-col">
+              <div className="flex-1">
+                {children}
+              </div>
+              <footer className="mt-auto pt-8 pb-3 text-center">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-surface/60 border border-cyber-border text-[11px] font-mono text-cyber-muted">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />
+                  <span>Built for Zewail Formula Team // PitLane Telemetry</span>
+                </div>
+              </footer>
             </main>
           </div>
         </>

@@ -73,7 +73,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
     { id: 'cad', label: 'CAD & Models', icon: Box, color: '#FF4FA3' },
     { id: 'rulebook', label: 'Rulebooks & SES', icon: BookOpen, color: '#FFD43B' },
     { id: 'telemetry', label: 'Telemetry & Logs', icon: Activity, color: '#10E57A' },
-    { id: 'report', label: 'Engineering Reports', icon: FileSpreadsheet, color: '#FF6A00' },
+    { id: 'report', label: 'Engineering Reports', icon: FileSpreadsheet, color: '#A855F7' },
   ];
 
   const formatFileSize = (bytes: number) => {
@@ -93,7 +93,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
       case 'telemetry':
         return { label: 'TELEM', color: '#10E57A', icon: Activity };
       case 'report':
-        return { label: 'REPORT', color: '#FF6A00', icon: FileSpreadsheet };
+        return { label: 'REPORT', color: '#A855F7', icon: FileSpreadsheet };
       default:
         return { label: 'DOC', color: '#737D89', icon: FileCode };
     }

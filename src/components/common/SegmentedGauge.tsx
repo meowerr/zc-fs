@@ -50,7 +50,7 @@ export const SegmentedGauge: React.FC<SegmentedGaugeProps> = ({
           if (index >= totalSegments * 0.75) {
             defaultBg = 'var(--accent-lime)';
           } else if (index >= totalSegments * 0.45) {
-            defaultBg = 'var(--accent-orange)';
+            defaultBg = 'var(--accent-yellow)';
           }
 
           const fillBg = accentColor || defaultBg;

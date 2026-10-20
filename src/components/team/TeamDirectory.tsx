@@ -163,7 +163,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
         <GlassCard className="p-3.5 relative overflow-hidden">
           <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
             <span>SUB-TEAMS</span>
-            <Layers className="w-3.5 h-3.5 text-accent-orange" />
+            <Layers className="w-3.5 h-3.5 text-accent-cyan" />
           </div>
           <div className="font-mono text-2xl font-bold text-cyber-primary">
             {groupsList.length.toString().padStart(2, '0')}
@@ -435,7 +435,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                     </div>
 
                     <div className="flex items-center gap-1 text-[10px] font-mono text-cyber-muted flex-shrink-0">
-                      <CheckSquare className="w-3 h-3 text-accent-orange" />
+                      <CheckSquare className="w-3 h-3 text-accent-cyan" />
                       <span>{taskCount} {taskCount === 1 ? 'task' : 'tasks'}</span>
                     </div>
                   </div>

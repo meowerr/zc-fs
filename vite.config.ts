@@ -2,9 +2,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  esbuild: {
+    legalComments: 'none',
+  },
   plugins: [
+
     react(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -53,12 +56,13 @@ export default defineConfig({
     })
   ],
   build: {
+    target: 'es2022',
     rollupOptions: {
+
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
+          vendor: ['react', 'react-dom', 'lucide-react'],
           supabase: ['@supabase/supabase-js'],
-          icons: ['lucide-react'],
         },
       },
     },

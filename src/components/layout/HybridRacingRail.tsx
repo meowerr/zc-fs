@@ -3,6 +3,7 @@ import { Palette, Pin, PinOff, Radio, Flag } from 'lucide-react';
 import { UserRole, Group, Task } from '../../lib/database.types';
 import { NavTab, getVisibleNavItems, getNavGroupsForRole, getNavItemsByGroup } from '../../config/navigation';
 import { SUB_TEAMS } from '../../lib/constants';
+import { ZfsMonogram } from '../brand/ZfsMonogram';
 
 export interface HybridRacingRailProps {
   activeTab: NavTab;
@@ -221,25 +222,29 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
             aria-label={isTablet ? 'Toggle command center' : 'Return to Mission Control'}
             className="group flex items-center gap-2.5 focus:outline-none focus:ring-1 focus:ring-accent-cyan cursor-pointer rounded-lg p-1"
           >
-            {/* Hex / Chamfered ZC Badge */}
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-accent-cyan/60 group-hover:border-accent-cyan shadow-[0_0_10px_rgba(0,217,255,0.25)] transition-all group-active:scale-95 shrink-0">
-              <span className="font-display font-black text-accent-cyan text-xs tracking-tighter">ZC</span>
-              <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
-            </div>
-
-            {isOpen && (
-              <div className="flex flex-col text-left transition-opacity duration-150 animate-fadeIn">
-                <div className="flex items-center gap-1.5">
-                  <span className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase">
-                    PitLane
-                  </span>
-                  <span className="text-[11px] font-mono text-accent-cyan font-bold tracking-tight">
-                    // NAV
+            {/* ZFS Brand Mark: Monogram */}
+            {!isOpen ? (
+              <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-cyber-border group-hover:border-brand-orange/60 shadow-cyber-sm transition-all group-active:scale-95 shrink-0 p-1">
+                <ZfsMonogram glow={false} className="w-full h-auto" />
+              </div>
+            ) : (
+              <div className="flex items-center gap-2.5 transition-opacity duration-150 animate-fadeIn">
+                <div className="h-7 w-7 flex items-center justify-center shrink-0">
+                  <ZfsMonogram glow={false} className="w-full h-auto" />
+                </div>
+                <div className="flex flex-col text-left">
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase">
+                      PitLane
+                    </span>
+                    <span className="text-[10px] font-mono text-brand-light-orange font-bold tracking-tight">
+                      // OS
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono text-cyber-secondary tracking-wider uppercase">
+                    COMMAND CONSOLE
                   </span>
                 </div>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-widest uppercase">
-                  CONTROL CONSOLE
-                </span>
               </div>
             )}
           </button>

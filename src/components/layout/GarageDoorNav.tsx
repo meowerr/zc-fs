@@ -8,6 +8,7 @@ import {
 import { UserRole } from '../../lib/database.types';
 import { NavTab, getVisibleNavItems } from '../../config/navigation';
 import { SUB_TEAMS } from '../../lib/constants';
+import { ZfsMonogram } from '../brand/ZfsMonogram';
 
 export interface GarageDoorNavProps {
   activeTab: NavTab;
@@ -244,8 +245,8 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
             {/* Garage Door Header */}
             <div className="px-4 pb-3 flex items-center justify-between border-b border-cyber-border/80 shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-accent-cyan/60 shadow-[0_0_8px_rgba(0,217,255,0.25)]">
-                  <span className="font-display font-black text-accent-cyan text-xs">ZC</span>
+                <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-cyber-border p-1 shrink-0">
+                  <ZfsMonogram glow={false} className="w-full h-auto" />
                 </div>
                 <div>
                   <h2 className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase">

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sun, Moon, Bell, BookOpen, Palette, Search } from 'lucide-react';
 import { ChromeAvatar } from '../common/ChromeAvatar';
+import { ZfsMonogram } from '../brand/ZfsMonogram';
 import { UserRole } from '../../lib/database.types';
 
 interface TopHeaderProps {
@@ -42,17 +43,16 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           {/* Mobile-Only Brand Logo */}
           <div className="md:hidden flex items-center gap-2 min-w-0">
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-accent-cyan/60 shadow-[0_0_10px_rgba(0,217,255,0.2)] shrink-0">
-              <span className="font-display font-black text-accent-cyan text-xs tracking-tighter">ZC</span>
-              <div className="absolute top-0.5 right-0.5 w-1 h-1 rounded-full bg-accent-cyan animate-pulse" />
+            <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-cyber-border p-1 shrink-0">
+              <ZfsMonogram glow={false} className="w-full h-auto" />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
                 <h1 className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase leading-tight truncate">
                   PitLane
                 </h1>
-                <span className="hidden xs:inline-block px-1 py-0.2 rounded text-[11px] font-mono font-bold bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
-                  FS-2026
+                <span className="hidden xs:inline-block px-1 py-0.2 rounded text-[11px] font-mono font-bold bg-brand-orange/15 text-brand-light-orange border border-brand-orange/30">
+                  ZFS-2026
                 </span>
               </div>
               <p className="text-[11px] font-mono text-cyber-secondary tracking-wider flex items-center gap-1 truncate">

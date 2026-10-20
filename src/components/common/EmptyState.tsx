@@ -1,9 +1,10 @@
 import React from 'react';
 import { GlossyButton } from './GlossyButton';
 import { Activity, CheckCircle2 } from 'lucide-react';
+import { ZfsMonogram } from '../brand/ZfsMonogram';
 
 interface EmptyStateProps {
-  illustration?: 'wheel' | 'helmet' | 'telemetry' | 'check';
+  illustration?: 'wheel' | 'helmet' | 'telemetry' | 'check' | 'brand';
   title: string;
   description: string;
   actionLabel?: string;
@@ -20,6 +21,14 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   className = '',
 }) => {
   const renderIllustration = () => {
+    if (illustration === 'brand') {
+      return (
+        <div className="w-12 h-auto mx-auto p-1.5 rounded-lg bg-cyber-surface-elevated border border-cyber-border">
+          <ZfsMonogram glow={false} className="w-full h-auto opacity-85" />
+        </div>
+      );
+    }
+
     if (illustration === 'helmet') {
       return (
         <svg viewBox="0 0 100 100" className="w-14 h-14 mx-auto text-accent-cyan" fill="none">
@@ -35,7 +44,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <path
             d="M30 46 C42 42 58 42 70 46 C72 52 70 58 50 58 C30 58 28 52 30 46 Z"
             fill="var(--cyber-surface-elevated)"
-            stroke="var(--accent-orange)"
+            stroke="var(--accent-cyan)"
             strokeWidth="2"
           />
           <path d="M35 48 Q50 45 65 48" stroke="#FFFFFF" strokeWidth="1" strokeLinecap="round" />

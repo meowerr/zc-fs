@@ -538,10 +538,17 @@ zc-fs/
       1. Notification dispatch & lifecycle: Dispatched `task_assigned`, `task_due_soon`, and `review_result` notifications to Engineer; queried and validated unread state.
       2. Strict RLS isolation: Verified Admin cannot query Engineer's private notifications (`user_id = auth.uid()` isolation).
       3. Mark as read: Verified `markAsRead` updates `is_read = true` in Supabase.
-      4. Mark all as read: Verified `markAllAsRead` batch updates all unread notifications to `is_read = true`.
-      5. Realtime CDC listener: Verified Postgres replication subscription on `public.notifications` table.
-      6. PWA Workbox cache policies: Verified `NetworkOnly` strategy on Supabase API & denylist on auth/rest endpoints.
-      7. Keep-alive & Production Budget: Verified scheduled keepalive GitHub Actions workflow, tree-shaking (zero mock data strings), and total gzipped bundle size (146.00 KB < 200 KB budget).
+
+  - **Phase: ZFS Brand Integration (Branch: `feature/zfs-branding`)**
+    - **B1 Asset Pipeline:** [COMPLETED] Cropped slide noise, separated color layers, traced 2-layer vector SVGs (`ZfsFullLogo.svg`, `ZfsHorizontalLogo.svg`, `ZfsMonogram.svg`, `ZfsLightModeLogo.svg` <= 6.3 KB), built PWA icon set, `ZfsLogo.tsx`, `BRAND.md`, and `DESIGN.md`.
+    - **B2 Tokens & Styleguide:** [COMPLETED] CSS vars, Tailwind config, /styleguide Section 10 Brand showcase, palette, buttons, 3:1 focus ring, collision re-map, and contrast matrix.
+    - **B3 Status/Semantic Re-map:** [COMPLETED] Re-mapped IN PROGRESS (cyan), IN REVIEW (violet), Low-Voltage Electronics (violet), and updated GlossyButton to WCAG AA brand-ink text. Zero status collisions remaining.
+    - **B4 Login Screen:** [COMPLETED] Desktop & mobile branded hero, CSS-only session-gated ignition animation, telemetry brackets ("01 / SIGN IN"), in-app browser warning, PendingApprovalView branded queue card, bundle code-splitting.
+
+    - **B5 App Chrome:** [PENDING] Rail monogram, header bar, loading/empty states, legal pages.
+    - **B6 PWA Manifest & Meta:** [PENDING] Manifest theme-color, apple-touch, WhatsApp/social OG meta.
+    - **B7 F1HorizontalTransition:** [OPTIONAL] Livery re-skin.
+    - **B8 A11y & Docs Pass:** [PENDING] Final WCAG AA audit, phone verification.
 
 ---
 

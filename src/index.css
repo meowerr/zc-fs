@@ -26,16 +26,29 @@
     /* Primary Visual Accents (Light-mode tuned for contrast) */
     --accent-cyan: #0099B8;
     --accent-red: #D61E38;
-    --accent-orange: #DE5200;
+    --accent-orange: #C2410C; /* Re-mapped to Brand Light Orange */
+    --accent-purple: #7C3AED; /* Cyber Violet (Light) */
     --accent-yellow: #B8860B;
     --accent-lime: #0B9E50;
 
     /* Sub-Team Accents */
     --team-vd: #0099B8;   /* Vehicle Dynamics */
     --team-aero: #D61E38; /* Aerodynamics */
-    --team-elec: #DE5200; /* Low-Voltage Electronics */
+    --team-elec: #7C3AED; /* Low-Voltage Electronics (Cyber Violet) */
     --team-pt: #B8860B;   /* Powertrain & Drivetrain */
     --team-ops: #0B9E50;  /* Business, Cost & Ops */
+
+    /* ZFS Brand Identity Tokens (Light Theme) */
+    --brand-orange: #E07212;
+    --brand-orange-hover: #C2410C;
+    --brand-orange-pressed: #9A3412;
+    --brand-orange-soft: rgba(224, 114, 18, 0.10);
+    --brand-orange-glow: rgba(224, 114, 18, 0.20);
+    --brand-light-orange: #C2410C; /* 5.53:1 contrast on white */
+    --brand-ink: #070B0E;
+    --brand-white: #FFFFFF;
+    --logo-body: var(--brand-ink);
+    --logo-accent: var(--brand-light-orange);
 
     /* Hybrid Racing Rail Navigation Dimensions */
     --rail-w: 72px;
@@ -89,31 +102,44 @@
   }
 
   .dark {
-    /* Dark Theme (Graphite Cyber Racing) */
-    --bg-base: #070A0E;
+    /* Dark Theme (Graphite Cyber Racing - Retuned to Brand Near-Black) */
+    --bg-base: #070B0E;
     --bg-alt: #0B0F14;
-    --surface-base: #11161D;
-    --surface-elevated: #181E26;
-    --surface-hover: #202731;
-    --border-subtle: #2A323C;
-    --border-strong: #39434F;
+    --surface-base: #10151C;
+    --surface-elevated: #161D26;
+    --surface-hover: #1E2632;
+    --border-subtle: #26303D;
+    --border-strong: #384556;
     --text-primary: #F2F4F7;
     --text-secondary: #B0B8C2;
     --text-muted: #8A96A4;
     --chrome: #C8CED6;
     --chrome-dark: #707986;
 
+    /* ZFS Brand Identity Tokens (Dark Theme) */
+    --brand-orange: #E07212;
+    --brand-orange-hover: #ED7D0D;
+    --brand-orange-pressed: #C6620A;
+    --brand-orange-soft: rgba(224, 114, 18, 0.15);
+    --brand-orange-glow: rgba(224, 114, 18, 0.35);
+    --brand-light-orange: #E07212;
+    --brand-ink: #070B0E;
+    --brand-white: #F2F4F7;
+    --logo-body: var(--brand-white);
+    --logo-accent: var(--brand-orange);
+
     /* Primary Visual Accents (Restrained Cyber Racing) */
     --accent-cyan: #00D9FF;   /* Electric Cyan */
     --accent-red: #FF304F;    /* Racing Red */
-    --accent-orange: #FF6A00; /* Racing Orange */
+    --accent-orange: #E07212; /* Brand Orange (Identity & Primary Actions) */
+    --accent-purple: #A855F7; /* Cyber Violet (Reviews & Electronics) */
     --accent-yellow: #FFD43B; /* Racing Yellow */
     --accent-lime: #10E57A;   /* Racing Lime */
 
     /* Sub-Team Accents */
     --team-vd: #00D9FF;   /* Vehicle Dynamics */
     --team-aero: #FF304F; /* Aerodynamics */
-    --team-elec: #FF6A00; /* Low-Voltage Electronics */
+    --team-elec: #A855F7; /* Low-Voltage Electronics (Cyber Violet) */
     --team-pt: #FFD43B;   /* Powertrain & Drivetrain */
     --team-ops: #10E57A;  /* Business, Cost & Ops */
 
@@ -296,10 +322,6 @@
 }
 
 /* ─── Cyber-Sigilism & Y2K Micro-Utilities ─── */
-.tech-border {
-  border: 1px solid var(--border-subtle);
-}
-
 .tech-chamfer {
   clip-path: polygon(
     0 0,
@@ -322,43 +344,6 @@
   );
 }
 
-.micro-label {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-/* Subtle corner registration mark */
-.corner-cross::before {
-  content: "+";
-  position: absolute;
-  top: 4px;
-  right: 6px;
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 10px;
-  line-height: 1;
-  color: var(--chrome-dark);
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-/* Subtle racing speed hash pattern */
-.bg-tech-grid {
-  background-image: radial-gradient(var(--border-subtle) 1px, transparent 1px);
-  background-size: 16px 16px;
-}
-
-/* Custom Y2K subtle animations */
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.animate-shimmer {
-  animation: shimmer 2.5s infinite;
-}
-
 /* Garage Door Mechanical Slide-Up Animation */
 .garage-door-sheet {
   will-change: transform;
@@ -368,6 +353,67 @@
 .garage-door-sheet-closing {
   will-change: transform;
   transition: transform 220ms cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* ZFS Brand Ignition Animations (CSS-Only ~1.2s, non-blocking) */
+@keyframes zfsDraw {
+  0% {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes zfsIgnite {
+  0% {
+    opacity: 0;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  40% {
+    opacity: 0;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  75% {
+    opacity: 1;
+    filter: drop-shadow(0 0 16px rgba(224, 114, 18, 0.9));
+  }
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px rgba(224, 114, 18, 0.4));
+  }
+}
+
+@keyframes zfsPulseLed {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+.animate-zfs-draw {
+  animation: zfsDraw 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: center center;
+}
+
+.animate-zfs-ignite {
+  animation: zfsIgnite 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-zfs-led-pulse {
+  animation: zfsPulseLed 1.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 @media (prefers-reduced-motion: reduce) {
