@@ -7,6 +7,14 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: {
+        xs: '420px',
+      },
+      fontSize: {
+        label: ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.04em' }], // 12px floor
+        body: ['0.875rem', { lineHeight: '1.25rem' }],                       // 14px
+        'body-lg': ['1rem', { lineHeight: '1.5rem' }],                       // 16px
+      },
       colors: {
         cyber: {
           bg: 'var(--bg-base)',

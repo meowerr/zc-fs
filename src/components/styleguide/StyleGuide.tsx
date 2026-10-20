@@ -666,7 +666,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
 
             <p className="text-xs text-cyber-secondary leading-relaxed">
-              Motorsport primary actions use <code className="text-brand-orange">#E07212</code> background with <code className="text-cyber-primary">#070B0E</code> Brand Ink typography, delivering <strong className="text-brand-white">5.23:1 contrast</strong> (strictly passing WCAG AA). White text on orange is prohibited.
+              Motorsport actions use <code className="text-brand-orange">#E07212</code> with <code className="text-cyber-primary">#070B0E</code> Brand Ink, delivering <strong className="text-brand-white">5.23:1 contrast</strong> (WCAG AA).
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -702,7 +702,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
 
             <p className="text-xs text-cyber-secondary leading-relaxed">
-              Old <em>"In Progress"</em> status used orange (<code className="text-[#FF6A00]">#FF6A00</code>), causing direct collision with the ZFS identity. Re-mapped to <strong className="text-accent-cyan">Electric Cyan</strong> and <strong className="text-purple-400">Cyber Violet</strong> so brand orange remains exclusive to identity.
+              In-Progress status re-mapped to <strong className="text-accent-cyan">Electric Cyan</strong> and <strong className="text-purple-400">Cyber Violet</strong> so brand orange remains exclusive to team identity.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
@@ -741,7 +741,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </div>
 
           <p className="text-xs text-cyber-secondary leading-relaxed">
-            To prevent sub-team color confusion with the ZFS identity brand orange, <strong>Low-Voltage Electronics</strong> is re-mapped from <code className="text-[#FF6A00]">#FF6A00</code> to <strong className="text-purple-400">Cyber Violet (#A855F7)</strong>. All 5 sub-teams maintain mutually exclusive, high-contrast identities.
+            <strong>Low-Voltage Electronics</strong> is re-mapped to <strong className="text-purple-400">Cyber Violet (#A855F7)</strong> to prevent sub-team confusion with ZFS brand orange.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">

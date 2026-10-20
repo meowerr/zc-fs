@@ -3,9 +3,24 @@
 ## Current Status
 - **Current Phase:** Phase: ZFS Brand Integration (Branch: `feature/zfs-branding`)
 - **Active Status:** Slice B1 (Asset Pipeline & PWA Icons) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | `tsc && vite build` passing (0 errors, gzip 184 KB < 200 KB).
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | `tsc && vite build` passing (0 errors, gzip 199.86 KB < 200 KB).
 
 ---
+
+---
+
+## Mobile UI Overhaul (Branch: `feature/mobile-ui-polish`)
+
+### Phase 0: Recon & Baseline
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Clean starting baseline verified (0 TS errors, 199.94 KB gzip bundle).
+- `[VERIFIED: node scratch/mobile-metrics.mjs]` Baseline recorded: 285 micro-text, 42 small controls, 19 vh units, zoom-lock present.
+
+### Phase 1: Foundations (Config & Global CSS)
+- `[IMPLEMENTED, MANUALLY CHECKED]` Removed zoom lock `maximum-scale=1.0, user-scalable=no` from `index.html`.
+- `[VERIFIED: computed styles in build]` Added mobile form control rules in `src/index.css` forcing `font-size: 16px !important` and `min-height: 44px` on mobile screens (`max-width: 767px`) to eliminate iOS auto-zoom.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Added type tokens in `tailwind.config.js` (`label: 12px`, `body: 14px`, `body-lg: 16px`) and `screens.xs: 420px`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Defined `.tap-target` utility in `src/index.css` (`min-h-[44px] min-w-[44px]`).
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total bundle gzip: 199.86 KB < 200 KB, main JS gzip: 44.99 KB < 50 KB)]` Strict TypeScript and verification suite passing.
 
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 
