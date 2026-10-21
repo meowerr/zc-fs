@@ -187,7 +187,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
       />
 
       {/* Filter & Search Bar */}
-      <GlassCard className="p-3.5 sm:p-4 space-y-3">
+      <GlassCard variant="flat" className="space-y-3">
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
           {/* Search Box */}
           <div className="relative flex-1">

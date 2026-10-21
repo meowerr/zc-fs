@@ -456,11 +456,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
       {/* ─── TAB 1: PENDING APPROVALS ─── */}
       {activeSubTab === 'approvals' && (
-        <GlassCard className="p-5 sm:p-6 space-y-4">
+        <GlassCard variant="flat" className="space-y-4">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-accent-yellow" />
-              <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
+              <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
                 Registration Queue ({pendingUsers.length})
               </h3>
             </div>
@@ -554,11 +554,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
       {/* ─── TAB 2: COMPREHENSIVE PEOPLE MANAGEMENT ─── */}
       {activeSubTab === 'people' && (
-        <GlassCard className="p-5 sm:p-6 space-y-4">
+        <GlassCard variant="flat" className="space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-accent-cyan" />
-              <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
+              <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
                 Club Personnel Directory ({filteredPeople.length})
               </h3>
             </div>
@@ -735,11 +735,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
       {/* ─── TAB 3: SUB-TEAMS MANAGEMENT ─── */}
       {activeSubTab === 'teams' && (
-        <GlassCard className="p-5 sm:p-6 space-y-4">
+        <GlassCard variant="flat" className="space-y-4">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
               <FolderPlus className="w-5 h-5 text-accent-cyan" />
-              <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
+              <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
                 Official Sub-Teams ({effectiveGroups.length})
               </h3>
             </div>
@@ -799,12 +799,12 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
       {/* ─── TAB 4: SYSTEM HEALTH & DIAGNOSTICS (Objective 22) ─── */}
       {activeSubTab === 'health' && (
-        <GlassCard className="p-5 sm:p-6 space-y-5">
+        <GlassCard variant="flat" className="space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
               <Server className="w-5 h-5 text-accent-cyan" />
               <div>
-                <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
+                <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
                   Platform Telemetry & Infrastructure Health
                 </h3>
                 <p className="text-label font-mono text-cyber-muted">

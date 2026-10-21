@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Mobile UI Overhaul Round 2 (Branch: `feature/mobile-ui-polish`)
-- **Active Status:** Phase R1 (Content-First Page Headers) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 198.83 KB < 200 KB, main App JS gzip: 45.02 KB < 50 KB).
+- **Active Status:** Phase R2 (Flatten the Containers) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.15 KB < 200 KB, main App JS gzip: 45.12 KB < 50 KB).
 
 ---
 
@@ -137,6 +137,21 @@
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Full test suite passing with strict TypeScript verification (0 errors).
 - `[VERIFIED: node scripts/verify-slice-5-responsive.mjs (23/23 passed)]` Tablet and mobile garage door responsive tests 100% green.
 - `[VERIFIED: npm run build]` Net diff -193 lines of duplicate code. Total bundle gzip: **198.83 KB** (< 200 KB budget, 1.17 KB headroom), Main JS gzip: **45.02 KB** (< 50 KB budget, 4.98 KB headroom).
+
+### Phase R2: Flatten the Containers
+- `[IMPLEMENTED, MANUALLY CHECKED]` Reclaimed ~28px horizontal space on mobile: updated `<main>` in [`AppShell.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/layout/AppShell.tsx) from `p-3.5 sm:p-5 md:p-6` to `px-3 py-3 sm:p-5 md:p-6`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Added `flat` variant to [`GlassCard.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/GlassCard.tsx) (`bg-transparent border-0 shadow-none p-0 md:bg-cyber-surface md:border md:border-cyber-border md:p-5 md:shadow-cyber-sm`), ensuring page-level section containers have zero outer border, shadow, or padding on mobile while retaining desktop framing.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Hid decorative `+` registration mark on mobile (`hidden md:block`) in [`GlassCard.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/GlassCard.tsx), removing stray characters on small screens.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Converted page-level section wrappers to `variant="flat"`:
+  - `MissionControl.tsx`: Sub-teams engineering matrix, lead review queue, and recent deliverables stream.
+  - `TasksHub.tsx`: Filter & search toolbar container.
+  - `TeamDirectory.tsx`: Sub-teams division filter row and search & role filters bar.
+  - `AdminApprovalHub.tsx`: Registration queue (Tab 1), personnel directory (Tab 2), sub-teams structure (Tab 3), and infrastructure health diagnostics (Tab 4).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Standardized section titles across all views to `text-label font-sans font-semibold text-cyber-secondary` on mobile, reserving Orbitron exclusively for page headers.
+- `[VERIFIED: viewport calculation & DOM geometry]` At 360px viewport: 360px - 24px padding = **336px content width** (meets ≥ 336px requirement), with nested bordered card depth ≤ 2.
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` Automated regression guard 100% green.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email validator, file quota, CSV/JSON, and database migration checks passing (100% success).
+- `[VERIFIED: npm run build]` Total bundle gzip: **199.15 KB** (< 200 KB budget, 870 bytes headroom), Main JS gzip: **45.12 KB** (< 50 KB budget, 4.88 KB headroom).
 
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 

@@ -114,7 +114,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             className="flex-1 flex w-full transition-all duration-200"
             style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
           >
-            <main className="flex-1 p-3.5 sm:p-5 md:p-6 safe-main-bottom pb-20 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden flex flex-col">
+            <main className="flex-1 px-3 py-3 sm:p-5 md:p-6 safe-main-bottom pb-20 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden flex flex-col">
               <div className="flex-1">
                 {children}
               </div>
@@ -141,7 +141,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             onOpenStyleGuide={onOpenStyleGuide}
           />
 
-          <main className="flex-1 p-3.5 sm:p-5 md:p-6 safe-main-bottom pb-20 md:pb-8 max-w-full overflow-x-hidden">
+          <main className="flex-1 px-3 py-3 sm:p-5 md:p-6 safe-main-bottom pb-20 md:pb-8 max-w-full overflow-x-hidden">
             {children}
           </main>
         </div>

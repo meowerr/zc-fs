@@ -145,9 +145,9 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
       />
 
       {/* ─── 5 Sub-Teams Quick Filter Overview ─── */}
-      <GlassCard className="p-3.5 space-y-2.5">
-        <div className="flex items-center justify-between text-label font-mono uppercase tracking-wider text-cyber-muted">
-          <span className="flex items-center gap-1.5 font-bold text-cyber-primary">
+      <GlassCard variant="flat" className="space-y-2.5">
+        <div className="flex items-center justify-between text-label font-sans uppercase tracking-wider text-cyber-muted">
+          <span className="text-label font-sans font-semibold text-cyber-secondary md:font-bold md:text-cyber-primary flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-accent-cyan" />
             <span>SUB-TEAM DIVISIONS</span>
           </span>
@@ -229,7 +229,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
       </GlassCard>
 
       {/* ─── Search & Role Filters Bar ─── */}
-      <GlassCard className="p-3.5 flex flex-col md:flex-row items-center justify-between gap-3">
+      <GlassCard variant="flat" className="flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-cyber-muted" />

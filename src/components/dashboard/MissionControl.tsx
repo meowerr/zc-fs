@@ -234,11 +234,11 @@ export const MissionControl: React.FC<MissionControlProps> = ({
 
       {/* ─── ADMIN: 5 SUB-TEAMS TELEMETRY MATRIX ─── */}
       {currentUser.role === 'admin' && (
-        <GlassCard className="p-5 sm:p-6 space-y-4">
+        <GlassCard variant="flat" className="space-y-4">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-accent-cyan" />
-              <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
+              <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
                 Sub-Teams Engineering Matrix
               </h3>
             </div>
@@ -301,11 +301,11 @@ export const MissionControl: React.FC<MissionControlProps> = ({
 
       {/* ─── GROUP HEAD: DELIVERABLES REQUIRING REVIEW ─── */}
       {currentUser.role === 'head' && needsReviewTasks.length > 0 && (
-        <GlassCard className="p-5 sm:p-6 space-y-3.5 border-purple-500/40">
+        <GlassCard variant="flat" className="space-y-3.5">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
               <FileCheck className="w-5 h-5 text-purple-400" />
-              <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
+              <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
                 Awaiting Lead Review ({needsReviewTasks.length})
               </h3>
             </div>
@@ -345,11 +345,11 @@ export const MissionControl: React.FC<MissionControlProps> = ({
       )}
 
       {/* ─── DELIVERABLES STREAM (MY WORK VS TEAM FEED) ─── */}
-      <GlassCard className="p-4 sm:p-5">
+      <GlassCard variant="flat" className="space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5 pb-2.5 border-b border-cyber-border">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-accent-cyan" />
-            <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
+            <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-sm md:sm:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
               {currentUser.role === 'member'
                 ? memberView === 'my_work' ? 'My Assigned Deliverables' : 'Sub-Team Telemetry Stream'
                 : 'Recent Deliverables Telemetry'}
