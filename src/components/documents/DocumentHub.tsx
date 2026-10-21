@@ -24,7 +24,7 @@ import { ModalShell } from '../common/ModalShell';
 import { SkeletonCard } from '../common/SkeletonCard';
 import { usePullToRefresh } from '../../hooks/usePullToRefresh';
 import { DocumentItem, DocumentCategory, Profile, Group } from '../../lib/database.types';
-import { SUB_TEAMS } from '../../lib/constants';
+import { SUB_TEAMS, triggerHaptic } from '../../lib/constants';
 
 interface DocumentHubProps {
   currentUser: Profile;
@@ -561,7 +561,10 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
 
       {/* Floating Action Button (FAB) for Mobile Document Upload */}
       <button
-        onClick={() => setIsUploadModalOpen(true)}
+        onClick={() => {
+          triggerHaptic(8);
+          setIsUploadModalOpen(true);
+        }}
         className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(4.5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
         aria-label="Upload document"
       >

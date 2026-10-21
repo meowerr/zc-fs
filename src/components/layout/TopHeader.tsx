@@ -3,12 +3,14 @@ import { Sun, Moon, Bell, BookOpen, Palette, Search } from 'lucide-react';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { ZfsMonogram } from '../brand/ZfsMonogram';
 import { UserRole } from '../../lib/database.types';
+import { NavTab } from '../../config/navigation';
 
 interface TopHeaderProps {
   currentRole: UserRole;
   userName: string;
   userEmail?: string;
   groupName?: string;
+  activeTab?: NavTab;
   isDarkMode: boolean;
   onToggleTheme: () => void;
   onOpenProfile?: () => void;
@@ -19,11 +21,22 @@ interface TopHeaderProps {
   onOpenSearch?: () => void;
 }
 
+const TAB_TITLES: Record<string, string> = {
+  dashboard: 'Mission Control',
+  tasks: 'Deliverables',
+  chat: 'Pit Wall Comms',
+  docs: 'Documents',
+  team: 'Team Directory',
+  admin: 'Admin Hub',
+  profile: 'Profile',
+};
+
 export const TopHeader: React.FC<TopHeaderProps> = ({
   currentRole,
   userName,
   userEmail,
   groupName = 'Vehicle Dynamics',
+  activeTab = 'dashboard',
   isDarkMode,
   onToggleTheme,
   onOpenProfile,
@@ -39,27 +52,41 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
       style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
     >
       <div className="max-w-7xl mx-auto safe-header-pad sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
-        {/* Left Section: Mobile Brand or Desktop Sub-Team Telemetry Breadcrumb */}
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          {/* Mobile-Only Brand Logo */}
+        {/* Left Section: Mobile Brand or Contextual Page Title or Desktop Sub-Team Telemetry Breadcrumb */}
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 md:flex-initial">
+          {/* Mobile Left Section */}
           <div className="md:hidden flex items-center gap-2 min-w-0 flex-1">
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-cyber-border p-1 shrink-0">
-              <ZfsMonogram glow={false} className="w-full h-auto" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                <h1 className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase leading-tight truncate">
-                  PitLane
+            {!activeTab || activeTab === 'dashboard' ? (
+              <>
+                <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-cyber-border p-1 shrink-0">
+                  <ZfsMonogram glow={false} className="w-full h-auto" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <h1 className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase leading-tight truncate">
+                      PitLane
+                    </h1>
+                    <span className="hidden xs:inline-block px-1 py-0.5 rounded text-label font-mono font-medium bg-brand-orange/15 text-brand-light-orange border border-brand-orange/30">
+                      ZFS-2026
+                    </span>
+                  </div>
+                  <p className="text-label font-mono text-cyber-secondary tracking-wider flex items-center gap-1 min-w-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse shrink-0" />
+                    <span className="truncate min-w-0 flex-1">{groupName}</span>
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className="min-w-0 flex-1">
+                <h1 className="font-display font-black text-xs sm:text-sm tracking-wider text-cyber-primary uppercase leading-tight truncate">
+                  {TAB_TITLES[activeTab] || 'PitLane'}
                 </h1>
-                <span className="hidden xs:inline-block px-1 py-0.5 rounded text-label font-mono font-medium bg-brand-orange/15 text-brand-light-orange border border-brand-orange/30">
-                  ZFS-2026
-                </span>
+                <p className="text-label font-sans text-cyber-secondary tracking-wider flex items-center gap-1 min-w-0 mt-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan shrink-0" />
+                  <span className="truncate min-w-0 flex-1">{groupName}</span>
+                </p>
               </div>
-              <p className="text-label font-mono text-cyber-secondary tracking-wider flex items-center gap-1 min-w-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse shrink-0" />
-                <span className="truncate min-w-0 flex-1">{groupName}</span>
-              </p>
-            </div>
+            )}
           </div>
 
           {/* Desktop Sub-Team Context Indicator */}

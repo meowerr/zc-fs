@@ -139,3 +139,15 @@ export const STATUS_SEMANTICS = {
     dotClass: 'bg-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.4)]',
   },
 };
+
+export const triggerHaptic = (ms = 8) => {
+  try {
+    if (
+      typeof window !== 'undefined' &&
+      'vibrate' in navigator &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      navigator.vibrate(ms);
+    }
+  } catch {}
+};

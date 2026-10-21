@@ -550,15 +550,23 @@ zc-fs/
     - **B7 F1HorizontalTransition:** [OPTIONAL] Livery re-skin.
     - **B8 A11y & Docs Pass:** [PENDING] Final WCAG AA audit, phone verification.
 
-  - **Mobile UI Overhaul (Branch: eature/mobile-ui-polish)**
+  - **Mobile UI Overhaul (Branch: feature/mobile-ui-polish)**
     - **Phase 0 Recon & Baseline:** [COMPLETED] Baseline metrics recorded (285 micro-text, 42 small controls, 19 vh units, zoom-lock present).
     - **Phase 1 Foundations:** [COMPLETED] Unlocked zoom, forced 16px mobile form inputs, added typography scale and .tap-target utility.
     - **Phase 2 Type Floor & Touch Targets:** [COMPLETED] Sub-12px text eliminated (285 -> 0), single-weight mono faux-bolding cleaned (137 -> 0), all controls expanded to >= 44px tap targets.
-    - **Phase 3 Safe Areas & Viewport Units:** [COMPLETED] Top notch header clearance, bottom bar clearance, h to dvh migration, dynamic theme-color meta synchronization.
+    - **Phase 3 Safe Areas & Viewport Units:** [COMPLETED] Top notch header clearance, bottom bar clearance, vh to dvh migration, dynamic theme-color meta synchronization.
     - **Phase 4 Modals & Chat Composer:** [COMPLETED] Mobile full-width bottom sheets (ModalShell.tsx), auto-expanding textarea, mobile nav bar collision resolution.
     - **Phase 5 Navigation Redesign & FABs:** [COMPLETED] 5-tab mobile bottom bar (GarageDoorNav.tsx), 56px FABs for tasks & documents, single-row snap scroll with edge masks.
     - **Phase 6 Density & Contrast:** [COMPLETED] Mission Control 4 prominent telemetry tiles, cards density streamlined, WCAG AA contrast compliance for placeholders and tokens.
-    - **Phase 7 Regression Guard & Wrap-Up:** [COMPLETED] Automated zero-dependency guard erify-mobile-ui.mjs (5/5 passed), 41/41 test suite passing, bundle strictly under 200 KB gzip budget.
+    - **Phase 7 Regression Guard & Wrap-Up:** [COMPLETED] Automated zero-dependency guard verify-mobile-ui.mjs (5/5 passed), 41/41 test suite passing, bundle strictly under 200 KB gzip budget.
+    - **Round 2 Phase R0 Regressions:** [COMPLETED] Label wrap, stat collision, chat composer auto-reset, contextual header, FAB clearance.
+    - **Round 2 Phase R1 Page Headers:** [COMPLETED] Unified PageHeader + StatStrip on 5 primary hubs, above-the-fold content priority.
+    - **Round 2 Phase R2 Flatten Containers:** [COMPLETED] Flattened nested boxes, padding tuned to 12px, >= 336px width at 360px.
+    - **Round 2 Phase R3 Filters & Lists:** [COMPLETED] Single-row toolbar, bottom filter sheets, shimmer skeleton cards, touch scale press feedback.
+    - **Round 2 Phase R4 Messenger Chat:** [COMPLETED] Own vs. incoming bubble hierarchy, 5-min grouping, date chips, keyboard clearance, auto-scroll.
+    - **Round 2 Phase R5 Navigation & Header:** [COMPLETED] Contextual mobile header, soft active pill, list-based More sheet, scroll restoration, haptics.
+    - **Round 2 Phase R6 Typography & Hierarchy:** [PENDING] Calm 3-level typography hierarchy, contrast audit, 390px view verification.
+    - **Round 2 Phase R7 Verification & Review:** [PENDING] 360/390/412px visual review, gesture inspection, production build audit.
 
 ---
 

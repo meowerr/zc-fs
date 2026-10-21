@@ -175,6 +175,16 @@
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email domain, file quota, CSV/JSON, and database migration checks passing (100% success).
 - `[VERIFIED: npm run build]` Total bundle gzip: **199.21 KB** (< 200 KB budget, 809 bytes headroom), Main JS gzip: **37.41 KB** (< 50 KB budget, 12.59 KB headroom).
 
+### Phase R5: Navigation & Header Refinement
+- `[IMPLEMENTED, MANUALLY CHECKED]` Contextual Mobile Header: Updated `TopHeader.tsx` so inner pages display the active page title (e.g. Mission Control, Deliverables, Comms, Documents, Directory, Admin Hub) + user's sub-team name, eliminating the duplicate "PitLane" brand header and giving room for long sub-team titles, while reserving the brand monogram and full logo strictly for the Mission Control dashboard.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Bottom Bar Active Pill & Keyboard Auto-Hide: Enhanced `GarageDoorNav.tsx` bottom bar with a soft cyan pill (`px-3 py-1 rounded-full bg-accent-cyan/15 text-accent-cyan`) behind the active tab icon (and behind More when an inner tab is active), retaining the 2px top indicator. Added a `visualViewport` listener that automatically hides the bottom bar when the virtual keyboard is open (`vv.height < window.innerHeight * 0.75`), preventing screen overlap.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Scannable 56px List-Based More Sheet: Re-architected the More sheet from cramped 2-column tiles into a clean, vertically scannable list of 56px rows featuring icon, title, subtitle, and chevron for Team Directory, Admin Hub (role-guarded to Club Admin only), Profile, Theme Toggle (Appearance), and Sign Out.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Scroll Restoration Per Tab: Implemented scroll position tracking and instant restoration per tab in `App.tsx` (`scrollPositionsRef.current[activeTab] = window.scrollY`), automatically restoring the user's exact scroll position on tab switch via `requestAnimationFrame` and `window.scrollTo({ top, behavior: 'instant' })`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Haptic Hints: Added a safe `triggerHaptic(ms = 8)` helper in `src/lib/constants.ts` (respecting `prefers-reduced-motion` and vibration support), wired to bottom bar tab switching, More sheet navigation selections, and mobile Floating Action Buttons (FABs) in `TasksHub.tsx` and `DocumentHub.tsx`.
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` 100% clean mobile UI regression guard (0 sub-12px microtext, strict dvh units, safe area notch awareness, 44px minimum tap targets).
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email domain, file quota, CSV/JSON, and database migration checks passing (100% success).
+- `[VERIFIED: npm run build]` Total bundle gzip: **199.77 KB** (< 200 KB budget, 235 bytes headroom), Main JS gzip: **37.98 KB** (< 50 KB budget, 12.02 KB headroom).
+
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 
 ### Slice B1: Asset Pipeline & PWA Icon Set

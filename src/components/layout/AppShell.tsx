@@ -25,6 +25,7 @@ interface AppShellProps {
   onOpenGuide?: () => void;
   onOpenStyleGuide?: () => void;
   onOpenSearch?: () => void;
+  onSignOut?: () => void;
   groups?: Group[];
   tasks?: Task[];
 }
@@ -44,6 +45,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   onOpenGuide,
   onOpenStyleGuide,
   onOpenSearch,
+  onSignOut,
   groups,
   tasks,
 }) => {
@@ -80,6 +82,7 @@ export const AppShell: React.FC<AppShellProps> = ({
 
       {/* Top Header Telemetry HUD */}
       <TopHeader
+        activeTab={activeTab}
         currentRole={currentRole}
         userName={userName}
         userEmail={userEmail}
@@ -159,6 +162,7 @@ export const AppShell: React.FC<AppShellProps> = ({
           onOpenProfile={onOpenProfile}
           isDarkMode={isDarkMode}
           onToggleTheme={toggleTheme}
+          onSignOut={onSignOut}
         />
       ) : (
         <BottomNav

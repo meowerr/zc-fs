@@ -17,7 +17,7 @@ import { SkeletonCard } from '../common/SkeletonCard';
 import { TaskCard } from './TaskCard';
 import { TaskCreateModal } from './TaskCreateModal';
 import { TaskDetailModal } from './TaskDetailModal';
-import { SUB_TEAMS } from '../../lib/constants';
+import { SUB_TEAMS, triggerHaptic } from '../../lib/constants';
 import { exportTasksToCSV, exportTasksToJSON } from '../../lib/exportUtils';
 import { usePullToRefresh } from '../../hooks/usePullToRefresh';
 import { 
@@ -322,7 +322,10 @@ export const TasksHub: React.FC<TasksHubProps> = ({
       {/* Floating Action Button (FAB) for Mobile Tasks Creation */}
       {isHeadOrAdmin && (
         <button
-          onClick={() => setIsCreateModalOpen(true)}
+          onClick={() => {
+            triggerHaptic(8);
+            setIsCreateModalOpen(true);
+          }}
           className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
           aria-label="New task"
         >

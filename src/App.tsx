@@ -56,6 +56,24 @@ export const App: React.FC = () => {
   });
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const prevUserRef = useRef<string | null>(null);
+  const scrollPositionsRef = useRef<Record<string, number>>({});
+
+  // Scroll restoration per navigation tab
+  useEffect(() => {
+    const handleScroll = () => {
+      scrollPositionsRef.current[activeTab] = window.scrollY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeTab]);
+
+  useEffect(() => {
+    const target = scrollPositionsRef.current[activeTab] || 0;
+    const raf = requestAnimationFrame(() => {
+      window.scrollTo({ top: target, behavior: 'instant' as ScrollBehavior });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [activeTab]);
 
   // Global Ctrl+K / Cmd+K listener
   useEffect(() => {
@@ -312,6 +330,7 @@ export const App: React.FC = () => {
         groupName={groupDisplayName}
         unreadCount={0}
         onOpenProfile={signOut}
+        onSignOut={signOut}
         notificationCount={notifUnreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
