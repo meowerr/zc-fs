@@ -59,7 +59,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
               {task.task_type}
             </span>
             {groupName && (
-              <span className="text-label font-mono text-cyber-muted truncate max-w-[130px]">
+              <span className="hidden sm:inline text-label font-mono text-cyber-muted truncate max-w-[130px]">
                 {groupName}
               </span>
             )}
@@ -90,7 +90,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
                   <ChromeAvatar key={a.id} name={a.full_name} role={a.role} size="sm" />
                 ))}
                 {task.assignees.length > 3 && (
-                  <span className="w-5 h-5 rounded bg-cyber-surface-elevated border border-cyber-border text-label font-mono flex items-center justify-center font-medium text-cyber-secondary">
+                  <span className="w-7 h-7 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-label font-mono flex items-center justify-center font-medium text-cyber-secondary">
                     +{task.assignees.length - 3}
                   </span>
                 )}
@@ -102,7 +102,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
             )}
 
             {task.links && task.links.length > 0 && (
-              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono text-cyber-muted">
+              <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono text-cyber-muted">
                 <Paperclip className="w-3 h-3" /> {task.links.length}
               </span>
             )}

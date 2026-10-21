@@ -354,11 +354,11 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       />
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <h4 className="font-display font-bold text-sm text-cyber-primary truncate">
+                          <h4 className="font-display font-bold text-body-lg sm:text-sm text-cyber-primary truncate">
                             {person.full_name}
                           </h4>
                           {isSelf && (
-                            <span className="text-label font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 font-medium">
+                            <span className="hidden sm:inline-block text-label font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 font-medium">
                               YOU
                             </span>
                           )}

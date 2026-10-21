@@ -35,7 +35,7 @@ export const GlowInput = React.forwardRef<HTMLInputElement, GlowInputProps>(
               w-full min-h-[44px] h-10 rounded-lg text-xs sm:text-sm font-sans
               bg-white dark:bg-[#181E26]
               text-[#0D1522] dark:text-[#F2F4F7]
-              placeholder:text-[#94A3B8] dark:placeholder:text-[#737D89]
+              placeholder:text-[#64748B] dark:placeholder:text-[#8A96A4]
               border border-[#D1DAE5] dark:border-[#2A323C]
               transition-all duration-150
               ${icon ? 'pl-9 pr-3.5' : 'px-3.5'}

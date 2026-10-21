@@ -106,6 +106,32 @@ export const MissionControl: React.FC<MissionControlProps> = ({
     return { text: `DUE IN ${days}d ${hours}h`, isOverdue: false };
   };
 
+  // Role-specific telemetry stat tiles
+  const statTiles = useMemo(() => {
+    if (currentUser.role === 'admin') {
+      return [
+        { label: 'Total Tasks', tag: 'ALL', icon: Sliders, color: 'text-accent-cyan', bar: 'bg-accent-cyan', count: tasks.length, sub: '5 Sub-Teams Combined', zero: 'No active deliverables' },
+        { label: 'Registrations', tag: 'ACTION', icon: Users, color: 'text-accent-yellow', bar: 'bg-accent-yellow', count: pendingRegistrations.length, sub: 'Pending Approval', zero: 'All caught up', action: () => onNavigateTab('admin') },
+        { label: 'Completed', tag: 'DONE', icon: CheckCircle2, color: 'text-accent-lime', bar: 'bg-accent-lime', count: tasks.filter(t => t.status === 'approved' || t.status === 'done').length, sub: 'Approved Deliverables', zero: 'No approved tasks yet' },
+        { label: 'Overdue', tag: 'ALERT', icon: AlertTriangle, color: 'text-accent-red', bar: 'bg-accent-red', count: overdueTasks.length, sub: 'Past Target Deadline', zero: 'On schedule' },
+      ];
+    }
+    if (currentUser.role === 'head') {
+      return [
+        { label: 'Team Queue', tag: 'SUB-TEAM', icon: Sliders, color: 'text-accent-cyan', bar: 'bg-accent-cyan', count: tasks.length, sub: 'Active Deliverables', zero: 'No queue deliverables' },
+        { label: 'Needs Review', tag: 'LEAD', icon: FileCheck, color: 'text-purple-400', bar: 'bg-purple-500', count: needsReviewTasks.length, sub: 'Submissions Awaiting You', zero: 'No reviews pending', action: () => onNavigateTab('tasks') },
+        { label: 'Completed', tag: 'DONE', icon: CheckCircle2, color: 'text-accent-lime', bar: 'bg-accent-lime', count: tasks.filter(t => t.status === 'approved' || t.status === 'done').length, sub: 'Approved Deliverables', zero: 'No approved tasks yet' },
+        { label: 'Overdue', tag: 'ALERT', icon: AlertTriangle, color: 'text-accent-red', bar: 'bg-accent-red', count: overdueTasks.length, sub: 'Past Target Deadline', zero: 'On schedule' },
+      ];
+    }
+    return [
+      { label: 'My Tasks', tag: 'ASSIGNED', icon: Activity, color: 'text-accent-cyan', bar: 'bg-accent-cyan', count: myTasks.length, sub: 'Assigned to Me', zero: 'No tasks assigned' },
+      { label: 'Revisions', tag: 'FEEDBACK', icon: AlertTriangle, color: 'text-accent-red', bar: 'bg-accent-red', count: changesRequestedTasks.length, sub: 'Changes Requested', zero: 'No changes requested' },
+      { label: 'Due Soon', tag: '<72H', icon: Clock, color: 'text-accent-yellow', bar: 'bg-accent-yellow', count: dueSoonTasks.length, sub: 'Upcoming Deadlines', zero: 'No upcoming deadlines' },
+      { label: 'Overdue', tag: 'ALERT', icon: AlertTriangle, color: 'text-accent-red', bar: 'bg-accent-red', count: overdueTasks.length, sub: 'Past Target Deadline', zero: 'On schedule' },
+    ];
+  }, [currentUser.role, tasks, pendingRegistrations.length, overdueTasks.length, needsReviewTasks.length, myTasks.length, changesRequestedTasks.length, dueSoonTasks.length, onNavigateTab]);
+
   // Recent tasks to show on main feed
   const displayTasks = useMemo(() => {
     if (currentUser.role === 'member' && memberView === 'my_work') {
@@ -197,221 +223,30 @@ export const MissionControl: React.FC<MissionControlProps> = ({
 
         {/* ─── ROLE-SPECIFIC TELEMETRY CARDS (Zero-State & Plain-Language Aware) ─── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-5 border-t border-cyber-border">
-          {/* CARD 1 */}
-          {currentUser.role === 'admin' ? (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Sliders className="w-3.5 h-3.5 text-accent-cyan" />
-                  Total Tasks
-                </span>
-                <span className="text-label font-mono text-cyber-secondary tracking-tighter">ALL</span>
-              </div>
-              {tasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No active deliverables</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{tasks.length}</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">5 Sub-Teams Combined</div>
-                </>
-              )}
-            </div>
-          ) : currentUser.role === 'head' ? (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Sliders className="w-3.5 h-3.5 text-accent-cyan" />
-                  Team Queue
-                </span>
-                <span className="text-label font-mono text-cyber-secondary tracking-tighter">SUB-TEAM</span>
-              </div>
-              {tasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No queue deliverables</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{tasks.length}</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Active Deliverables</div>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Activity className="w-3.5 h-3.5 text-accent-cyan" />
-                  My Tasks
-                </span>
-                <span className="text-label font-mono text-cyber-secondary tracking-tighter">ASSIGNED</span>
-              </div>
-              {myTasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No tasks assigned</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{myTasks.length}</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Assigned to Me</div>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* CARD 2 */}
-          {currentUser.role === 'admin' ? (
+          {statTiles.map((tile) => (
             <div
-              onClick={() => onNavigateTab('admin')}
-              className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors cursor-pointer"
+              key={tile.label}
+              onClick={tile.action}
+              className={`p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden transition-colors ${
+                tile.action ? 'cursor-pointer hover:border-accent-cyan/40' : 'hover:border-cyber-border-strong'
+              }`}
             >
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
+              <div className={`absolute top-0 inset-x-0 h-[2px] ${tile.bar} opacity-70`} />
               <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
                 <span className="flex items-center gap-1.5 font-bold">
-                  <Users className="w-3.5 h-3.5 text-accent-yellow" />
-                  Registrations
+                  <tile.icon className={`w-3.5 h-3.5 ${tile.color}`} />
+                  {tile.label}
                 </span>
-                <span className="text-label font-mono text-accent-yellow tracking-tighter font-medium">ACTION</span>
+                <span className={`text-label font-mono tracking-tighter ${tile.color}`}>{tile.tag}</span>
               </div>
-              {pendingRegistrations.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">All caught up</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">{pendingRegistrations.length}</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Pending Approval</div>
-                </>
-              )}
-            </div>
-          ) : currentUser.role === 'head' ? (
-            <div
-              onClick={() => onNavigateTab('tasks')}
-              className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-purple-500/40 transition-colors cursor-pointer"
-            >
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-purple-500 opacity-70" />
-              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <FileCheck className="w-3.5 h-3.5 text-purple-400" />
-                  Needs Review
-                </span>
-                <span className="text-label font-mono text-purple-400 tracking-tighter font-medium">LEAD</span>
+              <div className={`text-3xl font-display font-black mt-1 ${tile.count === 0 ? 'text-cyber-muted font-mono font-medium' : tile.color}`}>
+                {tile.count}
               </div>
-              {needsReviewTasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No reviews pending</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-purple-400 mt-1">{needsReviewTasks.length}</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Submissions Awaiting You</div>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
-              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
-                  Revisions
-                </span>
-                <span className="text-label font-mono text-accent-red tracking-tighter font-medium">FEEDBACK</span>
+              <div className="hidden sm:block text-label font-mono text-cyber-secondary mt-0.5 truncate">
+                {tile.count === 0 ? tile.zero : tile.sub}
               </div>
-              {changesRequestedTasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No changes requested</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">{changesRequestedTasks.length}</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Changes Requested</div>
-                </>
-              )}
             </div>
-          )}
-
-          {/* CARD 3 */}
-          {currentUser.role === 'member' ? (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
-              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Clock className="w-3.5 h-3.5 text-accent-yellow" />
-                  Due Soon
-                </span>
-                <span className="text-label font-mono text-cyber-secondary tracking-tighter">&lt;72H</span>
-              </div>
-              {dueSoonTasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No upcoming deadlines</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">{dueSoonTasks.length}</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Upcoming Deadlines</div>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-lime/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime opacity-70" />
-              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
-                  Completed
-                </span>
-                <span className="text-label font-mono text-cyber-secondary tracking-tighter">DONE</span>
-              </div>
-              {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">No approved tasks yet</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-lime mt-1">
-                    {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length}
-                  </div>
-                  <div className="text-label font-mono text-cyber-secondary mt-0.5">Approved Deliverables</div>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* CARD 4 */}
-          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
-            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-              <span className="flex items-center gap-1.5 font-bold">
-                <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
-                Overdue
-              </span>
-              <span className="text-label font-mono text-accent-red tracking-tighter font-medium">ALERT</span>
-            </div>
-            {overdueTasks.length === 0 ? (
-              <>
-                <div className="text-2xl sm:text-3xl font-mono font-medium text-cyber-muted mt-1">0</div>
-                <div className="text-label font-mono text-cyber-secondary mt-0.5">On schedule</div>
-              </>
-            ) : (
-              <>
-                <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">{overdueTasks.length}</div>
-                <div className="text-label font-mono text-cyber-secondary mt-0.5">Past Target Deadline</div>
-              </>
-            )}
-          </div>
+          ))}
         </div>
       </GlassCard>
 

@@ -325,13 +325,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                       {catMeta.label}
                     </span>
 
-                    <span className="font-mono text-label px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-secondary truncate max-w-[130px]">
+                    <span className="hidden sm:inline-block font-mono text-label px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-secondary truncate max-w-[130px]">
                       {teamName}
                     </span>
                   </div>
 
                   {/* Document Title */}
-                  <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-1">
+                  <h3 className="font-display font-bold text-body-lg sm:text-base text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-1">
                     {doc.title}
                   </h3>
 

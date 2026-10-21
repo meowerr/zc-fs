@@ -29,6 +29,7 @@
     --accent-orange: #C2410C; /* Re-mapped to Brand Light Orange */
     --accent-purple: #7C3AED; /* Cyber Violet (Light) */
     --accent-yellow: #B8860B;
+    --accent-yellow-text: #8A6508;
     --accent-lime: #0B9E50;
 
     /* Sub-Team Accents */
@@ -198,7 +199,7 @@
 
   .dark input::placeholder,
   .dark textarea::placeholder {
-    color: #737D89 !important;
+    color: #8A96A4 !important;
   }
 
   .dark select option {
@@ -242,7 +243,7 @@
 
   :root:not(.dark) input::placeholder,
   :root:not(.dark) textarea::placeholder {
-    color: #94A3B8 !important;
+    color: #64748B !important;
   }
 
   :root:not(.dark) select option {
