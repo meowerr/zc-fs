@@ -76,6 +76,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('all');
 
   // Sync initialTaskId if passed from Search or Notifications
@@ -156,23 +157,61 @@ export const TasksHub: React.FC<TasksHubProps> = ({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <GhostButton
-              size="sm"
-              icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
-              onClick={() => exportTasksToCSV(tasks, effectiveGroups)}
-              title="Download tasks as CSV spreadsheet"
-            >
-              CSV Export
-            </GhostButton>
+            <div className="hidden sm:flex items-center gap-2">
+              <GhostButton
+                size="sm"
+                icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
+                onClick={() => exportTasksToCSV(tasks, effectiveGroups)}
+                title="Download tasks as CSV spreadsheet"
+              >
+                CSV Export
+              </GhostButton>
 
-            <GhostButton
-              size="sm"
-              icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
-              onClick={() => exportTasksToJSON(tasks)}
-              title="Download JSON telemetry dump"
-            >
-              JSON
-            </GhostButton>
+              <GhostButton
+                size="sm"
+                icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
+                onClick={() => exportTasksToJSON(tasks)}
+                title="Download JSON telemetry dump"
+              >
+                JSON
+              </GhostButton>
+            </div>
+
+            {/* Mobile Export Overflow Menu */}
+            <div className="relative sm:hidden">
+              <GhostButton
+                size="sm"
+                icon={<Download className="w-3.5 h-3.5 text-accent-cyan" />}
+                onClick={() => setIsExportMenuOpen((prev) => !prev)}
+                aria-label="Export options"
+              >
+                Export
+              </GhostButton>
+              {isExportMenuOpen && (
+                <div className="absolute right-0 top-full mt-1.5 z-20 w-44 rounded-xl bg-cyber-surface border border-cyber-border-strong shadow-cyber-elevated py-1 animate-fade-in">
+                  <button
+                    onClick={() => {
+                      exportTasksToCSV(tasks, effectiveGroups);
+                      setIsExportMenuOpen(false);
+                    }}
+                    className="w-full px-3 py-2.5 text-left text-xs font-mono text-cyber-primary hover:bg-cyber-surface-hover flex items-center gap-2 cursor-pointer"
+                  >
+                    <FileSpreadsheet className="w-4 h-4 text-accent-cyan" />
+                    <span>CSV Export</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      exportTasksToJSON(tasks);
+                      setIsExportMenuOpen(false);
+                    }}
+                    className="w-full px-3 py-2.5 text-left text-xs font-mono text-cyber-primary hover:bg-cyber-surface-hover flex items-center gap-2 cursor-pointer"
+                  >
+                    <Download className="w-4 h-4 text-cyber-secondary" />
+                    <span>JSON Dump</span>
+                  </button>
+                </div>
+              )}
+            </div>
 
             {isHeadOrAdmin && (
               <GlossyButton
@@ -180,6 +219,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
                 size="md"
                 icon={<Plus className="w-4 h-4" />}
                 onClick={() => setIsCreateModalOpen(true)}
+                className="hidden sm:inline-flex"
               >
                 Create Task
               </GlossyButton>
@@ -299,7 +339,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-cyber-border">
+        <div className="-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none pt-2 border-t border-cyber-border mask-fade-edges">
           {[
             { id: 'all', label: 'All Tasks' },
             { id: 'my_tasks', label: 'My Deliverables' },
@@ -312,7 +352,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
               key={pill.id}
               onClick={() => setFilter(pill.id as any)}
               className={`
-                min-h-[40px] px-3.5 py-2 rounded-md text-label font-mono font-medium uppercase transition-all cursor-pointer border
+                shrink-0 snap-start min-h-[44px] px-4 rounded-lg text-label font-mono font-medium uppercase transition-all cursor-pointer border
                 ${
                   filter === pill.id
                     ? 'bg-accent-cyan text-black border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)]'
@@ -354,6 +394,17 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             );
           })}
         </div>
+      )}
+
+      {/* Floating Action Button (FAB) for Mobile Tasks Creation */}
+      {isHeadOrAdmin && (
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(4.5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+          aria-label="New task"
+        >
+          <Plus className="w-6 h-6" />
+        </button>
       )}
 
       {/* Task Creation Modal */}

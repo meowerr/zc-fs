@@ -333,7 +333,18 @@
     padding-right: max(0.625rem, env(safe-area-inset-right));
   }
   .safe-main-bottom {
-    padding-bottom: calc(6.5rem + env(safe-area-inset-bottom));
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .mask-fade-edges {
+    mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 24px), transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 12px, black calc(100% - 24px), transparent);
   }
 }
 
@@ -424,6 +435,7 @@
 }
 
 
-html[data-hide-mobile-nav="true"] .garage-door-pill {
+html[data-hide-mobile-nav="true"] .garage-door-pill,
+html[data-hide-mobile-nav="true"] .mobile-bottom-bar {
   display: none !important;
 }

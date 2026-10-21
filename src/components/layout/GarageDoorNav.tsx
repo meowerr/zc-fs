@@ -3,12 +3,17 @@ import {
   ChevronUp, 
   X, 
   Radio, 
-  User
+  User,
+  Menu
 } from 'lucide-react';
 import { UserRole } from '../../lib/database.types';
 import { NavTab, getVisibleNavItems } from '../../config/navigation';
 import { SUB_TEAMS } from '../../lib/constants';
 import { ZfsMonogram } from '../brand/ZfsMonogram';
+
+// Instant Rollback Flag: toggle to false if floating thumb-arc pill is needed
+const USE_MOBILE_TAB_BAR = true;
+const PRIMARY_TABS: NavTab[] = ['dashboard', 'tasks', 'chat', 'docs'];
 
 export interface GarageDoorNavProps {
   activeTab: NavTab;
@@ -138,16 +143,69 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
 
   return (
     <aside className="md:hidden" aria-label="Mobile Navigation Command Console">
-      {/* ─── CLOSED STATE: THUMB-ARC FLOATING GLASS PILL ─── */}
-      <div 
-        className={`fixed bottom-3 inset-x-3 sm:inset-x-6 z-40 max-w-md mx-auto pb-[env(safe-area-inset-bottom)] pointer-events-auto transition-all duration-200 ease-out garage-door-pill ${
-          isMounted ? 'opacity-0 pointer-events-none translate-y-3' : 'opacity-100 pointer-events-auto translate-y-0'
-        }`}
-      >
-        <button
-          onClick={openGarage}
-          aria-label="Open PitLane Command Console"
-          aria-expanded={isVisible}
+      {/* ─── CLOSED STATE: 5-TAB BOTTOM NAVIGATION BAR (OR THUMB-ARC PILL FOR ROLLBACK) ─── */}
+      {USE_MOBILE_TAB_BAR ? (
+        <nav
+          className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-cyber-surface/95 dark:bg-midnight-950/95 backdrop-blur-md border-t border-cyber-border pb-[env(safe-area-inset-bottom)] mobile-bottom-bar shadow-cyber transition-all duration-200"
+          aria-label="Mobile Bottom Navigation"
+        >
+          <div className="grid grid-cols-5">
+            {PRIMARY_TABS.map((tabId) => {
+              const item = visibleItems.find((i) => i.id === tabId);
+              if (!item) return null;
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              const showBadge = item.badgeKey === 'chat' && unreadCount > 0;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => onTabChange(item.id)}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`min-h-[56px] flex flex-col items-center justify-center gap-0.5 text-label font-display transition-colors cursor-pointer relative ${
+                    isActive ? 'text-accent-cyan font-bold' : 'text-cyber-secondary hover:text-cyber-primary font-medium'
+                  }`}
+                >
+                  {isActive && (
+                    <div className="absolute top-0 inset-x-3 h-[2px] bg-accent-cyan rounded-full shadow-[0_0_6px_rgba(0,217,255,0.6)]" />
+                  )}
+                  <div className="relative">
+                    <Icon className="w-5 h-5" />
+                    {showBadge && (
+                      <span className="absolute -top-1 -right-2 px-1 rounded-full text-label font-mono font-medium bg-accent-red text-white shadow-sm">
+                        {unreadCount > 99 ? '99+' : unreadCount}
+                      </span>
+                    )}
+                  </div>
+                  <span>{item.shortLabel || item.label}</span>
+                </button>
+              );
+            })}
+            <button
+              onClick={openGarage}
+              aria-label="More navigation destinations"
+              className={`min-h-[56px] flex flex-col items-center justify-center gap-0.5 text-label font-display transition-colors cursor-pointer relative ${
+                !PRIMARY_TABS.includes(activeTab) ? 'text-accent-cyan font-bold' : 'text-cyber-secondary hover:text-cyber-primary font-medium'
+              }`}
+            >
+              {!PRIMARY_TABS.includes(activeTab) && (
+                <div className="absolute top-0 inset-x-3 h-[2px] bg-accent-cyan rounded-full shadow-[0_0_6px_rgba(0,217,255,0.6)]" />
+              )}
+              <Menu className="w-5 h-5" />
+              <span>More</span>
+            </button>
+          </div>
+        </nav>
+      ) : (
+        /* Rollback: Thumb-Arc Floating Glass Pill */
+        <div 
+          className={`fixed bottom-3 inset-x-3 sm:inset-x-6 z-40 max-w-md mx-auto pb-[env(safe-area-inset-bottom)] pointer-events-auto transition-all duration-200 ease-out garage-door-pill ${
+            isMounted ? 'opacity-0 pointer-events-none translate-y-3' : 'opacity-100 pointer-events-auto translate-y-0'
+          }`}
+        >
+          <button
+            onClick={openGarage}
+            aria-label="Open PitLane Command Console"
+            aria-expanded={isVisible}
             className="w-full min-h-[56px] px-3.5 py-2 rounded-2xl bg-cyber-surface/95 dark:bg-midnight-900/95 backdrop-blur-md border border-cyber-border shadow-cyber-elevated flex items-center justify-between gap-3 active:scale-[0.98] transition-all cursor-pointer group"
           >
             {/* Left: ZC Motorsport Badge */}
@@ -173,7 +231,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
               </div>
             </div>
 
-            {/* Right: Unread Chat Badge + Status LED + Garage Door Open Chevron */}
+            {/* Right: Unread Chat Badge + Garage Door Open Chevron */}
             <div className="flex items-center gap-2">
               {unreadCount > 0 && (
                 <span className="px-1.5 py-0.5 rounded-full text-label font-mono font-medium bg-accent-red text-white flex items-center justify-center shadow-sm animate-pulse">
@@ -181,17 +239,13 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                 </span>
               )}
 
-              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-bg border border-cyber-border font-mono text-label text-accent-lime font-medium">
-                <Radio className="w-2.5 h-2.5 animate-pulse" />
-                <span>LIVE</span>
-              </div>
-
               <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-cyber-surface-elevated text-cyber-secondary group-hover:text-accent-cyan border border-cyber-border transition-colors">
                 <ChevronUp className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
               </div>
             </div>
           </button>
         </div>
+      )}
 
       {/* ─── OPEN STATE: GARAGE DOOR OVERLAY PANEL (~70VH BOTTOM SHEET) ─── */}
       {isMounted && (
@@ -218,7 +272,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                 : undefined
             }
             className={`
-              relative z-50 w-full max-h-[78dvh] bg-cyber-surface dark:bg-midnight-950 border-t border-cyber-border-strong rounded-t-3xl shadow-2xl flex flex-col overflow-hidden
+              relative z-50 w-full max-h-[78vh] max-h-[78dvh] bg-cyber-surface dark:bg-midnight-950 border-t border-cyber-border-strong rounded-t-3xl shadow-2xl flex flex-col overflow-hidden
               ${
                 dragOffset > 0
                   ? ''
@@ -243,7 +297,12 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
             </div>
 
             {/* Garage Door Header */}
-            <div className="px-4 pb-3 flex items-center justify-between border-b border-cyber-border/80 shrink-0">
+            <div 
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              className="px-4 pb-3 flex items-center justify-between border-b border-cyber-border/80 shrink-0 cursor-grab"
+            >
               <div className="flex items-center gap-2.5">
                 <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-cyber-border p-1 shrink-0">
                   <ZfsMonogram glow={false} className="w-full h-auto" />
@@ -304,7 +363,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                       {/* Text */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between">
-                          <span className={`font-display text-xs tracking-wider truncate ${isActive ? 'font-bold text-accent-cyan' : 'font-medium'}`}>
+                          <span className={`font-display text-sm tracking-wider truncate ${isActive ? 'font-bold text-accent-cyan' : 'font-medium'}`}>
                             {item.shortLabel || item.label}
                           </span>
                           {showBadge && (

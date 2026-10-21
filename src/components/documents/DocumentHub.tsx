@@ -36,6 +36,24 @@ interface DocumentHubProps {
   onDeleteDocument: (docId: string) => Promise<void>;
 }
 
+const CATEGORY_META: Record<string, { label: string; color: string; icon: any }> = {
+  spec: { label: 'SPEC', color: '#00D9FF', icon: FileText },
+  cad: { label: 'CAD', color: '#FF4FA3', icon: Box },
+  rulebook: { label: 'RULES', color: '#FFD43B', icon: BookOpen },
+  telemetry: { label: 'TELEM', color: '#10E57A', icon: Activity },
+  report: { label: 'REPORT', color: '#A855F7', icon: FileSpreadsheet },
+};
+const DEFAULT_CAT_META = { label: 'DOC', color: '#737D89', icon: FileCode };
+
+const CATEGORIES = [
+  { id: 'all', label: 'All Docs', icon: Layers, color: '#00D9FF' },
+  { id: 'spec', label: 'Specifications', icon: FileText, color: '#00D9FF' },
+  { id: 'cad', label: 'CAD & Models', icon: Box, color: '#FF4FA3' },
+  { id: 'rulebook', label: 'Rulebooks & SES', icon: BookOpen, color: '#FFD43B' },
+  { id: 'telemetry', label: 'Telemetry & Logs', icon: Activity, color: '#10E57A' },
+  { id: 'report', label: 'Engineering Reports', icon: FileSpreadsheet, color: '#A855F7' },
+];
+
 export const DocumentHub: React.FC<DocumentHubProps> = ({
   currentUser,
   documents,
@@ -67,37 +85,10 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
 
   const effectiveGroups = groups.length > 0 ? groups : SUB_TEAMS;
 
-  const categories: Array<{ id: string; label: string; icon: any; color: string }> = [
-    { id: 'all', label: 'All Docs', icon: Layers, color: '#00D9FF' },
-    { id: 'spec', label: 'Specifications', icon: FileText, color: '#00D9FF' },
-    { id: 'cad', label: 'CAD & Models', icon: Box, color: '#FF4FA3' },
-    { id: 'rulebook', label: 'Rulebooks & SES', icon: BookOpen, color: '#FFD43B' },
-    { id: 'telemetry', label: 'Telemetry & Logs', icon: Activity, color: '#10E57A' },
-    { id: 'report', label: 'Engineering Reports', icon: FileSpreadsheet, color: '#A855F7' },
-  ];
+  const formatFileSize = (bytes: number) =>
+    bytes < 1024 ? `${bytes} B` : bytes < 1048576 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1048576).toFixed(2)} MB`;
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-  };
-
-  const getCategoryMeta = (cat: string) => {
-    switch (cat) {
-      case 'spec':
-        return { label: 'SPEC', color: '#00D9FF', icon: FileText };
-      case 'cad':
-        return { label: 'CAD', color: '#FF4FA3', icon: Box };
-      case 'rulebook':
-        return { label: 'RULES', color: '#FFD43B', icon: BookOpen };
-      case 'telemetry':
-        return { label: 'TELEM', color: '#10E57A', icon: Activity };
-      case 'report':
-        return { label: 'REPORT', color: '#A855F7', icon: FileSpreadsheet };
-      default:
-        return { label: 'DOC', color: '#737D89', icon: FileCode };
-    }
-  };
+  const getCategoryMeta = (cat: string) => CATEGORY_META[cat] || DEFAULT_CAT_META;
 
   // Filtered documents
   const filteredDocs = useMemo(() => {
@@ -217,7 +208,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
               variant="primary"
               size="md"
               onClick={() => setIsUploadModalOpen(true)}
-              className="flex items-center gap-2"
+              className="hidden sm:inline-flex items-center gap-2"
             >
               <Upload className="w-4 h-4" />
               <span>Upload Document</span>
@@ -229,8 +220,8 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
       {/* Filter and Search Bar */}
       <div className="space-y-3">
         {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          {categories.map((cat) => {
+        <div className="-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-1 mask-fade-edges">
+          {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
             const isActive = selectedCategory === cat.id;
             return (
@@ -238,7 +229,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`
-                  flex items-center gap-2 min-h-[40px] px-3.5 py-2 rounded-lg text-label font-mono transition-all shrink-0 cursor-pointer border
+                  shrink-0 snap-start flex items-center gap-2 min-h-[44px] px-4 rounded-lg text-label font-mono transition-all cursor-pointer border
                   ${
                     isActive
                       ? 'bg-cyber-surface-elevated text-cyber-primary border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.2)] font-bold'
@@ -550,6 +541,15 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
           </GlassCard>
         </div>
       )}
+
+      {/* Floating Action Button (FAB) for Mobile Document Upload */}
+      <button
+        onClick={() => setIsUploadModalOpen(true)}
+        className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(4.5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+        aria-label="Upload document"
+      >
+        <Upload className="w-6 h-6" />
+      </button>
 
       {/* Delete Confirmation Modal */}
       {selectedDocToDelete && (

@@ -414,64 +414,40 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
           </div>
 
           <div className="flex items-center gap-2.5">
-            <div className="p-2.5 sm:p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center min-w-[70px]">
-              <div className="font-mono text-label text-cyber-muted uppercase">Pending</div>
-              <div className="font-display font-black text-lg sm:text-xl text-accent-yellow">{pendingUsers.length}</div>
-            </div>
-            <div className="p-2.5 sm:p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center min-w-[70px]">
-              <div className="font-mono text-label text-cyber-muted uppercase">Sub-Teams</div>
-              <div className="font-display font-black text-lg sm:text-xl text-accent-cyan">{effectiveGroups.length}</div>
-            </div>
-            <div className="p-2.5 sm:p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center min-w-[70px]">
-              <div className="font-mono text-label text-cyber-muted uppercase">Engineers</div>
-              <div className="font-display font-black text-lg sm:text-xl text-accent-lime">{approvedUsers.length}</div>
-            </div>
+            {[
+              { l: 'Pending', v: pendingUsers.length, c: 'text-accent-yellow' },
+              { l: 'Sub-Teams', v: effectiveGroups.length, c: 'text-accent-cyan' },
+              { l: 'Engineers', v: approvedUsers.length, c: 'text-accent-lime' },
+            ].map((s) => (
+              <div key={s.l} className="p-2.5 sm:p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center min-w-[70px]">
+                <div className="font-mono text-label text-cyber-muted uppercase">{s.l}</div>
+                <div className={`font-display font-black text-lg sm:text-xl ${s.c}`}>{s.v}</div>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Sub-Tabs Selector */}
         <div className="flex items-center gap-1.5 mt-5 pt-3.5 border-t border-cyber-border overflow-x-auto pb-1">
-          <button
-            onClick={() => setActiveSubTab('approvals')}
-            className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap ${
-              activeSubTab === 'approvals'
-                ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
-                : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
-            }`}
-          >
-            Pending Approvals ({pendingUsers.length})
-          </button>
-          <button
-            onClick={() => setActiveSubTab('people')}
-            className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap ${
-              activeSubTab === 'people'
-                ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
-                : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
-            }`}
-          >
-            People Management ({profiles.length})
-          </button>
-          <button
-            onClick={() => setActiveSubTab('teams')}
-            className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap ${
-              activeSubTab === 'teams'
-                ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
-                : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
-            }`}
-          >
-            Sub-Teams ({effectiveGroups.length})
-          </button>
-          <button
-            onClick={() => setActiveSubTab('health')}
-            className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap flex items-center gap-1.5 ${
-              activeSubTab === 'health'
-                ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
-                : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
-            }`}
-          >
-            <Server className="w-3.5 h-3.5" />
-            <span>System Health</span>
-          </button>
+          {[
+            { id: 'approvals', label: `Pending Approvals (${pendingUsers.length})` },
+            { id: 'people', label: `People Management (${profiles.length})` },
+            { id: 'teams', label: `Sub-Teams (${effectiveGroups.length})` },
+            { id: 'health', label: 'System Health', icon: Server },
+          ].map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setActiveSubTab(t.id as any)}
+              className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap flex items-center gap-1.5 ${
+                activeSubTab === t.id
+                  ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
+                  : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
+              }`}
+            >
+              {t.icon && <t.icon className="w-3.5 h-3.5" />}
+              <span>{t.label}</span>
+            </button>
+          ))}
         </div>
       </GlassCard>
 
@@ -863,105 +839,36 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-            {/* Database Health Card */}
-            <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
-                  <Database className="w-4 h-4 text-accent-cyan" />
-                  <span>PostgreSQL DB</span>
+            {[
+              { name: 'PostgreSQL DB', icon: Database, color: 'text-accent-cyan', health: dbHealth, fallback: 'Testing connection...' },
+              { name: 'GoTrue Auth', icon: Shield, color: 'text-accent-lime', health: authHealth, fallback: 'Verifying JWT session...' },
+              { name: 'Storage Buckets', icon: HardDrive, color: 'text-accent-cyan', health: storageHealth, fallback: 'Checking task-attachments...' },
+              { name: 'Realtime CDC', icon: Activity, color: 'text-accent-yellow', health: realtimeHealth, fallback: 'Connecting websocket...' },
+            ].map(({ name, icon: Icon, color, health, fallback }) => (
+              <div key={name} className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
+                    <Icon className={`w-4 h-4 ${color}`} />
+                    <span>{name}</span>
+                  </div>
+                  <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
+                    health.status === 'operational'
+                      ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
+                      : health.status === 'checking'
+                      ? 'bg-accent-yellow/10 border-accent-yellow/30 text-accent-yellow'
+                      : 'bg-accent-red/10 border-accent-red/30 text-accent-red'
+                  }`}>
+                    {health.status}
+                  </span>
                 </div>
-                <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
-                  dbHealth.status === 'operational'
-                    ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
-                    : dbHealth.status === 'checking'
-                    ? 'bg-accent-yellow/10 border-accent-yellow/30 text-accent-yellow'
-                    : 'bg-accent-red/10 border-accent-red/30 text-accent-red'
-                }`}>
-                  {dbHealth.status}
-                </span>
-              </div>
-              <div className="font-mono text-xl font-black text-cyber-primary">
-                {dbHealth.latencyMs !== undefined ? `${dbHealth.latencyMs} ms` : '--'}
-              </div>
-              <p className="text-label font-mono text-cyber-muted truncate">
-                {dbHealth.message || 'Testing connection...'}
-              </p>
-            </div>
-
-            {/* Auth Service Card */}
-            <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
-                  <Shield className="w-4 h-4 text-accent-lime" />
-                  <span>GoTrue Auth</span>
+                <div className="font-mono text-xl font-black text-cyber-primary">
+                  {health.latencyMs !== undefined ? `${health.latencyMs} ms` : '--'}
                 </div>
-                <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
-                  authHealth.status === 'operational'
-                    ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
-                    : authHealth.status === 'checking'
-                    ? 'bg-accent-yellow/10 border-accent-yellow/30 text-accent-yellow'
-                    : 'bg-accent-red/10 border-accent-red/30 text-accent-red'
-                }`}>
-                  {authHealth.status}
-                </span>
+                <p className="text-label font-mono text-cyber-muted truncate">
+                  {health.message || fallback}
+                </p>
               </div>
-              <div className="font-mono text-xl font-black text-cyber-primary">
-                {authHealth.latencyMs !== undefined ? `${authHealth.latencyMs} ms` : '--'}
-              </div>
-              <p className="text-label font-mono text-cyber-muted truncate">
-                {authHealth.message || 'Verifying JWT session...'}
-              </p>
-            </div>
-
-            {/* Storage Card */}
-            <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
-                  <HardDrive className="w-4 h-4 text-accent-cyan" />
-                  <span>Storage Buckets</span>
-                </div>
-                <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
-                  storageHealth.status === 'operational'
-                    ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
-                    : storageHealth.status === 'checking'
-                    ? 'bg-accent-yellow/10 border-accent-yellow/30 text-accent-yellow'
-                    : 'bg-accent-red/10 border-accent-red/30 text-accent-red'
-                }`}>
-                  {storageHealth.status}
-                </span>
-              </div>
-              <div className="font-mono text-xl font-black text-cyber-primary">
-                {storageHealth.latencyMs !== undefined ? `${storageHealth.latencyMs} ms` : '--'}
-              </div>
-              <p className="text-label font-mono text-cyber-muted truncate">
-                {storageHealth.message || 'Checking task-attachments...'}
-              </p>
-            </div>
-
-            {/* Realtime Engine Card */}
-            <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-cyber-primary font-medium text-xs uppercase font-mono">
-                  <Activity className="w-4 h-4 text-accent-yellow" />
-                  <span>Realtime CDC</span>
-                </div>
-                <span className={`text-label font-mono px-2 py-0.5 rounded border uppercase ${
-                  realtimeHealth.status === 'operational'
-                    ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
-                    : realtimeHealth.status === 'checking'
-                    ? 'bg-accent-yellow/10 border-accent-yellow/30 text-accent-yellow'
-                    : 'bg-accent-red/10 border-accent-red/30 text-accent-red'
-                }`}>
-                  {realtimeHealth.status}
-                </span>
-              </div>
-              <div className="font-mono text-xl font-black text-cyber-primary">
-                {realtimeHealth.latencyMs !== undefined ? `${realtimeHealth.latencyMs} ms` : '--'}
-              </div>
-              <p className="text-label font-mono text-cyber-muted truncate">
-                {realtimeHealth.message || 'Connecting websocket...'}
-              </p>
-            </div>
+            ))}
           </div>
 
           {lastHealthCheck && (

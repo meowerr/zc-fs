@@ -147,57 +147,25 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
 
       {/* ─── Telemetry HUD Metrics Cards ─── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
-            <span>ACTIVE ROSTER</span>
-            <Users className="w-3.5 h-3.5 text-accent-cyan" />
-          </div>
-          <div className="font-mono text-2xl font-medium text-cyber-primary">
-            {totalEngineers.toString().padStart(2, '0')}
-          </div>
-          <div className="text-label font-mono text-cyber-secondary mt-0.5">
-            Verified university engineers
-          </div>
-        </GlassCard>
-
-        <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
-            <span>SUB-TEAMS</span>
-            <Layers className="w-3.5 h-3.5 text-accent-cyan" />
-          </div>
-          <div className="font-mono text-2xl font-medium text-cyber-primary">
-            {groupsList.length.toString().padStart(2, '0')}
-          </div>
-          <div className="text-label font-mono text-cyber-secondary mt-0.5">
-            Specialized engineering divisions
-          </div>
-        </GlassCard>
-
-        <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
-            <span>GROUP HEADS</span>
-            <Award className="w-3.5 h-3.5 text-accent-yellow" />
-          </div>
-          <div className="font-mono text-2xl font-medium text-cyber-primary">
-            {totalHeads.toString().padStart(2, '0')}
-          </div>
-          <div className="text-label font-mono text-cyber-secondary mt-0.5">
-            Sub-team leads & reviewers
-          </div>
-        </GlassCard>
-
-        <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
-            <span>CLUB ADVISORY</span>
-            <Shield className="w-3.5 h-3.5 text-accent-lime" />
-          </div>
-          <div className="font-mono text-2xl font-medium text-cyber-primary">
-            {totalAdmins.toString().padStart(2, '0')}
-          </div>
-          <div className="text-label font-mono text-cyber-secondary mt-0.5">
-            System overseers & faculty
-          </div>
-        </GlassCard>
+        {[
+          { label: 'ACTIVE ROSTER', icon: Users, color: 'text-accent-cyan', val: totalEngineers, sub: 'Verified engineers' },
+          { label: 'SUB-TEAMS', icon: Layers, color: 'text-accent-cyan', val: groupsList.length, sub: 'Specialized divisions' },
+          { label: 'GROUP HEADS', icon: Award, color: 'text-accent-yellow', val: totalHeads, sub: 'Sub-team leads' },
+          { label: 'CLUB ADVISORY', icon: Shield, color: 'text-accent-lime', val: totalAdmins, sub: 'System overseers' },
+        ].map((s) => (
+          <GlassCard key={s.label} className="p-3.5 relative overflow-hidden">
+            <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
+              <span>{s.label}</span>
+              <s.icon className={`w-3.5 h-3.5 ${s.color}`} />
+            </div>
+            <div className="font-mono text-2xl font-medium text-cyber-primary">
+              {s.val.toString().padStart(2, '0')}
+            </div>
+            <div className="text-label font-mono text-cyber-secondary mt-0.5">
+              {s.sub}
+            </div>
+          </GlassCard>
+        ))}
       </div>
 
       {/* ─── 5 Sub-Teams Quick Filter Overview ─── */}
@@ -210,12 +178,12 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
           <span>Click to filter personnel</span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+        <div className="-mx-3.5 px-3.5 flex sm:grid sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scrollbar-none mask-fade-edges sm:[mask-image:none]">
           {/* "All" Filter Button */}
           <button
             onClick={() => setSelectedGroupId('all')}
             className={`
-              flex flex-col p-2.5 rounded-lg border text-left transition-all cursor-pointer
+              shrink-0 snap-start min-w-[130px] sm:min-w-0 min-h-[44px] flex flex-col p-2.5 rounded-lg border text-left transition-all cursor-pointer
               ${
                 selectedGroupId === 'all'
                   ? 'bg-cyber-surface-elevated border-accent-cyan text-cyber-primary shadow-cyber-sm'
@@ -244,7 +212,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                 key={g.id}
                 onClick={() => setSelectedGroupId(g.id)}
                 className={`
-                  flex flex-col p-2.5 rounded-lg border text-left transition-all cursor-pointer relative overflow-hidden
+                  shrink-0 snap-start min-w-[130px] sm:min-w-0 min-h-[44px] flex flex-col p-2.5 rounded-lg border text-left transition-all cursor-pointer relative overflow-hidden
                   ${
                     isSelected
                       ? 'bg-cyber-surface-elevated text-cyber-primary shadow-cyber-sm'

@@ -56,6 +56,19 @@
   - Auto-hides mobile navigation pill during active conversation by toggling `html[data-hide-mobile-nav="true"]` whenever `!showMobileList`, completely eliminating bottom nav overlapping the chat input.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total assets gzip: 199.89 KB < 200 KB, main JS gzip: 45.29 KB < 50 KB)]` Full test suite passing with zero TypeScript errors or warnings.
 
+### Phase 5: Navigation Redesign, FABs & Scrolling Chips
+- `[IMPLEMENTED, MANUALLY CHECKED]` Built 5-tab mobile bottom bar (`Dashboard`, `Tasks`, `Chat`, `Docs`, `More`) in [`GarageDoorNav.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/layout/GarageDoorNav.tsx) with active tab indicators, unread chat badge, thumb-arc "More" tab opening secondary destinations sheet (Directory, Admin Hub, Profile), and instant rollback flag `USE_MOBILE_TAB_BAR`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Floating Action Buttons (FAB):
+  - Added 56px FAB in [`TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx) for mobile task creation (`fixed right-4 bottom-[calc(4.5rem+env(safe-area-inset-bottom))]`).
+  - Added 56px FAB in [`DocumentHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/documents/DocumentHub.tsx) for mobile document upload.
+  - Replaced desktop header creation/upload buttons with `hidden sm:inline-flex` on small mobile screens.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Mobile Overflow Menus & Single-Row Scrolling:
+  - Added mobile overflow dropdown menu in [`TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx) for CSV & JSON telemetry export.
+  - Converted multi-row wrapped filter chips in [`TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx), [`DocumentHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/documents/DocumentHub.tsx), and 5-subteam cards in [`TeamDirectory.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/team/TeamDirectory.tsx) into single-row scrollable snap containers (`overflow-x-auto snap-x snap-mandatory scrollbar-none mask-fade-edges`) with edge fade masks.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Updated [`AppShell.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/layout/AppShell.tsx) with `pb-20 md:pb-8` clearance, and added `.scrollbar-none` and `.mask-fade-edges` utilities to [`src/index.css`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/index.css).
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total assets gzip: 199.97 KB < 200 KB, main JS gzip: 45.60 KB < 50 KB)]` Full test suite passing with strict TypeScript verification (0 errors).
+- `[VERIFIED: node scripts/verify-slice-5-responsive.mjs (23/23 passed) & node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` 100% test pass on responsive tablet/mobile garage door and accessibility suite.
+
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 
 ### Slice B1: Asset Pipeline & PWA Icon Set
