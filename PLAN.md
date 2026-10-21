@@ -550,6 +550,16 @@ zc-fs/
     - **B7 F1HorizontalTransition:** [OPTIONAL] Livery re-skin.
     - **B8 A11y & Docs Pass:** [PENDING] Final WCAG AA audit, phone verification.
 
+  - **Mobile UI Overhaul (Branch: eature/mobile-ui-polish)**
+    - **Phase 0 Recon & Baseline:** [COMPLETED] Baseline metrics recorded (285 micro-text, 42 small controls, 19 vh units, zoom-lock present).
+    - **Phase 1 Foundations:** [COMPLETED] Unlocked zoom, forced 16px mobile form inputs, added typography scale and .tap-target utility.
+    - **Phase 2 Type Floor & Touch Targets:** [COMPLETED] Sub-12px text eliminated (285 -> 0), single-weight mono faux-bolding cleaned (137 -> 0), all controls expanded to >= 44px tap targets.
+    - **Phase 3 Safe Areas & Viewport Units:** [COMPLETED] Top notch header clearance, bottom bar clearance, h to dvh migration, dynamic theme-color meta synchronization.
+    - **Phase 4 Modals & Chat Composer:** [COMPLETED] Mobile full-width bottom sheets (ModalShell.tsx), auto-expanding textarea, mobile nav bar collision resolution.
+    - **Phase 5 Navigation Redesign & FABs:** [COMPLETED] 5-tab mobile bottom bar (GarageDoorNav.tsx), 56px FABs for tasks & documents, single-row snap scroll with edge masks.
+    - **Phase 6 Density & Contrast:** [COMPLETED] Mission Control 4 prominent telemetry tiles, cards density streamlined, WCAG AA contrast compliance for placeholders and tokens.
+    - **Phase 7 Regression Guard & Wrap-Up:** [COMPLETED] Automated zero-dependency guard erify-mobile-ui.mjs (5/5 passed), 41/41 test suite passing, bundle strictly under 200 KB gzip budget.
+
 ---
 
 ## 8. Definition of Done for MVP (Phases 0–3)

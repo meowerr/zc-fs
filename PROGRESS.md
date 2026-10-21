@@ -1,9 +1,9 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Phase: ZFS Brand Integration (Branch: `feature/zfs-branding`)
-- **Active Status:** Slice B1 (Asset Pipeline & PWA Icons) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | `tsc && vite build` passing (0 errors, gzip 199.86 KB < 200 KB).
+- **Current Phase:** Mobile UI Overhaul (Branch: `feature/mobile-ui-polish`)
+- **Active Status:** Phase 7 (Regression guard and wrap-up) completed and verified. All 7 phases complete!
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.71 KB < 200 KB, main App JS gzip: 45.29 KB < 50 KB).
 
 ---
 
@@ -80,6 +80,37 @@
   - Dark mode placeholder upgraded from `#737D89` (4.01:1) to `#8A96A4` (**5.57:1** on `#181E26`, WCAG AA compliant).
   - Light mode yellow text token added `--accent-yellow-text: #8A6508` (**5.32:1** on white, WCAG AA compliant).
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed, total assets gzip: 199.71 KB < 200 KB, main JS gzip: 45.29 KB < 50 KB)]` Full test suite passing with zero TypeScript errors or warnings.
+
+### Phase 7: Regression Guard and Wrap-Up
+- `[IMPLEMENTED, AUTOMATED GUARD]` Created zero-dependency regression guard [`scripts/verify-mobile-ui.mjs`](file:///C:/Users/Abdullah/Desktop/zc-fs/scripts/verify-mobile-ui.mjs) asserting:
+  1. No sub-12px micro-text in source code (`text-[8..11px]`).
+  2. Viewport allows pinch-to-zoom (no `user-scalable=no` or `maximum-scale=1.0`) and declares `apple-touch-icon`.
+  3. Strict viewport units: no `vh` or `min-h-screen` outside desktop `Sidebar.tsx` (migrated to `dvh`).
+  4. Mobile form controls enforce `font-size: 16px` on `<768px` to prevent iOS zoom; `.tap-target` utility defined.
+  5. TopHeader respects top notch via `safe-area-inset-top`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Migrated remaining desktop `vh` units in [`ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx) to `dvh` (`md:h-[calc(100dvh-7.5rem)]`).
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` 100% green pass on regression guard.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email validator, file quota, CSV/JSON, and database migration checks passing (100% success).
+- `[VERIFIED: npm run build]` Total bundle gzip: **199.71 KB** (< 200 KB budget, 297 bytes headroom), Main JS gzip: **45.29 KB** (< 50 KB budget, 4.71 KB headroom).
+
+#### Mobile UI Overhaul: Before vs After Metrics
+
+| Metric / Requirement | Baseline (Before) | Final State (After) | Status |
+| :--- | :--- | :--- | :--- |
+| **Sub-12px Micro-text** | 285 occurrences | **0 occurrences** | ✅ Eliminated |
+| **Single-weight Mono Faux-Bolding** | 137 occurrences | **0 occurrences** | ✅ Cleaned |
+| **Viewport Units (`vh` / `min-h-screen`)** | 19 occurrences | **0 occurrences** (desktop Sidebar only) | ✅ Migrated to `dvh` |
+| **Pinch-to-Zoom** | Locked (`user-scalable=no`) | **Unlocked & Accessible** | ✅ WCAG Compliant |
+| **Touch Targets (< 44px)** | 42 small controls | **All interactive targets ≥ 44px** | ✅ Mobile Ergonomic |
+| **Form Inputs Mobile Auto-Zoom** | Triggers iOS zoom (<16px) | **Forced 16px font-size on mobile** | ✅ iOS Native Feel |
+| **Mobile Navigation** | Floating hamburger pill | **5-Tab Ergonomic Bottom Bar + FAB** | ✅ Instant Access |
+| **Dialog Modals on Phones** | Centered desktop dialogs | **Responsive Bottom Sheets (`ModalShell`)** | ✅ Thumb Friendly |
+| **Filter Chips & Grids** | Multi-row wrapped clutter | **Single-row scroll + edge fade masks** | ✅ Clean Horizon |
+| **Light Mode Placeholder Contrast** | 2.56:1 (Failing) | **4.76:1** (`#64748B`, WCAG AA) | ✅ AA Passing |
+| **Dark Mode Placeholder Contrast** | 4.01:1 (Failing) | **5.57:1** (`#8A96A4`, WCAG AA) | ✅ AA Passing |
+| **Yellow Text Token Contrast** | 3.25:1 (Failing) | **5.32:1** (`#8A6508`, WCAG AA) | ✅ AA Passing |
+| **Main App JS (Gzip)** | 45.60 KB | **45.29 KB** (< 50 KB budget) | ✅ Passing |
+| **Total Assets (Gzip)** | 199.94 KB | **199.71 KB** (< 200 KB budget) | ✅ Passing |
 
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 

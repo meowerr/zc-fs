@@ -133,7 +133,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
   };
 
   return (
-    <div className="h-[calc(100dvh-9.5rem)] md:h-[calc(100vh-7.5rem)] flex flex-col md:flex-row gap-3.5">
+    <div className="h-[calc(100dvh-9.5rem)] md:h-[calc(100dvh-7.5rem)] flex flex-col md:flex-row gap-3.5">
       {/* LEFT: Channels & Direct Messages Sidebar */}
       <GlassCard
         className={`

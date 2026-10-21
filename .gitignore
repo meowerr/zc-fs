@@ -24,6 +24,9 @@ tools/
 *.sln
 *.sw?
 
+# Scratch directory
+scratch/
+
 # Environment variables
 .env
 .env.local
