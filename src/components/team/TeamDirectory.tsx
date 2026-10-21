@@ -7,13 +7,17 @@ import {
   Search, 
   Mail, 
   CheckSquare, 
-  Layers
+  Layers,
+  Sliders
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { PageHeader } from '../common/PageHeader';
 import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
+import { ModalShell } from '../common/ModalShell';
+import { SkeletonCard } from '../common/SkeletonCard';
+import { usePullToRefresh } from '../../hooks/usePullToRefresh';
 import { Profile, Group, Task } from '../../lib/database.types';
 import { SUB_TEAMS } from '../../lib/constants';
 import { NavTab } from '../layout/BottomNav';
@@ -23,6 +27,8 @@ interface TeamDirectoryProps {
   allProfiles: Profile[];
   allGroups: Group[];
   tasks: Task[];
+  loading?: boolean;
+  onRefresh?: () => Promise<void> | void;
   onStartDirectMessage: (userId: string) => void;
   onNavigateTab: (tab: NavTab) => void;
 }
@@ -32,12 +38,21 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
   allProfiles,
   allGroups,
   tasks,
+  loading = false,
+  onRefresh,
   onStartDirectMessage,
   onNavigateTab,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGroupId, setSelectedGroupId] = useState<string>('all');
   const [selectedRole, setSelectedRole] = useState<string>('all');
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+
+  const activeFilterCount =
+    (selectedGroupId !== 'all' ? 1 : 0) +
+    (selectedRole !== 'all' ? 1 : 0);
+
+  const isPulling = usePullToRefresh(onRefresh);
 
   // Groups list fallback
   const groupsList = (allGroups && allGroups.length > 0) ? allGroups : SUB_TEAMS;
@@ -144,8 +159,159 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
         }
       />
 
-      {/* ─── 5 Sub-Teams Quick Filter Overview ─── */}
-      <GlassCard variant="flat" className="space-y-2.5">
+      {/* Pull to refresh indicator */}
+      {isPulling && (
+        <div className="py-2 text-center text-label font-mono text-accent-cyan animate-pulse">
+          RELEASE TO REFRESH ROSTER…
+        </div>
+      )}
+
+      {/* ─── Compact Mobile Toolbar (< md) ─── */}
+      <div className="md:hidden flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-cyber-muted" />
+          <input
+            type="text"
+            placeholder="Search engineers…"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full h-11 pl-9 pr-3 rounded-lg text-sm font-sans bg-cyber-bg-alt border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan transition-colors"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsFilterSheetOpen(true)}
+          className={`h-11 px-3.5 rounded-lg border flex items-center gap-2 text-xs font-mono font-bold transition-all shrink-0 cursor-pointer ${
+            activeFilterCount > 0
+              ? 'bg-accent-cyan/15 border-accent-cyan text-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.25)]'
+              : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary hover:text-cyber-primary'
+          }`}
+        >
+          <Sliders className="w-4 h-4" />
+          <span>Filters</span>
+          {activeFilterCount > 0 && (
+            <span className="w-5 h-5 rounded-full bg-accent-cyan text-black text-label font-mono font-black flex items-center justify-center">
+              {activeFilterCount}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* ─── Mobile Filter Sheet ─── */}
+      <ModalShell
+        open={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        title="Filter Team Directory"
+        footer={
+          <div className="flex items-center justify-between gap-3 w-full">
+            <GlossyButton
+              variant="ghost"
+              size="sm"
+              disabled={activeFilterCount === 0}
+              onClick={() => {
+                setSelectedGroupId('all');
+                setSelectedRole('all');
+              }}
+            >
+              Reset Filters
+            </GlossyButton>
+            <GlossyButton
+              variant="primary"
+              size="sm"
+              onClick={() => setIsFilterSheetOpen(false)}
+            >
+              Show {filteredProfiles.length} Members
+            </GlossyButton>
+          </div>
+        }
+      >
+        <div className="space-y-4 py-2">
+          {/* Sub-team division */}
+          <div>
+            <label className="block text-label font-mono uppercase tracking-wider text-cyber-muted mb-2">
+              Sub-Team Division
+            </label>
+            <div className="grid grid-cols-1 gap-1.5">
+              <button
+                type="button"
+                onClick={() => setSelectedGroupId('all')}
+                className={`min-h-[44px] px-3 py-2 rounded-lg border text-left text-xs font-mono flex items-center justify-between transition-colors ${
+                  selectedGroupId === 'all'
+                    ? 'bg-accent-cyan/15 border-accent-cyan text-accent-cyan font-bold'
+                    : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary'
+                }`}
+              >
+                <span>ALL SUB-TEAMS</span>
+                <span className="text-label px-1.5 py-0.5 rounded bg-cyber-surface border border-cyber-border">
+                  {approvedProfiles.length}
+                </span>
+              </button>
+              {groupsList.map((g) => {
+                const count = approvedProfiles.filter((p) => p.group_id === g.id).length;
+                const isSelected = selectedGroupId === g.id;
+                const accent = g.color_accent || '#00D9FF';
+                const shortName = g.name.replace(/^Technical - |^Operations - /, '');
+
+                return (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => setSelectedGroupId(g.id)}
+                    className={`min-h-[44px] px-3 py-2 rounded-lg border text-left text-xs font-mono flex items-center justify-between transition-colors ${
+                      isSelected
+                        ? 'bg-accent-cyan/15 border-accent-cyan text-accent-cyan font-bold'
+                        : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: accent }} />
+                      <span className="truncate">{shortName}</span>
+                    </div>
+                    <span className="text-label px-1.5 py-0.5 rounded bg-cyber-surface border border-cyber-border">
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Role selector */}
+          <div>
+            <label className="block text-label font-mono uppercase tracking-wider text-cyber-muted mb-2">
+              Role
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { id: 'all', label: 'All Roles' },
+                { id: 'admin', label: 'Club Admin' },
+                { id: 'head', label: 'Group Heads' },
+                { id: 'member', label: 'Engineers' },
+              ].map((r) => {
+                const isSelected = selectedRole === r.id;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => setSelectedRole(r.id)}
+                    className={`min-h-[44px] px-3 py-2 rounded-lg border text-xs font-mono uppercase transition-colors text-center ${
+                      isSelected
+                        ? 'bg-accent-cyan text-black font-bold border-accent-cyan'
+                        : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary'
+                    }`}
+                  >
+                    {r.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </ModalShell>
+
+      {/* ─── 5 Sub-Teams Quick Filter Overview (Desktop) ─── */}
+      <div className="hidden md:block">
+        <GlassCard variant="flat" className="space-y-2.5">
         <div className="flex items-center justify-between text-label font-sans uppercase tracking-wider text-cyber-muted">
           <span className="text-label font-sans font-semibold text-cyber-secondary md:font-bold md:text-cyber-primary flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-accent-cyan" />
@@ -227,9 +393,11 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
           })}
         </div>
       </GlassCard>
+      </div>
 
-      {/* ─── Search & Role Filters Bar ─── */}
-      <GlassCard variant="flat" className="flex flex-col md:flex-row items-center justify-between gap-3">
+      {/* ─── Search & Role Filters Bar (Desktop) ─── */}
+      <div className="hidden md:block">
+        <GlassCard variant="flat" className="flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-cyber-muted" />
@@ -273,9 +441,12 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
           })}
         </div>
       </GlassCard>
+      </div>
 
       {/* ─── Members Grid ─── */}
-      {filteredProfiles.length === 0 ? (
+      {loading ? (
+        <SkeletonCard count={4} />
+      ) : filteredProfiles.length === 0 ? (
         <GlassCard className="p-8 text-center space-y-3">
           <div className="w-12 h-12 rounded-xl bg-cyber-bg-alt border border-cyber-border flex items-center justify-center mx-auto text-cyber-muted">
             <Users className="w-6 h-6" />
@@ -310,7 +481,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
               <GlassCard
                 key={person.id}
                 variant="elevated"
-                className="p-4 flex flex-col justify-between space-y-3.5 border-cyber-border hover:border-cyber-border-strong transition-all relative overflow-hidden"
+                className="p-4 flex flex-col justify-between space-y-3.5 border-cyber-border hover:border-cyber-border-strong active:scale-[0.99] transition-all relative overflow-hidden"
               >
                 {/* Colored team identity line on top edge */}
                 <div

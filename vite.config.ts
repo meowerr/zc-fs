@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 export default defineConfig({
   esbuild: {
     legalComments: 'none',
+    drop: ['console', 'debugger'],
   },
   plugins: [
 

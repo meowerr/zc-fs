@@ -3,7 +3,8 @@ import {
   Plus, 
   Search, 
   Download,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Sliders
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { PageHeader } from '../common/PageHeader';
@@ -11,11 +12,14 @@ import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { EmptyState } from '../common/EmptyState';
+import { ModalShell } from '../common/ModalShell';
+import { SkeletonCard } from '../common/SkeletonCard';
 import { TaskCard } from './TaskCard';
 import { TaskCreateModal } from './TaskCreateModal';
 import { TaskDetailModal } from './TaskDetailModal';
 import { SUB_TEAMS } from '../../lib/constants';
 import { exportTasksToCSV, exportTasksToJSON } from '../../lib/exportUtils';
+import { usePullToRefresh } from '../../hooks/usePullToRefresh';
 import { 
   Task, 
   TaskStatus, 
@@ -34,6 +38,8 @@ interface TasksHubProps {
   submissions: Record<string, any>;
   comments: Record<string, any>;
   groups?: Group[];
+  loading?: boolean;
+  onRefresh?: () => Promise<void> | void;
   onCreateTask: (taskData: {
     title: string;
     description: string;
@@ -61,6 +67,8 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   submissions,
   comments,
   groups,
+  loading = false,
+  onRefresh,
   onCreateTask,
   onUpdateStatus,
   onSubmitWork,
@@ -74,7 +82,10 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('all');
+  const isPulling = usePullToRefresh(onRefresh);
+  const activeFilterCount = (filter !== 'all' ? 1 : 0) + (selectedGroupFilter !== 'all' ? 1 : 0);
 
   // Sync initialTaskId if passed from Search or Notifications
   React.useEffect(() => {
@@ -188,8 +199,34 @@ export const TasksHub: React.FC<TasksHubProps> = ({
 
       {/* Filter & Search Bar */}
       <GlassCard variant="flat" className="space-y-3">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-          {/* Search Box */}
+        {/* Mobile Toolbar (Single Row) */}
+        <div className="flex gap-2 md:hidden">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cyber-muted" />
+            <input
+              type="text"
+              placeholder="Search deliverables…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full min-h-[44px] pl-9 pr-3 rounded-lg text-base font-sans bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+            />
+          </div>
+          <button
+            onClick={() => setIsFilterSheetOpen(true)}
+            className="tap-target relative px-3 rounded-lg border border-cyber-border bg-cyber-surface-elevated text-cyber-secondary flex items-center justify-center cursor-pointer"
+            aria-label="Filter deliverables"
+          >
+            <Sliders className="w-5 h-5 text-accent-cyan" />
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-cyan text-black text-[12px] font-bold flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Desktop Toolbar */}
+        <div className="hidden md:flex items-center justify-between gap-2.5">
           <div className="relative flex-1">
             <Search className="w-4 h-4 absolute left-3 top-2.5 text-cyber-muted" />
             <input
@@ -197,16 +234,15 @@ export const TasksHub: React.FC<TasksHubProps> = ({
               placeholder="Search deliverables by title, note, or engineer..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full min-h-[44px] sm:min-h-0 sm:h-9 pl-9 pr-3.5 rounded-lg text-base sm:text-xs font-sans bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+              className="w-full h-9 pl-9 pr-3.5 rounded-lg text-xs font-sans bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
             />
           </div>
 
-          {/* Group Filter for Admin */}
           {currentUser.role === 'admin' && (
             <select
               value={selectedGroupFilter}
               onChange={(e) => setSelectedGroupFilter(e.target.value)}
-              className="h-10 sm:h-9 min-h-[44px] sm:min-h-0 px-3 rounded-lg text-base sm:text-xs font-mono bg-cyber-surface-elevated border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+              className="h-9 px-3 rounded-lg text-xs font-mono bg-cyber-surface-elevated border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
             >
               <option value="all">ALL SUB-TEAMS ({effectiveGroups.length})</option>
               {effectiveGroups.map((team) => (
@@ -235,7 +271,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
                 shrink-0 snap-start min-h-[44px] px-4 rounded-lg text-label font-mono font-medium uppercase transition-all cursor-pointer border
                 ${
                   filter === pill.id
-                    ? 'bg-accent-cyan text-black border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)]'
+                    ? 'bg-accent-cyan text-black border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)] font-bold'
                     : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:border-cyber-border-strong hover:text-cyber-primary'
                 }
               `}
@@ -246,8 +282,15 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         </div>
       </GlassCard>
 
-      {/* Deliverables Grid */}
-      {filteredTasks.length === 0 ? (
+      {/* Deliverables Grid with Skeletons & Pull to Refresh */}
+      {isPulling && (
+        <div className="py-2 text-center text-xs font-mono text-accent-cyan animate-pulse">
+          Refreshing telemetry queue…
+        </div>
+      )}
+      {loading ? (
+        <SkeletonCard count={3} />
+      ) : filteredTasks.length === 0 ? (
         <EmptyState
           illustration="wheel"
           title="NO DELIVERABLES MATCH"
@@ -319,6 +362,84 @@ export const TasksHub: React.FC<TasksHubProps> = ({
           onDeleteTask={onDeleteTask}
         />
       )}
+
+      {/* Mobile Filters Sheet */}
+      <ModalShell
+        open={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        title="Filter Deliverables"
+        footer={
+          <div className="flex items-center justify-between w-full gap-3">
+            <GhostButton
+              size="sm"
+              onClick={() => {
+                setFilter('all');
+                setSelectedGroupFilter('all');
+                setIsFilterSheetOpen(false);
+              }}
+            >
+              Reset
+            </GhostButton>
+            <GlossyButton
+              variant="primary"
+              size="sm"
+              onClick={() => setIsFilterSheetOpen(false)}
+            >
+              Apply Filters
+            </GlossyButton>
+          </div>
+        }
+      >
+        <div className="space-y-4 p-1">
+          {currentUser.role === 'admin' && (
+            <div>
+              <label className="block text-label font-mono uppercase text-cyber-muted mb-1.5">
+                Sub-Team Scope
+              </label>
+              <select
+                value={selectedGroupFilter}
+                onChange={(e) => setSelectedGroupFilter(e.target.value)}
+                className="w-full min-h-[44px] px-3 rounded-lg text-base font-mono bg-cyber-bg-alt border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+              >
+                <option value="all">ALL SUB-TEAMS ({effectiveGroups.length})</option>
+                {effectiveGroups.map((team) => (
+                  <option key={team.id} value={team.id}>
+                    {team.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-label font-mono uppercase text-cyber-muted mb-1.5">
+              Deliverable Status
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { id: 'all', label: 'All Tasks' },
+                { id: 'my_tasks', label: 'My Deliverables' },
+                { id: 'submitted', label: `In Review (${inReviewCount})` },
+                { id: 'in_progress', label: `In Progress (${inProgressCount})` },
+                { id: 'overdue', label: `Overdue (${overdueCount})` },
+                { id: 'approved', label: 'Approved' },
+              ].map((pill) => (
+                <button
+                  key={pill.id}
+                  onClick={() => setFilter(pill.id as any)}
+                  className={`min-h-[44px] px-3 py-2 rounded-lg text-xs font-mono font-medium uppercase border text-left transition-all ${
+                    filter === pill.id
+                      ? 'bg-accent-cyan text-black border-accent-cyan font-bold'
+                      : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border'
+                  }`}
+                >
+                  {pill.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </ModalShell>
     </div>
   );
 };

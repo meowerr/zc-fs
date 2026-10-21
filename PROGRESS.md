@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Mobile UI Overhaul Round 2 (Branch: `feature/mobile-ui-polish`)
-- **Active Status:** Phase R2 (Flatten the Containers) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.15 KB < 200 KB, main App JS gzip: 45.12 KB < 50 KB).
+- **Active Status:** Phase R3 (Filters become a sheet; lists get touch-native behaviour) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.32 KB < 200 KB, main App JS gzip: 45.51 KB < 50 KB).
 
 ---
 
@@ -152,6 +152,16 @@
 - `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` Automated regression guard 100% green.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email validator, file quota, CSV/JSON, and database migration checks passing (100% success).
 - `[VERIFIED: npm run build]` Total bundle gzip: **199.15 KB** (< 200 KB budget, 870 bytes headroom), Main JS gzip: **45.12 KB** (< 50 KB budget, 4.88 KB headroom).
+
+### Phase R3: Filters Become a Sheet; Lists Get Touch-Native Behaviour
+- `[IMPLEMENTED, MANUALLY CHECKED]` Compact Single-Row Mobile Toolbars: Replaced tall multi-control filter bars with a single 44px-tall row `[ 🔍 Search… ] [ ⚙ Filters • N ]` on mobile (< md / sm) across `TasksHub.tsx`, `DocumentHub.tsx`, and `TeamDirectory.tsx`. Active filter counts are displayed on an accent badge.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Bottom Filter Sheets: Integrated `ModalShell` bottom sheet for task deliverables, document repository, and team directory filtering with sticky footers (Reset All & Apply buttons), 44px minimum touch targets, sub-team division selectors, and status/role filters.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Shimmer Skeleton Loaders: Created reusable `SkeletonCard.tsx` (`src/components/common/SkeletonCard.tsx`) with an animated CSS gradient shimmer (`animate-shimmer` keyframe in `src/index.css`), replacing spinning circular loaders in `TasksHub`, `DocumentHub`, and `TeamDirectory`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Touch Affordances & Press Feedback: Added `active:scale-[0.99] transition-transform` press feedback to `TaskCard.tsx`, `DocumentHub.tsx` document cards, and `TeamDirectory.tsx` member cards.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Pull-to-Refresh: Implemented zero-dependency `usePullToRefresh.ts` (`src/hooks/usePullToRefresh.ts`) supporting native touch drag at scroll top with haptic trigger, visual feedback header, and integrated `onRefresh` hooks in `TasksHub`, `DocumentHub`, and `TeamDirectory`.
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` 100% clean automated mobile UI regression guard (0 sub-12px microtext, strict dvh units, 44px minimum touch targets).
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Full test suite passing with strict TypeScript verification (0 errors).
+- `[VERIFIED: npm run build]` Total bundle gzip: **199.32 KB** (< 200 KB budget, 696 bytes headroom), Main JS gzip: **45.51 KB** (< 50 KB budget, 4.49 KB headroom).
 
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 

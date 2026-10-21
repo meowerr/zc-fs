@@ -436,6 +436,15 @@
 }
 
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.animate-shimmer {
+  animation: shimmer 1.8s infinite;
+}
+
 html[data-hide-mobile-nav="true"] .garage-door-pill,
 html[data-hide-mobile-nav="true"] .mobile-bottom-bar,
 html[data-hide-mobile-nav="true"] .app-footer {

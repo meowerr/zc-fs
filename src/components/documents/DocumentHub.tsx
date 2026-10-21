@@ -11,7 +11,8 @@ import {
   Activity, 
   Layers,
   X,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Sliders
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { PageHeader } from '../common/PageHeader';
@@ -19,6 +20,9 @@ import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { EmptyState } from '../common/EmptyState';
+import { ModalShell } from '../common/ModalShell';
+import { SkeletonCard } from '../common/SkeletonCard';
+import { usePullToRefresh } from '../../hooks/usePullToRefresh';
 import { DocumentItem, DocumentCategory, Profile, Group } from '../../lib/database.types';
 import { SUB_TEAMS } from '../../lib/constants';
 
@@ -27,6 +31,7 @@ interface DocumentHubProps {
   documents: DocumentItem[];
   groups?: Group[];
   loading: boolean;
+  onRefresh?: () => Promise<void> | void;
   onUploadDocument: (params: {
     file: File;
     title: string;
@@ -60,6 +65,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
   documents,
   groups = [],
   loading,
+  onRefresh,
   onUploadDocument,
   onDeleteDocument,
 }) => {
@@ -67,7 +73,10 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
   const [selectedGroup, setSelectedGroup] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [selectedDocToDelete, setSelectedDocToDelete] = useState<DocumentItem | null>(null);
+  const isPulling = usePullToRefresh(onRefresh);
+  const activeFilterCount = (selectedCategory !== 'all' ? 1 : 0) + (selectedGroup !== 'all' ? 1 : 0);
 
   // Upload Form State
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -226,8 +235,34 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
           })}
         </div>
 
-        {/* Search & Team Filter Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+        {/* Mobile Toolbar (Single Row) */}
+        <div className="flex gap-2 sm:hidden">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-cyber-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search documents…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full min-h-[44px] pl-9 pr-3 rounded-lg text-base font-sans bg-cyber-surface border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+            />
+          </div>
+          <button
+            onClick={() => setIsFilterSheetOpen(true)}
+            className="tap-target relative px-3 rounded-lg border border-cyber-border bg-cyber-surface text-cyber-secondary flex items-center justify-center cursor-pointer"
+            aria-label="Filter documents"
+          >
+            <Sliders className="w-5 h-5 text-accent-cyan" />
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-cyan text-black text-[12px] font-bold flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Desktop Search & Team Filter Row */}
+        <div className="hidden sm:grid sm:grid-cols-12 gap-3">
           <div className="sm:col-span-8 relative">
             <Search className="w-4 h-4 text-cyber-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
@@ -258,13 +293,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
       </div>
 
       {/* Documents Grid / List */}
-      {loading ? (
-        <div className="py-20 text-center space-y-3">
-          <div className="w-8 h-8 rounded-full border-2 border-accent-cyan border-t-transparent animate-spin mx-auto" />
-          <p className="font-mono text-xs text-cyber-muted uppercase tracking-wider">
-            Accessing Engineering Storage Matrix...
-          </p>
+      {isPulling && (
+        <div className="py-2 text-center text-xs font-mono text-accent-cyan animate-pulse">
+          Refreshing engineering repository…
         </div>
+      )}
+      {loading ? (
+        <SkeletonCard count={3} />
       ) : filteredDocs.length === 0 ? (
         <EmptyState
           illustration="telemetry"
@@ -290,7 +325,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
               <GlassCard
                 key={doc.id}
                 variant="elevated"
-                className="p-4 border-cyber-border-strong hover:border-accent-cyan/50 transition-all flex flex-col justify-between group space-y-3"
+                className="p-4 border-cyber-border-strong hover:border-accent-cyan/50 active:bg-cyber-surface-hover active:scale-[0.99] transition-all flex flex-col justify-between group space-y-3"
               >
                 <div>
                   {/* Card Header: Category & Team Badge */}
@@ -571,6 +606,77 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
           </GlassCard>
         </div>
       )}
+
+      {/* Mobile Filter Sheet */}
+      <ModalShell
+        open={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        title="Filter Documents"
+        footer={
+          <div className="flex items-center justify-between w-full gap-3">
+            <GhostButton
+              size="sm"
+              onClick={() => {
+                setSelectedCategory('all');
+                setSelectedGroup('all');
+                setIsFilterSheetOpen(false);
+              }}
+            >
+              Reset
+            </GhostButton>
+            <GlossyButton
+              variant="primary"
+              size="sm"
+              onClick={() => setIsFilterSheetOpen(false)}
+            >
+              Apply Filters
+            </GlossyButton>
+          </div>
+        }
+      >
+        <div className="space-y-4 p-1">
+          <div>
+            <label className="block text-label font-mono uppercase text-cyber-muted mb-1.5">
+              Sub-Team Scope
+            </label>
+            <select
+              value={selectedGroup}
+              onChange={(e) => setSelectedGroup(e.target.value)}
+              className="w-full min-h-[44px] py-2 px-3 text-base bg-cyber-bg-alt border border-cyber-border rounded-lg text-cyber-primary focus:outline-none focus:border-accent-cyan transition-colors font-mono cursor-pointer"
+            >
+              <option value="all">Scope: All Sub-Teams & Club</option>
+              <option value="club">Scope: Club-Wide General</option>
+              {effectiveGroups.map((g) => (
+                <option key={g.id} value={g.id}>
+                  Scope: {g.name.replace(/^Technical - |^Operations - /, '')}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-label font-mono uppercase text-cyber-muted mb-1.5">
+              Document Category
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`min-h-[44px] px-3 py-2 rounded-lg text-xs font-mono font-medium uppercase border text-left transition-all flex items-center gap-2 ${
+                    selectedCategory === cat.id
+                      ? 'bg-accent-cyan text-black border-accent-cyan font-bold'
+                      : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border'
+                  }`}
+                >
+                  <cat.icon className="w-3.5 h-3.5 shrink-0" style={{ color: selectedCategory === cat.id ? '#000000' : cat.color }} />
+                  <span className="truncate">{cat.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </ModalShell>
     </div>
   );
 };

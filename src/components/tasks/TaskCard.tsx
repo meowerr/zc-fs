@@ -42,7 +42,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
     <GlassCard
       onClick={() => onSelect(task)}
       accentColor={groupAccent}
-      className="p-4 hover:border-accent-cyan/60 transition-all cursor-pointer group shadow-cyber-sm hover:shadow-cyber"
+      className="p-4 hover:border-accent-cyan/60 active:bg-cyber-surface-hover active:scale-[0.99] transition-all cursor-pointer group shadow-cyber-sm hover:shadow-cyber"
     >
       <div className="flex flex-col gap-2.5">
         {/* Top Badges Row */}

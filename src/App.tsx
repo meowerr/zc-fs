@@ -104,6 +104,8 @@ export const App: React.FC = () => {
     tasks,
     submissions,
     comments,
+    loading: tasksLoading,
+    reloadTasks,
     createTask,
     updateTaskStatus,
     deleteTask,
@@ -144,6 +146,7 @@ export const App: React.FC = () => {
   const {
     documents,
     loading: docsLoading,
+    refreshDocuments,
     uploadDocument,
     deleteDocument,
   } = useDocuments(currentUser);
@@ -344,6 +347,8 @@ export const App: React.FC = () => {
               teamMembers={allProfiles}
               submissions={submissions}
               comments={comments}
+              loading={tasksLoading}
+              onRefresh={reloadTasks}
               initialTaskId={activeTaskId}
               onClearInitialTaskId={() => setActiveTaskId(null)}
               onCreateTask={handleCreateTask}
@@ -379,6 +384,7 @@ export const App: React.FC = () => {
               allProfiles={allProfiles}
               allGroups={allGroups}
               tasks={tasks}
+              loading={loading}
               onStartDirectMessage={startDirectMessage}
               onNavigateTab={setActiveTab}
             />
@@ -388,6 +394,7 @@ export const App: React.FC = () => {
               documents={documents}
               groups={allGroups}
               loading={docsLoading}
+              onRefresh={refreshDocuments}
               onUploadDocument={async (params) => {
                 const res = await uploadDocument(params);
                 addNotification('announcement', 'Asset Archived', `"${params.title}" committed to engineering library.`, '/docs');
