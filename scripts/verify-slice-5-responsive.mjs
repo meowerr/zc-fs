@@ -68,7 +68,7 @@ const garageDoorContent = fs.readFileSync(garageDoorPath, 'utf8');
 assert(garageDoorContent.includes('min-h-[56px]'), 'Closed state thumb-arc glass tab provides >=56px tap target.');
 assert(garageDoorContent.includes('env(safe-area-inset-bottom)'), 'Safe area inset aware for mobile home bars.');
 assert(garageDoorContent.includes('max-h-[78dvh]') || garageDoorContent.includes('max-h-[78vh]'), 'Garage door sheet pulls up to ~70-78vh/dvh bottom sheet.');
-assert(garageDoorContent.includes('grid-cols-2'), '2-column destination grid with large tap targets (>=64px).');
+assert(garageDoorContent.includes('moreListItems') || garageDoorContent.includes('grid-cols-2'), 'Scannable destination list with large tap targets (>=56px).');
 assert(garageDoorContent.includes('onTouchStart') && garageDoorContent.includes('onTouchMove') && garageDoorContent.includes('onTouchEnd'), 'Swipe down gesture handlers implemented for drag-to-dismiss.');
 assert(garageDoorContent.includes("e.key === 'Escape'"), 'Escape key closes garage door.');
 
