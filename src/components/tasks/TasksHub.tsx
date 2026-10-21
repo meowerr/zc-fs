@@ -3,13 +3,11 @@ import {
   Plus, 
   Search, 
   Download,
-  FileSpreadsheet,
-  Clock,
-  AlertTriangle,
-  CheckCircle2,
-  FileCheck
+  FileSpreadsheet
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
+import { PageHeader } from '../common/PageHeader';
+import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { EmptyState } from '../common/EmptyState';
@@ -76,7 +74,6 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isExportMenuOpen, setIsExportMenuOpen] = useState(false);
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('all');
 
   // Sync initialTaskId if passed from Search or Notifications
@@ -138,173 +135,56 @@ export const TasksHub: React.FC<TasksHubProps> = ({
 
   return (
     <div className="space-y-5 pb-[calc(9rem+env(safe-area-inset-bottom))] md:pb-0">
-      {/* Top Telemetry Header & Stats */}
-      <GlassCard variant="elevated" className="p-4 sm:p-5">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
-              <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-label">DELIVERABLES // TELEMETRY</span>
-            </div>
-            <h2 className="font-display font-black text-xl sm:text-2xl text-cyber-primary uppercase tracking-wider">
-              {currentUser.role === 'admin'
-                ? 'Club Task Telemetry'
-                : `${currentUser.role === 'head' ? 'Pit Wall' : 'My Deliverables'} Workspace`}
-            </h2>
-            <p className="text-xs text-cyber-secondary max-w-lg leading-relaxed">
-              Track engineering milestones, submit CAD/code/specs, and review deliverables with multi-version history.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="hidden sm:flex items-center gap-2">
-              <GhostButton
-                size="sm"
-                icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
-                onClick={() => exportTasksToCSV(tasks, effectiveGroups)}
-                title="Download tasks as CSV spreadsheet"
-              >
-                CSV Export
-              </GhostButton>
-
-              <GhostButton
-                size="sm"
-                icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
-                onClick={() => exportTasksToJSON(tasks)}
-                title="Download JSON telemetry dump"
-              >
-                JSON
-              </GhostButton>
-            </div>
-
-            {/* Mobile Export Overflow Menu */}
-            <div className="relative sm:hidden">
-              <GhostButton
-                size="sm"
-                icon={<Download className="w-3.5 h-3.5 text-accent-cyan" />}
-                onClick={() => setIsExportMenuOpen((prev) => !prev)}
-                aria-label="Export options"
-              >
-                Export
-              </GhostButton>
-              {isExportMenuOpen && (
-                <div className="absolute right-0 top-full mt-1.5 z-20 w-44 rounded-xl bg-cyber-surface border border-cyber-border-strong shadow-cyber-elevated py-1 animate-fade-in">
-                  <button
-                    onClick={() => {
-                      exportTasksToCSV(tasks, effectiveGroups);
-                      setIsExportMenuOpen(false);
-                    }}
-                    className="w-full px-3 py-2.5 text-left text-xs font-mono text-cyber-primary hover:bg-cyber-surface-hover flex items-center gap-2 cursor-pointer"
-                  >
-                    <FileSpreadsheet className="w-4 h-4 text-accent-cyan" />
-                    <span>CSV Export</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      exportTasksToJSON(tasks);
-                      setIsExportMenuOpen(false);
-                    }}
-                    className="w-full px-3 py-2.5 text-left text-xs font-mono text-cyber-primary hover:bg-cyber-surface-hover flex items-center gap-2 cursor-pointer"
-                  >
-                    <Download className="w-4 h-4 text-cyber-secondary" />
-                    <span>JSON Dump</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
+      {/* Unified Telemetry Header & Stats */}
+      <PageHeader
+        title={
+          currentUser.role === 'admin'
+            ? 'Club Task Telemetry'
+            : `${currentUser.role === 'head' ? 'Pit Wall' : 'Deliverables'}`
+        }
+        eyebrow="Deliverables // Telemetry"
+        description="Track engineering milestones, submit CAD/code/specs, and review deliverables with multi-version history."
+        actions={
+          <>
+            <GhostButton
+              size="sm"
+              icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
+              onClick={() => exportTasksToCSV(tasks, effectiveGroups)}
+              title="Download tasks as CSV spreadsheet"
+            >
+              CSV Export
+            </GhostButton>
+            <GhostButton
+              size="sm"
+              icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
+              onClick={() => exportTasksToJSON(tasks)}
+              title="Download JSON telemetry dump"
+            >
+              JSON
+            </GhostButton>
             {isHeadOrAdmin && (
               <GlossyButton
                 variant="primary"
                 size="md"
                 icon={<Plus className="w-4 h-4" />}
                 onClick={() => setIsCreateModalOpen(true)}
-                className="hidden sm:inline-flex"
               >
                 Create Task
               </GlossyButton>
             )}
-          </div>
-        </div>
-
-        {/* Telemetry Metric Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mt-5 pt-4 border-t border-cyber-border">
-          <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border">
-            <div className="flex items-center justify-between gap-2 min-w-0">
-              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">Total Work</span>
-              <FileCheck className="w-3.5 h-3.5 shrink-0 text-cyber-muted" />
-            </div>
-            {tasks.length === 0 ? (
-              <>
-                <div className="text-xl sm:text-2xl font-mono font-medium text-cyber-muted mt-0.5">0</div>
-                <div className="text-label font-mono text-cyber-secondary">No active deliverables</div>
-              </>
-            ) : (
-              <>
-                <div className="text-xl sm:text-2xl font-display font-black text-cyber-primary mt-0.5">{tasks.length}</div>
-                <div className="text-label font-mono text-cyber-secondary">All Deliverables</div>
-              </>
-            )}
-          </div>
-
-          <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow" />
-            <div className="flex items-center justify-between gap-2 min-w-0">
-              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">In Review</span>
-              <Clock className="w-3.5 h-3.5 shrink-0 text-accent-yellow" />
-            </div>
-            {inReviewCount === 0 ? (
-              <>
-                <div className="text-xl sm:text-2xl font-mono font-medium text-cyber-muted mt-0.5">0</div>
-                <div className="text-label font-mono text-cyber-secondary">No reviews pending</div>
-              </>
-            ) : (
-              <>
-                <div className="text-xl sm:text-2xl font-display font-black text-accent-yellow mt-0.5">{inReviewCount}</div>
-                <div className="text-label font-mono text-cyber-secondary">Awaiting Head Review</div>
-              </>
-            )}
-          </div>
-
-          <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red" />
-            <div className="flex items-center justify-between gap-2 min-w-0">
-              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">Critical Overdue</span>
-              <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-accent-red" />
-            </div>
-            {overdueCount === 0 ? (
-              <>
-                <div className="text-xl sm:text-2xl font-mono font-medium text-cyber-muted mt-0.5">0</div>
-                <div className="text-label font-mono text-cyber-secondary">On schedule</div>
-              </>
-            ) : (
-              <>
-                <div className="text-xl sm:text-2xl font-display font-black text-accent-red mt-0.5">{overdueCount}</div>
-                <div className="text-label font-mono text-cyber-secondary">Requires Immediate Action</div>
-              </>
-            )}
-          </div>
-
-          <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime" />
-            <div className="flex items-center justify-between gap-2 min-w-0">
-              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">Verified / Passed</span>
-              <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-accent-lime" />
-            </div>
-            {completedCount === 0 ? (
-              <>
-                <div className="text-xl sm:text-2xl font-mono font-medium text-cyber-muted mt-0.5">0</div>
-                <div className="text-label font-mono text-cyber-secondary">No approved tasks yet</div>
-              </>
-            ) : (
-              <>
-                <div className="text-xl sm:text-2xl font-display font-black text-accent-lime mt-0.5">{completedCount}</div>
-                <div className="text-label font-mono text-cyber-secondary">Deliverables Approved</div>
-              </>
-            )}
-          </div>
-        </div>
-      </GlassCard>
+          </>
+        }
+        stats={
+          <StatStrip
+            items={[
+              { label: 'Total Tasks', value: tasks.length },
+              { label: 'In Review', value: inReviewCount, tone: 'yellow', hideZeroOnMobile: true },
+              { label: 'Critical Overdue', value: overdueCount, tone: 'red', hideZeroOnMobile: true },
+              { label: 'Deliverables Approved', value: completedCount, tone: 'lime', hideZeroOnMobile: true },
+            ]}
+          />
+        }
+      />
 
       {/* Filter & Search Bar */}
       <GlassCard className="p-3.5 sm:p-4 space-y-3">

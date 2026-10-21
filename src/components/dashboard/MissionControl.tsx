@@ -15,6 +15,8 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
+import { PageHeader } from '../common/PageHeader';
+import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { LedStatusChip } from '../common/LedStatusChip';
@@ -157,98 +159,78 @@ export const MissionControl: React.FC<MissionControlProps> = ({
         </div>
       )}
 
-      {/* ─── HERO TELEMETRY BANNER (ROLE-AWARE) ─── */}
-      <GlassCard variant="elevated" className="p-5 sm:p-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
-              <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-label">
-                {currentUser.role === 'admin' 
-                  ? 'CLUB // RACE CONTROL HQ' 
-                  : currentUser.role === 'head'
-                  ? `SUB-TEAM LEAD // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'PIT WALL'}`
-                  : `ENGINEERING COCKPIT // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'WORKSPACE'}`}
-              </span>
-              <span className="text-accent-lime text-label">● LIVE</span>
-            </div>
-
-            <h2 className="font-display font-black text-xl sm:text-2xl lg:text-3xl text-cyber-primary tracking-wider uppercase">
-              {currentUser.role === 'admin' 
-                ? 'Club Telemetry Command' 
-                : currentUser.role === 'head'
-                ? `${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'Sub-Team'} Leadership`
-                : 'My Engineering Workspace'}
-            </h2>
-            <p className="text-xs sm:text-sm text-cyber-secondary max-w-xl leading-relaxed">
-              {currentUser.role === 'admin'
-                ? 'High-level telemetry across all 5 technical and operational sub-teams. Govern registrations and platform health.'
-                : currentUser.role === 'head'
-                ? 'Oversee sub-team deliverables, review student engineering submissions, and manage technical workflows.'
-                : 'Track your assigned deliverables, submit revision iterations, and coordinate with technical teammates.'}
-            </p>
-          </div>
-
-          {/* Quick Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+      {/* ─── UNIFIED HERO TELEMETRY BANNER ─── */}
+      <PageHeader
+        title={
+          currentUser.role === 'admin' 
+            ? 'Club Telemetry Command' 
+            : currentUser.role === 'head'
+            ? `${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'Sub-Team'} Leadership`
+            : 'My Engineering Workspace'
+        }
+        eyebrow={
+          currentUser.role === 'admin' 
+            ? 'CLUB // RACE CONTROL HQ' 
+            : currentUser.role === 'head'
+            ? `SUB-TEAM LEAD // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'PIT WALL'}`
+            : `ENGINEERING COCKPIT // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'WORKSPACE'}`
+        }
+        description={
+          currentUser.role === 'admin'
+            ? 'High-level telemetry across all 5 technical and operational sub-teams. Govern registrations and platform health.'
+            : currentUser.role === 'head'
+            ? 'Oversee sub-team deliverables, review student engineering submissions, and manage technical workflows.'
+            : 'Track your assigned deliverables, submit revision iterations, and coordinate with technical teammates.'
+        }
+        actions={
+          <>
             {currentUser.role === 'admin' && (
               <GlossyButton
                 variant="outline"
+                size="sm"
                 icon={<Shield className="w-4 h-4 text-accent-cyan" />}
                 onClick={() => onNavigateTab('admin')}
               >
                 Admin Command ({pendingRegistrations.length})
               </GlossyButton>
             )}
-
             {(currentUser.role === 'admin' || currentUser.role === 'head') && (
               <GlossyButton
                 variant="primary"
+                size="sm"
                 icon={<Plus className="w-4 h-4" />}
                 onClick={onCreateTaskClick || (() => onNavigateTab('tasks'))}
               >
                 Create Task
               </GlossyButton>
             )}
-
             <GlossyButton
               variant="secondary"
+              size="sm"
               icon={<MessageSquare className="w-4 h-4" />}
               onClick={() => onNavigateTab('chat')}
             >
               Pit Wall Chat
             </GlossyButton>
-          </div>
-        </div>
-
-        {/* ─── ROLE-SPECIFIC TELEMETRY CARDS (Zero-State & Plain-Language Aware) ─── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-5 border-t border-cyber-border">
-          {statTiles.map((tile) => (
-            <div
-              key={tile.label}
-              onClick={tile.action}
-              className={`p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden transition-colors ${
-                tile.action ? 'cursor-pointer hover:border-accent-cyan/40' : 'hover:border-cyber-border-strong'
-              }`}
-            >
-              <div className={`absolute top-0 inset-x-0 h-[2px] ${tile.bar} opacity-70`} />
-              <div className="flex items-center justify-between gap-2 min-w-0">
-                <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary flex items-center gap-1.5">
-                  <tile.icon className={`w-3.5 h-3.5 shrink-0 ${tile.color}`} />
-                  <span className="truncate">{tile.label}</span>
-                </span>
-                <span className={`hidden sm:inline shrink-0 text-label font-mono ${tile.color}`}>{tile.tag}</span>
-              </div>
-              <div className={`text-3xl font-display font-black mt-1 ${tile.count === 0 ? 'text-cyber-muted font-mono font-medium' : tile.color}`}>
-                {tile.count}
-              </div>
-              <div className="hidden sm:block text-label font-mono text-cyber-secondary mt-0.5 truncate">
-                {tile.count === 0 ? tile.zero : tile.sub}
-              </div>
-            </div>
-          ))}
-        </div>
-      </GlassCard>
+          </>
+        }
+        stats={
+          <StatStrip
+            items={statTiles.map((tile) => ({
+              label: tile.label,
+              value: tile.count,
+              tone: tile.color.includes('cyan')
+                ? 'cyan'
+                : tile.color.includes('yellow')
+                ? 'yellow'
+                : tile.color.includes('lime')
+                ? 'lime'
+                : 'red',
+              hideZeroOnMobile: tile.label !== 'Total Tasks' && tile.label !== 'Team Queue' && tile.label !== 'My Tasks',
+            }))}
+          />
+        }
+      />
 
       {/* ─── ADMIN: 5 SUB-TEAMS TELEMETRY MATRIX ─── */}
       {currentUser.role === 'admin' && (

@@ -20,6 +20,8 @@ import {
   Server
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
+import { PageHeader } from '../common/PageHeader';
+import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
@@ -397,59 +399,44 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Header Banner */}
-      <GlassCard variant="elevated" className="p-5 sm:p-6 border-cyber-border-strong">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
-              <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-label">ADMIN COMMAND HQ</span>
-            </div>
-            <h2 className="font-display font-black text-xl sm:text-2xl text-cyber-primary uppercase tracking-wider">
-              Club Administration & Personnel
-            </h2>
-            <p className="text-xs font-sans text-cyber-secondary">
-              Review registrations, govern member assignments, inspect telemetry health, and orchestrate sub-teams.
-            </p>
-          </div>
+      {/* ─── UNIFIED ADMIN HEADER & STATS ─── */}
+      <PageHeader
+        title="Club Administration & Personnel"
+        eyebrow="ADMIN COMMAND HQ"
+        description="Review registrations, govern member assignments, inspect telemetry health, and orchestrate sub-teams."
+        stats={
+          <StatStrip
+            items={[
+              { label: 'Pending Approvals', value: pendingUsers.length, tone: 'yellow' },
+              { label: 'Sub-Teams', value: effectiveGroups.length, tone: 'cyan' },
+              { label: 'Active Engineers', value: approvedUsers.length, tone: 'lime' },
+            ]}
+          />
+        }
+      />
 
-          <div className="flex items-center gap-2.5">
-            {[
-              { l: 'Pending', v: pendingUsers.length, c: 'text-accent-yellow' },
-              { l: 'Sub-Teams', v: effectiveGroups.length, c: 'text-accent-cyan' },
-              { l: 'Engineers', v: approvedUsers.length, c: 'text-accent-lime' },
-            ].map((s) => (
-              <div key={s.l} className="p-2.5 sm:p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center min-w-[70px]">
-                <div className="font-mono text-label text-cyber-muted uppercase">{s.l}</div>
-                <div className={`font-display font-black text-lg sm:text-xl ${s.c}`}>{s.v}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Sub-Tabs Selector */}
-        <div className="flex items-center gap-1.5 mt-5 pt-3.5 border-t border-cyber-border overflow-x-auto pb-1">
-          {[
-            { id: 'approvals', label: `Pending Approvals (${pendingUsers.length})` },
-            { id: 'people', label: `People Management (${profiles.length})` },
-            { id: 'teams', label: `Sub-Teams (${effectiveGroups.length})` },
-            { id: 'health', label: 'System Health', icon: Server },
-          ].map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setActiveSubTab(t.id as any)}
-              className={`px-3 py-1.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer border whitespace-nowrap flex items-center gap-1.5 ${
-                activeSubTab === t.id
-                  ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
-                  : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
-              }`}
-            >
-              {t.icon && <t.icon className="w-3.5 h-3.5" />}
-              <span>{t.label}</span>
-            </button>
-          ))}
-        </div>
-      </GlassCard>
+      {/* Sub-Tabs Selector */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+        {[
+          { id: 'approvals', label: `Pending (${pendingUsers.length})` },
+          { id: 'people', label: `People (${profiles.length})` },
+          { id: 'teams', label: `Teams (${effectiveGroups.length})` },
+          { id: 'health', label: 'Health', icon: Server },
+        ].map((t) => (
+          <button
+            key={t.id}
+            onClick={() => setActiveSubTab(t.id as any)}
+            className={`px-3 py-2 rounded-lg text-xs font-mono uppercase transition-all cursor-pointer border whitespace-nowrap flex items-center gap-1.5 shrink-0 min-h-[44px] ${
+              activeSubTab === t.id
+                ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm font-bold'
+                : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:text-cyber-primary'
+            }`}
+          >
+            {t.icon && <t.icon className="w-3.5 h-3.5" />}
+            <span>{t.label}</span>
+          </button>
+        ))}
+      </div>
 
       {/* Success Notification Banner */}
       {successMessage && (

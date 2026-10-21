@@ -14,6 +14,7 @@ import {
   FileSpreadsheet
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
+import { PageHeader } from '../common/PageHeader';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
@@ -181,41 +182,22 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header telemetry HUD */}
-      <GlassCard variant="elevated" className="p-4 sm:p-6 border-cyber-border-strong relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-accent-cyan/10 to-transparent pointer-events-none" />
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-xs text-accent-cyan font-medium uppercase tracking-widest flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-                Formula Student Repository
-              </span>
-              <span className="text-cyber-muted text-xs">•</span>
-              <span className="font-mono text-xs text-cyber-muted">
-                {documents.length} ARCHIVED ASSETS
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-display font-extrabold text-cyber-primary tracking-wide">
-              Engineering Document Hub
-            </h1>
-            <p className="text-xs sm:text-sm text-cyber-secondary mt-1 max-w-2xl font-sans">
-              Centralized engineering repository for Formula Student design specifications, CAD solids, Formula SAE rulebooks, and telemetry acquisitions.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <GlossyButton
-              variant="primary"
-              size="md"
-              onClick={() => setIsUploadModalOpen(true)}
-              className="hidden sm:inline-flex items-center gap-2"
-            >
-              <Upload className="w-4 h-4" />
-              <span>Upload Document</span>
-            </GlossyButton>
-          </div>
-        </div>
-      </GlassCard>
+      <PageHeader
+        title="Engineering Document Hub"
+        eyebrow="Formula Student Repository"
+        description="Centralized engineering repository for Formula Student design specifications, CAD solids, Formula SAE rulebooks, and telemetry acquisitions."
+        actions={
+          <GlossyButton
+            variant="primary"
+            size="md"
+            onClick={() => setIsUploadModalOpen(true)}
+            className="hidden sm:inline-flex items-center gap-2"
+          >
+            <Upload className="w-4 h-4" />
+            <span>Upload Document</span>
+          </GlossyButton>
+        }
+      />
 
       {/* Filter and Search Bar */}
       <div className="space-y-3">

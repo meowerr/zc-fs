@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Mobile UI Overhaul Round 2 (Branch: `feature/mobile-ui-polish`)
-- **Active Status:** Phase R0 (Fix Regressions) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.96 KB < 200 KB, main App JS gzip: 45.52 KB < 50 KB).
+- **Active Status:** Phase R1 (Content-First Page Headers) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 198.83 KB < 200 KB, main App JS gzip: 45.02 KB < 50 KB).
 
 ---
 
@@ -123,6 +123,20 @@
 - `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` Automated regression guard 100% green.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email domain, file quota, CSV/JSON, and database migration checks passing (100% success).
 - `[VERIFIED: npm run build]` Total bundle gzip: **199.96 KB** (< 200 KB budget), Main JS gzip: **45.52 KB** (< 50 KB budget).
+
+### Phase R1: Content-First Page Headers
+- `[IMPLEMENTED, MANUALLY CHECKED]` Created reusable [`src/components/common/PageHeader.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/PageHeader.tsx) featuring a tight title (`text-xl font-display font-black uppercase tracking-wide`), desktop-only eyebrow (`hidden md:block`), desktop-only actions (`hidden sm:flex`), desktop-only description (`hidden md:block`), and responsive stats container.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Created horizontal scrollable [`src/components/common/StatStrip.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/StatStrip.tsx) (`-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none md:mx-0 md:px-0 md:grid md:grid-cols-4 md:gap-3`), with `min-w-[104px]` snap tiles, large `text-2xl font-black font-display` values, `hideZeroOnMobile` zero-metric filtering on mobile, and semantic tone mapping (`cyan`, `yellow`, `lime`, `red`).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Refactored all 5 primary hubs to use `PageHeader` + `StatStrip` instead of bespoke hero cards:
+  - `TasksHub.tsx`: Replaced 145-line hero card and redundant export menu with unified `PageHeader` + `StatStrip`. Tasks now appear directly above the fold on mobile.
+  - `MissionControl.tsx`: Replaced bespoke hero telemetry card with `PageHeader` + `StatStrip`, role-aware titles and actions.
+  - `DocumentHub.tsx`: Replaced heavy hero banner with compact `PageHeader`, bringing repository category pills and document listings above the fold.
+  - `TeamDirectory.tsx`: Replaced hero header and separate metric tiles with `PageHeader` + `StatStrip`.
+  - `AdminApprovalHub.tsx`: Replaced duplicate desktop header and redundant sub-tab selector with `PageHeader` + `StatStrip` and unified mobile/desktop sub-tab bar.
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` Automated mobile UI regression suite 100% clean.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Full test suite passing with strict TypeScript verification (0 errors).
+- `[VERIFIED: node scripts/verify-slice-5-responsive.mjs (23/23 passed)]` Tablet and mobile garage door responsive tests 100% green.
+- `[VERIFIED: npm run build]` Net diff -193 lines of duplicate code. Total bundle gzip: **198.83 KB** (< 200 KB budget, 1.17 KB headroom), Main JS gzip: **45.02 KB** (< 50 KB budget, 4.98 KB headroom).
 
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 

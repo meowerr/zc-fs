@@ -10,6 +10,8 @@ import {
   Layers
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
+import { PageHeader } from '../common/PageHeader';
+import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { Profile, Group, Task } from '../../lib/database.types';
@@ -105,68 +107,42 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
 
   return (
     <div className="space-y-5 animate-fade-in">
-      {/* ─── Top Telemetry Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-cyber-border">
-        <div>
-          <div className="flex items-center flex-wrap gap-1">
-            <span className="text-label font-mono text-accent-cyan tracking-widest uppercase bg-accent-cyan/10 px-2 py-0.5 rounded border border-accent-cyan/20 font-medium">
-              // TELEMETRY ROSTER
-            </span>
-            <span className="text-label font-mono text-cyber-muted">
-              5 SUB-TEAMS • ACTIVE DIRECTORY
-            </span>
-          </div>
-          <h1 className="font-display font-black text-xl sm:text-2xl text-cyber-primary tracking-wide uppercase mt-1">
-            Team Directory & Roster
-          </h1>
-          <p className="text-xs font-sans text-cyber-secondary mt-0.5">
-            Engineering structure, sub-team leads, active personnel, and direct telemetry dispatch.
-          </p>
-        </div>
-
-        {/* Quick Hub Navigation Actions */}
-        <div className="flex items-center gap-2">
-          <GlossyButton
-            size="sm"
-            variant="outline"
-            icon={<MessageSquare className="w-3.5 h-3.5" />}
-            onClick={() => onNavigateTab('chat')}
-          >
-            Pit Wall Comms
-          </GlossyButton>
-          <GlossyButton
-            size="sm"
-            variant="secondary"
-            icon={<CheckSquare className="w-3.5 h-3.5" />}
-            onClick={() => onNavigateTab('tasks')}
-          >
-            Tasks Hub
-          </GlossyButton>
-        </div>
-      </div>
-
-      {/* ─── Telemetry HUD Metrics Cards ─── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {[
-          { label: 'ACTIVE ROSTER', icon: Users, color: 'text-accent-cyan', val: totalEngineers, sub: 'Verified engineers' },
-          { label: 'SUB-TEAMS', icon: Layers, color: 'text-accent-cyan', val: groupsList.length, sub: 'Specialized divisions' },
-          { label: 'GROUP HEADS', icon: Award, color: 'text-accent-yellow', val: totalHeads, sub: 'Sub-team leads' },
-          { label: 'CLUB ADVISORY', icon: Shield, color: 'text-accent-lime', val: totalAdmins, sub: 'System overseers' },
-        ].map((s) => (
-          <GlassCard key={s.label} className="p-3.5 relative overflow-hidden">
-            <div className="flex items-center justify-between gap-2 min-w-0 text-cyber-muted mb-1">
-              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">{s.label}</span>
-              <s.icon className={`w-3.5 h-3.5 shrink-0 ${s.color}`} />
-            </div>
-            <div className="font-mono text-2xl font-medium text-cyber-primary">
-              {s.val.toString().padStart(2, '0')}
-            </div>
-            <div className="text-label font-mono text-cyber-secondary mt-0.5">
-              {s.sub}
-            </div>
-          </GlassCard>
-        ))}
-      </div>
+      {/* ─── UNIFIED HEADER & STATS ─── */}
+      <PageHeader
+        title="Team Directory & Roster"
+        eyebrow="TELEMETRY ROSTER // 5 SUB-TEAMS"
+        description="Engineering structure, sub-team leads, active personnel, and direct telemetry dispatch."
+        actions={
+          <>
+            <GlossyButton
+              size="sm"
+              variant="outline"
+              icon={<MessageSquare className="w-3.5 h-3.5" />}
+              onClick={() => onNavigateTab('chat')}
+            >
+              Pit Wall Comms
+            </GlossyButton>
+            <GlossyButton
+              size="sm"
+              variant="secondary"
+              icon={<CheckSquare className="w-3.5 h-3.5" />}
+              onClick={() => onNavigateTab('tasks')}
+            >
+              Tasks Hub
+            </GlossyButton>
+          </>
+        }
+        stats={
+          <StatStrip
+            items={[
+              { label: 'Active Roster', value: totalEngineers },
+              { label: 'Sub-Teams', value: groupsList.length },
+              { label: 'Group Heads', value: totalHeads, tone: 'yellow' },
+              { label: 'Club Advisory', value: totalAdmins, tone: 'lime' },
+            ]}
+          />
+        }
+      />
 
       {/* ─── 5 Sub-Teams Quick Filter Overview ─── */}
       <GlassCard className="p-3.5 space-y-2.5">
