@@ -15,13 +15,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   actions,
   stats,
 }) => (
-  <header className="mb-3 md:mb-6">
+  <header className={stats ? 'mb-3 md:mb-6' : 'hidden md:block mb-6'}>
     {eyebrow && (
       <p className="hidden md:block text-label font-mono uppercase text-accent-cyan mb-1">
         {eyebrow}
       </p>
     )}
-    <div className="flex items-center justify-between gap-3">
+    <div className="hidden md:flex items-center justify-between gap-3">
       <h1 className="font-display font-black text-xl md:text-3xl uppercase tracking-wide text-cyber-primary truncate">
         {title}
       </h1>

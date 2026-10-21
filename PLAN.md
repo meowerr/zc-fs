@@ -567,6 +567,7 @@ zc-fs/
     - **Round 2 Phase R5 Navigation & Header:** [COMPLETED] Contextual mobile header, soft active pill, list-based More sheet, scroll restoration, haptics.
     - **Round 2 Phase R6 Typography & Hierarchy:** [COMPLETED] Calm 3-level typography hierarchy, contrast audit, 390px view verification.
     - **Round 2 Phase R7 Verification & Review:** [COMPLETED] 360/390/412px visual review, gesture inspection, production build audit.
+    - **Top Nav Bar Refinements:** [COMPLETED] Header owns page title on mobile with PageHeader heading hidden (saving ~40px); title enlarged to 16–18px; sub-team prefixes trimmed; subtitle displayed only on Control; borderless ghost action buttons with 44px hit targets; avatar micro role badge hidden on mobile; back button on sub-screens; hide-on-scroll down / restore-on-scroll up (reclaiming 56px); total assets gzip 199.99 KB (< 200 KB).
 
 ---
 

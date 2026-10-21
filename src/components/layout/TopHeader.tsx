@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sun, Moon, Bell, BookOpen, Palette, Search } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Sun, Moon, Bell, BookOpen, Palette, Search, ChevronLeft } from 'lucide-react';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { ZfsMonogram } from '../brand/ZfsMonogram';
 import { UserRole } from '../../lib/database.types';
@@ -11,6 +11,7 @@ interface TopHeaderProps {
   userEmail?: string;
   groupName?: string;
   activeTab?: NavTab;
+  onBack?: () => void;
   isDarkMode: boolean;
   onToggleTheme: () => void;
   onOpenProfile?: () => void;
@@ -21,15 +22,24 @@ interface TopHeaderProps {
   onOpenSearch?: () => void;
 }
 
-const TAB_TITLES: Record<string, string> = {
-  dashboard: 'Mission Control',
-  tasks: 'Deliverables',
-  chat: 'Pit Wall Comms',
-  docs: 'Documents',
-  team: 'Team Directory',
-  admin: 'Admin Hub',
-  profile: 'Profile',
-};
+const getTitle = (t: string) =>
+  t === 'tasks'
+    ? 'Deliverables'
+    : t === 'chat'
+    ? 'Pit Wall Comms'
+    : t === 'docs'
+    ? 'Documents'
+    : t === 'team'
+    ? 'Team Directory'
+    : t === 'admin'
+    ? 'Admin Hub'
+    : 'PitLane';
+
+const GHOST_BTN =
+  'tap-target w-10 h-10 rounded-lg border border-transparent active:border-cyber-border md:border-cyber-border md:bg-cyber-surface-elevated text-cyber-secondary hover:text-cyber-primary transition-all cursor-pointer shrink-0';
+
+const DESK_BTN =
+  'tap-target sm:w-10 sm:h-10 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary transition-all active:scale-95 shadow-cyber-sm cursor-pointer shrink-0';
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
   currentRole,
@@ -37,6 +47,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   userEmail,
   groupName = 'Vehicle Dynamics',
   activeTab = 'dashboard',
+  onBack,
   isDarkMode,
   onToggleTheme,
   onOpenProfile,
@@ -46,9 +57,27 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   onOpenStyleGuide,
   onOpenSearch,
 }) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const lastY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      if (y <= 12 || y < lastY.current - 8) setIsVisible(true);
+      else if (y > lastY.current + 8 && y > 56) setIsVisible(false);
+      lastY.current = y;
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const shortGroupName = groupName.replace(/^(Technical|Operations)\s*-\s*/, '');
+
   return (
-    <header 
-      className="sticky top-0 z-20 w-full backdrop-blur-md bg-cyber-surface/90 border-b border-cyber-border transition-all duration-200 overflow-x-clip pt-[env(safe-area-inset-top)]"
+    <header
+      className={`sticky top-0 z-20 w-full backdrop-blur-md bg-cyber-surface/90 border-b border-cyber-border transition-transform duration-200 ease-out overflow-x-clip pt-[env(safe-area-inset-top)] ${
+        isVisible ? 'translate-y-0' : '-translate-y-full md:translate-y-0'
+      }`}
       style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
     >
       <div className="max-w-7xl mx-auto safe-header-pad sm:px-4 h-14 sm:h-16 flex items-center justify-between gap-2 sm:gap-4">
@@ -63,28 +92,33 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
-                    <h1 className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase leading-tight truncate">
+                    <h1 className="font-display font-black text-sm tracking-wider text-cyber-primary uppercase leading-tight truncate">
                       PitLane
                     </h1>
                     <span className="hidden xs:inline-block px-1 py-0.5 rounded text-label font-mono font-medium bg-brand-orange/15 text-brand-light-orange border border-brand-orange/30">
                       ZFS-2026
                     </span>
                   </div>
-                  <p className="text-label font-mono text-cyber-secondary tracking-wider flex items-center gap-1 min-w-0">
+                  <p className="text-label font-sans text-cyber-secondary tracking-normal flex items-center gap-1 min-w-0">
                     <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse shrink-0" />
-                    <span className="truncate min-w-0 flex-1">{groupName}</span>
+                    <span className="truncate min-w-0 flex-1">{shortGroupName}</span>
                   </p>
                 </div>
               </>
             ) : (
-              <div className="min-w-0 flex-1">
-                <h1 className="font-display font-black text-xs sm:text-sm tracking-wider text-cyber-primary uppercase leading-tight truncate">
-                  {TAB_TITLES[activeTab] || 'PitLane'}
+              <div className="min-w-0 flex-1 flex items-center gap-1.5">
+                {onBack && (
+                  <button
+                    onClick={onBack}
+                    aria-label="Back to Mission Control"
+                    className={`${GHOST_BTN} -ml-2`}
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                )}
+                <h1 className="font-display font-bold text-base sm:text-lg tracking-wide text-cyber-primary uppercase leading-tight truncate">
+                  {getTitle(activeTab)}
                 </h1>
-                <p className="text-label font-sans text-cyber-secondary tracking-wider flex items-center gap-1 min-w-0 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan shrink-0" />
-                  <span className="truncate min-w-0 flex-1">{groupName}</span>
-                </p>
               </div>
             )}
           </div>
@@ -93,16 +127,19 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <div className="hidden md:flex items-center gap-2 py-1 px-2.5 rounded-lg bg-cyber-surface-elevated/60 border border-cyber-border/70">
             <span className="w-2 h-2 rounded-full bg-accent-lime animate-pulse" />
             <span className="font-mono text-xs tracking-wider text-cyber-primary uppercase">
-              {groupName}
+              {shortGroupName}
             </span>
           </div>
         </div>
 
         {/* Telemetry Live Indicator & Controls */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          {/* User Email Context Pill (replaces duplicate static online indicator) */}
+          {/* User Email Context Pill */}
           {userEmail && (
-            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyber-bg-alt border border-cyber-border font-mono text-label text-cyber-secondary truncate max-w-[220px]" title={userEmail}>
+            <div
+              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyber-bg-alt border border-cyber-border font-mono text-label text-cyber-secondary truncate max-w-[220px]"
+              title={userEmail}
+            >
               <span className="text-accent-cyan font-bold truncate">{userEmail}</span>
             </div>
           )}
@@ -111,9 +148,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           {onOpenStyleGuide && (
             <button
               onClick={onOpenStyleGuide}
-              aria-label="Design System Style Guide"
-              title="Open Cyber Racing Style Guide (/styleguide)"
-              className="hidden md:flex tap-target sm:w-10 sm:h-10 rounded-lg items-center justify-center bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-accent-cyan hover:border-accent-cyan/50 transition-all active:scale-95 shadow-cyber-sm cursor-pointer shrink-0"
+              aria-label="Style Guide"
+              className={`hidden md:flex ${DESK_BTN} hover:text-accent-cyan hover:border-accent-cyan/50`}
             >
               <Palette className="w-4 h-4 text-accent-cyan" />
             </button>
@@ -123,8 +159,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={onOpenGuide}
             aria-label="Engineering Protocol Guide"
-            title="Formula Student Role Operations Guide"
-            className="hidden sm:flex tap-target sm:w-10 sm:h-10 rounded-lg items-center justify-center bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary hover:border-cyber-border-strong transition-all active:scale-95 shadow-cyber-sm cursor-pointer shrink-0"
+            className={`hidden sm:flex ${DESK_BTN} hover:text-cyber-primary hover:border-cyber-border-strong`}
           >
             <BookOpen className="w-4 h-4" />
           </button>
@@ -134,8 +169,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             <button
               onClick={onOpenSearch}
               aria-label="Search Workspace"
-              title="Search Deliverables, Engineers, Comms (Ctrl+K)"
-              className="tap-target sm:w-auto sm:h-10 sm:px-3 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-accent-cyan hover:border-accent-cyan/50 transition-all active:scale-95 shadow-cyber-sm cursor-pointer shrink-0"
+              title="Search (Ctrl+K)"
+              className={`${GHOST_BTN} sm:w-auto sm:px-3 hover:text-accent-cyan`}
             >
               <Search className="w-4 h-4 text-accent-cyan" />
               <span className="hidden xl:inline text-xs font-mono text-cyber-muted ml-2">Search...</span>
@@ -149,21 +184,21 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={onOpenNotifications}
             aria-label="Open notifications"
-            className="relative tap-target sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary hover:border-cyber-border-strong transition-all active:scale-95 shadow-cyber-sm cursor-pointer shrink-0"
+            className={`relative ${GHOST_BTN}`}
           >
             <Bell className="w-4 h-4" />
             {notificationCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded bg-accent-red text-white font-mono text-label font-medium flex items-center justify-center shadow-sm animate-pulse">
+              <span className="absolute top-1 right-1 sm:-top-1 sm:-right-1 w-4 h-4 rounded bg-accent-red text-white font-mono text-label font-medium flex items-center justify-center shadow-sm animate-pulse">
                 {notificationCount}
               </span>
             )}
           </button>
 
-          {/* Light / Dark Mode Toggle */}
+          {/* Light / Dark Mode Toggle (Desktop only) */}
           <button
             onClick={onToggleTheme}
             aria-label="Toggle theme"
-            className="hidden md:flex tap-target sm:w-10 sm:h-10 rounded-lg items-center justify-center bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-accent-yellow hover:border-accent-yellow/50 transition-all active:scale-95 shadow-cyber-sm cursor-pointer shrink-0"
+            className={`hidden md:flex ${DESK_BTN} hover:text-accent-yellow hover:border-accent-yellow/50`}
           >
             {isDarkMode ? (
               <Sun className="w-4 h-4 text-accent-yellow" />
@@ -176,7 +211,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={onOpenProfile}
             aria-label="User Profile"
-            className="tap-target sm:w-auto sm:min-w-0 flex items-center gap-1.5 sm:gap-2 p-0.5 sm:p-1 rounded-lg hover:bg-cyber-surface-hover transition-all text-left cursor-pointer border border-transparent hover:border-cyber-border shrink-0"
+            className="tap-target sm:w-auto flex items-center gap-1.5 sm:gap-2 p-0.5 sm:p-1 rounded-lg border border-transparent active:border-cyber-border hover:bg-cyber-surface-hover hover:border-cyber-border transition-all cursor-pointer shrink-0"
           >
             <div className="hidden sm:block text-right">
               <div className="text-xs font-semibold text-cyber-primary leading-tight truncate max-w-[120px]">

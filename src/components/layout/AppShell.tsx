@@ -83,6 +83,7 @@ export const AppShell: React.FC<AppShellProps> = ({
       {/* Top Header Telemetry HUD */}
       <TopHeader
         activeTab={activeTab}
+        onBack={() => onTabChange('dashboard')}
         currentRole={currentRole}
         userName={userName}
         userEmail={userEmail}

@@ -200,10 +200,13 @@ export const ChatView: React.FC<ChatViewProps> = ({
         `}
       >
         <div className="flex items-center justify-between pb-2.5 border-b border-cyber-border">
-          <div className="flex items-center gap-1.5 font-sans text-xs text-cyber-primary font-semibold">
+          <div className="hidden md:flex items-center gap-1.5 font-sans text-xs text-cyber-primary font-semibold">
             <Radio className="w-3.5 h-3.5 text-accent-cyan animate-pulse" />
             <span className="uppercase tracking-wider">Pit Wall Comms</span>
           </div>
+          <span className="md:hidden text-xs font-semibold text-cyber-secondary">
+            Channels
+          </span>
           <div className="flex items-center gap-1">
             <button
               onClick={() => setIsDMModalOpen(true)}

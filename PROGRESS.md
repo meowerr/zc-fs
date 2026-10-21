@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Mobile UI Overhaul Round 2 (Branch: `feature/mobile-ui-polish`)
-- **Active Status:** Phase R4 (Chat that feels like a messenger) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.21 KB < 200 KB, main App JS gzip: 37.41 KB < 50 KB).
+- **Active Status:** Top Nav Bar Refinements & Title Deduplication completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.99 KB < 200 KB, main App JS gzip: 38.07 KB < 50 KB).
 
 ---
 
@@ -212,6 +212,18 @@
 - `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` Automated regression guard 100% clean.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript compilation (0 errors), PWA manifests, university domain checks, file quotas, CSV/JSON roundtrips, and database migration integrity verified (100% success).
 - `[VERIFIED: npm run build]` Total bundle gzip: **199.75 KB** (< 200 KB budget, 256 bytes headroom), Main JS gzip: **37.91 KB** (< 50 KB budget, 12.09 KB headroom).
+
+### Phase R8: Top Nav Bar Refinements & Title Deduplication
+- `[IMPLEMENTED, MANUALLY CHECKED]` Deduplicated Page Heading: Updated `PageHeader.tsx` so the page title container is hidden on mobile (`hidden md:flex`), allowing `TopHeader` to own the page title and saving ~40px of vertical space on mobile across Tasks, Docs, and Admin. In `ChatView.tsx`, changed mobile channel bar from duplicate "Pit Wall Comms" to "Channels".
+- `[IMPLEMENTED, MANUALLY CHECKED]` 16–18px Header Title: Promoted mobile header title from small 12px caption to `text-base sm:text-lg font-display font-bold uppercase tracking-wide` (16–18px), providing a clear visual focal point.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Trimmed Sub-Team Prefix & Contextual Display: Stripped `"Technical - "` and `"Operations - "` prefixes using `groupName.replace(/^(Technical|Operations)\s*-\s*/, '')` (e.g. renders clean "Vehicle Dynamics"). Subtitle is displayed exclusively on Mission Control (`dashboard`); on inner sub-screens, the subtitle row is completely hidden.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Borderless Ghost Icon Buttons: Replaced heavy boxed chrome icon buttons (Search, Notifications, Back) on mobile with borderless ghost icons (`border border-transparent active:border-cyber-border`) while strictly preserving the 44px tap target (`.tap-target`), activating borders strictly on pressed state.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Clean Avatar on Mobile: Hid the cramped role-letter micro badge on `ChromeAvatar.tsx` on mobile (`hidden sm:flex`), showing role in the profile sheet.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Back Navigation & Hide-on-Scroll: Added a 44px `ChevronLeft` back button on mobile sub-screens returning to Mission Control. Implemented a dynamic scroll listener hiding the top bar on scroll down past threshold (`-translate-y-full md:translate-y-0`) and restoring it on scroll up or scroll top, reclaiming another 56px on mobile viewports.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Full suite passing with strict TypeScript verification (0 errors).
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` Automated regression guard 100% green.
+- `[VERIFIED: node scripts/verify-slice-5-responsive.mjs (23/23 checks passed)]` Responsive checks 100% green.
+- `[VERIFIED: npm run build]` Total bundle gzip: **199.99 KB** (< 200 KB budget, strictly preserved), Main JS gzip: **38.07 KB** (< 50 KB budget, 11.93 KB headroom).
 
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 

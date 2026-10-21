@@ -59,13 +59,14 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
         </div>
       </div>
 
-      {/* Role Indicator Micro Badge */}
+      {/* Role Indicator Micro Badge (Hidden on mobile to eliminate cramped badges) */}
       {role && (
         <span
           title={`Role: ${role.toUpperCase()}`}
           className={`
+            hidden sm:flex
             absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded border 
-            ${roleBadgeStyles[role]} shadow-sm flex items-center justify-center font-mono text-label font-medium leading-none
+            ${roleBadgeStyles[role]} shadow-sm items-center justify-center font-mono text-label font-medium leading-none
           `}
         >
           {role[0].toUpperCase()}
