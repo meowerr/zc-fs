@@ -118,7 +118,7 @@ export const AppShell: React.FC<AppShellProps> = ({
               <div className="flex-1">
                 {children}
               </div>
-              <footer className="mt-auto pt-8 pb-3 text-center">
+              <footer className="mt-auto pt-8 pb-3 text-center app-footer">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-surface/60 border border-cyber-border text-label font-mono text-cyber-muted">
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />
                   <span>Built for Zewail Formula Team // PitLane Telemetry</span>
@@ -157,6 +157,8 @@ export const AppShell: React.FC<AppShellProps> = ({
           userName={userName}
           unreadCount={unreadCount}
           onOpenProfile={onOpenProfile}
+          isDarkMode={isDarkMode}
+          onToggleTheme={toggleTheme}
         />
       ) : (
         <BottomNav

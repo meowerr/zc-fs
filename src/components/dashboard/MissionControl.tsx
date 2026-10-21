@@ -232,12 +232,12 @@ export const MissionControl: React.FC<MissionControlProps> = ({
               }`}
             >
               <div className={`absolute top-0 inset-x-0 h-[2px] ${tile.bar} opacity-70`} />
-              <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <tile.icon className={`w-3.5 h-3.5 ${tile.color}`} />
-                  {tile.label}
+              <div className="flex items-center justify-between gap-2 min-w-0">
+                <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary flex items-center gap-1.5">
+                  <tile.icon className={`w-3.5 h-3.5 shrink-0 ${tile.color}`} />
+                  <span className="truncate">{tile.label}</span>
                 </span>
-                <span className={`text-label font-mono tracking-tighter ${tile.color}`}>{tile.tag}</span>
+                <span className={`hidden sm:inline shrink-0 text-label font-mono ${tile.color}`}>{tile.tag}</span>
               </div>
               <div className={`text-3xl font-display font-black mt-1 ${tile.count === 0 ? 'text-cyber-muted font-mono font-medium' : tile.color}`}>
                 {tile.count}

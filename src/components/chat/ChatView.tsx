@@ -105,7 +105,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
     try {
       await onSendMessage(sentContent, sentAttachment);
-      setInputText(''); if (textareaRef.current) textareaRef.current.style.height = 'auto';
+      setInputText('');
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+        textareaRef.current.style.overflowY = 'hidden';
+      }
       setAttachmentUrl('');
       setShowAttachInput(false);
     } catch (err: any) {
@@ -415,12 +419,14 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 <textarea
                   ref={textareaRef}
                   rows={1}
-                  placeholder={`Transmit message to ${getChatTitle()}...`}
+                  placeholder="Message…"
                   value={inputText}
                   onChange={(e) => {
                     setInputText(e.target.value);
-                    e.currentTarget.style.height = 'auto';
-                    e.currentTarget.style.height = Math.min(e.currentTarget.scrollHeight, 120) + 'px';
+                    const el = e.currentTarget;
+                    el.style.height = 'auto';
+                    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+                    el.style.overflowY = el.scrollHeight > 120 ? 'auto' : 'hidden';
                   }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey && window.innerWidth >= 768) {
@@ -428,7 +434,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       handleSend(e as any);
                     }
                   }}
-                  className="flex-1 min-h-[44px] max-h-[120px] px-3 py-2.5 rounded-lg resize-none text-base sm:text-xs bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan font-sans"
+                  className="flex-1 min-h-[44px] max-h-[120px] py-[10px] px-3 resize-none overflow-hidden text-base leading-6 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan font-sans"
                 />
 
                 <GlossyButton

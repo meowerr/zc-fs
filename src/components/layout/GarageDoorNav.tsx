@@ -4,7 +4,9 @@ import {
   X, 
   Radio, 
   User,
-  Menu
+  Menu,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { UserRole } from '../../lib/database.types';
 import { NavTab, getVisibleNavItems } from '../../config/navigation';
@@ -14,6 +16,7 @@ import { ZfsMonogram } from '../brand/ZfsMonogram';
 // Instant Rollback Flag: toggle to false if floating thumb-arc pill is needed
 const USE_MOBILE_TAB_BAR = true;
 const PRIMARY_TABS: NavTab[] = ['dashboard', 'tasks', 'chat', 'docs'];
+const BAR_LABEL: Record<string, string> = { dashboard: 'Control', tasks: 'Tasks', chat: 'Chat', docs: 'Docs' };
 
 export interface GarageDoorNavProps {
   activeTab: NavTab;
@@ -23,6 +26,8 @@ export interface GarageDoorNavProps {
   userName?: string;
   unreadCount?: number;
   onOpenProfile?: () => void;
+  isDarkMode?: boolean;
+  onToggleTheme?: () => void;
 }
 
 export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
@@ -33,6 +38,8 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
   userName = 'Engineer',
   unreadCount = 0,
   onOpenProfile,
+  isDarkMode,
+  onToggleTheme,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -161,37 +168,41 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                   key={item.id}
                   onClick={() => onTabChange(item.id)}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`min-h-[56px] flex flex-col items-center justify-center gap-0.5 text-label font-display transition-colors cursor-pointer relative ${
-                    isActive ? 'text-accent-cyan font-bold' : 'text-cyber-secondary hover:text-cyber-primary font-medium'
+                  className={`min-h-[56px] min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 transition-colors cursor-pointer relative ${
+                    isActive ? 'text-accent-cyan' : 'text-cyber-secondary hover:text-cyber-primary'
                   }`}
                 >
                   {isActive && (
-                    <div className="absolute top-0 inset-x-3 h-[2px] bg-accent-cyan rounded-full shadow-[0_0_6px_rgba(0,217,255,0.6)]" />
+                    <div className="absolute top-0 inset-x-2 h-[2px] bg-accent-cyan rounded-full shadow-[0_0_6px_rgba(0,217,255,0.6)]" />
                   )}
                   <div className="relative">
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-5 h-5 shrink-0" />
                     {showBadge && (
                       <span className="absolute -top-1 -right-2 px-1 rounded-full text-label font-mono font-medium bg-accent-red text-white shadow-sm">
                         {unreadCount > 99 ? '99+' : unreadCount}
                       </span>
                     )}
                   </div>
-                  <span>{item.shortLabel || item.label}</span>
+                  <span className="max-w-full truncate font-sans font-semibold text-label leading-none tracking-normal">
+                    {BAR_LABEL[item.id] ?? item.label}
+                  </span>
                 </button>
               );
             })}
             <button
               onClick={openGarage}
               aria-label="More navigation destinations"
-              className={`min-h-[56px] flex flex-col items-center justify-center gap-0.5 text-label font-display transition-colors cursor-pointer relative ${
-                !PRIMARY_TABS.includes(activeTab) ? 'text-accent-cyan font-bold' : 'text-cyber-secondary hover:text-cyber-primary font-medium'
+              className={`min-h-[56px] min-w-0 flex flex-col items-center justify-center gap-0.5 px-1 transition-colors cursor-pointer relative ${
+                !PRIMARY_TABS.includes(activeTab) ? 'text-accent-cyan' : 'text-cyber-secondary hover:text-cyber-primary'
               }`}
             >
               {!PRIMARY_TABS.includes(activeTab) && (
-                <div className="absolute top-0 inset-x-3 h-[2px] bg-accent-cyan rounded-full shadow-[0_0_6px_rgba(0,217,255,0.6)]" />
+                <div className="absolute top-0 inset-x-2 h-[2px] bg-accent-cyan rounded-full shadow-[0_0_6px_rgba(0,217,255,0.6)]" />
               )}
-              <Menu className="w-5 h-5" />
-              <span>More</span>
+              <Menu className="w-5 h-5 shrink-0" />
+              <span className="max-w-full truncate font-sans font-semibold text-label leading-none tracking-normal">
+                More
+              </span>
             </button>
           </div>
         </nav>
@@ -272,7 +283,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                 : undefined
             }
             className={`
-              relative z-50 w-full max-h-[78vh] max-h-[78dvh] bg-cyber-surface dark:bg-midnight-950 border-t border-cyber-border-strong rounded-t-3xl shadow-2xl flex flex-col overflow-hidden
+              relative z-50 w-full max-h-[78dvh] bg-cyber-surface dark:bg-midnight-950 border-t border-cyber-border-strong rounded-t-3xl shadow-2xl flex flex-col overflow-hidden
               ${
                 dragOffset > 0
                   ? ''
@@ -340,7 +351,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                       key={item.id}
                       onClick={() => handleSelectTab(item.id)}
                       className={`
-                        relative min-h-[64px] p-2.5 rounded-xl border text-left flex items-center gap-2.5 transition-all cursor-pointer
+                        relative min-h-[72px] p-2.5 rounded-xl border text-left flex items-center gap-2.5 transition-all cursor-pointer
                         active:scale-95 focus:outline-none focus:ring-1 focus:ring-accent-cyan
                         ${isOddLast ? 'col-span-2' : ''}
                         ${
@@ -372,7 +383,7 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                             </span>
                           )}
                         </div>
-                        <span className="font-mono text-label text-cyber-secondary block truncate">
+                        <span className="font-mono text-label text-cyber-secondary line-clamp-2 leading-tight">
                           {item.subtitle}
                         </span>
                       </div>
@@ -400,24 +411,38 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
                 </div>
               </div>
 
-              {/* User Profile Button */}
-              {onOpenProfile ? (
-                <button
-                  onClick={() => {
-                    onOpenProfile();
-                    closeGarage();
-                  }}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyber-surface border border-cyber-border text-xs font-mono text-cyber-primary hover:border-accent-cyan transition-colors cursor-pointer shrink-0"
-                >
-                  <User className="w-3.5 h-3.5 text-accent-cyan" />
-                  <span className="truncate max-w-[80px]">{userName}</span>
-                </button>
-              ) : (
-                <div className="flex items-center gap-1 font-mono text-label text-accent-lime font-medium">
-                  <Radio className="w-3 h-3 animate-pulse" />
-                  <span>ONLINE</span>
-                </div>
-              )}
+              {/* Controls: Theme & Profile */}
+              <div className="flex items-center gap-2 shrink-0">
+                {onToggleTheme && (
+                  <button
+                    onClick={onToggleTheme}
+                    aria-label="Toggle light or dark theme"
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyber-surface border border-cyber-border text-xs font-mono text-cyber-secondary hover:text-cyber-primary transition-colors cursor-pointer shrink-0"
+                  >
+                    {isDarkMode ? <Sun className="w-3.5 h-3.5 text-accent-yellow" /> : <Moon className="w-3.5 h-3.5 text-accent-cyan" />}
+                    <span className="hidden xs:inline">{isDarkMode ? 'Light' : 'Dark'}</span>
+                  </button>
+                )}
+
+                {/* User Profile Button */}
+                {onOpenProfile ? (
+                  <button
+                    onClick={() => {
+                      onOpenProfile();
+                      closeGarage();
+                    }}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyber-surface border border-cyber-border text-xs font-mono text-cyber-primary hover:border-accent-cyan transition-colors cursor-pointer shrink-0"
+                  >
+                    <User className="w-3.5 h-3.5 text-accent-cyan" />
+                    <span className="truncate max-w-[80px]">{userName}</span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1 font-mono text-label text-accent-lime font-medium">
+                    <Radio className="w-3.5 h-3.5 animate-pulse" />
+                    <span>ONLINE</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

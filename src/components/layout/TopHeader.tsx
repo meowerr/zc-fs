@@ -42,11 +42,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         {/* Left Section: Mobile Brand or Desktop Sub-Team Telemetry Breadcrumb */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           {/* Mobile-Only Brand Logo */}
-          <div className="md:hidden flex items-center gap-2 min-w-0">
+          <div className="md:hidden flex items-center gap-2 min-w-0 flex-1">
             <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-cyber-bg border border-cyber-border p-1 shrink-0">
               <ZfsMonogram glow={false} className="w-full h-auto" />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-1.5">
                 <h1 className="font-display font-black text-xs tracking-wider text-cyber-primary uppercase leading-tight truncate">
                   PitLane
@@ -55,9 +55,9 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
                   ZFS-2026
                 </span>
               </div>
-              <p className="text-label font-mono text-cyber-secondary tracking-wider flex items-center gap-1 truncate">
+              <p className="text-label font-mono text-cyber-secondary tracking-wider flex items-center gap-1 min-w-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse shrink-0" />
-                <span className="truncate max-w-[85px] sm:max-w-[120px]">{groupName}</span>
+                <span className="truncate min-w-0 flex-1">{groupName}</span>
               </p>
             </div>
           </div>
@@ -139,7 +139,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={onToggleTheme}
             aria-label="Toggle theme"
-            className="tap-target sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-accent-yellow hover:border-accent-yellow/50 transition-all active:scale-95 shadow-cyber-sm cursor-pointer shrink-0"
+            className="hidden md:flex tap-target sm:w-10 sm:h-10 rounded-lg items-center justify-center bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-accent-yellow hover:border-accent-yellow/50 transition-all active:scale-95 shadow-cyber-sm cursor-pointer shrink-0"
           >
             {isDarkMode ? (
               <Sun className="w-4 h-4 text-accent-yellow" />

@@ -50,25 +50,25 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
   };
 
   const foundationColors = [
-    ['Canvas', '#070A0E', 'Main canvas'],
-    ['Sidebars', '#0B0F14', 'Nav panels'],
-    ['Surface', '#11161D', 'Card base'],
-    ['Elevated', '#181E26', 'Modals'],
-    ['Hover', '#202731', 'Active hover'],
-    ['Border', '#2A323C', '1px boundary'],
-    ['Border St.', '#39434F', 'Edge frame'],
+    ['Canvas', '#070A0E', 'Main'],
+    ['Sidebars', '#0B0F14', 'Nav'],
+    ['Surface', '#11161D', 'Card'],
+    ['Elevated', '#181E26', 'Modal'],
+    ['Hover', '#202731', 'Hover'],
+    ['Border', '#2A323C', 'Border'],
+    ['Border St.', '#39434F', 'Frame'],
     ['Primary', '#F2F4F7', 'Headings'],
-    ['Secondary', '#B0B8C2', 'Body text'],
+    ['Secondary', '#B0B8C2', 'Body'],
     ['Muted', '#737D89', 'Captions'],
   ] as const;
 
   const accentColors = [
-    ['Cyan', '#00D9FF', 'In-Progress'],
-    ['Violet', '#A855F7', 'Reviews'],
-    ['Yellow', '#FFD43B', 'Caution'],
+    ['Cyan', '#00D9FF', 'Active'],
+    ['Violet', '#A855F7', 'Review'],
+    ['Yellow', '#FFD43B', 'Due Soon'],
     ['Red', '#FF304F', 'Urgent'],
     ['Lime', '#10E57A', 'Approved'],
-    ['Orange', '#E07212', 'Brand Mark'],
+    ['Orange', '#E07212', 'Brand'],
   ] as const;
 
   return (
@@ -243,13 +243,13 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {[
-                { label: '// Primary', variant: 'primary' as const, icon: Activity, text: 'Launch Seq' },
-                { label: '// Secondary', variant: 'secondary' as const, icon: Layers, text: 'Inspect' },
-                { label: '// Outline', variant: 'outline' as const, icon: Activity, text: 'Telemetry' },
-                { label: '// Action', variant: 'action' as const, icon: Flame, text: 'Execute' },
-                { label: '// Warning', variant: 'warning' as const, icon: Clock, text: 'Review' },
-                { label: '// Danger', variant: 'danger' as const, icon: Flame, text: 'Delete' },
-                { label: '// Metallic', variant: 'metallic' as const, icon: Layers, text: 'Hardware' },
+                { label: 'Primary', variant: 'primary' as const, icon: Activity, text: 'Launch' },
+                { label: 'Secondary', variant: 'secondary' as const, icon: Layers, text: 'Inspect' },
+                { label: 'Outline', variant: 'outline' as const, icon: Activity, text: 'Status' },
+                { label: 'Action', variant: 'action' as const, icon: Flame, text: 'Run' },
+                { label: 'Warning', variant: 'warning' as const, icon: Clock, text: 'Alert' },
+                { label: 'Danger', variant: 'danger' as const, icon: Flame, text: 'Halt' },
+                { label: 'Metallic', variant: 'metallic' as const, icon: Layers, text: 'System' },
               ].map((btn) => {
                 const IconComp = btn.icon;
                 return (
@@ -278,7 +278,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             <div className="flex flex-wrap items-center gap-3">
               {(['sm', 'md', 'lg'] as const).map((s) => (
                 <GlossyButton key={s} variant="primary" size={s} icon={<Activity className="w-4 h-4" />}>
-                  {s === 'sm' ? 'Small 36px' : s === 'md' ? 'Medium 44px' : 'Large 48px'}
+                  {s.toUpperCase()}
                 </GlossyButton>
               ))}
               <GlossyButton variant="action" size="md" chamfer icon={<Flame className="w-4 h-4" />}>
@@ -613,7 +613,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
 
             <p className="text-xs text-cyber-secondary leading-relaxed">
-              Actions use <code className="text-brand-orange">#E07212</code>, delivering <strong className="text-brand-white">5.23:1 contrast</strong> (WCAG AA).
+              Actions use <code className="text-brand-orange">#E07212</code> (5.23:1 AA).
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -644,7 +644,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </div>
 
             <p className="text-xs text-cyber-secondary leading-relaxed">
-              Status colors re-mapped so brand orange remains exclusive to team identity.
+              Status colors re-mapped for brand identity.
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
@@ -680,7 +680,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </div>
 
           <p className="text-xs text-cyber-secondary leading-relaxed">
-            <strong>Low-Voltage</strong> is re-mapped to <strong className="text-purple-400">Cyber Violet</strong> to prevent confusion with brand orange.
+            <strong>Low-Voltage</strong> re-mapped to <strong className="text-purple-400">Cyber Violet</strong>.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">

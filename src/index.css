@@ -437,6 +437,7 @@
 
 
 html[data-hide-mobile-nav="true"] .garage-door-pill,
-html[data-hide-mobile-nav="true"] .mobile-bottom-bar {
+html[data-hide-mobile-nav="true"] .mobile-bottom-bar,
+html[data-hide-mobile-nav="true"] .app-footer {
   display: none !important;
 }

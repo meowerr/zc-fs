@@ -1,9 +1,9 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Mobile UI Overhaul (Branch: `feature/mobile-ui-polish`)
-- **Active Status:** Phase 7 (Regression guard and wrap-up) completed and verified. All 7 phases complete!
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.71 KB < 200 KB, main App JS gzip: 45.29 KB < 50 KB).
+- **Current Phase:** Mobile UI Overhaul Round 2 (Branch: `feature/mobile-ui-polish`)
+- **Active Status:** Phase R0 (Fix Regressions) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.96 KB < 200 KB, main App JS gzip: 45.52 KB < 50 KB).
 
 ---
 
@@ -111,6 +111,18 @@
 | **Yellow Text Token Contrast** | 3.25:1 (Failing) | **5.32:1** (`#8A6508`, WCAG AA) | ✅ AA Passing |
 | **Main App JS (Gzip)** | 45.60 KB | **45.29 KB** (< 50 KB budget) | ✅ Passing |
 | **Total Assets (Gzip)** | 199.94 KB | **199.71 KB** (< 200 KB budget) | ✅ Passing |
+
+## Mobile UI Round 2 (Branch: `feature/mobile-ui-polish`)
+
+### Phase R0: Fix Regressions
+- `[IMPLEMENTED, MANUALLY CHECKED]` Resolved tab bar label collision in `GarageDoorNav.tsx` by introducing `BAR_LABEL` mapping (`Control`, `Tasks`, `Chat`, `Docs`, `More`), eliminating wide `font-display` in favor of `font-sans font-semibold text-label leading-none tracking-normal`, and adding `min-w-0 truncate`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Resolved stat tile header collision in `MissionControl.tsx`, `TasksHub.tsx`, and `TeamDirectory.tsx` with `flex items-center justify-between gap-2 min-w-0`, allowing labels to shrink/truncate and hiding redundant uppercase tags (`ALL`, `DONE`, `ALERT`) below `sm`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Resolved chat composer layout in `ChatView.tsx`: shortened placeholder to `"Message…"`, set textarea auto-resizing with overflow hidden below 120px, auto-reset height to `auto` on message send, and hid app footer on mobile while chat thread is open via `html[data-hide-mobile-nav="true"] .app-footer`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Contextualized mobile header in `TopHeader.tsx`: expanded group name to `min-w-0 flex-1 truncate` to prevent `Club Adm…` truncation, streamlined mobile right buttons to Search + Bell + Avatar, and moved theme toggle to `hidden md:flex` in header and into the mobile More sheet in `GarageDoorNav.tsx`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Minor polish: Tasks FAB `bottom-[calc(5rem+env(safe-area-inset-bottom))]` and page clearance `pb-[calc(9rem+env(safe-area-inset-bottom))] md:pb-0`, More sheet tiles `min-h-[72px]` and subtitle `line-clamp-2 leading-tight`, TeamDirectory sub-team chip text `truncate max-w-[9rem]` and header pill `flex-wrap gap-1`, removed duplicate `max-h-[78vh]` in `GarageDoorNav.tsx`.
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` Automated regression guard 100% green.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email domain, file quota, CSV/JSON, and database migration checks passing (100% success).
+- `[VERIFIED: npm run build]` Total bundle gzip: **199.96 KB** (< 200 KB budget), Main JS gzip: **45.52 KB** (< 50 KB budget).
 
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 

@@ -108,7 +108,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
       {/* ─── Top Telemetry Header ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-cyber-border">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center flex-wrap gap-1">
             <span className="text-label font-mono text-accent-cyan tracking-widest uppercase bg-accent-cyan/10 px-2 py-0.5 rounded border border-accent-cyan/20 font-medium">
               // TELEMETRY ROSTER
             </span>
@@ -154,9 +154,9 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
           { label: 'CLUB ADVISORY', icon: Shield, color: 'text-accent-lime', val: totalAdmins, sub: 'System overseers' },
         ].map((s) => (
           <GlassCard key={s.label} className="p-3.5 relative overflow-hidden">
-            <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-label uppercase">
-              <span>{s.label}</span>
-              <s.icon className={`w-3.5 h-3.5 ${s.color}`} />
+            <div className="flex items-center justify-between gap-2 min-w-0 text-cyber-muted mb-1">
+              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">{s.label}</span>
+              <s.icon className={`w-3.5 h-3.5 shrink-0 ${s.color}`} />
             </div>
             <div className="font-mono text-2xl font-medium text-cyber-primary">
               {s.val.toString().padStart(2, '0')}
@@ -235,7 +235,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       className="w-2 h-2 rounded-full flex-shrink-0"
                       style={{ backgroundColor: accent }}
                     />
-                    <span className="text-label font-mono uppercase truncate text-cyber-muted">
+                    <span className="text-label font-mono uppercase truncate max-w-[9rem] text-cyber-muted">
                       {g.slug}
                     </span>
                   </div>
@@ -243,7 +243,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                     {count}
                   </span>
                 </div>
-                <span className="text-label font-sans truncate font-medium mt-1">
+                <span className="text-label font-sans truncate max-w-[9rem] font-medium mt-1">
                   {shortName}
                 </span>
               </button>

@@ -137,7 +137,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   const completedCount = tasks.filter((t) => t.status === 'approved' || t.status === 'done').length;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 pb-[calc(9rem+env(safe-area-inset-bottom))] md:pb-0">
       {/* Top Telemetry Header & Stats */}
       <GlassCard variant="elevated" className="p-4 sm:p-5">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -230,9 +230,9 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         {/* Telemetry Metric Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mt-5 pt-4 border-t border-cyber-border">
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border">
-            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between font-medium">
-              <span>Total Work</span>
-              <FileCheck className="w-3.5 h-3.5 text-cyber-muted" />
+            <div className="flex items-center justify-between gap-2 min-w-0">
+              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">Total Work</span>
+              <FileCheck className="w-3.5 h-3.5 shrink-0 text-cyber-muted" />
             </div>
             {tasks.length === 0 ? (
               <>
@@ -249,9 +249,9 @@ export const TasksHub: React.FC<TasksHubProps> = ({
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow" />
-            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between font-medium">
-              <span>In Review</span>
-              <Clock className="w-3.5 h-3.5 text-accent-yellow" />
+            <div className="flex items-center justify-between gap-2 min-w-0">
+              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">In Review</span>
+              <Clock className="w-3.5 h-3.5 shrink-0 text-accent-yellow" />
             </div>
             {inReviewCount === 0 ? (
               <>
@@ -268,9 +268,9 @@ export const TasksHub: React.FC<TasksHubProps> = ({
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red" />
-            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between font-medium">
-              <span>Critical Overdue</span>
-              <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
+            <div className="flex items-center justify-between gap-2 min-w-0">
+              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">Critical Overdue</span>
+              <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-accent-red" />
             </div>
             {overdueCount === 0 ? (
               <>
@@ -287,9 +287,9 @@ export const TasksHub: React.FC<TasksHubProps> = ({
 
           <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
             <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime" />
-            <div className="text-label font-mono text-cyber-secondary uppercase flex items-center justify-between font-medium">
-              <span>Verified / Passed</span>
-              <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
+            <div className="flex items-center justify-between gap-2 min-w-0">
+              <span className="min-w-0 truncate text-label font-sans font-semibold uppercase tracking-wide text-cyber-secondary">Verified / Passed</span>
+              <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-accent-lime" />
             </div>
             {completedCount === 0 ? (
               <>
@@ -400,7 +400,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
       {isHeadOrAdmin && (
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(4.5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+          className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
           aria-label="New task"
         >
           <Plus className="w-6 h-6" />
