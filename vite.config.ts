@@ -9,11 +9,17 @@ export default defineConfig({
     treeShaking: true,
   },
   plugins: [
-
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'icon-192.png', 'icon-512.png'],
+      includeAssets: [
+        'favicon.ico',
+        'favicon.svg',
+        'apple-touch-icon.png',
+        'icon-192.png',
+        'icon-512.png',
+        'icon-512-maskable.png',
+      ],
       manifest: {
         name: 'ZC Formula Student PitLane',
         short_name: 'PitLane',
@@ -26,20 +32,21 @@ export default defineConfig({
           {
             src: '/icon-192.png',
             sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/icon-512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
           },
           {
             src: '/icon-512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
+            purpose: 'any',
+          },
+          {
+            src: '/icon-512-maskable.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
       },
       workbox: {
         cleanupOutdatedCaches: true,
@@ -53,14 +60,27 @@ export default defineConfig({
             urlPattern: ({ url }) => url.hostname.includes('supabase.co'),
             handler: 'NetworkOnly',
           },
+          {
+            urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
         ],
-      }
-    })
+      },
+    }),
   ],
   build: {
     target: 'es2022',
     rollupOptions: {
-
       output: {
         manualChunks(id) {
           if (id.includes('node_modules/@supabase')) return 'supabase';
