@@ -143,7 +143,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
   }, [currentUser.role, memberView, myTasks, tasks]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 sm:space-y-8">
       {/* ─── UNASSIGNED MEMBER ALERT BANNER ─── */}
       {currentUser.role !== 'admin' && !currentUser.group_id && currentUser.status === 'approved' && (
         <div className="p-4 rounded-xl bg-accent-yellow/10 border border-accent-yellow/30 text-cyber-primary flex items-start gap-3">
@@ -170,10 +170,10 @@ export const MissionControl: React.FC<MissionControlProps> = ({
         }
         eyebrow={
           currentUser.role === 'admin' 
-            ? 'CLUB // RACE CONTROL HQ' 
+            ? 'Club Race Control HQ' 
             : currentUser.role === 'head'
-            ? `SUB-TEAM LEAD // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'PIT WALL'}`
-            : `ENGINEERING COCKPIT // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'WORKSPACE'}`
+            ? `Sub-Team Lead • ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'Pit Wall'}`
+            : `Engineering Cockpit • ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'Workspace'}`
         }
         description={
           currentUser.role === 'admin'
@@ -263,7 +263,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                         className="w-2.5 h-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: group.color_accent || '#00D9FF' }}
                       />
-                      <span className="font-bold text-xs text-cyber-primary truncate">
+                      <span className="font-sans font-semibold text-sm text-cyber-primary truncate">
                         {group.name.replace(/Technical - |Operations - /, '')}
                       </span>
                     </div>
@@ -329,7 +329,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                     {new Date(t.updated_at).toLocaleDateString()}
                   </span>
                 </div>
-                <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-purple-400 transition-colors truncate">
+                <h4 className="font-sans font-semibold text-base text-cyber-primary group-hover:text-purple-400 transition-colors truncate">
                   {t.title}
                 </h4>
                 <div className="text-label font-mono text-cyber-secondary flex items-center justify-between pt-1 border-t border-cyber-border">

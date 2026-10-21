@@ -12,12 +12,9 @@ export const GlowInput = React.forwardRef<HTMLInputElement, GlowInputProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label className="text-xs font-mono font-medium tracking-wider text-cyber-secondary uppercase flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <span className="text-accent-cyan opacity-80 font-bold">//</span>
-              {label}
-            </span>
-            {hint && <span className="text-label font-mono text-cyber-muted">{hint}</span>}
+          <label className="text-xs font-sans font-semibold text-cyber-secondary flex items-center justify-between">
+            <span>{label}</span>
+            {hint && <span className="text-label font-mono text-cyber-muted font-normal">{hint}</span>}
           </label>
         )}
 

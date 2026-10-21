@@ -55,7 +55,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
                 title={groupName}
               />
             )}
-            <span className={`px-1.5 py-0.5 rounded text-label font-mono font-medium uppercase border ${typeColorClasses[task.task_type] || typeColorClasses.other}`}>
+            <span className={`hidden sm:inline-block px-1.5 py-0.5 rounded text-label font-mono uppercase border ${typeColorClasses[task.task_type] || typeColorClasses.other}`}>
               {task.task_type}
             </span>
             {groupName && (
@@ -70,11 +70,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
 
         {/* Task Title & Description Snippet */}
         <div>
-          <h4 className="font-sans font-bold text-body-lg sm:text-sm text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-2 leading-snug">
+          <h4 className="font-sans font-semibold text-base text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-2 leading-snug">
             {task.title}
           </h4>
           {task.description && (
-            <p className="text-body sm:text-xs text-cyber-secondary line-clamp-2 mt-1 leading-relaxed">
+            <p className="text-sm font-sans text-cyber-secondary line-clamp-2 mt-1 leading-relaxed">
               {task.description}
             </p>
           )}
@@ -90,7 +90,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
                   <ChromeAvatar key={a.id} name={a.full_name} role={a.role} size="sm" />
                 ))}
                 {task.assignees.length > 3 && (
-                  <span className="w-7 h-7 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-label font-mono flex items-center justify-center font-medium text-cyber-secondary">
+                  <span className="w-7 h-7 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-label font-mono flex items-center justify-center text-cyber-secondary">
                     +{task.assignees.length - 3}
                   </span>
                 )}
@@ -112,7 +112,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
           <div className="flex items-center gap-1">
             <span
               className={`
-                inline-flex items-center gap-1 font-mono text-label font-medium px-1.5 py-0.5 rounded
+                inline-flex items-center gap-1 font-mono text-label px-1.5 py-0.5 rounded
                 ${
                   isOverdue
                     ? 'bg-accent-red/10 text-accent-red border border-accent-red/30 animate-pulse'

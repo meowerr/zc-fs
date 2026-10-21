@@ -398,11 +398,11 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 sm:space-y-8">
       {/* ─── UNIFIED ADMIN HEADER & STATS ─── */}
       <PageHeader
         title="Club Administration & Personnel"
-        eyebrow="ADMIN COMMAND HQ"
+        eyebrow="Admin Command HQ"
         description="Review registrations, govern member assignments, inspect telemetry health, and orchestrate sub-teams."
         stats={
           <StatStrip
@@ -848,7 +848,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                     {health.status}
                   </span>
                 </div>
-                <div className="font-mono text-xl font-black text-cyber-primary">
+                <div className="font-display text-xl font-black text-cyber-primary">
                   {health.latencyMs !== undefined ? `${health.latencyMs} ms` : '--'}
                 </div>
                 <p className="text-label font-mono text-cyber-muted truncate">

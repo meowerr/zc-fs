@@ -690,9 +690,9 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           {/* TAB 4: UNIFIED TELEMETRY TIMELINE (Objective 6) */}
           {activeTab === 'timeline' && (
             <div className="space-y-4 py-1">
-              <div className="flex items-center justify-between text-xs font-mono text-cyber-muted pb-2 border-b border-cyber-border">
-                <span>// CHRONOLOGICAL AUDIT TRAIL</span>
-                <span>{timelineEvents.length} TOTAL EVENTS</span>
+              <div className="flex items-center justify-between text-label font-sans font-semibold text-cyber-secondary pb-2 border-b border-cyber-border">
+                <span>Chronological Audit Trail</span>
+                <span className="font-mono text-label text-cyber-muted">{timelineEvents.length} TOTAL EVENTS</span>
               </div>
 
               <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-[2px] before:bg-cyber-border">

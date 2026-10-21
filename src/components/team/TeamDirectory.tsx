@@ -125,7 +125,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
       {/* ─── UNIFIED HEADER & STATS ─── */}
       <PageHeader
         title="Team Directory & Roster"
-        eyebrow="TELEMETRY ROSTER // 5 SUB-TEAMS"
+        eyebrow="Telemetry Roster • 5 Sub-Teams"
         description="Engineering structure, sub-team leads, active personnel, and direct telemetry dispatch."
         actions={
           <>
@@ -181,7 +181,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
         <button
           type="button"
           onClick={() => setIsFilterSheetOpen(true)}
-          className={`h-11 px-3.5 rounded-lg border flex items-center gap-2 text-xs font-mono font-bold transition-all shrink-0 cursor-pointer ${
+          className={`h-11 px-3.5 rounded-lg border flex items-center gap-2 text-xs font-sans font-semibold transition-all shrink-0 cursor-pointer ${
             activeFilterCount > 0
               ? 'bg-accent-cyan/15 border-accent-cyan text-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.25)]'
               : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary hover:text-cyber-primary'
@@ -190,7 +190,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
           <Sliders className="w-4 h-4" />
           <span>Filters</span>
           {activeFilterCount > 0 && (
-            <span className="w-5 h-5 rounded-full bg-accent-cyan text-black text-label font-mono font-black flex items-center justify-center">
+            <span className="w-5 h-5 rounded-full bg-accent-cyan text-black text-label font-sans font-bold flex items-center justify-center">
               {activeFilterCount}
             </span>
           )}
@@ -501,11 +501,11 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       />
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <h4 className="font-display font-bold text-body-lg sm:text-sm text-cyber-primary truncate">
+                          <h4 className="font-sans font-semibold text-base text-cyber-primary truncate">
                             {person.full_name}
                           </h4>
                           {isSelf && (
-                            <span className="hidden sm:inline-block text-label font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 font-medium">
+                            <span className="hidden sm:inline-block text-label font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30">
                               YOU
                             </span>
                           )}
@@ -520,17 +520,17 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                     {/* Role Chip */}
                     <div className="flex-shrink-0">
                       {person.role === 'admin' ? (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase font-medium bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30">
                           <Shield className="w-3 h-3" />
                           <span>Admin</span>
                         </span>
                       ) : person.role === 'head' ? (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase font-medium bg-accent-yellow/15 text-accent-yellow border border-accent-yellow/30">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase bg-accent-yellow/15 text-accent-yellow border border-accent-yellow/30">
                           <Award className="w-3 h-3" />
                           <span>Lead</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase font-medium bg-cyber-surface text-cyber-secondary border border-cyber-border">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase bg-cyber-surface text-cyber-secondary border border-cyber-border">
                           <span>Engineer</span>
                         </span>
                       )}

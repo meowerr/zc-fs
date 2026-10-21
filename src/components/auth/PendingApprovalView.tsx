@@ -42,7 +42,7 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
 
             {/* Status Pill */}
             <div className="inline-flex items-center gap-1.5 pt-1">
-              <LedStatusChip status="pending" customLabel="GATEWAY LOCKED // PENDING APPROVAL" size="sm" />
+              <LedStatusChip status="pending" customLabel="GATEWAY LOCKED • PENDING APPROVAL" size="sm" />
             </div>
 
             {/* Branded Welcome Message */}
@@ -86,8 +86,8 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
         </div>
 
         {/* Technical Footer */}
-        <div className="text-center font-mono text-label text-cyber-muted uppercase tracking-widest">
-          Built for Zewail Formula Team // PitLane Workspace
+        <div className="text-center font-mono text-label text-cyber-muted">
+          Built for Zewail Formula Team • PitLane Workspace
         </div>
       </div>
     </div>

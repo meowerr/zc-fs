@@ -185,6 +185,17 @@
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email domain, file quota, CSV/JSON, and database migration checks passing (100% success).
 - `[VERIFIED: npm run build]` Total bundle gzip: **199.77 KB** (< 200 KB budget, 235 bytes headroom), Main JS gzip: **37.98 KB** (< 50 KB budget, 12.02 KB headroom).
 
+### Phase R6: Typography & Hierarchy Pass
+- `[IMPLEMENTED, MANUALLY CHECKED]` Calm & Consistent Card Typography: Standardized card titles across all hubs (`TaskCard.tsx`, `DocumentHub.tsx`, `TeamDirectory.tsx`, `MissionControl.tsx`, `EmptyState.tsx`, `LegalView.tsx`) to Exo 2 semibold 16px (`font-sans font-semibold text-base text-cyber-primary`), card bodies to Exo 2 14px (`text-sm font-sans text-cyber-secondary line-clamp-2 leading-relaxed`), and section titles to Exo 2 semibold 12–13px (`text-label font-sans font-semibold text-cyber-secondary`).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Cleaned Single-Weight Mono Faux-Bolding: Purged faux-bolding from Share Tech Mono metadata elements (which has no native bold glyphs) across `AdminApprovalHub.tsx` (latency ping migrated to Orbitron 20px `font-display text-xl font-black`), `TeamDirectory.tsx` filter buttons and counts (migrated to `font-sans font-semibold/bold`), and task/member/document metadata chips.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Cleaned Clutter & `//` Delimiters: Removed noisy `//` delimiters and redundant tracking from section headers, form input labels (`GlowInput.tsx`), empty states (`EmptyState.tsx`), timeline headers (`TaskDetailModal.tsx`), sub-team context badges (`TopHeader.tsx`), legal clauses (`LegalView.tsx`), navigation rails (`Sidebar.tsx`, `HybridRacingRail.tsx`), and footers (`AppShell.tsx`, `PendingApprovalView.tsx`).
+- `[IMPLEMENTED, MANUALLY CHECKED]` One Status Badge Per Card on Mobile: Hidden secondary task type tags on mobile in `TaskCard.tsx` (`hidden sm:inline-block`), displaying strictly ONE high-legibility double-encoded status chip (`LedStatusChip`) per card on phones.
+- `[IMPLEMENTED, MANUALLY CHECKED]` ~35% Larger Section Spacing: Increased spacing between page sections (`space-y-6 sm:space-y-8` in `MissionControl.tsx`, `AdminApprovalHub.tsx`, `DocumentHub.tsx`, and `space-y-5 sm:space-y-6` in `TasksHub.tsx`, `TeamDirectory.tsx`), creating distinct visual rhythm without reliance on heavy nested borders.
+- `[VERIFIED: node scripts/measure-contrast.mjs]` Contrast audit passes WCAG AA compliance across light mode (#FFFFFF, #F3F6FA) and dark mode (#11161D, #181E26) for primary, secondary, muted, and accent tokens.
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` 100% clean mobile UI regression guard.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email domain, file quota, CSV/JSON, and database migration checks passing (100% success).
+- `[VERIFIED: npm run build]` Total bundle gzip: **199.75 KB** (< 200 KB budget, 256 bytes headroom), Main JS gzip: **37.91 KB** (< 50 KB budget, 12.09 KB headroom).
+
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 
 ### Slice B1: Asset Pipeline & PWA Icon Set

@@ -85,9 +85,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div className={`p-8 text-center space-y-3 rounded-xl border border-cyber-border bg-cyber-surface/60 ${className}`}>
       {/* Decorative Technical Header */}
-      <div className="flex items-center justify-center gap-2 font-mono text-label text-cyber-muted tracking-widest uppercase">
+      <div className="flex items-center justify-center gap-2 font-mono text-label text-cyber-muted uppercase">
         <span>[</span>
-        <span className="text-accent-cyan">//</span>
+        <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
         <span>TELEMETRY STANDBY</span>
         <span>]</span>
       </div>
@@ -97,10 +97,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       </div>
 
       <div>
-        <h4 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
+        <h4 className="font-sans font-semibold text-base text-cyber-primary">
           {title}
         </h4>
-        <p className="text-xs text-cyber-secondary max-w-sm mx-auto mt-1 leading-relaxed">
+        <p className="text-sm font-sans text-cyber-secondary max-w-sm mx-auto mt-1 leading-relaxed">
           {description}
         </p>
       </div>

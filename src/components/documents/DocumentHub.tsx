@@ -331,7 +331,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                   {/* Card Header: Category & Team Badge */}
                   <div className="flex items-center justify-between gap-2 mb-2">
                     <span
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label font-mono font-medium uppercase tracking-wider"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label font-mono uppercase tracking-wider"
                       style={{
                         backgroundColor: `${catMeta.color}15`,
                         color: catMeta.color,
@@ -348,13 +348,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                   </div>
 
                   {/* Document Title */}
-                  <h3 className="font-display font-bold text-body-lg sm:text-base text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-1">
+                  <h3 className="font-sans font-semibold text-base text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-1">
                     {doc.title}
                   </h3>
 
                   {/* Description */}
                   {doc.description && (
-                    <p className="text-body sm:text-xs text-cyber-secondary mt-1 font-sans line-clamp-2 leading-relaxed">
+                    <p className="text-sm text-cyber-secondary mt-1 font-sans line-clamp-2 leading-relaxed">
                       {doc.description}
                     </p>
                   )}
@@ -401,7 +401,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                       target="_blank"
                       rel="noopener noreferrer"
                       download={doc.file_name}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan text-xs font-mono font-medium transition-all cursor-pointer"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan text-xs font-mono transition-all cursor-pointer"
                       title="Download or open asset"
                     >
                       <Download className="w-3.5 h-3.5" />

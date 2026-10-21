@@ -79,7 +79,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
             </button>
             <div className="flex items-center gap-2.5">
               <ZfsLogo variant="horizontal" glow={false} className="h-6 sm:h-7 w-auto" />
-              <span className="hidden sm:inline-block font-mono text-xs text-cyber-muted">//</span>
+              <span className="hidden sm:inline-block font-mono text-xs text-cyber-muted">•</span>
               <span className="font-display font-black text-xs sm:text-sm tracking-wider uppercase text-cyber-primary">
                 LEGAL & COMPLIANCE
               </span>
@@ -129,8 +129,8 @@ export const LegalView: React.FC<LegalViewProps> = ({
 
             {items.map((sec) => (
               <section key={sec.num} className="space-y-2">
-                <h2 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wide flex items-center gap-2">
-                  <span className="text-brand-orange font-mono text-xs">{sec.num} //</span> {sec.title}
+                <h2 className="font-sans font-semibold text-base text-cyber-primary flex items-center gap-2">
+                  <span className="text-brand-orange font-mono text-xs">{sec.num} •</span> {sec.title}
                 </h2>
                 <p className="text-cyber-secondary leading-relaxed">{sec.body}</p>
               </section>

@@ -153,7 +153,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             ? 'Club Task Telemetry'
             : `${currentUser.role === 'head' ? 'Pit Wall' : 'Deliverables'}`
         }
-        eyebrow="Deliverables // Telemetry"
+        eyebrow="Deliverables Telemetry"
         description="Track engineering milestones, submit CAD/code/specs, and review deliverables with multi-version history."
         actions={
           <>

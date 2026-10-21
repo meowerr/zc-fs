@@ -291,8 +291,8 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
                   return (
                     <div key={groupId} className="space-y-1">
                       {/* Group Label */}
-                      <div className="px-2 py-0.5 font-mono text-label font-medium uppercase tracking-wider text-accent-cyan flex items-center gap-1">
-                        <span>//</span>
+                      <div className="px-2 py-0.5 font-sans font-semibold text-label uppercase text-cyber-secondary flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan/80 shrink-0" />
                         <span>{groupId}</span>
                       </div>
 

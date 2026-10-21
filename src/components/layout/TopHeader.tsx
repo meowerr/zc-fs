@@ -90,14 +90,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           </div>
 
           {/* Desktop Sub-Team Context Indicator */}
-          <div className="hidden md:flex items-center gap-2.5 py-1 px-2.5 rounded-lg bg-cyber-surface-elevated/60 border border-cyber-border/70">
-            <span className="font-mono text-accent-cyan text-xs font-medium">//</span>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-accent-lime animate-pulse" />
-              <span className="font-mono text-xs font-medium tracking-wider text-cyber-primary uppercase">
-                {groupName}
-              </span>
-            </div>
+          <div className="hidden md:flex items-center gap-2 py-1 px-2.5 rounded-lg bg-cyber-surface-elevated/60 border border-cyber-border/70">
+            <span className="w-2 h-2 rounded-full bg-accent-lime animate-pulse" />
+            <span className="font-mono text-xs tracking-wider text-cyber-primary uppercase">
+              {groupName}
+            </span>
           </div>
         </div>
 
