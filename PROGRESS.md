@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Mobile UI Overhaul Round 2 (Branch: `feature/mobile-ui-polish`)
-- **Active Status:** Phase R3 (Filters become a sheet; lists get touch-native behaviour) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.32 KB < 200 KB, main App JS gzip: 45.51 KB < 50 KB).
+- **Active Status:** Phase R4 (Chat that feels like a messenger) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.21 KB < 200 KB, main App JS gzip: 37.41 KB < 50 KB).
 
 ---
 
@@ -162,6 +162,18 @@
 - `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` 100% clean automated mobile UI regression guard (0 sub-12px microtext, strict dvh units, 44px minimum touch targets).
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Full test suite passing with strict TypeScript verification (0 errors).
 - `[VERIFIED: npm run build]` Total bundle gzip: **199.32 KB** (< 200 KB budget, 696 bytes headroom), Main JS gzip: **45.51 KB** (< 50 KB budget, 4.49 KB headroom).
+
+### Phase R4: Chat That Feels Like a Messenger
+- `[IMPLEMENTED, MANUALLY CHECKED]` Obvious Own vs. Incoming Messenger Hierarchy: Styled own messages with a tinted electric-cyan accent fill (`bg-accent-cyan/15 text-cyber-primary border-accent-cyan/40 shadow-[0_1px_8px_rgba(0,217,255,0.12)] ml-auto`) and incoming messages with neutral surface framing (`bg-cyber-surface border-cyber-border`).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Consecutive Message Grouping: Grouped consecutive messages from the same sender within 5 minutes into cohesive clusters: sender name and role tag appear only on the first message, avatar only on the last message (with 32px placeholder preserving vertical left alignment), tightened inter-bubble spacing (`mb-1` intra-group vs. `mb-3` inter-group), and dynamic messenger corner radii.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Centered Date Separator Chips: Added contextual date separators ("Today", "Yesterday", or formatted dates) as small centered pills (`bg-cyber-surface border-cyber-border text-label font-sans font-medium text-cyber-secondary shadow-cyber-sm`).
+- `[IMPLEMENTED, MANUALLY CHECKED]` 12px Non-Mono Badges: Standardized sender role tags, channel subtitles, and channel section headers to clean `text-label font-sans font-medium` (eliminated uppercase mono tags and `//` prefixes).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Smart Auto-Scroll & Floating Jump Pill: Automatic smooth scroll on thread open and when sending messages; detects when user has scrolled up to read earlier history and presents a floating `↓ New messages` pill instead of yanking the scroll container.
+- `[IMPLEMENTED, MANUALLY CHECKED]` VisualViewport Virtual Keyboard Clearance: Bound `visualViewport` listener in `ChatView.tsx` to dynamically set `--kb` CSS variable on document element, applying `paddingBottom: 'max(env(safe-area-inset-bottom), var(--kb, 0px))'` to keep composer directly above on-screen keyboard.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Mobile Touch Affordances & Icon-Only Send: Converted send button to 44px min-size icon-only on mobile (`sm:inline` label), touch target attach button, and upgraded channel and DM navigation list rows to `min-h-[56px]` with secondary preview lines.
+- `[VERIFIED: node scripts/verify-mobile-ui.mjs (5/5 checks passed)]` 100% clean mobile UI regression guard (0 sub-12px microtext, short chat placeholder, strict dvh units).
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript, PWA, email domain, file quota, CSV/JSON, and database migration checks passing (100% success).
+- `[VERIFIED: npm run build]` Total bundle gzip: **199.21 KB** (< 200 KB budget, 809 bytes headroom), Main JS gzip: **37.41 KB** (< 50 KB budget, 12.59 KB headroom).
 
 ## ZFS Brand Integration (Branch: `feature/zfs-branding`)
 

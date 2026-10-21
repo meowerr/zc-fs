@@ -6,6 +6,7 @@ export default defineConfig({
   esbuild: {
     legalComments: 'none',
     drop: ['console', 'debugger'],
+    treeShaking: true,
   },
   plugins: [
 
@@ -61,9 +62,10 @@ export default defineConfig({
     rollupOptions: {
 
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'lucide-react'],
-          supabase: ['@supabase/supabase-js'],
+        manualChunks(id) {
+          if (id.includes('node_modules/@supabase')) return 'supabase';
+          if (id.includes('node_modules/react') || id.includes('node_modules/lucide-react')) return 'vendor';
+          if (id.includes('src/components/auth/')) return 'auth';
         },
       },
     },
