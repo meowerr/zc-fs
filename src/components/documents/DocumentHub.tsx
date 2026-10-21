@@ -11,21 +11,27 @@ import {
   Activity, 
   Layers,
   X,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Sliders
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
+import { PageHeader } from '../common/PageHeader';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { EmptyState } from '../common/EmptyState';
+import { ModalShell } from '../common/ModalShell';
+import { SkeletonCard } from '../common/SkeletonCard';
+import { usePullToRefresh } from '../../hooks/usePullToRefresh';
 import { DocumentItem, DocumentCategory, Profile, Group } from '../../lib/database.types';
-import { SUB_TEAMS } from '../../lib/constants';
+import { SUB_TEAMS, triggerHaptic } from '../../lib/constants';
 
 interface DocumentHubProps {
   currentUser: Profile;
   documents: DocumentItem[];
   groups?: Group[];
   loading: boolean;
+  onRefresh?: () => Promise<void> | void;
   onUploadDocument: (params: {
     file: File;
     title: string;
@@ -36,11 +42,30 @@ interface DocumentHubProps {
   onDeleteDocument: (docId: string) => Promise<void>;
 }
 
+const CATEGORY_META: Record<string, { label: string; color: string; icon: any }> = {
+  spec: { label: 'SPEC', color: '#00D9FF', icon: FileText },
+  cad: { label: 'CAD', color: '#FF4FA3', icon: Box },
+  rulebook: { label: 'RULES', color: '#FFD43B', icon: BookOpen },
+  telemetry: { label: 'TELEM', color: '#10E57A', icon: Activity },
+  report: { label: 'REPORT', color: '#A855F7', icon: FileSpreadsheet },
+};
+const DEFAULT_CAT_META = { label: 'DOC', color: '#737D89', icon: FileCode };
+
+const CATEGORIES = [
+  { id: 'all', label: 'All Docs', icon: Layers, color: '#00D9FF' },
+  { id: 'spec', label: 'Specifications', icon: FileText, color: '#00D9FF' },
+  { id: 'cad', label: 'CAD & Models', icon: Box, color: '#FF4FA3' },
+  { id: 'rulebook', label: 'Rulebooks & SES', icon: BookOpen, color: '#FFD43B' },
+  { id: 'telemetry', label: 'Telemetry & Logs', icon: Activity, color: '#10E57A' },
+  { id: 'report', label: 'Engineering Reports', icon: FileSpreadsheet, color: '#A855F7' },
+];
+
 export const DocumentHub: React.FC<DocumentHubProps> = ({
   currentUser,
   documents,
   groups = [],
   loading,
+  onRefresh,
   onUploadDocument,
   onDeleteDocument,
 }) => {
@@ -48,7 +73,10 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
   const [selectedGroup, setSelectedGroup] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [selectedDocToDelete, setSelectedDocToDelete] = useState<DocumentItem | null>(null);
+  const isPulling = usePullToRefresh(onRefresh);
+  const activeFilterCount = (selectedCategory !== 'all' ? 1 : 0) + (selectedGroup !== 'all' ? 1 : 0);
 
   // Upload Form State
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -67,37 +95,10 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
 
   const effectiveGroups = groups.length > 0 ? groups : SUB_TEAMS;
 
-  const categories: Array<{ id: string; label: string; icon: any; color: string }> = [
-    { id: 'all', label: 'All Docs', icon: Layers, color: '#00D9FF' },
-    { id: 'spec', label: 'Specifications', icon: FileText, color: '#00D9FF' },
-    { id: 'cad', label: 'CAD & Models', icon: Box, color: '#FF4FA3' },
-    { id: 'rulebook', label: 'Rulebooks & SES', icon: BookOpen, color: '#FFD43B' },
-    { id: 'telemetry', label: 'Telemetry & Logs', icon: Activity, color: '#10E57A' },
-    { id: 'report', label: 'Engineering Reports', icon: FileSpreadsheet, color: '#FF6A00' },
-  ];
+  const formatFileSize = (bytes: number) =>
+    bytes < 1024 ? `${bytes} B` : bytes < 1048576 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1048576).toFixed(2)} MB`;
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-  };
-
-  const getCategoryMeta = (cat: string) => {
-    switch (cat) {
-      case 'spec':
-        return { label: 'SPEC', color: '#00D9FF', icon: FileText };
-      case 'cad':
-        return { label: 'CAD', color: '#FF4FA3', icon: Box };
-      case 'rulebook':
-        return { label: 'RULES', color: '#FFD43B', icon: BookOpen };
-      case 'telemetry':
-        return { label: 'TELEM', color: '#10E57A', icon: Activity };
-      case 'report':
-        return { label: 'REPORT', color: '#FF6A00', icon: FileSpreadsheet };
-      default:
-        return { label: 'DOC', color: '#737D89', icon: FileCode };
-    }
-  };
+  const getCategoryMeta = (cat: string) => CATEGORY_META[cat] || DEFAULT_CAT_META;
 
   // Filtered documents
   const filteredDocs = useMemo(() => {
@@ -190,47 +191,28 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header telemetry HUD */}
-      <GlassCard variant="elevated" className="p-4 sm:p-6 border-cyber-border-strong relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-full bg-gradient-to-l from-accent-cyan/10 to-transparent pointer-events-none" />
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-mono text-xs text-accent-cyan font-bold uppercase tracking-widest flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-accent-cyan animate-pulse" />
-                Formula Student Repository
-              </span>
-              <span className="text-cyber-muted text-xs">•</span>
-              <span className="font-mono text-xs text-cyber-muted">
-                {documents.length} ARCHIVED ASSETS
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-display font-extrabold text-cyber-primary tracking-wide">
-              Engineering Document Hub
-            </h1>
-            <p className="text-xs sm:text-sm text-cyber-secondary mt-1 max-w-2xl font-sans">
-              Centralized engineering repository for Formula Student design specifications, CAD solids, Formula SAE rulebooks, and telemetry acquisitions.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2 shrink-0">
-            <GlossyButton
-              variant="primary"
-              size="md"
-              onClick={() => setIsUploadModalOpen(true)}
-              className="flex items-center gap-2"
-            >
-              <Upload className="w-4 h-4" />
-              <span>Upload Document</span>
-            </GlossyButton>
-          </div>
-        </div>
-      </GlassCard>
+      <PageHeader
+        title="Engineering Document Hub"
+        eyebrow="Formula Student Repository"
+        description="Centralized engineering repository for Formula Student design specifications, CAD solids, Formula SAE rulebooks, and telemetry acquisitions."
+        actions={
+          <GlossyButton
+            variant="primary"
+            size="md"
+            onClick={() => setIsUploadModalOpen(true)}
+            className="hidden sm:inline-flex items-center gap-2"
+          >
+            <Upload className="w-4 h-4" />
+            <span>Upload Document</span>
+          </GlossyButton>
+        }
+      />
 
       {/* Filter and Search Bar */}
       <div className="space-y-3">
         {/* Category Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
-          {categories.map((cat) => {
+        <div className="-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-1 mask-fade-edges">
+          {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
             const isActive = selectedCategory === cat.id;
             return (
@@ -238,7 +220,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`
-                  flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono transition-all shrink-0 cursor-pointer border
+                  shrink-0 snap-start flex items-center gap-2 min-h-[44px] px-4 rounded-lg text-label font-mono transition-all cursor-pointer border
                   ${
                     isActive
                       ? 'bg-cyber-surface-elevated text-cyber-primary border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.2)] font-bold'
@@ -253,8 +235,34 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
           })}
         </div>
 
-        {/* Search & Team Filter Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+        {/* Mobile Toolbar (Single Row) */}
+        <div className="flex gap-2 sm:hidden">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-cyber-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search documents…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full min-h-[44px] pl-9 pr-3 rounded-lg text-base font-sans bg-cyber-surface border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+            />
+          </div>
+          <button
+            onClick={() => setIsFilterSheetOpen(true)}
+            className="tap-target relative px-3 rounded-lg border border-cyber-border bg-cyber-surface text-cyber-secondary flex items-center justify-center cursor-pointer"
+            aria-label="Filter documents"
+          >
+            <Sliders className="w-5 h-5 text-accent-cyan" />
+            {activeFilterCount > 0 && (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-cyan text-black text-[12px] font-bold flex items-center justify-center">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Desktop Search & Team Filter Row */}
+        <div className="hidden sm:grid sm:grid-cols-12 gap-3">
           <div className="sm:col-span-8 relative">
             <Search className="w-4 h-4 text-cyber-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
@@ -285,13 +293,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
       </div>
 
       {/* Documents Grid / List */}
-      {loading ? (
-        <div className="py-20 text-center space-y-3">
-          <div className="w-8 h-8 rounded-full border-2 border-accent-cyan border-t-transparent animate-spin mx-auto" />
-          <p className="font-mono text-xs text-cyber-muted uppercase tracking-wider">
-            Accessing Engineering Storage Matrix...
-          </p>
+      {isPulling && (
+        <div className="py-2 text-center text-xs font-mono text-accent-cyan animate-pulse">
+          Refreshing engineering repository…
         </div>
+      )}
+      {loading ? (
+        <SkeletonCard count={3} />
       ) : filteredDocs.length === 0 ? (
         <EmptyState
           illustration="telemetry"
@@ -317,13 +325,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
               <GlassCard
                 key={doc.id}
                 variant="elevated"
-                className="p-4 border-cyber-border-strong hover:border-accent-cyan/50 transition-all flex flex-col justify-between group space-y-3"
+                className="p-4 border-cyber-border-strong hover:border-accent-cyan/50 active:bg-cyber-surface-hover active:scale-[0.99] transition-all flex flex-col justify-between group space-y-3"
               >
                 <div>
                   {/* Card Header: Category & Team Badge */}
                   <div className="flex items-center justify-between gap-2 mb-2">
                     <span
-                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-label font-mono uppercase tracking-wider"
                       style={{
                         backgroundColor: `${catMeta.color}15`,
                         color: catMeta.color,
@@ -334,25 +342,25 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                       {catMeta.label}
                     </span>
 
-                    <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-secondary truncate max-w-[130px]">
+                    <span className="hidden sm:inline-block font-mono text-label px-2 py-0.5 rounded bg-cyber-bg border border-cyber-border text-cyber-secondary truncate max-w-[130px]">
                       {teamName}
                     </span>
                   </div>
 
                   {/* Document Title */}
-                  <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-1">
+                  <h3 className="font-sans font-semibold text-base text-cyber-primary group-hover:text-accent-cyan transition-colors line-clamp-1">
                     {doc.title}
                   </h3>
 
                   {/* Description */}
                   {doc.description && (
-                    <p className="text-xs text-cyber-secondary mt-1 font-sans line-clamp-2 leading-relaxed">
+                    <p className="text-sm text-cyber-secondary mt-1 font-sans line-clamp-2 leading-relaxed">
                       {doc.description}
                     </p>
                   )}
 
                   {/* File Metadata telemetry bar */}
-                  <div className="mt-3 p-2 rounded-lg bg-cyber-bg/80 border border-cyber-border/70 flex items-center justify-between text-[11px] font-mono">
+                  <div className="mt-3 p-2 rounded-lg bg-cyber-bg/80 border border-cyber-border/70 flex items-center justify-between text-label font-mono">
                     <span className="text-cyber-primary truncate max-w-[180px]" title={doc.file_name}>
                       {doc.file_name}
                     </span>
@@ -369,7 +377,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                       name={doc.uploader?.full_name || 'ZC Engineer'}
                       size="sm"
                     />
-                    <div className="text-[10px] font-mono text-cyber-muted">
+                    <div className="text-label font-mono text-cyber-muted">
                       <div className="text-cyber-secondary font-sans truncate max-w-[90px]">
                         {doc.uploader?.full_name || 'Engineer'}
                       </div>
@@ -393,7 +401,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                       target="_blank"
                       rel="noopener noreferrer"
                       download={doc.file_name}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan text-xs font-mono font-bold transition-all cursor-pointer"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent-cyan/10 hover:bg-accent-cyan/20 border border-accent-cyan/30 text-accent-cyan text-xs font-mono transition-all cursor-pointer"
                       title="Download or open asset"
                     >
                       <Download className="w-3.5 h-3.5" />
@@ -423,7 +431,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                   <h3 className="font-display font-bold text-base text-cyber-primary">
                     Upload Engineering Asset
                   </h3>
-                  <span className="font-mono text-[10px] text-cyber-muted uppercase tracking-wider">
+                  <span className="font-mono text-label text-cyber-muted uppercase tracking-wider">
                     Formula Student Knowledge Repository
                   </span>
                 </div>
@@ -451,10 +459,10 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
                 <input
                   type="file"
                   onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-                  className="w-full text-xs text-cyber-primary file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-mono file:font-bold file:bg-accent-cyan/20 file:text-accent-cyan hover:file:bg-accent-cyan/30 cursor-pointer bg-cyber-surface p-2 rounded-lg border border-cyber-border"
+                  className="w-full text-xs text-cyber-primary file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-mono file:font-medium file:bg-accent-cyan/20 file:text-accent-cyan hover:file:bg-accent-cyan/30 cursor-pointer bg-cyber-surface p-2 rounded-lg border border-cyber-border"
                 />
                 {uploadFile && (
-                  <div className="mt-1 text-[11px] font-mono text-accent-cyan">
+                  <div className="mt-1 text-label font-mono text-accent-cyan">
                     Selected: {uploadFile.name} ({formatFileSize(uploadFile.size)})
                   </div>
                 )}
@@ -551,6 +559,18 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
         </div>
       )}
 
+      {/* Floating Action Button (FAB) for Mobile Document Upload */}
+      <button
+        onClick={() => {
+          triggerHaptic(8);
+          setIsUploadModalOpen(true);
+        }}
+        className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(4.5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+        aria-label="Upload document"
+      >
+        <Upload className="w-6 h-6" />
+      </button>
+
       {/* Delete Confirmation Modal */}
       {selectedDocToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
@@ -589,6 +609,77 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
           </GlassCard>
         </div>
       )}
+
+      {/* Mobile Filter Sheet */}
+      <ModalShell
+        open={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        title="Filter Documents"
+        footer={
+          <div className="flex items-center justify-between w-full gap-3">
+            <GhostButton
+              size="sm"
+              onClick={() => {
+                setSelectedCategory('all');
+                setSelectedGroup('all');
+                setIsFilterSheetOpen(false);
+              }}
+            >
+              Reset
+            </GhostButton>
+            <GlossyButton
+              variant="primary"
+              size="sm"
+              onClick={() => setIsFilterSheetOpen(false)}
+            >
+              Apply Filters
+            </GlossyButton>
+          </div>
+        }
+      >
+        <div className="space-y-4 p-1">
+          <div>
+            <label className="block text-label font-mono uppercase text-cyber-muted mb-1.5">
+              Sub-Team Scope
+            </label>
+            <select
+              value={selectedGroup}
+              onChange={(e) => setSelectedGroup(e.target.value)}
+              className="w-full min-h-[44px] py-2 px-3 text-base bg-cyber-bg-alt border border-cyber-border rounded-lg text-cyber-primary focus:outline-none focus:border-accent-cyan transition-colors font-mono cursor-pointer"
+            >
+              <option value="all">Scope: All Sub-Teams & Club</option>
+              <option value="club">Scope: Club-Wide General</option>
+              {effectiveGroups.map((g) => (
+                <option key={g.id} value={g.id}>
+                  Scope: {g.name.replace(/^Technical - |^Operations - /, '')}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-label font-mono uppercase text-cyber-muted mb-1.5">
+              Document Category
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCategory(cat.id)}
+                  className={`min-h-[44px] px-3 py-2 rounded-lg text-xs font-mono font-medium uppercase border text-left transition-all flex items-center gap-2 ${
+                    selectedCategory === cat.id
+                      ? 'bg-accent-cyan text-black border-accent-cyan font-bold'
+                      : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border'
+                  }`}
+                >
+                  <cat.icon className="w-3.5 h-3.5 shrink-0" style={{ color: selectedCategory === cat.id ? '#000000' : cat.color }} />
+                  <span className="truncate">{cat.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </ModalShell>
     </div>
   );
 };

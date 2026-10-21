@@ -2,12 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { F1HorizontalTransition } from './components/transitions/F1HorizontalTransition';
 import { AppShell } from './components/layout/AppShell';
 import { NavTab } from './components/layout/BottomNav';
+// Code-split auth screens to keep initial application bundle lean
+const AuthScreen = React.lazy(() => import('./components/auth/AuthScreen').then((m) => ({ default: m.AuthScreen })));
+const PendingApprovalView = React.lazy(() => import('./components/auth/PendingApprovalView').then((m) => ({ default: m.PendingApprovalView })));
 import { MissionControl } from './components/dashboard/MissionControl';
-import { AuthScreen } from './components/auth/AuthScreen';
-import { PendingApprovalView } from './components/auth/PendingApprovalView';
 import { TasksHub } from './components/tasks/TasksHub';
-import { ChatView } from './components/chat/ChatView';
-import { TeamDirectory } from './components/team/TeamDirectory';
 import { NotificationDrawer } from './components/notifications/NotificationDrawer';
 import { ToastContainer } from './components/common/ToastContainer';
 import { RoleGuideModal } from './components/common/RoleGuideModal';
@@ -24,11 +23,17 @@ import { SubmissionReviewStatus, SubmissionType, TaskType, TaskPriority } from '
 const AdminApprovalHub = React.lazy(() => import('./components/admin/AdminApprovalHub').then((m) => ({ default: m.AdminApprovalHub })));
 const DocumentHub = React.lazy(() => import('./components/documents/DocumentHub').then((m) => ({ default: m.DocumentHub })));
 const StyleGuide = React.lazy(() => import('./components/styleguide/StyleGuide').then((m) => ({ default: m.StyleGuide })));
+const LegalView = React.lazy(() => import('./components/legal/LegalView').then((m) => ({ default: m.LegalView })));
+const ChatView = React.lazy(() => import('./components/chat/ChatView').then((m) => ({ default: m.ChatView })));
+const TeamDirectory = React.lazy(() => import('./components/team/TeamDirectory').then((m) => ({ default: m.TeamDirectory })));
+import { ZfsMonogram } from './components/brand/ZfsMonogram';
 
 const SuspenseFallback = () => (
-  <div className="py-24 text-center space-y-3">
-    <div className="w-8 h-8 rounded-full border-2 border-accent-cyan border-t-transparent animate-spin mx-auto" />
-    <span className="font-mono text-xs text-cyber-muted uppercase tracking-wider">
+  <div className="py-24 text-center space-y-4">
+    <div className="w-14 h-auto mx-auto p-1">
+      <ZfsMonogram pulse={true} className="w-full h-auto" />
+    </div>
+    <span className="font-mono text-xs text-cyber-muted uppercase tracking-wider block">
       Initializing Telemetry Subsystem...
     </span>
   </div>
@@ -43,8 +48,32 @@ export const App: React.FC = () => {
   const [isStyleGuideOpen, setIsStyleGuideOpen] = useState<boolean>(() => {
     return window.location.pathname === '/styleguide' || window.location.hash === '#styleguide';
   });
+  const [legalRoute, setLegalRoute] = useState<'privacy' | 'terms' | null>(() => {
+    const p = window.location.pathname;
+    if (p === '/privacy') return 'privacy';
+    if (p === '/terms') return 'terms';
+    return null;
+  });
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
   const prevUserRef = useRef<string | null>(null);
+  const scrollPositionsRef = useRef<Record<string, number>>({});
+
+  // Scroll restoration per navigation tab
+  useEffect(() => {
+    const handleScroll = () => {
+      scrollPositionsRef.current[activeTab] = window.scrollY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [activeTab]);
+
+  useEffect(() => {
+    const target = scrollPositionsRef.current[activeTab] || 0;
+    const raf = requestAnimationFrame(() => {
+      window.scrollTo({ top: target, behavior: 'instant' as ScrollBehavior });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [activeTab]);
 
   // Global Ctrl+K / Cmd+K listener
   useEffect(() => {
@@ -61,6 +90,10 @@ export const App: React.FC = () => {
   useEffect(() => {
     const handlePopState = () => {
       setIsStyleGuideOpen(window.location.pathname === '/styleguide' || window.location.hash === '#styleguide');
+      const p = window.location.pathname;
+      if (p === '/privacy') setLegalRoute('privacy');
+      else if (p === '/terms') setLegalRoute('terms');
+      else setLegalRoute(null);
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
@@ -89,6 +122,8 @@ export const App: React.FC = () => {
     tasks,
     submissions,
     comments,
+    loading: tasksLoading,
+    reloadTasks,
     createTask,
     updateTaskStatus,
     deleteTask,
@@ -129,6 +164,7 @@ export const App: React.FC = () => {
   const {
     documents,
     loading: docsLoading,
+    refreshDocuments,
     uploadDocument,
     deleteDocument,
   } = useDocuments(currentUser);
@@ -147,7 +183,7 @@ export const App: React.FC = () => {
     prevUserRef.current = currentUser ? currentUser.id : null;
   }, [currentUser]);
 
-  // 0. Styleguide Direct Route Check
+  // 0a. Styleguide Direct Route Check
   if (isStyleGuideOpen) {
     return (
       <React.Suspense fallback={<SuspenseFallback />}>
@@ -163,10 +199,27 @@ export const App: React.FC = () => {
     );
   }
 
+  // 0b. Legal & Compliance Direct Route Check (/privacy, /terms)
+  if (legalRoute) {
+    return (
+      <React.Suspense fallback={<SuspenseFallback />}>
+        <LegalView
+          initialTab={legalRoute}
+          onBack={() => {
+            setLegalRoute(null);
+            if (window.location.pathname === '/privacy' || window.location.pathname === '/terms') {
+              window.history.pushState(null, '', '/');
+            }
+          }}
+        />
+      </React.Suspense>
+    );
+  }
+
   // 1. Authenticating Screen (Prevents flash of login screen during PKCE code exchange)
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative">
+      <div className="min-h-dvh flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative">
         <div 
           className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
           style={{
@@ -175,7 +228,9 @@ export const App: React.FC = () => {
           }}
         />
         <div className="w-full max-w-sm text-center space-y-4 relative z-10">
-          <div className="w-12 h-12 rounded-full border-2 border-accent-cyan border-t-transparent animate-spin mx-auto shadow-[0_0_15px_rgba(0,217,255,0.3)]" />
+          <div className="w-16 h-auto mx-auto p-2 rounded-xl bg-cyber-surface/70 border border-cyber-border shadow-cyber-elevated">
+            <ZfsMonogram pulse={true} className="w-full h-auto" />
+          </div>
           <div className="space-y-1">
             <h2 className="font-display font-black text-lg text-cyber-primary uppercase tracking-wider">
               Authenticating...
@@ -192,25 +247,30 @@ export const App: React.FC = () => {
   // 2. Not Authenticated -> Show Auth Screen (Google primary, email secondary)
   if (!currentUser) {
     return (
-      <AuthScreen
-        onLogin={signIn}
-        onSignup={signUp}
-        onGoogleSignIn={signInWithGoogle}
-        authError={authError}
-        onClearError={clearError}
-      />
+      <React.Suspense fallback={<SuspenseFallback />}>
+        <AuthScreen
+          onLogin={signIn}
+          onSignup={signUp}
+          onGoogleSignIn={signInWithGoogle}
+          authError={authError}
+          onClearError={clearError}
+        />
+      </React.Suspense>
     );
   }
 
   // 3. Authenticated but Pending Approval -> Show Pending Screen
   if (currentUser.status === 'pending') {
     return (
-      <PendingApprovalView
-        user={currentUser}
-        onSignOut={signOut}
-      />
+      <React.Suspense fallback={<SuspenseFallback />}>
+        <PendingApprovalView
+          user={currentUser}
+          onSignOut={signOut}
+        />
+      </React.Suspense>
     );
   }
+
 
   // Find user's assigned group name
   const assignedGroup = SUB_TEAMS.find((g) => g.id === currentUser.group_id);
@@ -270,6 +330,7 @@ export const App: React.FC = () => {
         groupName={groupDisplayName}
         unreadCount={0}
         onOpenProfile={signOut}
+        onSignOut={signOut}
         notificationCount={notifUnreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
         onOpenSearch={() => setIsSearchOpen(true)}
@@ -305,6 +366,8 @@ export const App: React.FC = () => {
               teamMembers={allProfiles}
               submissions={submissions}
               comments={comments}
+              loading={tasksLoading}
+              onRefresh={reloadTasks}
               initialTaskId={activeTaskId}
               onClearInitialTaskId={() => setActiveTaskId(null)}
               onCreateTask={handleCreateTask}
@@ -340,6 +403,7 @@ export const App: React.FC = () => {
               allProfiles={allProfiles}
               allGroups={allGroups}
               tasks={tasks}
+              loading={loading}
               onStartDirectMessage={startDirectMessage}
               onNavigateTab={setActiveTab}
             />
@@ -349,6 +413,7 @@ export const App: React.FC = () => {
               documents={documents}
               groups={allGroups}
               loading={docsLoading}
+              onRefresh={refreshDocuments}
               onUploadDocument={async (params) => {
                 const res = await uploadDocument(params);
                 addNotification('announcement', 'Asset Archived', `"${params.title}" committed to engineering library.`, '/docs');

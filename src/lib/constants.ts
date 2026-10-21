@@ -21,7 +21,7 @@ export const SUB_TEAMS: Group[] = [
     id: '33333333-3333-3333-3333-333333333333', 
     name: 'Technical - Low-Voltage Electronics', 
     slug: 'electronics', 
-    color_accent: '#FF6A00', // Racing Orange
+    color_accent: '#A855F7', // Cyber Violet (re-mapped to prevent brand orange collision)
     description: 'Sensors, wiring harness, ECU, telemetry transmitters, and telemetry UI.', 
     created_at: '' 
   },
@@ -46,30 +46,40 @@ export const SUB_TEAMS: Group[] = [
 export const PRESET_COLORS = [
   '#00D9FF', // Electric Cyan
   '#FF304F', // Racing Red
-  '#FF6A00', // Racing Orange
+  '#A855F7', // Cyber Violet
   '#FFD43B', // Racing Yellow
   '#10E57A', // Racing Lime
   '#C8CED6', // Chrome
-  '#A855F7', // Cyber Purple
+  '#E07212', // ZFS Brand Orange
 ];
 
 /**
- * Global Semantic Status Mapping
- * ACTIVE      → Racing Orange (#FF6A00)
- * PENDING     → Racing Yellow (#FFD43B)
- * SUCCESS     → Racing Lime   (#10E57A)
- * ERROR       → Racing Red    (#FF304F)
- * SYSTEM      → Electric Cyan (#00D9FF)
- * INACTIVE    → Chrome Muted  (#737D89)
+ * Global Semantic Status Mapping (Zero Collision with Brand Orange)
+ * IN PROGRESS → Electric Cyan  (#00D9FF)
+ * REVIEW      → Cyber Violet   (#A855F7)
+ * PENDING     → Racing Yellow  (#FFD43B)
+ * SUCCESS     → Racing Lime    (#10E57A)
+ * ERROR       → Racing Red     (#FF304F)
+ * SYSTEM      → Electric Cyan  (#00D9FF)
+ * BRAND       → ZFS Orange     (#E07212)
+ * TODO        → Chrome Muted   (#737D89)
  */
 export const STATUS_SEMANTICS = {
-  active: {
-    label: 'ACTIVE',
-    color: '#FF6A00',
-    bgClass: 'bg-[#FF6A00]/15',
-    textClass: 'text-[#FF6A00]',
-    borderClass: 'border-[#FF6A00]/40',
-    dotClass: 'bg-[#FF6A00] shadow-glow-orange',
+  in_progress: {
+    label: 'IN PROGRESS',
+    color: '#00D9FF',
+    bgClass: 'bg-accent-cyan/15',
+    textClass: 'text-accent-cyan',
+    borderClass: 'border-accent-cyan/40',
+    dotClass: 'bg-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.4)]',
+  },
+  review: {
+    label: 'IN REVIEW',
+    color: '#A855F7',
+    bgClass: 'bg-purple-500/15',
+    textClass: 'text-purple-400',
+    borderClass: 'border-purple-500/40',
+    dotClass: 'bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.5)] animate-pulse',
   },
   pending: {
     label: 'PENDING',
@@ -77,7 +87,7 @@ export const STATUS_SEMANTICS = {
     bgClass: 'bg-[#FFD43B]/15',
     textClass: 'text-[#FFD43B]',
     borderClass: 'border-[#FFD43B]/40',
-    dotClass: 'bg-[#FFD43B] shadow-glow-yellow animate-pulse',
+    dotClass: 'bg-[#FFD43B] shadow-[0_0_8px_rgba(255,212,59,0.4)] animate-pulse',
   },
   success: {
     label: 'APPROVED',
@@ -85,7 +95,7 @@ export const STATUS_SEMANTICS = {
     bgClass: 'bg-[#10E57A]/15',
     textClass: 'text-[#10E57A]',
     borderClass: 'border-[#10E57A]/40',
-    dotClass: 'bg-[#10E57A] shadow-glow-lime',
+    dotClass: 'bg-[#10E57A] shadow-[0_0_8px_rgba(16,229,122,0.4)]',
   },
   error: {
     label: 'CRITICAL',
@@ -93,7 +103,7 @@ export const STATUS_SEMANTICS = {
     bgClass: 'bg-[#FF304F]/15',
     textClass: 'text-[#FF304F]',
     borderClass: 'border-[#FF304F]/40',
-    dotClass: 'bg-[#FF304F] shadow-glow-red animate-pulse',
+    dotClass: 'bg-[#FF304F] shadow-[0_0_8px_rgba(255,48,79,0.5)] animate-pulse',
   },
   system: {
     label: 'SYSTEM',
@@ -101,14 +111,43 @@ export const STATUS_SEMANTICS = {
     bgClass: 'bg-[#00D9FF]/15',
     textClass: 'text-[#00D9FF]',
     borderClass: 'border-[#00D9FF]/40',
-    dotClass: 'bg-[#00D9FF] shadow-glow-cyan',
+    dotClass: 'bg-[#00D9FF] shadow-[0_0_8px_rgba(0,217,255,0.4)]',
+  },
+  brand: {
+    label: 'ZFS IDENTITY',
+    color: '#E07212',
+    bgClass: 'bg-brand-orange/15',
+    textClass: 'text-brand-orange',
+    borderClass: 'border-brand-orange/40',
+    dotClass: 'bg-brand-orange shadow-[0_0_8px_rgba(224,114,18,0.5)]',
   },
   muted: {
-    label: 'TODO',
+    label: 'TO DO',
     color: '#737D89',
     bgClass: 'bg-[#737D89]/15',
     textClass: 'text-cyber-muted',
     borderClass: 'border-cyber-border',
     dotClass: 'bg-[#737D89]',
   },
+  // Backward compatibility alias for legacy active
+  active: {
+    label: 'IN PROGRESS',
+    color: '#00D9FF',
+    bgClass: 'bg-accent-cyan/15',
+    textClass: 'text-accent-cyan',
+    borderClass: 'border-accent-cyan/40',
+    dotClass: 'bg-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.4)]',
+  },
+};
+
+export const triggerHaptic = (ms = 8) => {
+  try {
+    if (
+      typeof window !== 'undefined' &&
+      'vibrate' in navigator &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      navigator.vibrate(ms);
+    }
+  } catch {}
 };

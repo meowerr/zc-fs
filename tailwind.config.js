@@ -7,6 +7,14 @@ export default {
   darkMode: 'class',
   theme: {
     extend: {
+      screens: {
+        xs: '420px',
+      },
+      fontSize: {
+        label: ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.04em' }], // 12px floor
+        body: ['0.875rem', { lineHeight: '1.25rem' }],                       // 14px
+        'body-lg': ['1rem', { lineHeight: '1.5rem' }],                       // 16px
+      },
       colors: {
         cyber: {
           bg: 'var(--bg-base)',
@@ -28,6 +36,7 @@ export default {
           orange: 'var(--accent-orange)',
           yellow: 'var(--accent-yellow)',
           lime: 'var(--accent-lime)',
+          purple: 'var(--accent-purple)',
         },
         team: {
           vd: 'var(--team-vd)',
@@ -57,7 +66,18 @@ export default {
           lime: '#10E57A', // Racing Lime
           amber: '#FFD43B', // Racing Yellow
           red: '#FF304F', // Racing Red
-          orange: '#FF6A00', // Racing Orange
+          orange: '#E07212', // ZFS Brand Orange
+          purple: '#A855F7', // Cyber Violet
+        },
+        brand: {
+          orange: 'var(--brand-orange, #E07212)',
+          'orange-hover': 'var(--brand-orange-hover, #ED7D0D)',
+          'orange-pressed': 'var(--brand-orange-pressed, #C6620A)',
+          'orange-soft': 'var(--brand-orange-soft, rgba(224, 114, 18, 0.12))',
+          'orange-glow': 'var(--brand-orange-glow, rgba(224, 114, 18, 0.35))',
+          'light-orange': 'var(--brand-light-orange, #C2410C)',
+          ink: 'var(--brand-ink, #070B0E)',
+          white: 'var(--brand-white, #F2F4F7)',
         }
       },
       fontFamily: {
@@ -66,27 +86,11 @@ export default {
         mono: ['"Share Tech Mono"', 'monospace'],
       },
       boxShadow: {
+        'glow-brand': '0 0 16px rgba(224, 114, 18, 0.4)',
         'cyber-sm': '0 1px 3px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
         'cyber': '0 4px 16px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.08)',
         'cyber-elevated': '0 12px 32px -4px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.12)',
-        'glow-cyan': '0 0 14px rgba(0, 217, 255, 0.35)',
-        'glow-red': '0 0 14px rgba(255, 48, 79, 0.35)',
-        'glow-orange': '0 0 14px rgba(255, 106, 0, 0.35)',
-        'glow-yellow': '0 0 14px rgba(255, 212, 59, 0.35)',
-        'glow-lime': '0 0 14px rgba(16, 229, 122, 0.35)',
-        'glass-sm': '0 2px 8px -2px rgba(11, 27, 58, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.7)',
-        'glass': '0 8px 30px -4px rgba(11, 27, 58, 0.12), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8)',
-        'glass-dark': '0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)',
-        'neon-blue': '0 0 15px rgba(0, 217, 255, 0.4)',
-        'neon-aqua': '0 0 15px rgba(0, 217, 255, 0.4)',
-        'neon-lime': '0 0 12px rgba(16, 229, 122, 0.4)',
       },
-      backgroundImage: {
-        'chrome-metallic': 'linear-gradient(180deg, #FFFFFF 0%, #E8F0FE 45%, #D0DFFA 55%, #EDF3FC 100%)',
-        'holo-gradient': 'linear-gradient(135deg, #FF304F 0%, #00D9FF 50%, #FFD43B 100%)',
-        'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)',
-        'cyber-gradient': 'linear-gradient(180deg, var(--surface-base) 0%, var(--surface-elevated) 100%)',
-      }
     },
   },
   plugins: [],

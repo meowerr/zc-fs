@@ -10,7 +10,6 @@ import {
   CheckCircle2, 
   AlertCircle 
 } from 'lucide-react';
-import { GlassCard } from '../common/GlassCard';
 import { GhostButton } from '../common/GhostButton';
 import { NotificationItem, NotificationType } from '../../lib/database.types';
 
@@ -48,18 +47,15 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
       case 'task_due_soon':
         return <AlertCircle className="w-4 h-4 text-accent-yellow" />;
       case 'announcement':
-        return <Sparkles className="w-4 h-4 text-accent-orange" />;
+        return <Sparkles className="w-4 h-4 text-brand-orange" />;
       default:
         return <Clock className="w-4 h-4 text-accent-cyan" />;
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end p-4 sm:p-6 bg-black/75 backdrop-blur-md">
-      <GlassCard
-        variant="elevated"
-        className="w-full max-w-sm sm:max-w-md max-h-[85vh] flex flex-col p-5 border-cyber-border-strong shadow-2xl space-y-3"
-      >
+    <div className="fixed inset-0 z-50 flex items-end sm:items-start justify-end p-0 sm:p-6 bg-black/75 backdrop-blur-md" role="dialog" aria-modal="true" onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()} className="w-full sm:max-w-md max-h-[85dvh] flex flex-col p-4 sm:p-5 border border-cyber-border-strong rounded-t-2xl sm:rounded-2xl shadow-2xl space-y-3 bg-cyber-surface">
         {/* Drawer Header */}
         <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
           <div className="flex items-center gap-2">
@@ -70,7 +66,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
               <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
                 Telemetry Notifications
               </h3>
-              <span className="text-[10px] font-mono text-cyber-muted">
+              <span className="text-label font-mono text-cyber-muted">
                 {unreadCount} UNREAD ALERTS
               </span>
             </div>
@@ -88,7 +84,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-cyber-surface-hover text-cyber-secondary hover:text-cyber-primary cursor-pointer"
+              className="tap-target rounded-lg hover:bg-cyber-surface-hover text-cyber-secondary hover:text-cyber-primary cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -100,14 +96,14 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
           <button
             onClick={onMarkAllAsRead}
             disabled={unreadCount === 0}
-            className="flex items-center gap-1 font-mono text-[11px] text-accent-cyan hover:underline disabled:opacity-30 cursor-pointer"
+            className="flex items-center gap-1 font-mono text-label text-accent-cyan hover:underline disabled:opacity-30 cursor-pointer"
           >
             <CheckCheck className="w-3.5 h-3.5" /> Mark all read
           </button>
 
           <button
             onClick={onRequestWebPush}
-            className="font-mono text-[10px] text-cyber-muted hover:text-cyber-primary hover:underline cursor-pointer"
+            className="font-mono text-label text-cyber-muted hover:text-cyber-primary hover:underline cursor-pointer"
           >
             Enable Web Push
           </button>
@@ -143,7 +139,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                     {getTypeIcon(notif.type)}
                     <span>{notif.title}</span>
                   </div>
-                  <span className="font-mono text-[9px] text-cyber-muted">
+                  <span className="font-mono text-label text-cyber-muted">
                     {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
@@ -151,7 +147,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                   {notif.message}
                 </p>
                 {onSelectNotification && (
-                  <div className="pl-6 flex items-center gap-1 text-[10px] font-mono text-accent-cyan font-bold pt-0.5">
+                  <div className="pl-6 flex items-center gap-1 text-label font-mono text-accent-cyan font-medium pt-0.5">
                     <span>Inspect Target</span>
                     <span className="text-xs">→</span>
                   </div>
@@ -161,12 +157,12 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
           )}
         </div>
 
-        <div className="pt-2 border-t border-cyber-border flex justify-end flex-shrink-0">
+        <div className="pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:pb-0 border-t border-cyber-border flex justify-end shrink-0">
           <GhostButton size="sm" onClick={onClose}>
             Close
           </GhostButton>
         </div>
-      </GlassCard>
+      </div>
     </div>
   );
 };

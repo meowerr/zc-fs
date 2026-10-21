@@ -179,7 +179,7 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
       )`;
 
   return (
-    <div className="relative w-full min-h-screen overflow-hidden bg-chrome-100 dark:bg-midnight-950">
+    <div className="relative w-full min-h-dvh overflow-hidden bg-chrome-100 dark:bg-midnight-950">
       {/* ─── Layer 1: Outgoing Frozen Login Screen Canvas / Backdrop ─── */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none select-none overflow-hidden bg-gradient-to-b from-chrome-100 via-chrome-50 to-chrome-100 dark:from-midnight-950 dark:via-midnight-900 dark:to-midnight-950"
@@ -310,7 +310,7 @@ export const F1HorizontalTransition: React.FC<F1HorizontalTransitionProps> = ({
         {/* E. Accessibility Skip Escape Hatch */}
         <button
           onClick={finish}
-          className="absolute bottom-6 right-6 px-3 py-1.5 rounded-lg border border-white/20 bg-black/40 text-white/60 hover:text-white hover:border-white/50 text-[11px] font-mono uppercase tracking-wider backdrop-blur-md cursor-pointer pointer-events-auto transition-all"
+          className="absolute bottom-6 right-6 px-3 py-1.5 rounded-lg border border-white/20 bg-black/40 text-white/60 hover:text-white hover:border-white/50 text-label font-mono uppercase tracking-wider backdrop-blur-md cursor-pointer pointer-events-auto transition-all"
           aria-label="Skip transition"
         >
           Skip ⏭

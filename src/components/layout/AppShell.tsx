@@ -25,6 +25,7 @@ interface AppShellProps {
   onOpenGuide?: () => void;
   onOpenStyleGuide?: () => void;
   onOpenSearch?: () => void;
+  onSignOut?: () => void;
   groups?: Group[];
   tasks?: Task[];
 }
@@ -44,6 +45,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   onOpenGuide,
   onOpenStyleGuide,
   onOpenSearch,
+  onSignOut,
   groups,
   tasks,
 }) => {
@@ -59,6 +61,8 @@ export const AppShell: React.FC<AppShellProps> = ({
       document.documentElement.classList.remove('dark');
       localStorage.setItem('zcfs_theme', 'light');
     }
+    const meta = document.querySelector('meta[name="theme-color"]');
+    meta?.setAttribute('content', isDarkMode ? '#070A0E' : '#F3F6FA');
   }, [isDarkMode]);
 
   const toggleTheme = () => {
@@ -66,7 +70,7 @@ export const AppShell: React.FC<AppShellProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-cyber-bg text-cyber-primary font-sans transition-colors duration-200">
+    <div className="min-h-dvh flex flex-col bg-cyber-bg text-cyber-primary font-sans transition-colors duration-200">
       {/* Background Subtle Tech-Grid Texture */}
       <div 
         className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
@@ -78,6 +82,8 @@ export const AppShell: React.FC<AppShellProps> = ({
 
       {/* Top Header Telemetry HUD */}
       <TopHeader
+        activeTab={activeTab}
+        onBack={() => onTabChange('dashboard')}
         currentRole={currentRole}
         userName={userName}
         userEmail={userEmail}
@@ -112,8 +118,16 @@ export const AppShell: React.FC<AppShellProps> = ({
             className="flex-1 flex w-full transition-all duration-200"
             style={{ paddingLeft: 'var(--rail-offset, 0px)' }}
           >
-            <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-20 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden">
-              {children}
+            <main className="flex-1 px-3 py-3 sm:p-5 md:p-6 safe-main-bottom pb-20 md:pb-8 max-w-7xl mx-auto w-full overflow-x-hidden flex flex-col">
+              <div className="flex-1">
+                {children}
+              </div>
+              <footer className="mt-auto pt-8 pb-3 text-center app-footer">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-surface/60 border border-cyber-border text-label font-mono text-cyber-muted">
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />
+                  <span>Built for Zewail Formula Team • PitLane Telemetry</span>
+                </div>
+              </footer>
             </main>
           </div>
         </>
@@ -131,7 +145,7 @@ export const AppShell: React.FC<AppShellProps> = ({
             onOpenStyleGuide={onOpenStyleGuide}
           />
 
-          <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-24 md:pb-8 max-w-full overflow-x-hidden">
+          <main className="flex-1 px-3 py-3 sm:p-5 md:p-6 safe-main-bottom pb-20 md:pb-8 max-w-full overflow-x-hidden">
             {children}
           </main>
         </div>
@@ -147,6 +161,9 @@ export const AppShell: React.FC<AppShellProps> = ({
           userName={userName}
           unreadCount={unreadCount}
           onOpenProfile={onOpenProfile}
+          isDarkMode={isDarkMode}
+          onToggleTheme={toggleTheme}
+          onSignOut={onSignOut}
         />
       ) : (
         <BottomNav

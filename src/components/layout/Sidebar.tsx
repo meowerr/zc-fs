@@ -75,12 +75,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside className="hidden md:flex flex-col w-64 lg:w-72 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)] sticky top-14 sm:top-16 bg-cyber-surface border-r border-cyber-border p-3.5 overflow-y-auto">
       {/* Micro Console Header */}
-      <div className="px-2 py-1 mb-2 font-mono text-[10px] uppercase tracking-wider text-cyber-muted flex items-center justify-between border-b border-cyber-border pb-2">
+      <div className="px-2 py-1 mb-2 font-sans font-semibold text-label text-cyber-secondary flex items-center justify-between border-b border-cyber-border pb-2">
         <span className="flex items-center gap-1.5">
-          <span className="text-accent-cyan">//</span>
-          <span>CONSOLE // NAV</span>
+          <span>Console Navigation</span>
         </span>
-        <span className="text-[9px] text-cyber-chrome">PITLANE-OS</span>
+        <span className="text-label font-mono text-cyber-chrome">PITLANE-OS</span>
       </div>
 
       {/* Navigation Links */}
@@ -111,12 +110,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     {item.label}
                   </span>
                   {Boolean(item.badge && item.badge > 0) && (
-                    <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-accent-red text-white">
+                    <span className="px-1.5 py-0.5 rounded text-label font-mono font-medium bg-accent-red text-white">
                       {item.badge}
                     </span>
                   )}
                 </div>
-                <div className="text-[10px] font-mono text-cyber-muted truncate">
+                <div className="text-label font-mono text-cyber-muted truncate">
                   {item.subtitle}
                 </div>
               </div>
@@ -127,10 +126,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sub-teams Telemetry Progress Monitor */}
       <div className="mt-6 pt-4 border-t border-cyber-border">
-        <div className="px-2 mb-2.5 flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-cyber-muted">
+        <div className="px-2 mb-2.5 flex items-center justify-between text-label font-sans font-semibold text-cyber-secondary">
           <span className="flex items-center gap-1.5">
             <Gauge className="w-3 h-3 text-accent-cyan" />
-            <span>SUB-TEAMS // {subTeams.length}</span>
+            <span>Sub-Teams • {subTeams.length}</span>
           </span>
           <Flag className="w-3 h-3 text-accent-lime opacity-80" />
         </div>
@@ -148,12 +147,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     className="w-1.5 h-1.5 rounded-full shrink-0" 
                     style={{ backgroundColor: team.color }} 
                   />
-                  <span className="font-sans font-medium text-cyber-primary text-[11px] truncate">
+                  <span className="font-sans font-medium text-cyber-primary text-label truncate">
                     {team.name}
                   </span>
                 </div>
                 <span 
-                  className="font-mono text-[10px] font-bold shrink-0" 
+                  className="font-mono text-label font-medium shrink-0" 
                   style={{ color: team.color }}
                 >
                   {team.progress}%
@@ -178,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs font-mono text-cyber-secondary hover:text-accent-cyan hover:bg-cyber-surface-hover border border-cyber-border/60 transition-all cursor-pointer"
           >
             <Palette className="w-3.5 h-3.5 text-accent-cyan" />
-            <span>SYSTEM // STYLEGUIDE</span>
+            <span>System Styleguide</span>
           </button>
         </div>
       )}
@@ -186,8 +185,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Active Group Scoping Footer */}
       <div className="mt-auto pt-4">
         <div className="p-2.5 rounded-lg bg-cyber-bg-alt border border-cyber-border">
-          <div className="text-[9px] font-mono text-cyber-muted uppercase tracking-wider flex items-center gap-1">
-            <span className="text-accent-cyan">●</span> SCOPE // ACTIVE
+          <div className="text-label font-mono text-cyber-muted uppercase tracking-wider flex items-center gap-1">
+            <span className="text-accent-cyan">●</span> ACTIVE SCOPE
           </div>
           <div className="text-xs font-semibold text-cyber-primary mt-0.5 truncate">
             {currentGroupName}

@@ -89,7 +89,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
             title: t.title,
             subtitle: `${t.task_type.toUpperCase()} • Priority: ${t.priority.toUpperCase()} • Status: ${t.status.toUpperCase()}`,
             badge: t.status.toUpperCase(),
-            badgeColor: t.status === 'approved' ? '#10E57A' : t.status === 'in_progress' ? '#FF6A00' : '#00D9FF',
+            badgeColor: t.status === 'approved' ? '#10E57A' : t.status === 'submitted' ? '#A855F7' : t.status === 'in_progress' ? '#00D9FF' : '#737D89',
             original: t,
           });
         }
@@ -110,7 +110,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
             title: p.full_name,
             subtitle: `${p.email} • Role: ${p.role.toUpperCase()}`,
             badge: p.role.toUpperCase(),
-            badgeColor: p.role === 'admin' ? '#00D9FF' : p.role === 'head' ? '#FF6A00' : '#10E57A',
+            badgeColor: p.role === 'admin' ? '#00D9FF' : p.role === 'head' ? '#A855F7' : '#10E57A',
             original: p,
           });
         }
@@ -205,9 +205,9 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-24 px-4 bg-black/80 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[max(1rem,env(safe-area-inset-top))] sm:pt-24 px-2 sm:px-4 bg-black/80 backdrop-blur-md animate-fade-in" onClick={onClose}>
       <div 
-        className="w-full max-w-2xl rounded-2xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-2xl overflow-hidden flex flex-col max-h-[75vh]"
+        className="w-full max-w-2xl rounded-2xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-2xl overflow-hidden flex flex-col max-h-[75dvh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Header Input */}
@@ -222,7 +222,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               setQuery(e.target.value);
               setSelectedIndex(0);
             }}
-            className="flex-1 bg-transparent text-sm text-cyber-primary placeholder:text-cyber-muted focus:outline-none font-sans"
+            className="flex-1 bg-transparent text-base sm:text-sm text-cyber-primary placeholder:text-cyber-muted focus:outline-none font-sans"
           />
           {query && (
             <button
@@ -232,7 +232,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               <X className="w-4 h-4" />
             </button>
           )}
-          <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-surface border border-cyber-border font-mono text-[10px] text-cyber-muted">
+          <span className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-cyber-surface border border-cyber-border font-mono text-label text-cyber-muted">
             ESC to close
           </span>
         </div>
@@ -300,7 +300,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           {!query.trim() ? (
             <div className="py-12 text-center text-xs font-mono text-cyber-muted">
               Start typing to search cross-subteam deliverables, personnel, and telemetry channels.
-              <div className="mt-2 text-[10px] text-cyber-secondary flex items-center justify-center gap-3">
+              <div className="mt-2 text-label text-cyber-secondary flex items-center justify-center gap-3">
                 <span><kbd className="px-1 py-0.5 rounded bg-cyber-bg border border-cyber-border">↑</kbd> <kbd className="px-1 py-0.5 rounded bg-cyber-bg border border-cyber-border">↓</kbd> to navigate</span>
                 <span><kbd className="px-1 py-0.5 rounded bg-cyber-bg border border-cyber-border">↵</kbd> to select</span>
               </div>
@@ -331,7 +331,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                     <div className="p-2 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0">
                       {item.category === 'task' && <CheckSquare className="w-4 h-4 text-accent-cyan" />}
                       {item.category === 'person' && <Users className="w-4 h-4 text-accent-lime" />}
-                      {item.category === 'channel' && <MessageSquare className="w-4 h-4 text-accent-orange" />}
+                      {item.category === 'channel' && <MessageSquare className="w-4 h-4 text-purple-400" />}
                       {item.category === 'document' && <FileCode className="w-4 h-4 text-accent-yellow" />}
                     </div>
 
@@ -339,7 +339,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       <div className="font-bold text-xs text-cyber-primary truncate">
                         {item.title}
                       </div>
-                      <div className="font-mono text-[11px] text-cyber-secondary truncate">
+                      <div className="font-mono text-label text-cyber-secondary truncate">
                         {item.subtitle}
                       </div>
                     </div>
@@ -348,7 +348,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                   <div className="flex items-center gap-2 shrink-0">
                     {item.badge && (
                       <span
-                        className="text-[9px] font-mono font-bold px-2 py-0.5 rounded border uppercase"
+                        className="text-label font-mono font-medium px-2 py-0.5 rounded border uppercase"
                         style={{
                           backgroundColor: `${item.badgeColor || '#00D9FF'}15`,
                           borderColor: `${item.badgeColor || '#00D9FF'}40`,
@@ -369,7 +369,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="px-4 py-2 bg-cyber-bg-alt border-t border-cyber-border text-[10px] font-mono text-cyber-muted flex items-center justify-between">
+        <div className="px-4 py-2 bg-cyber-bg-alt border-t border-cyber-border text-label font-mono text-cyber-muted flex items-center justify-between">
           <span>Formula Student Command Telemetry</span>
           <span>{results.length} result(s)</span>
         </div>

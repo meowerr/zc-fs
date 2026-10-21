@@ -538,10 +538,36 @@ zc-fs/
       1. Notification dispatch & lifecycle: Dispatched `task_assigned`, `task_due_soon`, and `review_result` notifications to Engineer; queried and validated unread state.
       2. Strict RLS isolation: Verified Admin cannot query Engineer's private notifications (`user_id = auth.uid()` isolation).
       3. Mark as read: Verified `markAsRead` updates `is_read = true` in Supabase.
-      4. Mark all as read: Verified `markAllAsRead` batch updates all unread notifications to `is_read = true`.
-      5. Realtime CDC listener: Verified Postgres replication subscription on `public.notifications` table.
-      6. PWA Workbox cache policies: Verified `NetworkOnly` strategy on Supabase API & denylist on auth/rest endpoints.
-      7. Keep-alive & Production Budget: Verified scheduled keepalive GitHub Actions workflow, tree-shaking (zero mock data strings), and total gzipped bundle size (146.00 KB < 200 KB budget).
+
+  - **Phase: ZFS Brand Integration (Branch: `feature/zfs-branding`)**
+    - **B1 Asset Pipeline:** [COMPLETED] Cropped slide noise, separated color layers, traced 2-layer vector SVGs (`ZfsFullLogo.svg`, `ZfsHorizontalLogo.svg`, `ZfsMonogram.svg`, `ZfsLightModeLogo.svg` <= 6.3 KB), built PWA icon set, `ZfsLogo.tsx`, `BRAND.md`, and `DESIGN.md`.
+    - **B2 Tokens & Styleguide:** [COMPLETED] CSS vars, Tailwind config, /styleguide Section 10 Brand showcase, palette, buttons, 3:1 focus ring, collision re-map, and contrast matrix.
+    - **B3 Status/Semantic Re-map:** [COMPLETED] Re-mapped IN PROGRESS (cyan), IN REVIEW (violet), Low-Voltage Electronics (violet), and updated GlossyButton to WCAG AA brand-ink text. Zero status collisions remaining.
+    - **B4 Login Screen:** [COMPLETED] Desktop & mobile branded hero, CSS-only session-gated ignition animation, telemetry brackets ("01 / SIGN IN"), in-app browser warning, PendingApprovalView branded queue card, bundle code-splitting.
+
+    - **B5 App Chrome:** [PENDING] Rail monogram, header bar, loading/empty states, legal pages.
+    - **B6 PWA Manifest & Meta:** [PENDING] Manifest theme-color, apple-touch, WhatsApp/social OG meta.
+    - **B7 F1HorizontalTransition:** [OPTIONAL] Livery re-skin.
+    - **B8 A11y & Docs Pass:** [PENDING] Final WCAG AA audit, phone verification.
+
+  - **Mobile UI Overhaul (Branch: feature/mobile-ui-polish)**
+    - **Phase 0 Recon & Baseline:** [COMPLETED] Baseline metrics recorded (285 micro-text, 42 small controls, 19 vh units, zoom-lock present).
+    - **Phase 1 Foundations:** [COMPLETED] Unlocked zoom, forced 16px mobile form inputs, added typography scale and .tap-target utility.
+    - **Phase 2 Type Floor & Touch Targets:** [COMPLETED] Sub-12px text eliminated (285 -> 0), single-weight mono faux-bolding cleaned (137 -> 0), all controls expanded to >= 44px tap targets.
+    - **Phase 3 Safe Areas & Viewport Units:** [COMPLETED] Top notch header clearance, bottom bar clearance, vh to dvh migration, dynamic theme-color meta synchronization.
+    - **Phase 4 Modals & Chat Composer:** [COMPLETED] Mobile full-width bottom sheets (ModalShell.tsx), auto-expanding textarea, mobile nav bar collision resolution.
+    - **Phase 5 Navigation Redesign & FABs:** [COMPLETED] 5-tab mobile bottom bar (GarageDoorNav.tsx), 56px FABs for tasks & documents, single-row snap scroll with edge masks.
+    - **Phase 6 Density & Contrast:** [COMPLETED] Mission Control 4 prominent telemetry tiles, cards density streamlined, WCAG AA contrast compliance for placeholders and tokens.
+    - **Phase 7 Regression Guard & Wrap-Up:** [COMPLETED] Automated zero-dependency guard verify-mobile-ui.mjs (5/5 passed), 41/41 test suite passing, bundle strictly under 200 KB gzip budget.
+    - **Round 2 Phase R0 Regressions:** [COMPLETED] Label wrap, stat collision, chat composer auto-reset, contextual header, FAB clearance.
+    - **Round 2 Phase R1 Page Headers:** [COMPLETED] Unified PageHeader + StatStrip on 5 primary hubs, above-the-fold content priority.
+    - **Round 2 Phase R2 Flatten Containers:** [COMPLETED] Flattened nested boxes, padding tuned to 12px, >= 336px width at 360px.
+    - **Round 2 Phase R3 Filters & Lists:** [COMPLETED] Single-row toolbar, bottom filter sheets, shimmer skeleton cards, touch scale press feedback.
+    - **Round 2 Phase R4 Messenger Chat:** [COMPLETED] Own vs. incoming bubble hierarchy, 5-min grouping, date chips, keyboard clearance, auto-scroll.
+    - **Round 2 Phase R5 Navigation & Header:** [COMPLETED] Contextual mobile header, soft active pill, list-based More sheet, scroll restoration, haptics.
+    - **Round 2 Phase R6 Typography & Hierarchy:** [COMPLETED] Calm 3-level typography hierarchy, contrast audit, 390px view verification.
+    - **Round 2 Phase R7 Verification & Review:** [COMPLETED] 360/390/412px visual review, gesture inspection, production build audit.
+    - **Top Nav Bar Refinements:** [COMPLETED] Header owns page title on mobile with PageHeader heading hidden (saving ~40px); title enlarged to 16–18px; sub-team prefixes trimmed; subtitle displayed only on Control; borderless ghost action buttons with 44px hit targets; avatar micro role badge hidden on mobile; back button on sub-screens; hide-on-scroll down / restore-on-scroll up (reclaiming 56px); total assets gzip 199.99 KB (< 200 KB).
 
 ---
 

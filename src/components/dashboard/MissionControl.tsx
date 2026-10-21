@@ -15,6 +15,8 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
+import { PageHeader } from '../common/PageHeader';
+import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { LedStatusChip } from '../common/LedStatusChip';
@@ -106,6 +108,32 @@ export const MissionControl: React.FC<MissionControlProps> = ({
     return { text: `DUE IN ${days}d ${hours}h`, isOverdue: false };
   };
 
+  // Role-specific telemetry stat tiles
+  const statTiles = useMemo(() => {
+    if (currentUser.role === 'admin') {
+      return [
+        { label: 'Total Tasks', tag: 'ALL', icon: Sliders, color: 'text-accent-cyan', bar: 'bg-accent-cyan', count: tasks.length, sub: '5 Sub-Teams Combined', zero: 'No active deliverables' },
+        { label: 'Registrations', tag: 'ACTION', icon: Users, color: 'text-accent-yellow', bar: 'bg-accent-yellow', count: pendingRegistrations.length, sub: 'Pending Approval', zero: 'All caught up', action: () => onNavigateTab('admin') },
+        { label: 'Completed', tag: 'DONE', icon: CheckCircle2, color: 'text-accent-lime', bar: 'bg-accent-lime', count: tasks.filter(t => t.status === 'approved' || t.status === 'done').length, sub: 'Approved Deliverables', zero: 'No approved tasks yet' },
+        { label: 'Overdue', tag: 'ALERT', icon: AlertTriangle, color: 'text-accent-red', bar: 'bg-accent-red', count: overdueTasks.length, sub: 'Past Target Deadline', zero: 'On schedule' },
+      ];
+    }
+    if (currentUser.role === 'head') {
+      return [
+        { label: 'Team Queue', tag: 'SUB-TEAM', icon: Sliders, color: 'text-accent-cyan', bar: 'bg-accent-cyan', count: tasks.length, sub: 'Active Deliverables', zero: 'No queue deliverables' },
+        { label: 'Needs Review', tag: 'LEAD', icon: FileCheck, color: 'text-purple-400', bar: 'bg-purple-500', count: needsReviewTasks.length, sub: 'Submissions Awaiting You', zero: 'No reviews pending', action: () => onNavigateTab('tasks') },
+        { label: 'Completed', tag: 'DONE', icon: CheckCircle2, color: 'text-accent-lime', bar: 'bg-accent-lime', count: tasks.filter(t => t.status === 'approved' || t.status === 'done').length, sub: 'Approved Deliverables', zero: 'No approved tasks yet' },
+        { label: 'Overdue', tag: 'ALERT', icon: AlertTriangle, color: 'text-accent-red', bar: 'bg-accent-red', count: overdueTasks.length, sub: 'Past Target Deadline', zero: 'On schedule' },
+      ];
+    }
+    return [
+      { label: 'My Tasks', tag: 'ASSIGNED', icon: Activity, color: 'text-accent-cyan', bar: 'bg-accent-cyan', count: myTasks.length, sub: 'Assigned to Me', zero: 'No tasks assigned' },
+      { label: 'Revisions', tag: 'FEEDBACK', icon: AlertTriangle, color: 'text-accent-red', bar: 'bg-accent-red', count: changesRequestedTasks.length, sub: 'Changes Requested', zero: 'No changes requested' },
+      { label: 'Due Soon', tag: '<72H', icon: Clock, color: 'text-accent-yellow', bar: 'bg-accent-yellow', count: dueSoonTasks.length, sub: 'Upcoming Deadlines', zero: 'No upcoming deadlines' },
+      { label: 'Overdue', tag: 'ALERT', icon: AlertTriangle, color: 'text-accent-red', bar: 'bg-accent-red', count: overdueTasks.length, sub: 'Past Target Deadline', zero: 'On schedule' },
+    ];
+  }, [currentUser.role, tasks, pendingRegistrations.length, overdueTasks.length, needsReviewTasks.length, myTasks.length, changesRequestedTasks.length, dueSoonTasks.length, onNavigateTab]);
+
   // Recent tasks to show on main feed
   const displayTasks = useMemo(() => {
     if (currentUser.role === 'member' && memberView === 'my_work') {
@@ -115,13 +143,13 @@ export const MissionControl: React.FC<MissionControlProps> = ({
   }, [currentUser.role, memberView, myTasks, tasks]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6 sm:space-y-8">
       {/* ─── UNASSIGNED MEMBER ALERT BANNER ─── */}
       {currentUser.role !== 'admin' && !currentUser.group_id && currentUser.status === 'approved' && (
         <div className="p-4 rounded-xl bg-accent-yellow/10 border border-accent-yellow/30 text-cyber-primary flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-accent-yellow shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <h4 className="font-bold text-xs uppercase font-mono text-accent-yellow">
+            <h4 className="font-medium text-xs uppercase font-mono text-accent-yellow">
               Awaiting Sub-Team Assignment
             </h4>
             <p className="text-xs text-cyber-secondary font-sans leading-relaxed">
@@ -131,297 +159,86 @@ export const MissionControl: React.FC<MissionControlProps> = ({
         </div>
       )}
 
-      {/* ─── HERO TELEMETRY BANNER (ROLE-AWARE) ─── */}
-      <GlassCard variant="elevated" className="p-5 sm:p-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
-              <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-[11px]">
-                {currentUser.role === 'admin' 
-                  ? 'CLUB // RACE CONTROL HQ' 
-                  : currentUser.role === 'head'
-                  ? `SUB-TEAM LEAD // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'PIT WALL'}`
-                  : `ENGINEERING COCKPIT // ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'WORKSPACE'}`}
-              </span>
-              <span className="text-accent-lime text-[10px]">● LIVE</span>
-            </div>
-
-            <h2 className="font-display font-black text-xl sm:text-2xl lg:text-3xl text-cyber-primary tracking-wider uppercase">
-              {currentUser.role === 'admin' 
-                ? 'Club Telemetry Command' 
-                : currentUser.role === 'head'
-                ? `${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'Sub-Team'} Leadership`
-                : 'My Engineering Workspace'}
-            </h2>
-            <p className="text-xs sm:text-sm text-cyber-secondary max-w-xl leading-relaxed">
-              {currentUser.role === 'admin'
-                ? 'High-level telemetry across all 5 technical and operational sub-teams. Govern registrations and platform health.'
-                : currentUser.role === 'head'
-                ? 'Oversee sub-team deliverables, review student engineering submissions, and manage technical workflows.'
-                : 'Track your assigned deliverables, submit revision iterations, and coordinate with technical teammates.'}
-            </p>
-          </div>
-
-          {/* Quick Action Buttons */}
-          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+      {/* ─── UNIFIED HERO TELEMETRY BANNER ─── */}
+      <PageHeader
+        title={
+          currentUser.role === 'admin' 
+            ? 'Club Telemetry Command' 
+            : currentUser.role === 'head'
+            ? `${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'Sub-Team'} Leadership`
+            : 'My Engineering Workspace'
+        }
+        eyebrow={
+          currentUser.role === 'admin' 
+            ? 'Club Race Control HQ' 
+            : currentUser.role === 'head'
+            ? `Sub-Team Lead • ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'Pit Wall'}`
+            : `Engineering Cockpit • ${userTeam?.name?.replace(/Technical - |Operations - /, '') || 'Workspace'}`
+        }
+        description={
+          currentUser.role === 'admin'
+            ? 'High-level telemetry across all 5 technical and operational sub-teams. Govern registrations and platform health.'
+            : currentUser.role === 'head'
+            ? 'Oversee sub-team deliverables, review student engineering submissions, and manage technical workflows.'
+            : 'Track your assigned deliverables, submit revision iterations, and coordinate with technical teammates.'
+        }
+        actions={
+          <>
             {currentUser.role === 'admin' && (
               <GlossyButton
                 variant="outline"
+                size="sm"
                 icon={<Shield className="w-4 h-4 text-accent-cyan" />}
                 onClick={() => onNavigateTab('admin')}
               >
                 Admin Command ({pendingRegistrations.length})
               </GlossyButton>
             )}
-
             {(currentUser.role === 'admin' || currentUser.role === 'head') && (
               <GlossyButton
                 variant="primary"
+                size="sm"
                 icon={<Plus className="w-4 h-4" />}
                 onClick={onCreateTaskClick || (() => onNavigateTab('tasks'))}
               >
                 Create Task
               </GlossyButton>
             )}
-
             <GlossyButton
               variant="secondary"
+              size="sm"
               icon={<MessageSquare className="w-4 h-4" />}
               onClick={() => onNavigateTab('chat')}
             >
               Pit Wall Chat
             </GlossyButton>
-          </div>
-        </div>
-
-        {/* ─── ROLE-SPECIFIC TELEMETRY CARDS (Zero-State & Plain-Language Aware) ─── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-5 border-t border-cyber-border">
-          {/* CARD 1 */}
-          {currentUser.role === 'admin' ? (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Sliders className="w-3.5 h-3.5 text-accent-cyan" />
-                  Total Tasks
-                </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">ALL</span>
-              </div>
-              {tasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No active deliverables</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{tasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">5 Sub-Teams Combined</div>
-                </>
-              )}
-            </div>
-          ) : currentUser.role === 'head' ? (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Sliders className="w-3.5 h-3.5 text-accent-cyan" />
-                  Team Queue
-                </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">SUB-TEAM</span>
-              </div>
-              {tasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No queue deliverables</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{tasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Active Deliverables</div>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-cyan/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-cyan opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Activity className="w-3.5 h-3.5 text-accent-cyan" />
-                  My Tasks
-                </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">ASSIGNED</span>
-              </div>
-              {myTasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No tasks assigned</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-cyan mt-1">{myTasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Assigned to Me</div>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* CARD 2 */}
-          {currentUser.role === 'admin' ? (
-            <div
-              onClick={() => onNavigateTab('admin')}
-              className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors cursor-pointer"
-            >
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Users className="w-3.5 h-3.5 text-accent-yellow" />
-                  Registrations
-                </span>
-                <span className="text-[11px] font-mono text-accent-yellow tracking-tighter font-bold">ACTION</span>
-              </div>
-              {pendingRegistrations.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">All caught up</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">{pendingRegistrations.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Pending Approval</div>
-                </>
-              )}
-            </div>
-          ) : currentUser.role === 'head' ? (
-            <div
-              onClick={() => onNavigateTab('tasks')}
-              className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-orange/40 transition-colors cursor-pointer"
-            >
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-orange opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <FileCheck className="w-3.5 h-3.5 text-accent-orange" />
-                  Needs Review
-                </span>
-                <span className="text-[11px] font-mono text-accent-orange tracking-tighter font-bold">LEAD</span>
-              </div>
-              {needsReviewTasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No reviews pending</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-orange mt-1">{needsReviewTasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Submissions Awaiting You</div>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
-                  Revisions
-                </span>
-                <span className="text-[11px] font-mono text-accent-red tracking-tighter font-bold">FEEDBACK</span>
-              </div>
-              {changesRequestedTasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No changes requested</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">{changesRequestedTasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Changes Requested</div>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* CARD 3 */}
-          {currentUser.role === 'member' ? (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <Clock className="w-3.5 h-3.5 text-accent-yellow" />
-                  Due Soon
-                </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">&lt;72H</span>
-              </div>
-              {dueSoonTasks.length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No upcoming deadlines</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">{dueSoonTasks.length}</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Upcoming Deadlines</div>
-                </>
-              )}
-            </div>
-          ) : (
-            <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-lime/40 transition-colors">
-              <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime opacity-70" />
-              <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
-                  Completed
-                </span>
-                <span className="text-[11px] font-mono text-cyber-secondary tracking-tighter">DONE</span>
-              </div>
-              {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length === 0 ? (
-                <>
-                  <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">No approved tasks yet</div>
-                </>
-              ) : (
-                <>
-                  <div className="text-2xl sm:text-3xl font-display font-black text-accent-lime mt-1">
-                    {tasks.filter((t) => t.status === 'approved' || t.status === 'done').length}
-                  </div>
-                  <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Approved Deliverables</div>
-                </>
-              )}
-            </div>
-          )}
-
-          {/* CARD 4 */}
-          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-              <span className="flex items-center gap-1.5 font-bold">
-                <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
-                Overdue
-              </span>
-              <span className="text-[11px] font-mono text-accent-red tracking-tighter font-bold">ALERT</span>
-            </div>
-            {overdueTasks.length === 0 ? (
-              <>
-                <div className="text-2xl sm:text-3xl font-mono font-bold text-cyber-muted mt-1">0</div>
-                <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">On schedule</div>
-              </>
-            ) : (
-              <>
-                <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">{overdueTasks.length}</div>
-                <div className="text-[11px] font-mono text-cyber-secondary mt-0.5">Past Target Deadline</div>
-              </>
-            )}
-          </div>
-        </div>
-      </GlassCard>
+          </>
+        }
+        stats={
+          <StatStrip
+            items={statTiles.map((tile) => ({
+              label: tile.label,
+              value: tile.count,
+              tone: tile.color.includes('cyan')
+                ? 'cyan'
+                : tile.color.includes('yellow')
+                ? 'yellow'
+                : tile.color.includes('lime')
+                ? 'lime'
+                : 'red',
+              hideZeroOnMobile: tile.label !== 'Total Tasks' && tile.label !== 'Team Queue' && tile.label !== 'My Tasks',
+            }))}
+          />
+        }
+      />
 
       {/* ─── ADMIN: 5 SUB-TEAMS TELEMETRY MATRIX ─── */}
       {currentUser.role === 'admin' && (
-        <GlassCard className="p-5 sm:p-6 space-y-4">
+        <GlassCard variant="flat" className="space-y-4">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5 text-accent-cyan" />
-              <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
+              <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
                 Sub-Teams Engineering Matrix
               </h3>
             </div>
@@ -446,17 +263,17 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                         className="w-2.5 h-2.5 rounded-full shrink-0"
                         style={{ backgroundColor: group.color_accent || '#00D9FF' }}
                       />
-                      <span className="font-bold text-xs text-cyber-primary truncate">
+                      <span className="font-sans font-semibold text-sm text-cyber-primary truncate">
                         {group.name.replace(/Technical - |Operations - /, '')}
                       </span>
                     </div>
-                    <span className="font-mono text-[10px] text-cyber-muted">
+                    <span className="font-mono text-label text-cyber-muted">
                       {groupMembers.length} eng
                     </span>
                   </div>
 
                   <div className="space-y-1">
-                    <div className="flex justify-between text-[10px] font-mono text-cyber-muted">
+                    <div className="flex justify-between text-label font-mono text-cyber-muted">
                       <span>PROGRESS</span>
                       <span className="text-cyber-primary font-bold">{pct}%</span>
                     </div>
@@ -471,7 +288,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                     </div>
                   </div>
 
-                  <div className="flex justify-between text-[10px] font-mono text-cyber-secondary pt-1 border-t border-cyber-border/40">
+                  <div className="flex justify-between text-label font-mono text-cyber-secondary pt-1 border-t border-cyber-border/40">
                     <span>Active: {groupTasks.length}</span>
                     <span>Delivered: {groupApproved}</span>
                   </div>
@@ -484,15 +301,15 @@ export const MissionControl: React.FC<MissionControlProps> = ({
 
       {/* ─── GROUP HEAD: DELIVERABLES REQUIRING REVIEW ─── */}
       {currentUser.role === 'head' && needsReviewTasks.length > 0 && (
-        <GlassCard className="p-5 sm:p-6 space-y-3.5 border-accent-orange/40">
+        <GlassCard variant="flat" className="space-y-3.5">
           <div className="flex items-center justify-between border-b border-cyber-border pb-3">
             <div className="flex items-center gap-2">
-              <FileCheck className="w-5 h-5 text-accent-orange" />
-              <h3 className="font-display font-bold text-base text-cyber-primary uppercase tracking-wider">
+              <FileCheck className="w-5 h-5 text-purple-400" />
+              <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
                 Awaiting Lead Review ({needsReviewTasks.length})
               </h3>
             </div>
-            <span className="text-[10px] font-mono text-accent-orange uppercase px-2 py-0.5 rounded bg-accent-orange/10 border border-accent-orange/30">
+            <span className="text-label font-mono text-purple-400 uppercase px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30">
               ACTION REQUIRED
             </span>
           </div>
@@ -502,20 +319,20 @@ export const MissionControl: React.FC<MissionControlProps> = ({
               <div
                 key={t.id}
                 onClick={() => onNavigateTab('tasks')}
-                className="p-3.5 rounded-xl bg-cyber-surface-elevated border border-accent-orange/30 hover:border-accent-orange transition-all space-y-2 cursor-pointer group"
+                className="p-3.5 rounded-xl bg-cyber-surface-elevated border border-purple-500/30 hover:border-purple-400 transition-all space-y-2 cursor-pointer group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded bg-accent-orange/10 text-accent-orange font-bold">
+                  <span className="font-mono text-label uppercase px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-400 font-medium">
                     SUBMITTED FOR REVIEW
                   </span>
-                  <span className="font-mono text-[10px] text-cyber-muted">
+                  <span className="font-mono text-label text-cyber-muted">
                     {new Date(t.updated_at).toLocaleDateString()}
                   </span>
                 </div>
-                <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-accent-orange transition-colors truncate">
+                <h4 className="font-sans font-semibold text-base text-cyber-primary group-hover:text-purple-400 transition-colors truncate">
                   {t.title}
                 </h4>
-                <div className="text-[11px] font-mono text-cyber-secondary flex items-center justify-between pt-1 border-t border-cyber-border">
+                <div className="text-label font-mono text-cyber-secondary flex items-center justify-between pt-1 border-t border-cyber-border">
                   <span>Assignees: {t.assignees?.map(a => a.full_name).join(', ') || 'Unassigned'}</span>
                   <span className="text-accent-cyan flex items-center gap-0.5">
                     REVIEW <ArrowUpRight className="w-3 h-3" />
@@ -528,11 +345,11 @@ export const MissionControl: React.FC<MissionControlProps> = ({
       )}
 
       {/* ─── DELIVERABLES STREAM (MY WORK VS TEAM FEED) ─── */}
-      <GlassCard className="p-4 sm:p-5">
+      <GlassCard variant="flat" className="space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5 pb-2.5 border-b border-cyber-border">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-accent-cyan" />
-            <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
+            <h3 className="text-label font-sans font-semibold text-cyber-secondary md:font-display md:font-bold md:text-sm md:sm:text-base md:text-cyber-primary md:uppercase md:tracking-wider">
               {currentUser.role === 'member'
                 ? memberView === 'my_work' ? 'My Assigned Deliverables' : 'Sub-Team Telemetry Stream'
                 : 'Recent Deliverables Telemetry'}
@@ -541,7 +358,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
 
           <div className="flex items-center gap-2">
             {currentUser.role === 'member' && (
-              <div className="flex items-center p-0.5 rounded-lg bg-cyber-bg-alt border border-cyber-border text-[11px] font-mono">
+              <div className="flex items-center p-0.5 rounded-lg bg-cyber-bg-alt border border-cyber-border text-label font-mono">
                 <button
                   onClick={() => setMemberView('my_work')}
                   className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
@@ -603,11 +420,11 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-0.5 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className="font-mono text-[9px] uppercase tracking-wider text-cyber-muted">
+                        <span className="font-mono text-label uppercase tracking-wider text-cyber-muted">
                           {t.task_type} // {t.priority}
                         </span>
                         {isMine && (
-                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
+                          <span className="text-label font-mono px-1.5 py-0.5 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan">
                             ASSIGNED TO YOU
                           </span>
                         )}
@@ -625,7 +442,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                     </p>
                   )}
 
-                  <div className="flex items-center justify-between pt-2 border-t border-cyber-border text-[11px] font-mono">
+                  <div className="flex items-center justify-between pt-2 border-t border-cyber-border text-label font-mono">
                     <span className={deadlineInfo.isOverdue ? 'text-accent-red font-bold' : 'text-cyber-muted'}>
                       {deadlineInfo.text}
                     </span>

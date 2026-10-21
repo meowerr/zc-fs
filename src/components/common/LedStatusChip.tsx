@@ -35,9 +35,15 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
           icon: <CheckCircle2 className="w-3 h-3" />,
         };
       case 'submitted':
+        return {
+          label: customLabel || 'IN REVIEW',
+          colorClasses: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
+          dotColor: 'bg-purple-500 shadow-[0_0_6px_rgba(168,85,247,0.4)] animate-pulse',
+          icon: <Clock className="w-3 h-3" />,
+        };
       case 'pending':
         return {
-          label: customLabel || (status === 'submitted' ? 'IN REVIEW' : 'PENDING'),
+          label: customLabel || 'PENDING',
           colorClasses: 'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/30',
           dotColor: 'bg-accent-yellow shadow-[0_0_6px_rgba(255,212,59,0.4)] animate-pulse',
           icon: <Clock className="w-3 h-3" />,
@@ -45,8 +51,8 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
       case 'in_progress':
         return {
           label: customLabel || 'IN PROGRESS',
-          colorClasses: 'bg-accent-orange/10 text-accent-orange border-accent-orange/30',
-          dotColor: 'bg-accent-orange shadow-[0_0_6px_rgba(255,106,0,0.4)]',
+          colorClasses: 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/30',
+          dotColor: 'bg-accent-cyan shadow-[0_0_6px_rgba(0,217,255,0.4)]',
           icon: <RotateCcw className="w-3 h-3" />,
         };
       case 'changes_requested':
@@ -104,12 +110,12 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
   };
 
   const { label, colorClasses, dotColor, icon } = getStatusConfig();
-  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-1 text-xs';
+  const sizeClasses = size === 'sm' ? 'px-2 py-0.5 text-label' : 'px-2.5 py-1 text-xs';
 
   return (
     <span
       className={`
-        inline-flex items-center gap-1.5 rounded font-mono font-bold tracking-wider border
+        inline-flex items-center gap-1.5 rounded font-mono font-medium tracking-wider border
         select-none transition-all
         ${sizeClasses}
         ${colorClasses}

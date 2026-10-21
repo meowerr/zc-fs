@@ -7,11 +7,17 @@ import {
   Search, 
   Mail, 
   CheckSquare, 
-  Layers
+  Layers,
+  Sliders
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
+import { PageHeader } from '../common/PageHeader';
+import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
+import { ModalShell } from '../common/ModalShell';
+import { SkeletonCard } from '../common/SkeletonCard';
+import { usePullToRefresh } from '../../hooks/usePullToRefresh';
 import { Profile, Group, Task } from '../../lib/database.types';
 import { SUB_TEAMS } from '../../lib/constants';
 import { NavTab } from '../layout/BottomNav';
@@ -21,6 +27,8 @@ interface TeamDirectoryProps {
   allProfiles: Profile[];
   allGroups: Group[];
   tasks: Task[];
+  loading?: boolean;
+  onRefresh?: () => Promise<void> | void;
   onStartDirectMessage: (userId: string) => void;
   onNavigateTab: (tab: NavTab) => void;
 }
@@ -30,12 +38,21 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
   allProfiles,
   allGroups,
   tasks,
+  loading = false,
+  onRefresh,
   onStartDirectMessage,
   onNavigateTab,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGroupId, setSelectedGroupId] = useState<string>('all');
   const [selectedRole, setSelectedRole] = useState<string>('all');
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+
+  const activeFilterCount =
+    (selectedGroupId !== 'all' ? 1 : 0) +
+    (selectedRole !== 'all' ? 1 : 0);
+
+  const isPulling = usePullToRefresh(onRefresh);
 
   // Groups list fallback
   const groupsList = (allGroups && allGroups.length > 0) ? allGroups : SUB_TEAMS;
@@ -105,117 +122,210 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
 
   return (
     <div className="space-y-5 animate-fade-in">
-      {/* ─── Top Telemetry Header ─── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-cyber-border">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] font-mono text-accent-cyan tracking-widest uppercase bg-accent-cyan/10 px-2 py-0.5 rounded border border-accent-cyan/20 font-bold">
-              // TELEMETRY ROSTER
-            </span>
-            <span className="text-[10px] font-mono text-cyber-muted">
-              5 SUB-TEAMS • ACTIVE DIRECTORY
-            </span>
-          </div>
-          <h1 className="font-display font-black text-xl sm:text-2xl text-cyber-primary tracking-wide uppercase mt-1">
-            Team Directory & Roster
-          </h1>
-          <p className="text-xs font-sans text-cyber-secondary mt-0.5">
-            Engineering structure, sub-team leads, active personnel, and direct telemetry dispatch.
-          </p>
-        </div>
+      {/* ─── UNIFIED HEADER & STATS ─── */}
+      <PageHeader
+        title="Team Directory & Roster"
+        eyebrow="Telemetry Roster • 5 Sub-Teams"
+        description="Engineering structure, sub-team leads, active personnel, and direct telemetry dispatch."
+        actions={
+          <>
+            <GlossyButton
+              size="sm"
+              variant="outline"
+              icon={<MessageSquare className="w-3.5 h-3.5" />}
+              onClick={() => onNavigateTab('chat')}
+            >
+              Pit Wall Comms
+            </GlossyButton>
+            <GlossyButton
+              size="sm"
+              variant="secondary"
+              icon={<CheckSquare className="w-3.5 h-3.5" />}
+              onClick={() => onNavigateTab('tasks')}
+            >
+              Tasks Hub
+            </GlossyButton>
+          </>
+        }
+        stats={
+          <StatStrip
+            items={[
+              { label: 'Active Roster', value: totalEngineers },
+              { label: 'Sub-Teams', value: groupsList.length },
+              { label: 'Group Heads', value: totalHeads, tone: 'yellow' },
+              { label: 'Club Advisory', value: totalAdmins, tone: 'lime' },
+            ]}
+          />
+        }
+      />
 
-        {/* Quick Hub Navigation Actions */}
-        <div className="flex items-center gap-2">
-          <GlossyButton
-            size="sm"
-            variant="outline"
-            icon={<MessageSquare className="w-3.5 h-3.5" />}
-            onClick={() => onNavigateTab('chat')}
-          >
-            Pit Wall Comms
-          </GlossyButton>
-          <GlossyButton
-            size="sm"
-            variant="secondary"
-            icon={<CheckSquare className="w-3.5 h-3.5" />}
-            onClick={() => onNavigateTab('tasks')}
-          >
-            Tasks Hub
-          </GlossyButton>
+      {/* Pull to refresh indicator */}
+      {isPulling && (
+        <div className="py-2 text-center text-label font-mono text-accent-cyan animate-pulse">
+          RELEASE TO REFRESH ROSTER…
         </div>
+      )}
+
+      {/* ─── Compact Mobile Toolbar (< md) ─── */}
+      <div className="md:hidden flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-cyber-muted" />
+          <input
+            type="text"
+            placeholder="Search engineers…"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full h-11 pl-9 pr-3 rounded-lg text-sm font-sans bg-cyber-bg-alt border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan transition-colors"
+          />
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsFilterSheetOpen(true)}
+          className={`h-11 px-3.5 rounded-lg border flex items-center gap-2 text-xs font-sans font-semibold transition-all shrink-0 cursor-pointer ${
+            activeFilterCount > 0
+              ? 'bg-accent-cyan/15 border-accent-cyan text-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.25)]'
+              : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary hover:text-cyber-primary'
+          }`}
+        >
+          <Sliders className="w-4 h-4" />
+          <span>Filters</span>
+          {activeFilterCount > 0 && (
+            <span className="w-5 h-5 rounded-full bg-accent-cyan text-black text-label font-sans font-bold flex items-center justify-center">
+              {activeFilterCount}
+            </span>
+          )}
+        </button>
       </div>
 
-      {/* ─── Telemetry HUD Metrics Cards ─── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
-            <span>ACTIVE ROSTER</span>
-            <Users className="w-3.5 h-3.5 text-accent-cyan" />
+      {/* ─── Mobile Filter Sheet ─── */}
+      <ModalShell
+        open={isFilterSheetOpen}
+        onClose={() => setIsFilterSheetOpen(false)}
+        title="Filter Team Directory"
+        footer={
+          <div className="flex items-center justify-between gap-3 w-full">
+            <GlossyButton
+              variant="ghost"
+              size="sm"
+              disabled={activeFilterCount === 0}
+              onClick={() => {
+                setSelectedGroupId('all');
+                setSelectedRole('all');
+              }}
+            >
+              Reset Filters
+            </GlossyButton>
+            <GlossyButton
+              variant="primary"
+              size="sm"
+              onClick={() => setIsFilterSheetOpen(false)}
+            >
+              Show {filteredProfiles.length} Members
+            </GlossyButton>
           </div>
-          <div className="font-mono text-2xl font-bold text-cyber-primary">
-            {totalEngineers.toString().padStart(2, '0')}
-          </div>
-          <div className="text-[10px] font-mono text-cyber-secondary mt-0.5">
-            Verified university engineers
-          </div>
-        </GlassCard>
+        }
+      >
+        <div className="space-y-4 py-2">
+          {/* Sub-team division */}
+          <div>
+            <label className="block text-label font-mono uppercase tracking-wider text-cyber-muted mb-2">
+              Sub-Team Division
+            </label>
+            <div className="grid grid-cols-1 gap-1.5">
+              <button
+                type="button"
+                onClick={() => setSelectedGroupId('all')}
+                className={`min-h-[44px] px-3 py-2 rounded-lg border text-left text-xs font-mono flex items-center justify-between transition-colors ${
+                  selectedGroupId === 'all'
+                    ? 'bg-accent-cyan/15 border-accent-cyan text-accent-cyan font-bold'
+                    : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary'
+                }`}
+              >
+                <span>ALL SUB-TEAMS</span>
+                <span className="text-label px-1.5 py-0.5 rounded bg-cyber-surface border border-cyber-border">
+                  {approvedProfiles.length}
+                </span>
+              </button>
+              {groupsList.map((g) => {
+                const count = approvedProfiles.filter((p) => p.group_id === g.id).length;
+                const isSelected = selectedGroupId === g.id;
+                const accent = g.color_accent || '#00D9FF';
+                const shortName = g.name.replace(/^Technical - |^Operations - /, '');
 
-        <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
-            <span>SUB-TEAMS</span>
-            <Layers className="w-3.5 h-3.5 text-accent-orange" />
+                return (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => setSelectedGroupId(g.id)}
+                    className={`min-h-[44px] px-3 py-2 rounded-lg border text-left text-xs font-mono flex items-center justify-between transition-colors ${
+                      isSelected
+                        ? 'bg-accent-cyan/15 border-accent-cyan text-accent-cyan font-bold'
+                        : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: accent }} />
+                      <span className="truncate">{shortName}</span>
+                    </div>
+                    <span className="text-label px-1.5 py-0.5 rounded bg-cyber-surface border border-cyber-border">
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="font-mono text-2xl font-bold text-cyber-primary">
-            {groupsList.length.toString().padStart(2, '0')}
-          </div>
-          <div className="text-[10px] font-mono text-cyber-secondary mt-0.5">
-            Specialized engineering divisions
-          </div>
-        </GlassCard>
 
-        <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
-            <span>GROUP HEADS</span>
-            <Award className="w-3.5 h-3.5 text-accent-yellow" />
+          {/* Role selector */}
+          <div>
+            <label className="block text-label font-mono uppercase tracking-wider text-cyber-muted mb-2">
+              Role
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { id: 'all', label: 'All Roles' },
+                { id: 'admin', label: 'Club Admin' },
+                { id: 'head', label: 'Group Heads' },
+                { id: 'member', label: 'Engineers' },
+              ].map((r) => {
+                const isSelected = selectedRole === r.id;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => setSelectedRole(r.id)}
+                    className={`min-h-[44px] px-3 py-2 rounded-lg border text-xs font-mono uppercase transition-colors text-center ${
+                      isSelected
+                        ? 'bg-accent-cyan text-black font-bold border-accent-cyan'
+                        : 'bg-cyber-bg-alt border-cyber-border text-cyber-secondary'
+                    }`}
+                  >
+                    {r.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div className="font-mono text-2xl font-bold text-cyber-primary">
-            {totalHeads.toString().padStart(2, '0')}
-          </div>
-          <div className="text-[10px] font-mono text-cyber-secondary mt-0.5">
-            Sub-team leads & reviewers
-          </div>
-        </GlassCard>
+        </div>
+      </ModalShell>
 
-        <GlassCard className="p-3.5 relative overflow-hidden">
-          <div className="flex items-center justify-between text-cyber-muted mb-1 font-mono text-[10px] uppercase">
-            <span>CLUB ADVISORY</span>
-            <Shield className="w-3.5 h-3.5 text-accent-lime" />
-          </div>
-          <div className="font-mono text-2xl font-bold text-cyber-primary">
-            {totalAdmins.toString().padStart(2, '0')}
-          </div>
-          <div className="text-[10px] font-mono text-cyber-secondary mt-0.5">
-            System overseers & faculty
-          </div>
-        </GlassCard>
-      </div>
-
-      {/* ─── 5 Sub-Teams Quick Filter Overview ─── */}
-      <GlassCard className="p-3.5 space-y-2.5">
-        <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-cyber-muted">
-          <span className="flex items-center gap-1.5 font-bold text-cyber-primary">
+      {/* ─── 5 Sub-Teams Quick Filter Overview (Desktop) ─── */}
+      <div className="hidden md:block">
+        <GlassCard variant="flat" className="space-y-2.5">
+        <div className="flex items-center justify-between text-label font-sans uppercase tracking-wider text-cyber-muted">
+          <span className="text-label font-sans font-semibold text-cyber-secondary md:font-bold md:text-cyber-primary flex items-center gap-1.5">
             <Layers className="w-3.5 h-3.5 text-accent-cyan" />
             <span>SUB-TEAM DIVISIONS</span>
           </span>
           <span>Click to filter personnel</span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+        <div className="-mx-3.5 px-3.5 flex sm:grid sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scrollbar-none mask-fade-edges sm:[mask-image:none]">
           {/* "All" Filter Button */}
           <button
             onClick={() => setSelectedGroupId('all')}
             className={`
-              flex flex-col p-2.5 rounded-lg border text-left transition-all cursor-pointer
+              shrink-0 snap-start min-w-[130px] sm:min-w-0 min-h-[44px] flex flex-col p-2.5 rounded-lg border text-left transition-all cursor-pointer
               ${
                 selectedGroupId === 'all'
                   ? 'bg-cyber-surface-elevated border-accent-cyan text-cyber-primary shadow-cyber-sm'
@@ -224,12 +334,12 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
             `}
           >
             <div className="flex items-center justify-between w-full">
-              <span className="text-[10px] font-mono uppercase font-bold">ALL TEAMS</span>
-              <span className="text-[10px] font-mono px-1 rounded bg-cyber-surface border border-cyber-border">
+              <span className="text-label font-mono uppercase font-medium">ALL TEAMS</span>
+              <span className="text-label font-mono px-1 rounded bg-cyber-surface border border-cyber-border">
                 {approvedProfiles.length}
               </span>
             </div>
-            <span className="text-[11px] font-sans truncate font-medium mt-1">Full Roster</span>
+            <span className="text-label font-sans truncate font-medium mt-1">Full Roster</span>
           </button>
 
           {/* Individual Sub-teams */}
@@ -244,7 +354,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                 key={g.id}
                 onClick={() => setSelectedGroupId(g.id)}
                 className={`
-                  flex flex-col p-2.5 rounded-lg border text-left transition-all cursor-pointer relative overflow-hidden
+                  shrink-0 snap-start min-w-[130px] sm:min-w-0 min-h-[44px] flex flex-col p-2.5 rounded-lg border text-left transition-all cursor-pointer relative overflow-hidden
                   ${
                     isSelected
                       ? 'bg-cyber-surface-elevated text-cyber-primary shadow-cyber-sm'
@@ -267,15 +377,15 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       className="w-2 h-2 rounded-full flex-shrink-0"
                       style={{ backgroundColor: accent }}
                     />
-                    <span className="text-[9px] font-mono uppercase truncate text-cyber-muted">
+                    <span className="text-label font-mono uppercase truncate max-w-[9rem] text-cyber-muted">
                       {g.slug}
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono px-1 rounded bg-cyber-surface border border-cyber-border">
+                  <span className="text-label font-mono px-1 rounded bg-cyber-surface border border-cyber-border">
                     {count}
                   </span>
                 </div>
-                <span className="text-[11px] font-sans truncate font-medium mt-1">
+                <span className="text-label font-sans truncate max-w-[9rem] font-medium mt-1">
                   {shortName}
                 </span>
               </button>
@@ -283,9 +393,11 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
           })}
         </div>
       </GlassCard>
+      </div>
 
-      {/* ─── Search & Role Filters Bar ─── */}
-      <GlassCard className="p-3.5 flex flex-col md:flex-row items-center justify-between gap-3">
+      {/* ─── Search & Role Filters Bar (Desktop) ─── */}
+      <div className="hidden md:block">
+        <GlassCard variant="flat" className="flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative w-full md:w-80">
           <Search className="w-4 h-4 absolute left-3 top-2.5 text-cyber-muted" />
@@ -294,13 +406,13 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
             placeholder="Search engineers by name, email, or role..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full h-9 pl-9 pr-3 rounded-lg text-xs font-sans bg-cyber-bg-alt border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan transition-colors"
+            className="w-full min-h-[44px] sm:min-h-0 sm:h-9 pl-9 pr-3 rounded-lg text-base sm:text-xs font-sans bg-cyber-bg-alt border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan transition-colors"
           />
         </div>
 
         {/* Role Filter Chips */}
         <div className="flex items-center gap-1.5 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-          <span className="text-[10px] font-mono text-cyber-muted uppercase tracking-wider mr-1 hidden sm:inline">
+          <span className="text-label font-mono text-cyber-muted uppercase tracking-wider mr-1 hidden sm:inline">
             ROLE:
           </span>
           {[
@@ -315,10 +427,10 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                 key={r.id}
                 onClick={() => setSelectedRole(r.id)}
                 className={`
-                  px-2.5 py-1 rounded text-xs font-mono uppercase tracking-wider transition-all cursor-pointer border whitespace-nowrap
+                  min-h-[40px] px-3.5 py-2 rounded text-label font-mono font-medium uppercase tracking-wider transition-all cursor-pointer border whitespace-nowrap
                   ${
                     isSelected
-                      ? 'bg-accent-cyan text-black font-bold border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)]'
+                      ? 'bg-accent-cyan text-black font-medium border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)]'
                       : 'bg-cyber-surface-elevated border-cyber-border text-cyber-secondary hover:text-cyber-primary hover:border-cyber-border-strong'
                   }
                 `}
@@ -329,9 +441,12 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
           })}
         </div>
       </GlassCard>
+      </div>
 
       {/* ─── Members Grid ─── */}
-      {filteredProfiles.length === 0 ? (
+      {loading ? (
+        <SkeletonCard count={4} />
+      ) : filteredProfiles.length === 0 ? (
         <GlassCard className="p-8 text-center space-y-3">
           <div className="w-12 h-12 rounded-xl bg-cyber-bg-alt border border-cyber-border flex items-center justify-center mx-auto text-cyber-muted">
             <Users className="w-6 h-6" />
@@ -366,7 +481,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
               <GlassCard
                 key={person.id}
                 variant="elevated"
-                className="p-4 flex flex-col justify-between space-y-3.5 border-cyber-border hover:border-cyber-border-strong transition-all relative overflow-hidden"
+                className="p-4 flex flex-col justify-between space-y-3.5 border-cyber-border hover:border-cyber-border-strong active:scale-[0.99] transition-all relative overflow-hidden"
               >
                 {/* Colored team identity line on top edge */}
                 <div
@@ -386,16 +501,16 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       />
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
-                          <h4 className="font-display font-bold text-sm text-cyber-primary truncate">
+                          <h4 className="font-sans font-semibold text-base text-cyber-primary truncate">
                             {person.full_name}
                           </h4>
                           {isSelf && (
-                            <span className="text-[9px] font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 font-bold">
+                            <span className="hidden sm:inline-block text-label font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30">
                               YOU
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 text-[11px] font-mono text-cyber-muted truncate mt-0.5">
+                        <div className="flex items-center gap-1 text-label font-mono text-cyber-muted truncate mt-0.5">
                           <Mail className="w-3 h-3 flex-shrink-0" />
                           <span className="truncate">{person.email}</span>
                         </div>
@@ -405,17 +520,17 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                     {/* Role Chip */}
                     <div className="flex-shrink-0">
                       {person.role === 'admin' ? (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase bg-[#A855F7]/15 text-[#A855F7] border border-[#A855F7]/30">
                           <Shield className="w-3 h-3" />
                           <span>Admin</span>
                         </span>
                       ) : person.role === 'head' ? (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-accent-yellow/15 text-accent-yellow border border-accent-yellow/30">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase bg-accent-yellow/15 text-accent-yellow border border-accent-yellow/30">
                           <Award className="w-3 h-3" />
                           <span>Lead</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono uppercase font-bold bg-cyber-surface text-cyber-secondary border border-cyber-border">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase bg-cyber-surface text-cyber-secondary border border-cyber-border">
                           <span>Engineer</span>
                         </span>
                       )}
@@ -434,8 +549,8 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[10px] font-mono text-cyber-muted flex-shrink-0">
-                      <CheckSquare className="w-3 h-3 text-accent-orange" />
+                    <div className="flex items-center gap-1 text-label font-mono text-cyber-muted flex-shrink-0">
+                      <CheckSquare className="w-3 h-3 text-accent-cyan" />
                       <span>{taskCount} {taskCount === 1 ? 'task' : 'tasks'}</span>
                     </div>
                   </div>
@@ -443,7 +558,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
 
                 {/* Action Footer */}
                 <div className="pt-2 border-t border-cyber-border flex items-center justify-between gap-2">
-                  <div className="text-[10px] font-mono text-cyber-muted">
+                  <div className="text-label font-mono text-cyber-muted">
                     STATUS: <span className="text-accent-lime font-bold">ONLINE</span>
                   </div>
 

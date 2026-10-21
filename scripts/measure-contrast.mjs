@@ -21,23 +21,22 @@ console.log('=== WCAG CONTRAST AUDIT ===');
 console.log('Light Mode on #FFFFFF:');
 console.log('  #0D1522 (text-primary):', contrast('#FFFFFF', '#0D1522').toFixed(2) + ':1');
 console.log('  #475569 (text-secondary):', contrast('#FFFFFF', '#475569').toFixed(2) + ':1');
-console.log('  #64748B (text-muted):', contrast('#FFFFFF', '#64748B').toFixed(2) + ':1');
+console.log('  #64748B (placeholder / text-muted):', contrast('#FFFFFF', '#64748B').toFixed(2) + ':1');
+console.log('  #8A6508 (accent-yellow-text):', contrast('#FFFFFF', '#8A6508').toFixed(2) + ':1');
 console.log('  #0099B8 (accent-cyan):', contrast('#FFFFFF', '#0099B8').toFixed(2) + ':1');
 
 console.log('\nLight Mode on #F3F6FA:');
 console.log('  #475569 (text-secondary):', contrast('#F3F6FA', '#475569').toFixed(2) + ':1');
-console.log('  #64748B (text-muted):', contrast('#F3F6FA', '#64748B').toFixed(2) + ':1');
+console.log('  #64748B (placeholder / text-muted):', contrast('#F3F6FA', '#64748B').toFixed(2) + ':1');
+console.log('  #8A6508 (accent-yellow-text):', contrast('#F3F6FA', '#8A6508').toFixed(2) + ':1');
 
 console.log('\nDark Mode on #11161D (surface-base):');
 console.log('  #F2F4F7 (text-primary):', contrast('#11161D', '#F2F4F7').toFixed(2) + ':1');
 console.log('  #B0B8C2 (text-secondary):', contrast('#11161D', '#B0B8C2').toFixed(2) + ':1');
-console.log('  #737D89 (old text-muted):', contrast('#11161D', '#737D89').toFixed(2) + ':1');
-console.log('  #8A96A4 (improved text-muted):', contrast('#11161D', '#8A96A4').toFixed(2) + ':1');
-console.log('  #94A3B8 (slate-400):', contrast('#11161D', '#94A3B8').toFixed(2) + ':1');
+console.log('  #8A96A4 (placeholder / text-muted):', contrast('#11161D', '#8A96A4').toFixed(2) + ':1');
 console.log('  #00D9FF (accent-cyan):', contrast('#11161D', '#00D9FF').toFixed(2) + ':1');
 
 console.log('\nDark Mode on #181E26 (surface-elevated):');
 console.log('  #B0B8C2 (text-secondary):', contrast('#181E26', '#B0B8C2').toFixed(2) + ':1');
-console.log('  #8A96A4 (improved text-muted):', contrast('#181E26', '#8A96A4').toFixed(2) + ':1');
-console.log('  #94A3B8 (slate-400):', contrast('#181E26', '#94A3B8').toFixed(2) + ':1');
+console.log('  #8A96A4 (placeholder / text-muted):', contrast('#181E26', '#8A96A4').toFixed(2) + ':1');
 console.log('  #00D9FF (accent-cyan):', contrast('#181E26', '#00D9FF').toFixed(2) + ':1');

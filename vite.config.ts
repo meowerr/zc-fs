@@ -2,9 +2,14 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  esbuild: {
+    legalComments: 'none',
+    drop: ['console', 'debugger'],
+    treeShaking: true,
+  },
   plugins: [
+
     react(),
     VitePWA({
       registerType: 'autoUpdate',
@@ -14,7 +19,7 @@ export default defineConfig({
         short_name: 'PitLane',
         description: 'Zewail City Formula Student Telemetry & Project Workspace',
         theme_color: '#0B1B3A',
-        background_color: '#EAF4FF',
+        background_color: '#070A0E',
         display: 'standalone',
         orientation: 'portrait-primary',
         icons: [
@@ -53,12 +58,14 @@ export default defineConfig({
     })
   ],
   build: {
+    target: 'es2022',
     rollupOptions: {
+
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          supabase: ['@supabase/supabase-js'],
-          icons: ['lucide-react'],
+        manualChunks(id) {
+          if (id.includes('node_modules/@supabase')) return 'supabase';
+          if (id.includes('node_modules/react') || id.includes('node_modules/lucide-react')) return 'vendor';
+          if (id.includes('src/components/auth/')) return 'auth';
         },
       },
     },

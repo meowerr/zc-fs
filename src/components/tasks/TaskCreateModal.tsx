@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { 
-  X, 
   Plus, 
   Calendar, 
   Link as LinkIcon, 
-  UserPlus, 
-  Layers
+  UserPlus
 } from 'lucide-react';
-import { GlassCard } from '../common/GlassCard';
+import { ModalShell } from '../common/ModalShell';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { GlowInput } from '../common/GlowInput';
@@ -58,8 +56,6 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
   const [selectedAssigneeIds, setSelectedAssigneeIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  if (!isOpen) return null;
 
   // Filter members eligible for this task's sub-team
   const availableMembers = teamMembers.filter(
@@ -121,40 +117,40 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
     }
   };
 
+  const modalFooter = (
+    <div className="flex items-center justify-end gap-2">
+      <GhostButton type="button" size="sm" onClick={onClose} disabled={isSubmitting}>
+        Cancel
+      </GhostButton>
+      <GlossyButton
+        type="submit"
+        form="task-create-form"
+        variant="primary"
+        size="sm"
+        disabled={isSubmitting || !title.trim()}
+        icon={<Plus className="w-4 h-4" />}
+      >
+        {isSubmitting ? 'Dispatching...' : 'Launch Task'}
+      </GlossyButton>
+    </div>
+  );
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-      <GlassCard variant="elevated" className="w-full max-w-lg p-6 sm:p-7 my-8 border-cyber-border-strong shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-cyber-border">
-          <div className="flex items-center gap-2">
-            <div className="p-2 rounded-lg bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">
-              <Layers className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-display font-black text-lg text-cyber-primary uppercase tracking-wider">
-                Create Sub-Team Task
-              </h3>
-              <p className="text-xs font-mono text-cyber-muted">
-                Formula Student Engineering Deliverable
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover transition-colors text-cyber-muted hover:text-cyber-primary cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
+    <ModalShell
+      open={isOpen}
+      onClose={onClose}
+      title="Create Sub-Team Task"
+      footer={modalFooter}
+      maxWidth="md:max-w-xl"
+    >
+      <div className="space-y-4">
         {error && (
-          <div className="mt-3 p-3 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono">
+          <div className="p-3 rounded-xl bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form id="task-create-form" onSubmit={handleSubmit} className="space-y-4">
           <GlowInput
             label="Deliverable Title"
             placeholder="e.g. Front Wing CFD Simulation (20 m/s)"
@@ -164,28 +160,28 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           />
 
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+            <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
               Description & Specifications
             </label>
             <textarea
               rows={3}
+              placeholder="State aerodynamic goals, CAD constraints, or compliance benchmarks..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Outline engineering constraints, required software (Ansys, SolidWorks, MATLAB), and acceptance criteria..."
-              className="w-full p-3 rounded-xl text-sm font-sans bg-cyber-surface border border-cyber-border focus:outline-none focus:border-accent-cyan text-cyber-primary placeholder:text-cyber-muted"
+              className="w-full p-3 rounded-xl text-base sm:text-xs bg-cyber-surface border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan font-sans resize-none"
             />
           </div>
 
-          {/* Sub-Team Selection (If Admin) */}
+          {/* Sub-team selection (for Club Admin) */}
           {isAdmin && (
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
-                Assign to Sub-Team
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+                Assign to Sub-Team Division
               </label>
               <select
                 value={groupId}
                 onChange={(e) => setGroupId(e.target.value)}
-                className="w-full h-11 px-3 rounded-xl text-sm font-sans bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full min-h-[44px] px-3 rounded-xl text-base sm:text-xs font-mono font-medium uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 {SUB_TEAMS.map((team) => (
                   <option key={team.id} value={team.id} className="bg-cyber-surface text-cyber-primary">
@@ -196,16 +192,16 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </div>
           )}
 
-          {/* Type & Priority Row */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Type & Priority Row - responsive single column on phones */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Task Type
               </label>
               <select
                 value={taskType}
                 onChange={(e) => setTaskType(e.target.value as TaskType)}
-                className="w-full h-11 px-3 rounded-xl text-xs font-mono font-bold uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full min-h-[44px] px-3 rounded-xl text-base sm:text-xs font-mono font-medium uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 <option value="design" className="bg-cyber-surface text-cyber-primary">Design (CAD/FEA)</option>
                 <option value="code" className="bg-cyber-surface text-cyber-primary">Code (Firmware/Sim)</option>
@@ -217,13 +213,13 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Priority
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                className="w-full h-11 px-3 rounded-xl text-xs font-mono font-bold uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full min-h-[44px] px-3 rounded-xl text-base sm:text-xs font-mono font-medium uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 <option value="low" className="bg-cyber-surface text-cyber-primary">Low Priority</option>
                 <option value="medium" className="bg-cyber-surface text-cyber-primary">Medium Priority</option>
@@ -233,30 +229,31 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </div>
           </div>
 
-          {/* Deadline Row */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Deadline Row - responsive single column on phones */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-accent-cyan" /> Deadline Date
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5 text-accent-cyan" />
+                <span>Deadline Date</span>
               </label>
               <input
                 type="date"
                 value={deadlineDate}
                 onChange={(e) => setDeadlineDate(e.target.value)}
-                className="w-full h-11 px-3 rounded-xl text-xs font-mono bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full min-h-[44px] px-3 rounded-xl text-base sm:text-xs font-mono bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
-                Time (UTC+2)
+              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+                Deadline Time
               </label>
               <input
                 type="time"
                 value={deadlineTime}
                 onChange={(e) => setDeadlineTime(e.target.value)}
-                className="w-full h-11 px-3 rounded-xl text-xs font-mono bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
+                className="w-full min-h-[44px] px-3 rounded-xl text-base sm:text-xs font-mono bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
                 required
               />
             </div>
@@ -264,74 +261,81 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
 
           {/* Assignees Selector */}
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1.5">
-              <UserPlus className="w-3.5 h-3.5 text-accent-cyan" /> Assign Team Members
+            <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1.5">
+              <UserPlus className="w-3.5 h-3.5 text-accent-cyan" />
+              <span>Assign Engineers</span>
             </label>
-            <div className="max-h-28 overflow-y-auto p-2 rounded-xl bg-cyber-surface border border-cyber-border space-y-1.5">
-              {availableMembers.length === 0 ? (
-                <div className="text-xs text-cyber-muted italic p-1 font-mono">
-                  No approved members in this group yet.
-                </div>
-              ) : (
-                availableMembers.map((member) => (
-                  <label
-                    key={member.id}
-                    className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-cyber-surface-hover cursor-pointer text-xs transition-colors"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedAssigneeIds.includes(member.id)}
-                      onChange={() => toggleAssignee(member.id)}
-                      className="w-4 h-4 rounded text-accent-cyan focus:ring-accent-cyan bg-cyber-surface border-cyber-border"
-                    />
-                    <span className="font-semibold text-cyber-primary">
-                      {member.full_name}
-                    </span>
-                    <span className="text-[10px] font-mono text-cyber-muted">
-                      ({member.role})
-                    </span>
-                  </label>
-                ))
-              )}
-            </div>
+
+            {availableMembers.length === 0 ? (
+              <div className="p-3 rounded-xl bg-cyber-surface border border-cyber-border text-xs text-cyber-muted italic font-mono">
+                No active engineers in this sub-team.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-36 overflow-y-auto p-1 border border-cyber-border rounded-xl bg-cyber-surface">
+                {availableMembers.map((m) => {
+                  const isChecked = selectedAssigneeIds.includes(m.id);
+                  return (
+                    <button
+                      type="button"
+                      key={m.id}
+                      onClick={() => toggleAssignee(m.id)}
+                      className={`flex items-center gap-2 p-2 rounded-lg text-left transition-all border cursor-pointer min-h-[44px] ${
+                        isChecked
+                          ? 'bg-accent-cyan/15 border-accent-cyan text-cyber-primary shadow-sm'
+                          : 'bg-transparent border-transparent hover:bg-cyber-surface-hover text-cyber-secondary'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => {}}
+                        className="rounded border-cyber-border text-accent-cyan focus:ring-0 cursor-pointer pointer-events-none"
+                      />
+                      <span className="text-xs truncate">{m.full_name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Reference Links */}
-          <div className="space-y-2">
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary flex items-center gap-1.5">
-              <LinkIcon className="w-3.5 h-3.5 text-accent-cyan" /> Reference CAD / Repo Links
+          <div>
+            <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary flex items-center gap-1.5 mb-1.5">
+              <LinkIcon className="w-3.5 h-3.5 text-accent-cyan" />
+              <span>Reference CAD / Docs</span>
             </label>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-stretch gap-2">
               <input
                 type="text"
-                placeholder="Title (e.g. Onshape CAD)"
+                placeholder="Label (e.g. Onshape Assembly)"
                 value={linkTitle}
                 onChange={(e) => setLinkTitle(e.target.value)}
-                className="w-1/3 h-9 px-3 rounded-lg text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted"
+                className="w-full sm:w-1/3 min-h-[44px] px-3 rounded-lg text-base sm:text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted"
               />
               <input
                 type="url"
                 placeholder="https://..."
                 value={linkUrl}
                 onChange={(e) => setLinkUrl(e.target.value)}
-                className="flex-1 h-9 px-3 rounded-lg text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted"
+                className="w-full sm:flex-1 min-h-[44px] px-3 rounded-lg text-base sm:text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted"
               />
               <button
                 type="button"
                 onClick={handleAddLink}
-                className="h-9 px-3 rounded-lg bg-cyber-surface-hover hover:bg-cyber-border border border-cyber-border text-xs font-mono font-bold text-cyber-primary cursor-pointer transition-colors"
+                className="min-h-[44px] px-4 rounded-lg bg-cyber-surface-hover hover:bg-cyber-border border border-cyber-border text-label font-mono font-medium text-cyber-primary cursor-pointer transition-colors shrink-0"
               >
-                Add
+                + Add Link
               </button>
             </div>
 
             {links.length > 0 && (
-              <div className="space-y-1">
+              <div className="space-y-1.5 mt-2">
                 {links.map((lnk, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center justify-between p-1.5 px-2.5 rounded-lg bg-cyber-surface border border-cyber-border text-xs font-mono"
+                    className="flex items-center justify-between p-2 px-3 rounded-lg bg-cyber-surface border border-cyber-border text-xs font-mono"
                   >
                     <span className="truncate text-accent-cyan">
                       {lnk.title}: {lnk.url}
@@ -339,7 +343,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
                     <button
                       type="button"
                       onClick={() => handleRemoveLink(idx)}
-                      className="text-accent-red hover:underline text-xs ml-2 cursor-pointer"
+                      className="text-accent-red hover:underline text-xs ml-2 cursor-pointer p-1"
                     >
                       Remove
                     </button>
@@ -348,23 +352,8 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
               </div>
             )}
           </div>
-
-          {/* Form Actions */}
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-cyber-border">
-            <GhostButton type="button" onClick={onClose}>
-              Cancel
-            </GhostButton>
-            <GlossyButton
-              type="submit"
-              variant="primary"
-              disabled={isSubmitting}
-              icon={<Plus className="w-4 h-4" />}
-            >
-              {isSubmitting ? 'Dispatching...' : 'Launch Task'}
-            </GlossyButton>
-          </div>
         </form>
-      </GlassCard>
-    </div>
+      </div>
+    </ModalShell>
   );
 };
