@@ -80,7 +80,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
       title: 'Task Dispatched',
       actor: task.creator?.full_name || 'Sub-Team Lead / Admin',
       timestamp: task.created_at,
-      details: `Dispatched with priority ${task.priority.toUpperCase()} and type ${task.task_type.toUpperCase()}`,
+      details: `Dispatched with priority ${(task.priority || 'medium').toUpperCase()} and type ${(task.task_type || 'task').toUpperCase()}`,
       color: '#00D9FF',
       badgeText: 'CREATED',
     });
@@ -118,7 +118,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           id: `rev-${sub.id}`,
           type: 'review',
           title: `Deliverable v${sub.version_number} Review`,
-          actor: sub.reviewed_by ? 'Reviewer' : 'Group Head',
+          actor: sub.reviewer?.full_name || (sub.reviewed_by ? 'Reviewer' : 'Group Head'),
           timestamp: sub.reviewed_at || sub.created_at,
           details: sub.review_feedback
             ? `Feedback: "${sub.review_feedback}"`

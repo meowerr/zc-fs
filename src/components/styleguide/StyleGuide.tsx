@@ -5,19 +5,14 @@ import {
   Flame, 
   Gauge, 
   Layers, 
-  CheckCircle2, 
-  Send, 
   Sun, 
-  Moon, 
-  Sparkles 
+  Moon 
 } from 'lucide-react';
-import { ZfsMonogram } from '../brand/ZfsMonogram';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { GlowInput } from '../common/GlowInput';
 import { LedStatusChip } from '../common/LedStatusChip';
-import { SegmentedGauge } from '../common/SegmentedGauge';
 import { SUB_TEAMS } from '../../lib/constants';
 
 interface StyleGuideProps {
@@ -211,7 +206,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-accent-lime" />
+            <Activity className="w-4 h-4 text-accent-lime" />
             <h2 className="font-display font-bold text-lg uppercase tracking-wider">
               5. Status Chips & Telemetry Badges
             </h2>
@@ -242,7 +237,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
       <section className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Send className="w-4 h-4 text-accent-cyan" />
+            <Layers className="w-4 h-4 text-accent-cyan" />
             <h2 className="font-display font-bold text-lg uppercase tracking-wider">
               6. Inputs & Form Controls
             </h2>
@@ -269,28 +264,6 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </GlassCard>
       </section>
 
-      {/* ─── 7. GAUGES & NUMERICAL TELEMETRY READOUTS ─── */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Gauge className="w-4 h-4 text-accent-cyan" />
-            <h2 className="font-display font-bold text-lg uppercase tracking-wider">
-              7. Segmented Gauges & Telemetry Instruments
-            </h2>
-          </div>
-          <span className="text-label font-mono text-cyber-muted">PRECISION ENGINEERING DATA READOUTS</span>
-        </div>
-
-        <GlassCard className="p-5 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="font-mono text-xs text-cyber-secondary uppercase">Battery State of Charge</span>
-            <span className="font-mono font-medium text-sm text-accent-lime">88%</span>
-          </div>
-          <SegmentedGauge value={88} totalSegments={10} accentColor="#10E57A" />
-          <span className="text-label font-mono block pt-1 text-cyber-muted">Accumulator nominal</span>
-        </GlassCard>
-      </section>
-
       {/* ─── 8. TYPOGRAPHY MATRIX ─── */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
@@ -304,16 +277,18 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </div>
 
         <GlassCard className="p-5 space-y-3">
-          {([
-            ['// Orbitron — Headers', 'text-accent-cyan', <div className="text-xl font-display font-black uppercase">ZEWAIL FORMULA STUDENT</div>],
-            ['// Exo 2 — Body', 'text-brand-orange', <p className="text-xs font-sans text-cyber-primary">Motorsport telemetry meets clean cyber-optimism.</p>],
-            ['// Share Tech Mono — Telemetry', 'text-accent-yellow', <div className="font-mono text-xs text-cyber-secondary">SYS.ID: ZCFS-2026-CHASSIS-004 // 384.2V</div>],
-          ] as const).map(([tag, cls, body]) => (
-            <div key={tag} className="space-y-1 border-b last:border-b-0 border-cyber-border pb-2.5 last:pb-0">
-              <span className={`text-label font-mono ${cls} uppercase block`}>{tag}</span>
-              {body}
-            </div>
-          ))}
+          <div className="space-y-1 border-b border-cyber-border pb-2.5">
+            <span className="text-label font-mono text-accent-cyan uppercase block">// Orbitron — Headers</span>
+            <div className="text-xl font-display font-black uppercase">ZEWAIL FORMULA STUDENT</div>
+          </div>
+          <div className="space-y-1 border-b border-cyber-border pb-2.5">
+            <span className="text-label font-mono text-brand-orange uppercase block">// Exo 2 — Body</span>
+            <p className="text-xs font-sans text-cyber-primary">Motorsport telemetry meets clean cyber-optimism.</p>
+          </div>
+          <div className="space-y-1">
+            <span className="text-label font-mono text-accent-yellow uppercase block">// Share Tech Mono — Telemetry</span>
+            <div className="font-mono text-xs text-cyber-secondary">SYS.ID: ZCFS-2026-CHASSIS-004 // 384.2V</div>
+          </div>
         </GlassCard>
       </section>
 
@@ -348,71 +323,6 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </GlassCard>
           ))}
         </div>
-      </section>
-
-      {/* ─── 10. ZFS BRAND IDENTITY & PALETTE (APPROVAL GATE) ─── */}
-      <section className="space-y-6 pt-4 border-t-2 border-brand-orange/40">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="p-1.5 rounded-lg bg-brand-orange/15 border border-brand-orange/40 text-brand-orange">
-              <Sparkles className="w-5 h-5 animate-pulse" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-label font-mono font-medium text-brand-orange tracking-widest uppercase">
-                  // SLICE B2 APPROVAL GATE
-                </span>
-                <span className="px-2 py-0.5 rounded text-label font-mono font-medium bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
-                  WCAG AA VERIFIED
-                </span>
-              </div>
-              <h2 className="font-display font-black text-xl sm:text-2xl uppercase tracking-wider text-cyber-primary">
-                10. ZFS Brand Identity &amp; Color System
-              </h2>
-            </div>
-          </div>
-          <span className="text-xs font-mono text-cyber-muted tracking-tight">
-            ZEWAIL FORMULA TEAM // PITLANE
-          </span>
-        </div>
-
-        {/* 10.1 Vector Lockup Showcase */}
-        <div className="p-6 rounded-2xl border border-white/15 bg-cyber-bg space-y-4">
-          <div className="flex items-center justify-between border-b border-cyber-border/40 pb-3">
-            <span className="text-xs font-mono font-medium flex items-center gap-1.5 text-brand-orange">
-              <span className="w-2 h-2 rounded-full bg-brand-orange" />
-              // 10.1 Vector Mark Lockup (SVG &lt;= 6.3 KB)
-            </span>
-            <span className="text-label font-mono px-2 py-0.5 rounded bg-white/10">MIDNIGHT DEFAULT</span>
-          </div>
-          <div className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/5 space-y-2">
-            <ZfsMonogram glow className="w-full max-w-xs h-auto" />
-          </div>
-        </div>
-
-        {/* 10.3 Brand Actions & Semantics */}
-        <GlassCard className="p-6 space-y-3">
-          <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
-            <span className="text-xs font-mono font-medium text-brand-orange uppercase">
-              // 10.2 Brand Action Controls &amp; Status Semantics
-            </span>
-            <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
-              5.23:1 RATIO (AA)
-            </span>
-          </div>
-
-          <p className="text-xs text-cyber-secondary leading-relaxed">
-            Actions use <code className="text-brand-orange">#E07212</code> (5.23:1 AA). Motorsport telemetry tokens re-mapped for high contrast.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-3 pt-1">
-            <button className="px-4 py-2 rounded-lg bg-brand-orange text-black font-display font-bold text-xs uppercase">
-              Primary Brand
-            </button>
-            <span className="px-2.5 py-1 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan text-xs font-mono">PROGRESS #00D9FF</span>
-            <span className="px-2.5 py-1 rounded bg-accent-lime/10 border border-accent-lime/30 text-accent-lime text-xs font-mono">APPROVED #10E57A</span>
-          </div>
-        </GlassCard>
       </section>
     </div>
   );

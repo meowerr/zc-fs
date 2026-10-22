@@ -20,20 +20,32 @@ import {
 export function useTasks(currentUser: Profile | null) {
   const [tasks, setTasks] = useState<Task[]>(() => {
     if (!isDemoMode) return [];
-    const saved = localStorage.getItem('zcfs_tasks');
-    return saved ? JSON.parse(saved) : INITIAL_DEMO_TASKS;
+    try {
+      const saved = localStorage.getItem('zcfs_tasks');
+      return saved ? JSON.parse(saved) : INITIAL_DEMO_TASKS;
+    } catch {
+      return INITIAL_DEMO_TASKS;
+    }
   });
 
   const [submissions, setSubmissions] = useState<Record<string, TaskSubmission[]>>(() => {
     if (!isDemoMode) return {};
-    const saved = localStorage.getItem('zcfs_submissions');
-    return saved ? JSON.parse(saved) : (INITIAL_DEMO_SUBMISSIONS as Record<string, TaskSubmission[]>);
+    try {
+      const saved = localStorage.getItem('zcfs_submissions');
+      return saved ? JSON.parse(saved) : (INITIAL_DEMO_SUBMISSIONS as Record<string, TaskSubmission[]>);
+    } catch {
+      return (INITIAL_DEMO_SUBMISSIONS as Record<string, TaskSubmission[]>);
+    }
   });
 
   const [comments, setComments] = useState<Record<string, TaskComment[]>>(() => {
     if (!isDemoMode) return {};
-    const saved = localStorage.getItem('zcfs_comments');
-    return saved ? JSON.parse(saved) : (INITIAL_DEMO_COMMENTS as Record<string, TaskComment[]>);
+    try {
+      const saved = localStorage.getItem('zcfs_comments');
+      return saved ? JSON.parse(saved) : (INITIAL_DEMO_COMMENTS as Record<string, TaskComment[]>);
+    } catch {
+      return (INITIAL_DEMO_COMMENTS as Record<string, TaskComment[]>);
+    }
   });
 
   const [loading, setLoading] = useState<boolean>(() => {
@@ -94,7 +106,7 @@ export function useTasks(currentUser: Profile | null) {
       // 2. Fetch Submissions (scoped by RLS)
       const { data: subData, error: subErr } = await supabase
         .from('task_submissions')
-        .select('*, submitter:profiles!task_submissions_submitted_by_fkey(*)')
+        .select('*, submitter:profiles!task_submissions_submitted_by_fkey(*), reviewer:profiles!task_submissions_reviewed_by_fkey(*)')
         .order('created_at', { ascending: false });
 
       if (!subErr && subData) {

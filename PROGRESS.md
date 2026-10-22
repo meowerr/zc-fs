@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)
-- **Active Status:** Slice 4 (Notification Routing, Realtime Debouncing & Head Submissions) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.96 KB < 200 KB, main App JS gzip: 40.53 KB < 50 KB).
+- **Active Status:** Slice 5 (Pull-to-Refresh Safety, Timeline Reviewers, Intelligent Sorting & Task RLS Hardening) completed and verified.
+- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 198.98 KB < 200 KB, main App JS gzip: 40.76 KB < 50 KB).
 
 ---
 
@@ -44,6 +44,14 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Realtime Event Reload Debouncing (Item 3.5):** In `src/hooks/useTasks.ts`, collapsed rapid bursts of `postgres_changes` across `tasks`, `task_assignees`, `task_submissions`, and `task_comments` through a 300ms debounce timer (`reloadDebounceRef`), avoiding UI lockup and multiple simultaneous network requests.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Direct Status Advance for Non-Assignee Head Submissions (Item 3.2):** In `src/hooks/useTasks.ts`, `submitWork` and `reviewSubmission` now advance `tasks.status` directly via Supabase if the actor is a group head or club admin not listed in `task_assignees`, preventing task progression from deadlocking.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.96 KB** (< 200 KB budget), Main JS gzip: **40.53 KB** (< 50 KB budget).
+
+### Slice 5: Pull-to-Refresh Safety, Timeline Reviewers, Intelligent Sorting & Task RLS Hardening
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Accidental Pull-to-Refresh Safety (Item 1.6):** In `usePullToRefresh.ts`, initialized `startY` to `null` and reset on touchstart/touchcancel. Only touches strictly starting at top of viewport (`window.scrollY <= 2`) with downward delta (`diff > 72px`) trigger refresh, completely eliminating mid-scroll accidental reloads.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Timeline Reviewer Profile Resolution & Null Guards (Item 3.10):** In `database.types.ts` and `useTasks.ts`, joined `reviewer:profiles!task_submissions_reviewed_by_fkey(*)`. In `TaskDetailModal.tsx`, timeline shows reviewer's actual name (`sub.reviewer?.full_name`) instead of literal `"Reviewer"` placeholder, and guarded `task.priority` / `task.task_type` with fallback uppercase defaults to prevent null crashes.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Demo LocalStorage Corruption Fallback (Item 3.12):** In `useTasks.ts`, wrapped demo tasks, submissions, and comments initializers in `try/catch` fallback blocks, preventing crashes on invalid local storage states.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Intelligent Engineering Priority Sorting (Item 2.9):** In `TasksHub.tsx`, implemented natural sorting hierarchy: (1) Overdue tasks first, (2) Active tasks (`in_progress`, `changes_requested`, `todo`) by earliest deadline, (3) Awaiting review (`submitted`), (4) Completed tasks (`approved`, `done`) with recent deadlines first at list bottom.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Database RLS Policy Hardening (Item 4.2):** Created `supabase/migrations/007_task_security_hardening.sql` enforcing `task_assignees` updates restrict to `('in_progress', 'submitted')` preventing self-approvals, `task_submissions` inserts require `review_status = 'pending'`, and direct `tasks` updates restricted to Admin and Group Head only. Added test suite coverage in `supabase/tests/rls_security_test.sql`.
+- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **198.98 KB** (< 200 KB budget, >1 KB headroom), Main JS gzip: **40.76 KB** (< 50 KB budget).
 
 ---
 

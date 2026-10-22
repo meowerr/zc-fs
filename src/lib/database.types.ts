@@ -80,6 +80,7 @@ export interface TaskSubmission {
   reviewed_at: string | null;
   created_at: string;
   submitter?: Profile;
+  reviewer?: Profile;
 }
 
 export interface TaskComment {

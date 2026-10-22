@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
   Plus, 
   Search, 
@@ -58,6 +58,13 @@ interface TasksHubProps {
   onDeleteTask: (taskId: string) => Promise<void>;
   initialTaskId?: string | null;
   onClearInitialTaskId?: () => void;
+}
+
+function getTaskSortRank(t: Task, nowTime: number): number {
+  if (t.status === 'approved' || t.status === 'done') return 4;
+  if (new Date(t.deadline).getTime() < nowTime) return 1;
+  if (t.status === 'submitted') return 3;
+  return 2;
 }
 
 export const TasksHub: React.FC<TasksHubProps> = ({
@@ -144,6 +151,25 @@ export const TasksHub: React.FC<TasksHubProps> = ({
     return true;
   });
 
+  // Engineering Priority Sort:
+  // 1. Overdue deliverables (highest urgency)
+  // 2. Active tasks ('in_progress', 'changes_requested', 'todo') by earliest deadline
+  // 3. Submissions awaiting review ('submitted') by earliest deadline
+  // 4. Completed deliverables ('approved', 'done') with recent deadlines first at bottom of list
+  const nowTime = now.getTime();
+  const sortedTasks = useMemo(() => {
+    return [...filteredTasks].sort((a, b) => {
+      const rankA = getTaskSortRank(a, nowTime);
+      const rankB = getTaskSortRank(b, nowTime);
+      if (rankA !== rankB) return rankA - rankB;
+
+      const dateA = new Date(a.deadline).getTime();
+      const dateB = new Date(b.deadline).getTime();
+
+      return rankA === 4 ? dateB - dateA : dateA - dateB;
+    });
+  }, [filteredTasks, nowTime]);
+
   // Calculate telemetry counts
   const overdueCount = tasks.filter((t) => new Date(t.deadline) < now && t.status !== 'done' && t.status !== 'approved').length;
   const inReviewCount = tasks.filter((t) => t.status === 'submitted').length;
@@ -166,7 +192,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             <GhostButton
               size="sm"
               icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
-              onClick={() => exportTasksToCSV(filteredTasks, effectiveGroups)}
+              onClick={() => exportTasksToCSV(sortedTasks, effectiveGroups)}
               title="Download tasks as CSV spreadsheet"
             >
               CSV Export
@@ -174,7 +200,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             <GhostButton
               size="sm"
               icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
-              onClick={() => exportTasksToJSON(filteredTasks)}
+              onClick={() => exportTasksToJSON(sortedTasks)}
               title="Download JSON telemetry dump"
             >
               JSON
@@ -296,7 +322,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
       )}
       {loading && tasks.length === 0 ? (
         <SkeletonCard count={3} />
-      ) : filteredTasks.length === 0 ? (
+      ) : sortedTasks.length === 0 ? (
         <EmptyState
           illustration="wheel"
           title="NO DELIVERABLES MATCH"
@@ -310,7 +336,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {filteredTasks.map((task) => {
+          {sortedTasks.map((task) => {
             const group = effectiveGroups.find((g) => g.id === task.group_id);
             return (
               <TaskCard
@@ -459,7 +485,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
                 type="button"
                 onClick={() => {
                   triggerHaptic(8);
-                  exportTasksToCSV(filteredTasks, effectiveGroups);
+                  exportTasksToCSV(sortedTasks, effectiveGroups);
                 }}
                 className="tap-target px-3 py-2 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-xs font-mono font-medium text-cyber-primary hover:text-accent-cyan flex items-center justify-center gap-1.5 cursor-pointer"
               >
@@ -470,7 +496,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
                 type="button"
                 onClick={() => {
                   triggerHaptic(8);
-                  exportTasksToJSON(filteredTasks);
+                  exportTasksToJSON(sortedTasks);
                 }}
                 className="tap-target px-3 py-2 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-xs font-mono font-medium text-cyber-primary hover:text-accent-cyan flex items-center justify-center gap-1.5 cursor-pointer"
               >

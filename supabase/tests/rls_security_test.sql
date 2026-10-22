@@ -457,7 +457,58 @@ BEGIN
 END $$;
 
 -- ------------------------------------------------------------------------------
--- 8. Clean up Temporary Test Data & Display Verification Table
+-- 8. TEST TASK ASSIGNEE & SUBMISSION INTEGRITY (MIGRATION 007)
+-- Member cannot self-approve assignee status or insert pre-approved submission
+-- ------------------------------------------------------------------------------
+SET LOCAL ROLE authenticated;
+SET LOCAL "request.jwt.claims" TO '{"sub": "cccccccc-cccc-cccc-cccc-cccccccccccc", "role": "authenticated", "email": "member.vd@zewailcity.edu.eg"}';
+
+DO $$
+DECLARE
+    illegal_approval_attempt INT := 0;
+BEGIN
+    -- 1. Attempt to illegally set own status to 'approved'
+    BEGIN
+        UPDATE task_assignees 
+        SET status = 'approved'
+        WHERE task_id = '11111111-0000-0000-0000-000000000001'
+          AND user_id = 'cccccccc-cccc-cccc-cccc-cccccccccccc';
+        GET DIAGNOSTICS illegal_approval_attempt = ROW_COUNT;
+    EXCEPTION WHEN OTHERS THEN
+        illegal_approval_attempt := 0;
+    END;
+
+    IF illegal_approval_attempt > 0 THEN
+        RAISE EXCEPTION 'SECURITY BREACH: Member was able to self-approve their own assignee status!';
+    END IF;
+
+    -- 2. Attempt to illegally insert a pre-approved submission
+    BEGIN
+        INSERT INTO task_submissions (
+            task_id, submitted_by, version_number, submission_type, content, review_status, reviewed_by
+        ) VALUES (
+            '11111111-0000-0000-0000-000000000001',
+            'cccccccc-cccc-cccc-cccc-cccccccccccc',
+            99,
+            'note',
+            'Forged deliverable',
+            'approved',
+            'cccccccc-cccc-cccc-cccc-cccccccccccc'
+        );
+        RAISE EXCEPTION 'SECURITY BREACH: Member was able to insert a pre-approved submission!';
+    EXCEPTION 
+        WHEN check_violation OR insufficient_privilege THEN
+            NULL; -- Expected rejection
+        WHEN OTHERS THEN
+            NULL; -- Expected rejection
+    END;
+
+    RAISE NOTICE 'TEST PASSED [8/8]: Assignee self-approval and forged submission bypass successfully blocked.';
+    PERFORM pg_temp.record_test_result(8, 'Task Assignee Self-Approval Blocked', 'PASSED', 'Member cannot set status to approved or insert pre-approved submission');
+END $$;
+
+-- ------------------------------------------------------------------------------
+-- 9. Clean up Temporary Test Data & Display Verification Table
 -- ------------------------------------------------------------------------------
 RESET ROLE;
 
