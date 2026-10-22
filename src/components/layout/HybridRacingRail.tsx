@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { Palette, Pin, PinOff, Radio, Flag } from 'lucide-react';
+import { Palette, Pin, PinOff, Flag } from 'lucide-react';
 import { UserRole, Group, Task } from '../../lib/database.types';
 import { NavTab, getVisibleNavItems, getNavGroupsForRole, getNavItemsByGroup } from '../../config/navigation';
 import { SUB_TEAMS } from '../../lib/constants';
@@ -532,46 +532,64 @@ export const HybridRacingRail: React.FC<HybridRacingRailProps> = ({
             )}
 
             {/* Bottom Console Telemetry Status (Double Encoded: Icon + Color + Text) */}
-            <div className="flex items-center justify-between pt-1 text-label font-mono">
-              {onOpenStyleGuide && (
-                <button
-                  onClick={onOpenStyleGuide}
-                  title="Open Cyber Racing Style Guide (/styleguide)"
-                  aria-label="Open Design System Style Guide"
-                  className="p-1 rounded text-cyber-muted hover:text-accent-cyan hover:bg-cyber-surface-hover transition-colors cursor-pointer"
-                >
-                  <Palette className="w-3.5 h-3.5" />
-                </button>
-              )}
-
-              <div 
-                className="flex items-center gap-1.5 ml-auto cursor-default px-2 py-0.5 rounded bg-cyber-bg/80 border border-cyber-border" 
-                title={`Telemetry Status: ${connectionStatus.toUpperCase()}`}
-              >
-                {connectionStatus === 'online' ? (
-                  <>
-                    <Radio className="w-3 h-3 text-accent-lime animate-pulse" />
-                    <span className="text-accent-lime font-bold text-label">
-                      {isOpen ? 'SYSTEM ONLINE' : 'LIVE'}
-                    </span>
-                  </>
-                ) : connectionStatus === 'reconnecting' ? (
-                  <>
-                    <span className="w-2 h-2 rounded-full bg-accent-yellow animate-ping" />
-                    <span className="text-accent-yellow font-bold text-label">
-                      {isOpen ? 'RECONNECTING' : 'SYNC'}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <span className="w-2 h-2 rounded-full bg-accent-red" />
-                    <span className="text-accent-red font-bold text-label">
-                      {isOpen ? 'SYSTEM OFFLINE' : 'OFF'}
-                    </span>
-                  </>
+            {!isOpen ? (
+              <div className="flex flex-col items-center gap-2 pt-1">
+                {onOpenStyleGuide && (
+                  <button
+                    onClick={onOpenStyleGuide}
+                    title="Open Cyber Racing Style Guide (/styleguide)"
+                    aria-label="Open Design System Style Guide"
+                    className="p-1 rounded text-cyber-muted hover:text-accent-cyan hover:bg-cyber-surface-hover transition-colors cursor-pointer"
+                  >
+                    <Palette className="w-3.5 h-3.5" />
+                  </button>
                 )}
+                <div className="flex justify-center p-1 cursor-default" title="SYSTEM LIVE">
+                  <span className={`h-2 w-2 rounded-full ${
+                    connectionStatus === 'online'
+                      ? 'bg-accent-lime animate-pulse'
+                      : connectionStatus === 'reconnecting'
+                      ? 'bg-accent-yellow animate-ping'
+                      : 'bg-accent-red'
+                  }`} />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center justify-between pt-1 text-label font-mono">
+                {onOpenStyleGuide && (
+                  <button
+                    onClick={onOpenStyleGuide}
+                    title="Open Cyber Racing Style Guide (/styleguide)"
+                    aria-label="Open Design System Style Guide"
+                    className="p-1 rounded text-cyber-muted hover:text-accent-cyan hover:bg-cyber-surface-hover transition-colors cursor-pointer"
+                  >
+                    <Palette className="w-3.5 h-3.5" />
+                  </button>
+                )}
+
+                <div 
+                  className="flex items-center gap-2 px-3 py-1 rounded bg-cyber-bg/80 border border-cyber-border ml-auto cursor-default" 
+                  title="SYSTEM LIVE"
+                >
+                  <span className={`h-2 w-2 rounded-full ${
+                    connectionStatus === 'online'
+                      ? 'bg-accent-lime animate-pulse'
+                      : connectionStatus === 'reconnecting'
+                      ? 'bg-accent-yellow animate-ping'
+                      : 'bg-accent-red'
+                  }`} />
+                  <span className={`text-label font-mono font-bold ${
+                    connectionStatus === 'online'
+                      ? 'text-accent-lime'
+                      : connectionStatus === 'reconnecting'
+                      ? 'text-accent-yellow'
+                      : 'text-accent-red'
+                  }`}>
+                    {connectionStatus === 'online' ? 'SYSTEM LIVE' : connectionStatus.toUpperCase()}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </aside>
