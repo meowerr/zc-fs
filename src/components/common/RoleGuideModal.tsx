@@ -11,6 +11,15 @@ import { ModalShell } from './ModalShell';
 import { GhostButton } from './GhostButton';
 import { UserRole } from '../../lib/database.types';
 
+type RoleGuideTab = 'all' | 'member' | 'head' | 'admin';
+
+const ROLES_TABS: { id: RoleGuideTab; label: string }[] = [
+  { id: 'all', label: 'All Roles' },
+  { id: 'member', label: 'Member' },
+  { id: 'head', label: 'Group Head' },
+  { id: 'admin', label: 'Club Admin' },
+];
+
 interface RoleGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -22,8 +31,8 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
   onClose,
   defaultRole = 'member',
 }) => {
-  const [selectedRole, setSelectedRole] = useState<UserRole>(
-    defaultRole === 'pending' ? 'member' : defaultRole
+  const [selectedRole, setSelectedRole] = useState<RoleGuideTab>(
+    defaultRole === 'pending' ? 'member' : (defaultRole as RoleGuideTab) || 'all'
   );
 
   const modalFooter = (
@@ -43,27 +52,34 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
       maxWidth="md:max-w-2xl"
     >
       <div className="space-y-4">
-        {/* Role Selector Tabs */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-cyber-bg-alt border border-cyber-border">
-          {(['member', 'head', 'admin'] as UserRole[]).map((r) => (
+        {/* Role Selector Tabs (Mobile: horizontal scroll with fade mask; Desktop/sm: 4-col grid) */}
+        <div className="flex sm:grid sm:grid-cols-4 gap-1.5 overflow-x-auto scrollbar-none p-1 pb-1 rounded-xl bg-cyber-bg-alt border border-cyber-border scroll-fade-right">
+          {ROLES_TABS.map((tab) => (
             <button
-              key={r}
-              onClick={() => setSelectedRole(r)}
-              className={`flex-1 min-h-[40px] py-2 px-3 rounded-lg text-label font-mono font-medium uppercase transition-all cursor-pointer ${
-                selectedRole === r
+              key={tab.id}
+              type="button"
+              onClick={() => setSelectedRole(tab.id)}
+              className={`shrink-0 sm:shrink sm:flex-1 whitespace-nowrap min-h-[44px] py-2 px-3 rounded-lg text-label font-mono font-medium uppercase transition-all cursor-pointer ${
+                selectedRole === tab.id
                   ? 'bg-accent-cyan text-black font-bold shadow-sm'
                   : 'text-cyber-secondary hover:text-cyber-primary'
               }`}
             >
-              {r === 'admin' ? 'Club Admin' : r === 'head' ? 'Group Head' : 'Member (Engineer)'}
+              {tab.label}
             </button>
           ))}
         </div>
 
         {/* Role Guide Content */}
         <div className="space-y-4 text-xs sm:text-sm font-sans leading-relaxed">
-          {selectedRole === 'member' && (
+          {(selectedRole === 'all' || selectedRole === 'member') && (
             <div className="space-y-3">
+              {selectedRole === 'all' && (
+                <div className="flex items-center gap-2 pt-1 font-mono text-xs font-bold text-accent-cyan uppercase tracking-wider">
+                  <Users className="w-3.5 h-3.5" />
+                  <span>Role: Member (Engineer)</span>
+                </div>
+              )}
               <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
                   <Layers className="w-4 h-4 text-accent-cyan" />
@@ -96,8 +112,14 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
             </div>
           )}
 
-          {selectedRole === 'head' && (
+          {(selectedRole === 'all' || selectedRole === 'head') && (
             <div className="space-y-3">
+              {selectedRole === 'all' && (
+                <div className="flex items-center gap-2 pt-2 border-t border-cyber-border font-mono text-xs font-bold text-accent-yellow uppercase tracking-wider">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Role: Group Head</span>
+                </div>
+              )}
               <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
                   <Sparkles className="w-4 h-4 text-accent-cyan" />
@@ -130,8 +152,14 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
             </div>
           )}
 
-          {selectedRole === 'admin' && (
+          {(selectedRole === 'all' || selectedRole === 'admin') && (
             <div className="space-y-3">
+              {selectedRole === 'all' && (
+                <div className="flex items-center gap-2 pt-2 border-t border-cyber-border font-mono text-xs font-bold text-accent-lime uppercase tracking-wider">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Role: Club Admin</span>
+                </div>
+              )}
               <div className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border space-y-2">
                 <div className="flex items-center gap-2 font-display font-bold text-sm text-cyber-primary uppercase">
                   <ShieldCheck className="w-4 h-4 text-accent-cyan" />
