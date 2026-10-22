@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)
-- **Active Status:** Slice 3 (Safety, Mobile Export, Tab Responsiveness & Discussion Flow) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.96 KB < 200 KB, main App JS gzip: 40.10 KB < 50 KB).
+- **Active Status:** Slice 4 (Notification Routing, Realtime Debouncing & Head Submissions) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.96 KB < 200 KB, main App JS gzip: 40.53 KB < 50 KB).
 
 ---
 
@@ -38,6 +38,12 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Discussion Thread Scroll & Timestamps (Item 2.7):** In `TaskDetailModal.tsx`, removed restrictive `max-h-60 overflow-y-auto` double-scroll trap so thread flows naturally inside the modal scroll area. Added full date and time formatting and `commentEndRef` with smooth auto-scroll to latest technical discussion notes.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **StatStrip Total Tasks Mobile Clean-Up (Item 2.8):** Added `hideZeroOnMobile: true` to the 'Total Tasks' stat item in `TasksHub.tsx` to prevent showing an isolated 0 tile on empty task lists.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.96 KB** (< 200 KB budget), Main JS gzip: **40.10 KB** (< 50 KB budget).
+
+### Slice 4: Targeted Notification Routing, Realtime Storm Debouncing & Non-Assignee Submissions
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Notification Routing & Recipient Corrections (Item 3.6):** In `src/App.tsx`, task creation dispatches notifications to assigned engineers (`task_assigned`), work submissions notify group heads/admins (`submission_received`), reviews notify the submission author (`review_result` / `task_due_soon`), and discussion comments notify task creators and assignees (`announcement`). In `src/hooks/useNotifications.ts`, suppressed local toast chimes/banners when `recipientId !== currentUser.id`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Realtime Event Reload Debouncing (Item 3.5):** In `src/hooks/useTasks.ts`, collapsed rapid bursts of `postgres_changes` across `tasks`, `task_assignees`, `task_submissions`, and `task_comments` through a 300ms debounce timer (`reloadDebounceRef`), avoiding UI lockup and multiple simultaneous network requests.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Direct Status Advance for Non-Assignee Head Submissions (Item 3.2):** In `src/hooks/useTasks.ts`, `submitWork` and `reviewSubmission` now advance `tasks.status` directly via Supabase if the actor is a group head or club admin not listed in `task_assignees`, preventing task progression from deadlocking.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.96 KB** (< 200 KB budget), Main JS gzip: **40.53 KB** (< 50 KB budget).
 
 ---
 

@@ -27,7 +27,6 @@ interface StyleGuideProps {
 export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
   const [testInput, setTestInput] = useState('Front Wing CFD v4');
-  const [testChecked, setTestChecked] = useState(true);
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
 
   const toggleGuideTheme = () => {
@@ -252,7 +251,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </div>
 
         <GlassCard className="p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <GlowInput
               label="Interactive Telemetry Input"
               placeholder="Type here..."
@@ -260,39 +259,12 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               onChange={(e) => setTestInput(e.target.value)}
               hint="Editable field"
             />
-
-            <div>
-              <label className="block text-xs font-sans font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
-                <span className="text-accent-cyan font-bold mr-1.5">//</span>
-                Sub-Team Select Dropdown
-              </label>
-              <select className="w-full h-11 px-3 rounded-lg text-xs font-sans bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan">
-                {SUB_TEAMS.map((t) => (
-                  <option key={t.id} value={t.id} className="bg-cyber-surface text-cyber-primary">
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
             <GlowInput
               label="Validation Error State"
               placeholder="CAN-BUS ID"
               defaultValue="0x999_OVERFLOW"
               error="Value exceeds 11-bit telemetry identifier"
             />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-6 pt-3 border-t border-cyber-border text-xs font-mono">
-            <label className="flex items-center gap-2 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={testChecked}
-                onChange={(e) => setTestChecked(e.target.checked)}
-                className="w-4 h-4 rounded text-accent-cyan border-cyber-border cursor-pointer"
-              />
-              <span className="text-cyber-primary font-semibold">Strict RLS Authorization Active</span>
-            </label>
           </div>
         </GlassCard>
       </section>
@@ -418,46 +390,11 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* 10.2 Brand Palette Tokens */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-medium text-brand-orange uppercase">
-              // 10.2 Official Brand Tokens (Tailwind + CSS Variables)
-            </span>
-            <span className="text-label font-mono text-cyber-muted">CLICK SWATCH TO COPY HEX</span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {([
-              ['Orange', '#E07212', 'text-black', 'Primary'],
-              ['Light', '#C2410C', 'text-white', '5.5:1 AA'],
-              ['Ink', '#070B0E', 'text-white', 'Dark Base'],
-            ] as const).map(([name, hex, text, role]) => (
-              <button
-                key={name}
-                onClick={() => copyToClipboard(hex)}
-                className="p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-brand-orange/50 transition-all text-left space-y-2 cursor-pointer focus:ring-2 focus:ring-brand-orange"
-              >
-                <div
-                  style={{ backgroundColor: hex }}
-                  className={`w-full h-10 rounded-lg flex items-center justify-center font-mono text-label font-medium ${text}`}
-                >
-                  {copiedColor === hex ? 'COPIED' : hex}
-                </div>
-                <div>
-                  <div className="font-display font-bold text-xs text-cyber-primary">{name}</div>
-                  <div className="text-label font-mono text-cyber-muted">{role}</div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* 10.3 Brand Actions & Semantics */}
         <GlassCard className="p-6 space-y-3">
           <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
             <span className="text-xs font-mono font-medium text-brand-orange uppercase">
-              // 10.3 Brand Action Controls &amp; Status Semantics
+              // 10.2 Brand Action Controls &amp; Status Semantics
             </span>
             <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
               5.23:1 RATIO (AA)

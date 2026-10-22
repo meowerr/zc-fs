@@ -142,25 +142,27 @@ export function useNotifications(currentUser: Profile | null) {
         await loadNotifications();
       }
 
-      // Add toast banner
-      const toastId = `toast-${Date.now()}`;
-      setToasts((prev) => [...prev, { id: toastId, type, title, message }]);
+      // Add toast banner & chime only for current user's own notifications
+      if (recipientId === currentUser?.id) {
+        const toastId = `toast-${Date.now()}`;
+        setToasts((prev) => [...prev, { id: toastId, type, title, message }]);
 
-      // Synthesize telemetry audio chime
-      if (!isAudioMuted) {
-        if (type === 'review_result' && message.toLowerCase().includes('approved')) {
-          playTelemetrySound('success');
-        } else if (type === 'task_due_soon') {
-          playTelemetrySound('alert');
-        } else {
-          playTelemetrySound('chime');
+        // Synthesize telemetry audio chime
+        if (!isAudioMuted) {
+          if (type === 'review_result' && message.toLowerCase().includes('approved')) {
+            playTelemetrySound('success');
+          } else if (type === 'task_due_soon') {
+            playTelemetrySound('alert');
+          } else {
+            playTelemetrySound('chime');
+          }
         }
-      }
 
-      // Auto-dismiss toast after 4.5s
-      setTimeout(() => {
-        removeToast(toastId);
-      }, 4500);
+        // Auto-dismiss toast after 4.5s
+        setTimeout(() => {
+          removeToast(toastId);
+        }, 4500);
+      }
     },
     [currentUser, isAudioMuted, loadNotifications, removeToast]
   );

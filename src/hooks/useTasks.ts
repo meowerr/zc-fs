@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase, isLiveSupabaseConfigured, isDemoMode } from '../lib/supabase';
 import { 
   Task, 
@@ -128,34 +128,38 @@ export function useTasks(currentUser: Profile | null) {
     }
   }, [currentUser]);
 
+  const reloadDebounceRef = useRef<NodeJS.Timeout | null>(null);
+
+  const debouncedBackgroundReload = useCallback(() => {
+    if (reloadDebounceRef.current) {
+      clearTimeout(reloadDebounceRef.current);
+    }
+    reloadDebounceRef.current = setTimeout(() => {
+      loadTasksFromSupabase(true);
+    }, 300);
+  }, [loadTasksFromSupabase]);
+
   useEffect(() => {
     loadTasksFromSupabase();
   }, [loadTasksFromSupabase]);
 
-  // Realtime Postgres Changes Subscription
+  // Realtime Postgres Changes Subscription (debounced at 300ms to eliminate reload storms)
   useEffect(() => {
     if (!isLiveSupabaseConfigured || !currentUser || currentUser.status !== 'approved') return;
 
     const channel = supabase
       .channel('public:tasks_telemetry')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
-        loadTasksFromSupabase(true);
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'task_assignees' }, () => {
-        loadTasksFromSupabase(true);
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'task_submissions' }, () => {
-        loadTasksFromSupabase(true);
-      })
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'task_comments' }, () => {
-        loadTasksFromSupabase(true);
-      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, debouncedBackgroundReload)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'task_assignees' }, debouncedBackgroundReload)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'task_submissions' }, debouncedBackgroundReload)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'task_comments' }, debouncedBackgroundReload)
       .subscribe();
 
     return () => {
+      if (reloadDebounceRef.current) clearTimeout(reloadDebounceRef.current);
       supabase.removeChannel(channel);
     };
-  }, [currentUser, loadTasksFromSupabase]);
+  }, [currentUser, debouncedBackgroundReload]);
 
   // Filter tasks visible to current user (enforcing RLS semantics in UI)
   const visibleTasks = tasks.filter((t) => {
@@ -342,11 +346,20 @@ export function useTasks(currentUser: Profile | null) {
     if (error) throw error;
 
     // Update user's assignee status to submitted (triggers automatic task status rollup)
-    await supabase
+    const { data: assigneeUpdated } = await supabase
       .from('task_assignees')
       .update({ status: 'submitted', updated_at: new Date().toISOString() })
       .eq('task_id', taskId)
-      .eq('user_id', currentUser.id);
+      .eq('user_id', currentUser.id)
+      .select('id');
+
+    if (!assigneeUpdated || assigneeUpdated.length === 0) {
+      // If submitter is head/admin not currently assigned, update task status directly
+      await supabase
+        .from('tasks')
+        .update({ status: 'submitted', updated_at: new Date().toISOString() })
+        .eq('id', taskId);
+    }
 
     await loadTasksFromSupabase(true);
     return data;
@@ -403,14 +416,26 @@ export function useTasks(currentUser: Profile | null) {
       .single();
 
     if (subRow?.submitted_by) {
-      await supabase
+      const { data: assigneeUpdated } = await supabase
         .from('task_assignees')
         .update({ 
           status: targetAssigneeStatus, 
           updated_at: new Date().toISOString() 
         })
         .eq('task_id', taskId)
-        .eq('user_id', subRow.submitted_by);
+        .eq('user_id', subRow.submitted_by)
+        .select('id');
+
+      if (!assigneeUpdated || assigneeUpdated.length === 0) {
+        // If submitter is head/admin not in assignees, update task status directly
+        await supabase
+          .from('tasks')
+          .update({
+            status: targetAssigneeStatus,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', taskId);
+      }
     }
 
     await loadTasksFromSupabase(true);

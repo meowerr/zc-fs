@@ -293,11 +293,27 @@ export const App: React.FC = () => {
     const created = await createTask(taskData);
     const link = created?.id ? `/tasks?taskId=${created.id}` : '/tasks';
     addNotification('task_assigned', 'Task Dispatched', `New task "${taskData.title}" created for team.`, link);
+    if (taskData.assigneeIds && taskData.assigneeIds.length > 0) {
+      for (const aId of taskData.assigneeIds) {
+        if (aId !== currentUser.id) {
+          addNotification('task_assigned', 'New Assignment', `You were assigned to "${taskData.title}".`, link, aId);
+        }
+      }
+    }
   };
 
   const handleSubmitWork = async (taskId: string, type: SubmissionType, content: string, notes: string) => {
     await submitWork(taskId, type, content, notes);
     addNotification('submission_received', 'Deliverable Submitted', 'Your engineering deliverable has been queued for review.', `/tasks?taskId=${taskId}`);
+    const targetTask = tasks.find((t) => t.id === taskId);
+    if (targetTask) {
+      const groupHeads = allProfiles.filter((p) => p.group_id === targetTask.group_id && p.role === 'head');
+      for (const head of groupHeads) {
+        if (head.id !== currentUser.id) {
+          addNotification('submission_received', 'Review Queued', `${currentUser.full_name} submitted work for "${targetTask.title}".`, `/tasks?taskId=${taskId}`, head.id);
+        }
+      }
+    }
   };
 
   const handleReviewSubmission = async (
@@ -307,10 +323,37 @@ export const App: React.FC = () => {
     feedback: string
   ) => {
     await reviewSubmission(submissionId, taskId, status, feedback);
+    const targetTask = tasks.find((t) => t.id === taskId);
+    const targetSub = submissions[taskId]?.find((s: any) => s.id === submissionId);
+    const recipientId = targetSub?.submitted_by;
+
     if (status === 'approved') {
       addNotification('review_result', 'Work Approved', 'Deliverable approved! Progress recorded.', `/tasks?taskId=${taskId}`);
+      if (recipientId && recipientId !== currentUser.id) {
+        addNotification('review_result', 'Deliverable Approved', `Your work on "${targetTask?.title || 'task'}" was approved.`, `/tasks?taskId=${taskId}`, recipientId);
+      }
     } else {
       addNotification('task_due_soon', 'Revisions Requested', 'Reviewer requested changes. See feedback.', `/tasks?taskId=${taskId}`);
+      if (recipientId && recipientId !== currentUser.id) {
+        addNotification('task_due_soon', 'Changes Requested', `Revisions requested on "${targetTask?.title || 'task'}": ${feedback || 'See feedback.'}`, `/tasks?taskId=${taskId}`, recipientId);
+      }
+    }
+  };
+
+  const handleAddComment = async (taskId: string, content: string) => {
+    await addComment(taskId, content);
+    const targetTask = tasks.find((t) => t.id === taskId);
+    if (targetTask) {
+      const notifyIds = new Set<string>();
+      if (targetTask.creator_id && targetTask.creator_id !== currentUser.id) {
+        notifyIds.add(targetTask.creator_id);
+      }
+      targetTask.assignees?.forEach((a) => {
+        if (a.id !== currentUser.id) notifyIds.add(a.id);
+      });
+      for (const id of notifyIds) {
+        addNotification('announcement', 'New Discussion Note', `${currentUser.full_name} commented on "${targetTask.title}".`, `/tasks?taskId=${taskId}`, id);
+      }
     }
   };
 
@@ -374,7 +417,7 @@ export const App: React.FC = () => {
               onUpdateStatus={updateTaskStatus}
               onSubmitWork={handleSubmitWork}
               onReviewSubmission={handleReviewSubmission}
-              onAddComment={addComment}
+              onAddComment={handleAddComment}
               onDeleteTask={handleDeleteTask}
             />
           ) : activeTab === 'chat' ? (
