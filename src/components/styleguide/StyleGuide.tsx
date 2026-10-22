@@ -437,8 +437,8 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {([
-            ['Desktop Racing Rail', 'OVERLAY Z-35', 'text-accent-cyan', 'Console reserving fixed left offset (--rail-offset).', ['Collapsed 72px', 'Expanded 288px', '≥1280px Docking']],
-            ['Mobile Navigation', 'THUMB-ARC TAB', 'text-brand-orange', 'Edge thumb-arc glass tab opening into responsive navigation sheet.', ['Floating Tab (56px)', '78vh Sheet', 'Swipe Dismiss']],
+            ['Desktop Hybrid Racing Rail (72px → 288px)', 'OVERLAY Z-35', 'text-accent-cyan', 'Console reserving fixed left offset (--rail-offset).', ['Collapsed 72px', 'Expanded 288px', '≥1280px Docking']],
+            ['Mobile "Garage Door" Navigation', 'THUMB-ARC TAB', 'text-brand-orange', 'Edge thumb-arc glass tab opening into responsive navigation sheet.', ['Floating Tab (56px)', '78vh Sheet', 'Swipe Dismiss']],
           ] as const).map(([title, badge, color, desc, tags]) => (
             <GlassCard key={title} className="p-5 space-y-3">
               <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
