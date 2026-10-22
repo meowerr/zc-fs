@@ -315,7 +315,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            <LedStatusChip status={task.status} />
+            <LedStatusChip status={task.status} size="sm" />
             {isHeadOrAdmin && onDeleteTask && (
               <button
                 onClick={() => setIsConfirmingDelete(true)}
@@ -340,16 +340,17 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
         {/* Tab Navigation */}
         <div
           role="tablist"
-          className="flex items-center gap-1 my-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0 sticky top-0 z-10 overflow-x-auto no-scrollbar"
+          aria-label="Deliverable details sections"
+          className="flex items-center gap-1 sm:gap-1.5 my-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0 sticky top-0 z-10 overflow-x-auto scrollbar-none"
         >
           <button
             role="tab"
             aria-selected={activeTab === 'overview'}
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 min-w-[70px] min-h-[40px] py-2 px-2.5 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1 whitespace-nowrap ${
+            className={`shrink-0 sm:flex-1 min-h-[44px] py-2 px-3 sm:px-2.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === 'overview'
                 ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
-                : 'text-cyber-muted hover:text-cyber-primary'
+                : 'text-cyber-muted hover:text-cyber-primary hover:bg-cyber-surface/50'
             }`}
           >
             Overview
@@ -358,10 +359,10 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             role="tab"
             aria-selected={activeTab === 'submissions'}
             onClick={() => setActiveTab('submissions')}
-            className={`flex-1 min-w-[85px] min-h-[40px] py-2 px-2.5 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
+            className={`shrink-0 sm:flex-1 min-h-[44px] py-2 px-3 sm:px-2.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === 'submissions'
                 ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
-                : 'text-cyber-muted hover:text-cyber-primary'
+                : 'text-cyber-muted hover:text-cyber-primary hover:bg-cyber-surface/50'
             }`}
           >
             <History className="w-3.5 h-3.5 hidden sm:inline" />
@@ -371,10 +372,10 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             role="tab"
             aria-selected={activeTab === 'discussion'}
             onClick={() => setActiveTab('discussion')}
-            className={`flex-1 min-w-[75px] min-h-[40px] py-2 px-2.5 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
+            className={`shrink-0 sm:flex-1 min-h-[44px] py-2 px-3 sm:px-2.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === 'discussion'
                 ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
-                : 'text-cyber-muted hover:text-cyber-primary'
+                : 'text-cyber-muted hover:text-cyber-primary hover:bg-cyber-surface/50'
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5 hidden sm:inline" />
@@ -384,10 +385,10 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             role="tab"
             aria-selected={activeTab === 'timeline'}
             onClick={() => setActiveTab('timeline')}
-            className={`flex-1 min-w-[75px] min-h-[40px] py-2 px-2.5 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
+            className={`shrink-0 sm:flex-1 min-h-[44px] py-2 px-3 sm:px-2.5 rounded text-xs font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === 'timeline'
                 ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
-                : 'text-cyber-muted hover:text-cyber-primary'
+                : 'text-cyber-muted hover:text-cyber-primary hover:bg-cyber-surface/50'
             }`}
           >
             <GitCommit className="w-3.5 h-3.5 hidden sm:inline" />
@@ -493,16 +494,17 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               )}
 
               {/* Quick Status Action Bar */}
-              <div className="pt-3 border-t border-cyber-border flex flex-wrap items-center justify-between gap-3">
-                <div className="text-xs font-mono text-cyber-muted">
+              <div className="pt-3 border-t border-cyber-border space-y-2">
+                <div className="text-xs font-mono text-cyber-muted uppercase tracking-wider">
                   Update Lifecycle State:
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-2 w-full">
                   {task.status === 'todo' && (isAssignee || isHeadOrAdmin) && (
                     <GlossyButton
                       size="sm"
                       variant="primary"
+                      className="w-full sm:w-auto justify-center"
                       onClick={() => onUpdateStatus(task.id, 'in_progress')}
                     >
                       Start Task
@@ -514,6 +516,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     <GlossyButton
                       size="sm"
                       variant="action"
+                      className="w-full sm:w-auto justify-center"
                       onClick={() => {
                         setIsSubmittingWork(true);
                         setActiveTab('submissions');
@@ -527,6 +530,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     <GlossyButton
                       size="sm"
                       variant="action"
+                      className="w-full sm:w-auto justify-center"
                       onClick={() => onUpdateStatus(task.id, 'done')}
                     >
                       Mark Done
@@ -706,13 +710,14 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                 placeholder="Enter constructive feedback or change requests..."
                                 className="w-full p-2 text-xs rounded-lg bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
                               />
-                              <div className="flex justify-end gap-2">
-                                <GhostButton size="sm" onClick={() => { setReviewingSubId(null); setReviewError(null); }} disabled={submittingAction === 'review'}>
+                              <div className="flex flex-col sm:flex-row sm:justify-end gap-2">
+                                <GhostButton size="sm" className="w-full sm:w-auto justify-center" onClick={() => { setReviewingSubId(null); setReviewError(null); }} disabled={submittingAction === 'review'}>
                                   Cancel
                                 </GhostButton>
                                 <GlossyButton
                                   size="sm"
                                   variant="warning"
+                                  className="w-full sm:w-auto justify-center"
                                   disabled={submittingAction === 'review'}
                                   onClick={() => handleReviewSubmit(sub.id, 'changes_requested')}
                                 >
@@ -721,6 +726,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                 <GlossyButton
                                   size="sm"
                                   variant="action"
+                                  className="w-full sm:w-auto justify-center"
                                   disabled={submittingAction === 'review'}
                                   onClick={() => handleReviewSubmit(sub.id, 'approved')}
                                 >
