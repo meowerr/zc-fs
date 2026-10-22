@@ -148,7 +148,7 @@ export const LegalView: React.FC<LegalViewProps> = ({
           </div>
         </GlassCard>
 
-        <footer className="pt-4 pb-8 text-center text-xs font-mono text-cyber-muted/70 select-none">
+        <footer className="pt-4 pb-8 text-center text-xs font-mono text-text-muted select-none">
           Built for Zewail Formula Team // PitLane Telemetry
         </footer>
       </div>

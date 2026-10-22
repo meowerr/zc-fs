@@ -539,7 +539,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                           <span>Lead</span>
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase bg-cyber-surface text-cyber-secondary border border-cyber-border">
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-label font-mono uppercase bg-cyber-surface text-cyber-primary border border-cyber-border">
                           <span>Engineer</span>
                         </span>
                       )}

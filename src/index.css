@@ -19,7 +19,8 @@
     --border-strong: #9AA8BA;
     --text-primary: #0D1522;
     --text-secondary: #475569;
-    --text-muted: #64748B;
+    --text-muted: #526071;
+    --text-subtle: #64748B;
     --chrome: #516074;
     --chrome-dark: #94A3B8;
 
@@ -113,7 +114,8 @@
     --border-strong: #384556;
     --text-primary: #F2F4F7;
     --text-secondary: #B0B8C2;
-    --text-muted: #8A96A4;
+    --text-muted: #94A3B8;
+    --text-subtle: #8290A4;
     --chrome: #C8CED6;
     --chrome-dark: #707986;
 

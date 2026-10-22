@@ -16,6 +16,8 @@ export default {
         'body-lg': ['1rem', { lineHeight: '1.5rem' }],                       // 16px
       },
       colors: {
+        'text-muted': 'var(--text-muted)',
+        'text-subtle': 'var(--text-subtle)',
         cyber: {
           bg: 'var(--bg-base)',
           'bg-alt': 'var(--bg-alt)',

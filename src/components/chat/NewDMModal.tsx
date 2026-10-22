@@ -112,7 +112,7 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
                       </div>
                       <div className="font-mono text-label text-cyber-muted truncate flex items-center gap-1.5">
                         <span>{team ? team.name.replace('Technical - ', '') : 'Club Leadership'} • {user.role.toUpperCase()}</span>
-                        {studentId && <span className="text-cyber-muted/80">#{studentId}</span>}
+                        {studentId && <span className="text-text-muted">#{studentId}</span>}
                       </div>
                     </div>
                   </div>

@@ -678,7 +678,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                           ? 'bg-accent-cyan/10 border-accent-cyan/30 text-accent-cyan font-bold'
                           : member.role === 'head'
                           ? 'bg-purple-500/10 border-purple-500/30 text-purple-400 font-bold'
-                          : 'bg-cyber-surface border-cyber-border text-cyber-secondary'
+                          : 'bg-cyber-surface border-cyber-border text-cyber-primary'
                       }`}>
                         {member.role}
                       </span>

@@ -108,7 +108,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
 
           {/* Timestamp footer in bubble (shown only on last bubble of group) */}
           {showTimestamp && (
-            <div className="mt-1 text-label font-mono text-right select-none text-cyber-muted opacity-80">
+            <div className="mt-1 text-label font-mono text-right select-none text-text-muted">
               {timeFormatted}
             </div>
           )}

@@ -344,7 +344,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                         </div>
                         <div className="text-label font-sans text-cyber-muted truncate mt-0.5 flex items-center gap-1.5">
                           <span>{partnerRole}</span>
-                          {studentId && <span className="font-mono text-cyber-muted/80">#{studentId}</span>}
+                          {studentId && <span className="font-mono text-text-muted">#{studentId}</span>}
                         </div>
                       </div>
                     </button>
