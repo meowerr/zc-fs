@@ -177,57 +177,59 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   const completedCount = tasks.filter((t) => t.status === 'approved' || t.status === 'done').length;
 
   return (
-    <div className="space-y-5 pb-[calc(9rem+env(safe-area-inset-bottom))] md:pb-0">
-      {/* Unified Telemetry Header & Stats */}
-      <PageHeader
-        title={
-          currentUser.role === 'admin'
-            ? 'Club Task Telemetry'
-            : `${currentUser.role === 'head' ? 'Team Deliverables' : 'Deliverables'}`
-        }
-        eyebrow="Deliverables Telemetry"
-        description="Track engineering milestones, submit CAD/code/specs, and review deliverables with multi-version history."
-        actions={
-          <>
-            <GhostButton
-              size="sm"
-              icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
-              onClick={() => exportTasksToCSV(sortedTasks, effectiveGroups)}
-              title="Download tasks as CSV spreadsheet"
-            >
-              CSV Export
-            </GhostButton>
-            <GhostButton
-              size="sm"
-              icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
-              onClick={() => exportTasksToJSON(sortedTasks)}
-              title="Download JSON telemetry dump"
-            >
-              JSON
-            </GhostButton>
-            {isHeadOrAdmin && (
-              <GlossyButton
-                variant="primary"
-                size="md"
-                icon={<Plus className="w-4 h-4" />}
-                onClick={() => setIsCreateModalOpen(true)}
+    <div className="space-y-3 sm:space-y-5 pt-1 sm:pt-4 pb-[calc(9rem+env(safe-area-inset-bottom))] md:pb-0">
+      {/* Unified Telemetry Header & Stats (Desktop/Tablet) */}
+      <div className="hidden md:block">
+        <PageHeader
+          title={
+            currentUser.role === 'admin'
+              ? 'Club Task Telemetry'
+              : `${currentUser.role === 'head' ? 'Team Deliverables' : 'Deliverables'}`
+          }
+          eyebrow="Deliverables Telemetry"
+          description="Track engineering milestones, submit CAD/code/specs, and review deliverables with multi-version history."
+          actions={
+            <>
+              <GhostButton
+                size="sm"
+                icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
+                onClick={() => exportTasksToCSV(sortedTasks, effectiveGroups)}
+                title="Download tasks as CSV spreadsheet"
               >
-                Create Task
-              </GlossyButton>
-            )}
-          </>
-        }
-        stats={
-          <StatStrip
-            items={[
-              { label: 'Total Tasks', value: tasks.length },
-              { label: 'In Review', value: inReviewCount, tone: 'yellow' },
-              { label: 'Critical Overdue', value: overdueCount, tone: 'red' },
-              { label: 'Deliverables Approved', value: completedCount, tone: 'lime' },
-            ]}
-          />
-        }
-      />
+                CSV Export
+              </GhostButton>
+              <GhostButton
+                size="sm"
+                icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
+                onClick={() => exportTasksToJSON(sortedTasks)}
+                title="Download JSON telemetry dump"
+              >
+                JSON
+              </GhostButton>
+              {isHeadOrAdmin && (
+                <GlossyButton
+                  variant="primary"
+                  size="md"
+                  icon={<Plus className="w-4 h-4" />}
+                  onClick={() => setIsCreateModalOpen(true)}
+                >
+                  Create Task
+                </GlossyButton>
+              )}
+            </>
+          }
+          stats={
+            <StatStrip
+              items={[
+                { label: 'Total Tasks', value: tasks.length },
+                { label: 'In Review', value: inReviewCount, tone: 'yellow' },
+                { label: 'Critical Overdue', value: overdueCount, tone: 'red' },
+                { label: 'Deliverables Approved', value: completedCount, tone: 'lime' },
+              ]}
+            />
+          }
+        />
+      </div>
 
       {/* Filter & Search Bar */}
       <GlassCard variant="flat" className="space-y-3">

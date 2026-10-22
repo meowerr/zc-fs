@@ -558,7 +558,7 @@ zc-fs/
     - **Fix 11 — Mobile Control/Dashboard stat cards: half-width gap + missing cards:** [COMPLETED] Rendered all four stat cards unconditionally in DOM (removed zero-hiding rule) in a responsive 2-column grid (`grid grid-cols-2 gap-2.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-4`). Verified at 375px mobile viewport.
     - **Fix 12 — Stray decorative "+" icon overlapping functional "+" button (desktop chat):** [COMPLETED] Disabled decorative `cornerMark` on `ChatView.tsx` GlassCards to eliminate decorative `+` glyph overlapping the functional action button. Verified on desktop.
     - **Fix 13 — Global unlabeled "+" icons sweep:** [COMPLETED] Disabled default decorative `cornerMark` across GlassCard (removing stray `+` marks globally across Team Directory, Deliverables, Documents, Pit Wall Chat, Upload modal, Admin Hub) and added accessible `aria-label` attributes to action and dialog buttons.
-    - **Fix 14 — Empty gap at top of mobile Deliverables page:** [PENDING]
+    - **Fix 14 — Empty gap at top of mobile Deliverables page:** [COMPLETED] Wrapped desktop telemetry `PageHeader` in `hidden md:block` and adjusted mobile container top padding (`pt-1 sm:pt-4 space-y-3 sm:space-y-5`), eliminating empty banner gap above search and filter chips on mobile. Verified at 375px mobile viewport.
     - **Fix 15 — Missing empty state under "CHANNELS" (desktop Pit Wall Chat):** [PENDING]
     - **Fix 16 / Fix 21 — Horizontally-clipped chips/tabs need fade mask:** [PENDING]
     - **Fix 17 — Login desktop: empty top half of screen:** [PENDING]
