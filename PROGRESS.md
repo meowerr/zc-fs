@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** UI/UX QA & Polish Pass (Branch: `feature/ui-qa-polish`)
-- **Active Status:** FIX 5 completed and verified (Consolidated top header icon cluster, plain text email trigger, unified Appearance dropdown, and collapsed book/palette on <1280px). Awaiting confirmation to proceed to FIX 6.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | Contrast audit passing (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.93 KB < 200 KB, main App JS gzip: 38.79 KB < 50 KB).
+- **Active Status:** FIX 6 completed and verified (Explicit tablet breakpoints 768-1024px added for all 4-column stat card grids to collapse into 2x2 before mobile single-column). All 6 polish fixes fully completed.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | Contrast audit passing (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.92 KB < 200 KB, main App JS gzip: 38.79 KB < 50 KB).
 
 ---
 
