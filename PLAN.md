@@ -555,7 +555,7 @@ zc-fs/
     - **Fix 8 — Sidebar "SYSTEM LIVE" badge truncated when collapsed:** [COMPLETED] Render centered status dot with tooltip on collapsed rail and full badge when expanded.
     - **Fix 9 — Mobile Deliverables FAB overlaps footer pill:** [COMPLETED] Reconfigured brand orange round FAB and added mobile footer bottom margin with 68px clearance at 375px/414px.
     - **Fix 10 — Mobile chat header title crushed by "TELEMETRY LIVE" badge:** [COMPLETED] Gave chat title flex-1 min-w-0 and status badge flex-shrink-0 to prevent title crushing. Verified at 375px mobile viewport.
-    - **Fix 11 — Mobile Control/Dashboard stat cards: half-width gap + missing cards:** [PENDING]
+    - **Fix 11 — Mobile Control/Dashboard stat cards: half-width gap + missing cards:** [COMPLETED] Rendered all four stat cards unconditionally in DOM (removed zero-hiding rule) in a responsive 2-column grid (`grid grid-cols-2 gap-2.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-4`). Verified at 375px mobile viewport.
     - **Fix 12 — Stray decorative "+" icon overlapping functional "+" button (desktop chat):** [PENDING]
     - **Fix 13 — Global unlabeled "+" icons sweep:** [PENDING]
     - **Fix 14 — Empty gap at top of mobile Deliverables page:** [PENDING]

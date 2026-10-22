@@ -226,7 +226,6 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 : tile.color.includes('lime')
                 ? 'lime'
                 : 'red',
-              hideZeroOnMobile: tile.label !== 'Total Tasks' && tile.label !== 'Team Queue' && tile.label !== 'My Tasks',
             }))}
           />
         }

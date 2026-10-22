@@ -220,10 +220,10 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         stats={
           <StatStrip
             items={[
-              { label: 'Total Tasks', value: tasks.length, hideZeroOnMobile: true },
-              { label: 'In Review', value: inReviewCount, tone: 'yellow', hideZeroOnMobile: true },
-              { label: 'Critical Overdue', value: overdueCount, tone: 'red', hideZeroOnMobile: true },
-              { label: 'Deliverables Approved', value: completedCount, tone: 'lime', hideZeroOnMobile: true },
+              { label: 'Total Tasks', value: tasks.length },
+              { label: 'In Review', value: inReviewCount, tone: 'yellow' },
+              { label: 'Critical Overdue', value: overdueCount, tone: 'red' },
+              { label: 'Deliverables Approved', value: completedCount, tone: 'lime' },
             ]}
           />
         }

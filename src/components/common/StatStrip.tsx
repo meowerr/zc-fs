@@ -19,18 +19,18 @@ export const StatStrip: React.FC<{ items: StatItem[]; className?: string }> = ({
   className = '',
 }) => (
   <div
-    className={`-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none sm:mx-0 sm:px-0 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-3 ${className}`}
+    className={`grid grid-cols-2 gap-2.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-4 ${className}`}
   >
-    {items.map((s) => {
+    {items.map((s, idx) => {
       const isZero = s.value === 0 || s.value === '0' || s.value === '00';
-      const hideMobile = s.hideZeroOnMobile && isZero;
       const toneCls = s.tone ? TONE_CLASSES[s.tone] || '' : '';
+      const isOddLast = items.length === 3 && idx === 2;
 
       return (
         <div
           key={s.label}
-          className={`snap-start shrink-0 min-w-[104px] sm:min-w-0 rounded-xl border border-cyber-border bg-cyber-surface-elevated px-3 py-2 ${
-            hideMobile ? 'hidden sm:block' : ''
+          className={`min-w-0 rounded-xl border border-cyber-border bg-cyber-surface-elevated px-3 py-2.5 ${
+            isOddLast ? 'col-span-2 sm:col-span-1' : ''
           }`}
         >
           <div
