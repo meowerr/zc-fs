@@ -1,9 +1,23 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** UI/UX QA & Polish Pass Completed & Verified
-- **Active Status:** All 6 QA polish fixes implemented, verified across desktop and mobile, full test suites passing, merged into master.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | WCAG AA contrast ratio compliance (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.95 KB < 200 KB, main App JS gzip: 38.79 KB < 50 KB).
+- **Current Phase:** Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)
+- **Active Status:** Slice 1 (High-Impact Broken Interactions & Realtime State Stability) completed and verified: Overview "Submit Work" tab switch, Delete confirmation event propagation fix, skeleton list flashing elimination, reactive derived modal state, and 0-row RLS refusal detection.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.89 KB < 200 KB, main App JS gzip: 38.97 KB < 50 KB).
+
+---
+
+## Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)
+
+### Slice 1: High-Impact Broken Interactions & Realtime State Stability
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Overview "Submit Work" Fix (Item 1.1):** In `TaskDetailModal.tsx`, clicking "Submit Work Deliverable" from the Overview tab now sets `setIsSubmittingWork(true)` AND switches `activeTab` to `'submissions'`, immediately displaying the submission form.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Delete Confirmation Dialog Fix (Item 1.2):** In `TaskDetailModal.tsx`, added `z-[60]` and `onClick={(e) => e.stopPropagation()}` on backdrop and modal card. Clicking "Cancel" no longer closes the underlying task modal, and `deleteError` messages remain visible on failure.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Start Task Gating (Item 1.3):** Gated "Start Task" action strictly to `(isAssignee || isHeadOrAdmin)`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **List Skeleton Flashing Fix (Item 2.1):** In `useTasks.ts` and `TasksHub.tsx`, distinguished initial load from background reloads (`isRefreshing`). Skeleton loader renders only when `loading && tasks.length === 0`, completely eliminating list flashing on realtime events or mutations.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Reactive Derived Modal State (Item 2.2):** In `TasksHub.tsx`, migrated `selectedTask` to derived state from `selectedTaskId` (`tasks.find(t => t.id === selectedTaskId)`). The open modal now always displays fresh task status, assignees, and deadlines without stale snapshots or fake client-side state patches.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **RLS 0-Row Refusal Detection (Item 3.1):** In `useTasks.ts`, updated `updateTaskStatus` to verify updated rows via `.select('id')` and throw a clear permission error when RLS blocks the update with 0 rows.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Chunk Isolation (Item 3.7):** Cleaned up `SUB_TEAMS` imports in `TaskCreateModal.tsx` and `NewDMModal.tsx` to reference `lib/constants` directly rather than the lazy `AdminApprovalHub`.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.89 KB** (< 200 KB budget), Main JS gzip: **38.97 KB** (< 50 KB budget).
 
 ---
 
