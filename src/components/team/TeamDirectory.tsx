@@ -321,7 +321,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
           <span>Click to filter personnel</span>
         </div>
 
-        <div className="-mx-3.5 px-3.5 flex sm:grid sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scrollbar-none mask-fade-edges sm:[mask-image:none]">
+        <div className="-mx-3.5 px-3.5 flex sm:grid sm:grid-cols-3 md:grid-cols-6 gap-2 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scrollbar-none scroll-fade-right sm:[mask-image:none]">
           {/* "All" Filter Button */}
           <button
             onClick={() => setSelectedGroupId('all')}

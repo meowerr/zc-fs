@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Pitlane UI/UX Fix Pass (Fixes 7–23 on `feature/hyperspeed-login`)
-- **Active Status:** Fix 15 (Missing empty state under "CHANNELS" in desktop Pit Wall Chat) completed and verified on desktop.
-- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 199.13 KB < 200 KB, Main JS gzip: 40.79 KB < 50 KB).
+- **Active Status:** Fix 16 / Fix 21 (Horizontally-clipped chips/tabs need fade mask) completed and verified at 375px mobile viewport.
+- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 199.12 KB < 200 KB, Main JS gzip: 40.78 KB < 50 KB).
 
 ---
 
@@ -17,7 +17,8 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 13 — Global Unlabeled "+" Icons Sweep:** In [`src/components/common/GlassCard.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/GlassCard.tsx), disabled default `cornerMark = false`, removing decorative stray `+` marks globally across Team Directory, Deliverables, Documents, Pit Wall Chat, Upload modal, and Admin Hub. Added explicit `aria-label` tags to icon buttons across Chat (`aria-label="Start new direct message"`), Task Creation (`aria-label="Add external reference link"`), Task Details (`aria-label="Review this deliverable submission"`), Admin Hub (`aria-label="Close dialog"`), and Documents Hub (`aria-label="Close upload modal"`).
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 14 — Empty Gap at Top of Mobile Deliverables Page:** In [`src/components/tasks/TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx), wrapped desktop telemetry `PageHeader` in `hidden md:block` and adjusted mobile container spacing (`space-y-3 sm:space-y-5 pt-1 sm:pt-4`), eliminating empty vertical gap above search input and filter chips on mobile. Verified at 375px mobile viewport.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 15 — Missing Empty State Under "CHANNELS" (Desktop Pit Wall Chat):** In [`src/components/chat/ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx), added clean empty-state message (`"No channels accessible for your role."`) when `accessibleChannels.length === 0`, matching the existing DMs empty-state styling. Verified on desktop viewport.
-- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), captured screenshots/15_desktop_chat_channels.png]`
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 16 / Fix 21 — Horizontally-Clipped Chips/Tabs Need Fade Mask:** Created `.scroll-fade-right` utility class in [`src/index.css`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/index.css) (`mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%)`). Applied across horizontal scroll containers: Admin Hub sub-tabs (`AdminApprovalHub.tsx`), Deliverables filter pills (`TasksHub.tsx`), Task Detail modal tabs (`TaskDetailModal.tsx`), Document categories (`DocumentHub.tsx`), and Team Directory filters (`TeamDirectory.tsx`). Verified smooth gradient fade on 375px mobile viewport.
+- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), captured screenshots/16_mobile_admin_subtabs_fade.png]`
 
 ---
 

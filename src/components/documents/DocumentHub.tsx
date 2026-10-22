@@ -211,7 +211,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
       {/* Filter and Search Bar */}
       <div className="space-y-3">
         {/* Category Pills */}
-        <div className="-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-1 mask-fade-edges">
+        <div className="-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-1 scroll-fade-right">
           {CATEGORIES.map((cat) => {
             const Icon = cat.icon;
             const isActive = selectedCategory === cat.id;

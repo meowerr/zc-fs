@@ -341,7 +341,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
         <div
           role="tablist"
           aria-label="Deliverable details sections"
-          className="flex items-center gap-1 sm:gap-1.5 my-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0 sticky top-0 z-10 overflow-x-auto scrollbar-none"
+          className="flex items-center gap-1 sm:gap-1.5 my-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0 sticky top-0 z-10 overflow-x-auto scrollbar-none scroll-fade-right"
         >
           <button
             role="tab"

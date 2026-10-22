@@ -289,7 +289,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none pt-2 border-t border-cyber-border mask-fade-edges">
+        <div className="-mx-3.5 px-3.5 flex gap-2 overflow-x-auto snap-x snap-mandatory scrollbar-none pt-2 border-t border-cyber-border scroll-fade-right">
           {[
             { id: 'all', label: 'All Tasks' },
             { id: 'my_tasks', label: 'My Deliverables' },

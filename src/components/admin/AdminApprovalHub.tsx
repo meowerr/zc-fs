@@ -416,7 +416,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
       />
 
       {/* Sub-Tabs Selector */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none scroll-fade-right">
         {[
           { id: 'approvals', label: `Pending (${pendingUsers.length})` },
           { id: 'people', label: `People (${profiles.length})` },

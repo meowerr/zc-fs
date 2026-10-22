@@ -560,7 +560,7 @@ zc-fs/
     - **Fix 13 — Global unlabeled "+" icons sweep:** [COMPLETED] Disabled default decorative `cornerMark` across GlassCard (removing stray `+` marks globally across Team Directory, Deliverables, Documents, Pit Wall Chat, Upload modal, Admin Hub) and added accessible `aria-label` attributes to action and dialog buttons.
     - **Fix 14 — Empty gap at top of mobile Deliverables page:** [COMPLETED] Wrapped desktop telemetry `PageHeader` in `hidden md:block` and adjusted mobile container top padding (`pt-1 sm:pt-4 space-y-3 sm:space-y-5`), eliminating empty banner gap above search and filter chips on mobile. Verified at 375px mobile viewport.
     - **Fix 15 — Missing empty state under "CHANNELS" (desktop Pit Wall Chat):** [COMPLETED] Added clean empty-state message ("No channels accessible for your role.") under CHANNELS section when `accessibleChannels.length === 0`. Verified on desktop.
-    - **Fix 16 / Fix 21 — Horizontally-clipped chips/tabs need fade mask:** [PENDING]
+    - **Fix 16 / Fix 21 — Horizontally-clipped chips/tabs need fade mask:** [COMPLETED] Added `.scroll-fade-right` utility class (`mask-image: linear-gradient(...)`) across scrollable chip lists and sub-tabs (Admin Hub sub-tabs, Deliverables filter pills, Task Detail modal tabs, Document Hub categories, and Team Directory filters) to provide clean scroll continuation visual affordance on mobile. Verified at 375px mobile viewport.
     - **Fix 17 — Login desktop: empty top half of screen:** [PENDING]
     - **Fix 18 — Pending Approval screen should reuse Hyperspeed/gradient background:** [PENDING]
     - **Fix 19 — Engineering Protocol Guide modal: broken role tabs on mobile:** [PENDING]
