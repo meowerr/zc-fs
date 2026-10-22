@@ -198,6 +198,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
     <div className="h-[calc(100dvh-9.5rem)] md:h-[calc(100dvh-7.5rem)] flex flex-col md:flex-row gap-3.5">
       {/* LEFT: Channels & Direct Messages Sidebar */}
       <GlassCard
+        cornerMark={false}
         className={`
           w-full md:w-64 lg:w-72 flex-shrink-0 flex flex-col p-3.5 overflow-hidden
           ${showMobileList ? 'flex' : 'hidden md:flex'}
@@ -359,6 +360,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
       {/* RIGHT: Chat Messages Stream & Input */}
       <GlassCard
+        cornerMark={false}
         className={`
           flex-1 flex flex-col p-3.5 sm:p-4 overflow-hidden relative
           ${showMobileList ? 'hidden md:flex' : 'flex'}
