@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
+import { supabase, isLiveSupabaseConfigured, isDemoMode } from '../lib/supabase';
 import { Profile, UserRole, UserStatus, Group } from '../lib/database.types';
 
 export const UNIVERSITY_DOMAIN = 'zewailcity.edu.eg';
@@ -89,6 +89,31 @@ export function useAuth() {
 
   useEffect(() => {
     if (!isLiveSupabaseConfigured) {
+      if (isDemoMode) {
+        Promise.all([
+          import('../lib/demoData'),
+          import('../lib/constants'),
+        ]).then(([{ MOCK_PROFILES }, { SUB_TEAMS }]) => {
+          const urlParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+          const requestedRole = urlParams?.get('role') || (typeof window !== 'undefined' ? localStorage.getItem('zcfs_demo_role') : null);
+          const defaultEmail = requestedRole === 'head'
+            ? 'kareem.vd@zewailcity.edu.eg'
+            : requestedRole === 'member'
+            ? 'omar.member@zewailcity.edu.eg'
+            : requestedRole === 'pending'
+            ? 'ziad.new@zewailcity.edu.eg'
+            : 'admin@zewailcity.edu.eg';
+
+          const storedEmail = (typeof window !== 'undefined' && localStorage.getItem('zcfs_demo_email')) || defaultEmail;
+          const profile = MOCK_PROFILES[storedEmail] || MOCK_PROFILES[defaultEmail] || Object.values(MOCK_PROFILES)[0];
+
+          setCurrentUser(profile || null);
+          setAllProfiles(Object.values(MOCK_PROFILES));
+          setAllGroups(SUB_TEAMS);
+          setLoading(false);
+        });
+        return;
+      }
       setLoading(false);
       return;
     }
@@ -223,6 +248,17 @@ export function useAuth() {
   const signInWithGoogle = async () => {
     setError(null);
     if (!isLiveSupabaseConfigured) {
+      if (isDemoMode) {
+        const { MOCK_PROFILES } = await import('../lib/demoData');
+        const profile = Object.values(MOCK_PROFILES)[0];
+        if (profile) {
+          setCurrentUser(profile);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('zcfs_demo_email', profile.email);
+          }
+          return;
+        }
+      }
       throw new Error('Supabase client is not configured.');
     }
 
@@ -255,6 +291,17 @@ export function useAuth() {
     }
 
     if (!isLiveSupabaseConfigured) {
+      if (isDemoMode) {
+        const { MOCK_PROFILES } = await import('../lib/demoData');
+        const profile = MOCK_PROFILES[email] || Object.values(MOCK_PROFILES)[0];
+        if (profile) {
+          setCurrentUser(profile);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('zcfs_demo_email', profile.email);
+          }
+          return;
+        }
+      }
       throw new Error('Supabase client is not configured.');
     }
 
@@ -279,6 +326,17 @@ export function useAuth() {
     }
 
     if (!isLiveSupabaseConfigured) {
+      if (isDemoMode) {
+        const { MOCK_PROFILES } = await import('../lib/demoData');
+        const profile = MOCK_PROFILES[email] || Object.values(MOCK_PROFILES)[0];
+        if (profile) {
+          setCurrentUser(profile);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('zcfs_demo_email', profile.email);
+          }
+          return;
+        }
+      }
       throw new Error('Supabase client is not configured.');
     }
 
@@ -317,7 +375,18 @@ export function useAuth() {
 
   // Admin approval action: assigns group & role and sets status to 'approved'
   const approveUser = async (userId: string, groupId: string, role: UserRole) => {
-    if (!isLiveSupabaseConfigured) return;
+    if (!isLiveSupabaseConfigured) {
+      if (isDemoMode) {
+        setAllProfiles((prev) =>
+          prev.map((p) =>
+            p.id === userId
+              ? { ...p, status: 'approved' as const, group_id: groupId, role: role, updated_at: new Date().toISOString() }
+              : p
+          )
+        );
+      }
+      return;
+    }
 
     const { error: updateErr } = await supabase
       .from('profiles')

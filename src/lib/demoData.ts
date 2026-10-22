@@ -1,9 +1,18 @@
 import { Profile, Task, Channel, Message, NotificationItem } from './database.types';
 
 // Mock layer is strictly compiled and loaded ONLY in DEV mode with VITE_DEMO_MODE=true
-export const isDemoMode = import.meta.env.DEV && import.meta.env.VITE_DEMO_MODE === 'true';
+// Mock layer is strictly restricted to DEV (statically dead-code eliminated in production build)
+export const isDemoMode: boolean = import.meta.env.DEV
+  ? Boolean(
+      import.meta.env.VITE_DEMO_MODE === 'true' ||
+      (typeof window !== 'undefined' && (
+        window.location.search.includes('demo=true') ||
+        window.localStorage.getItem('zcfs_demo_mode') === 'true'
+      ))
+    )
+  : false;
 
-export const MOCK_PROFILES: Record<string, Profile> = (import.meta.env.DEV && import.meta.env.VITE_DEMO_MODE === 'true')
+export const MOCK_PROFILES: Record<string, Profile> = (import.meta.env.DEV && isDemoMode)
   ? {
       'admin@zewailcity.edu.eg': {
         id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
@@ -242,7 +251,7 @@ export const INITIAL_MESSAGES: Message[] = (import.meta.env.DEV && import.meta.e
     ]
   : [];
 
-export const INITIAL_NOTIFICATIONS: NotificationItem[] = (import.meta.env.DEV && import.meta.env.VITE_DEMO_MODE === 'true')
+export const INITIAL_NOTIFICATIONS: NotificationItem[] = (import.meta.env.DEV && isDemoMode)
   ? [
       {
         id: 'notif-1',
@@ -254,5 +263,55 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = (import.meta.env.DEV &&
         is_read: false,
         created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
       },
+    ]
+  : [];
+
+export const INITIAL_DEMO_DOCUMENTS: any[] = (import.meta.env.DEV && isDemoMode)
+  ? [
+      {
+        id: 'doc-1',
+        title: 'Double Wishbone Suspension Kinematics Spec (Rev 3)',
+        description: 'CAD kinematic simulation outputs and bump steer angles.',
+        file_name: 'suspension_kinematics_v3.pdf',
+        file_size: 4200000,
+        file_type: 'application/pdf',
+        file_url: 'https://example.com/suspension_kinematics_v3.pdf',
+        category: 'technical_spec',
+        group_id: '11111111-1111-1111-1111-111111111111',
+        uploader_id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+        version: '3',
+        created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+        updated_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+      },
+      {
+        id: 'doc-2',
+        title: 'Front Wing Multi-Element CFD Pressure Distribution',
+        description: 'Surface pressure coefficient maps and downforce validation.',
+        file_name: 'front_wing_cfd_results.step',
+        file_size: 14500000,
+        file_type: 'application/step',
+        file_url: 'https://example.com/front_wing_cfd_results.step',
+        category: 'cad',
+        group_id: '22222222-2222-2222-2222-222222222222',
+        uploader_id: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+        version: '1',
+        created_at: new Date(Date.now() - 86400000 * 4).toISOString(),
+        updated_at: new Date(Date.now() - 86400000 * 4).toISOString(),
+      },
+      {
+        id: 'doc-3',
+        title: 'Formula Student 2026 Cost Report & Bill of Materials',
+        description: 'Standardized FS BOM cost accounting spreadsheet.',
+        file_name: 'bom_cost_report_2026.xlsx',
+        file_size: 2100000,
+        file_type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        file_url: 'https://example.com/bom_cost_report_2026.xlsx',
+        category: 'cost_report',
+        group_id: '55555555-5555-5555-5555-555555555555',
+        uploader_id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+        version: '1',
+        created_at: new Date(Date.now() - 86400000 * 6).toISOString(),
+        updated_at: new Date(Date.now() - 86400000 * 6).toISOString(),
+      }
     ]
   : [];

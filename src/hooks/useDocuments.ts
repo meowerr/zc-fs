@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase, isLiveSupabaseConfigured } from '../lib/supabase';
+import { supabase, isLiveSupabaseConfigured, isDemoMode } from '../lib/supabase';
 import { DocumentItem, DocumentCategory, Profile } from '../lib/database.types';
 import { uploadFile } from '../lib/storage';
 
@@ -21,6 +21,26 @@ export function useDocuments(currentUser: Profile | null) {
       setError(null);
 
       if (!isLiveSupabaseConfigured) {
+        if (isDemoMode) {
+          const local = localStorage.getItem('zcfs_documents');
+          if (local) {
+            try {
+              setDocuments(JSON.parse(local));
+              setLoading(false);
+              return;
+            } catch {
+              // fallback
+            }
+          }
+          import('../lib/demoData').then((mod) => {
+            if (mod.INITIAL_DEMO_DOCUMENTS) {
+              setDocuments(mod.INITIAL_DEMO_DOCUMENTS);
+            }
+          });
+          setLoading(false);
+          return;
+        }
+
         // Local fallback if offline
         const local = localStorage.getItem('zcfs_documents');
         if (local) {

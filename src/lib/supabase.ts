@@ -3,8 +3,16 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder-zcfs.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'dummy_anon_key_for_local_development';
 
-// Mock layer is strictly restricted to DEV and explicit VITE_DEMO_MODE=true
-export const isDemoMode = Boolean(import.meta.env.DEV && import.meta.env.VITE_DEMO_MODE === 'true');
+// Mock layer is strictly restricted to DEV (statically dead-code eliminated in production build)
+export const isDemoMode: boolean = import.meta.env.DEV
+  ? Boolean(
+      import.meta.env.VITE_DEMO_MODE === 'true' ||
+      (typeof window !== 'undefined' && (
+        window.location.search.includes('demo=true') ||
+        window.localStorage.getItem('zcfs_demo_mode') === 'true'
+      ))
+    )
+  : false;
 
 export const isLiveSupabaseConfigured = 
   !isDemoMode &&
