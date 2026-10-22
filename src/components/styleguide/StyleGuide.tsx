@@ -49,22 +49,13 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
     setTimeout(() => setCopiedColor(null), 1800);
   };
 
-  const foundationColors = [
-    ['Canvas', '#070A0E', 'Main'],
-    ['Surface', '#11161D', 'Card'],
-    ['Elevated', '#181E26', 'Modal'],
-    ['Border', '#2A323C', 'Border'],
-    ['Primary', '#F2F4F7', 'Headings'],
-    ['Muted', '#737D89', 'Captions'],
-  ] as const;
-
-  const accentColors = [
-    ['Cyan', '#00D9FF', 'Active'],
-    ['Violet', '#A855F7', 'Review'],
-    ['Yellow', '#FFD43B', 'Due Soon'],
-    ['Red', '#FF304F', 'Urgent'],
-    ['Lime', '#10E57A', 'Approved'],
-    ['Orange', '#E07212', 'Brand'],
+  const paletteColors = [
+    ['Canvas', '#070A0E'],
+    ['Surface', '#11161D'],
+    ['Elevated', '#181E26'],
+    ['Cyan', '#00D9FF'],
+    ['Violet', '#A855F7'],
+    ['Orange', '#E07212'],
   ] as const;
 
   return (
@@ -113,60 +104,27 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-accent-cyan" />
             <h2 className="font-display font-bold text-lg uppercase tracking-wider">
-              1. Foundation Neutrals (Graphite & Dark Base)
+              1. Palette Architecture (Foundation & Accents)
             </h2>
           </div>
-          <span className="text-label font-mono text-cyber-muted">90% OF INTERFACE FOUNDATION</span>
+          <span className="text-label font-mono text-cyber-muted">FOUNDATION & ACCENTS</span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-          {foundationColors.map(([name, hex, desc]) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          {paletteColors.map(([name, hex]) => (
             <div
               key={name}
               onClick={() => copyToClipboard(hex)}
-              className="p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-accent-cyan/40 transition-all cursor-pointer space-y-2"
+              className="p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-accent-cyan/40 transition-all cursor-pointer space-y-1.5"
             >
               <div 
-                className="w-full h-10 rounded-lg flex items-center justify-center font-mono text-label font-medium"
+                className="w-full h-8 rounded-lg flex items-center justify-center font-mono text-label font-medium"
                 style={{ backgroundColor: hex }}
               >
                 {copiedColor === hex ? 'COPIED' : ''}
               </div>
-              <div>
-                <div className="font-bold text-xs text-cyber-primary">{name}</div>
-                <div className="font-mono text-label text-cyber-muted">{hex}</div>
-                <p className="text-label text-cyber-secondary mt-0.5">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── 2. PRIMARY CONTROLLED ACCENT COLORS ─── */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-brand-orange" />
-            <h2 className="font-display font-bold text-lg uppercase tracking-wider">
-              2. Controlled Semantic Accents
-            </h2>
-          </div>
-          <span className="text-label font-mono text-cyber-muted">USED WITH INTENT & RESTRAINT</span>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {accentColors.map(([name, hex, role]) => (
-            <div
-              key={name}
-              onClick={() => copyToClipboard(hex)}
-              className="p-3.5 rounded-xl bg-cyber-surface border border-cyber-border hover:border-cyber-border-strong transition-all cursor-pointer space-y-2"
-              style={{ borderTop: `3px solid ${hex}` }}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-display font-black text-sm tracking-wider" style={{ color: hex }}>{name}</span>
-                <span className="font-mono text-label text-cyber-muted">{hex}</span>
-              </div>
-              <p className="text-xs text-cyber-secondary leading-snug">{role}</p>
+              <div className="font-bold text-xs text-cyber-primary">{name}</div>
+              <div className="font-mono text-label text-cyber-muted">{hex}</div>
             </div>
           ))}
         </div>

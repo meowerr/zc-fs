@@ -5,7 +5,7 @@ import { GhostButton } from '../common/GhostButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { parseUserIdentity } from '../common/UserLabel';
 import { Profile } from '../../lib/database.types';
-import { SUB_TEAMS } from '../admin/AdminApprovalHub';
+import { SUB_TEAMS } from '../../lib/constants';
 
 interface NewDMModalProps {
   isOpen: boolean;

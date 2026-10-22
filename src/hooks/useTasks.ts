@@ -36,7 +36,10 @@ export function useTasks(currentUser: Profile | null) {
     return saved ? JSON.parse(saved) : (INITIAL_DEMO_COMMENTS as Record<string, TaskComment[]>);
   });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(() => {
+    return Boolean(isLiveSupabaseConfigured && currentUser && currentUser.status === 'approved');
+  });
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   // Sync to localStorage in demo mode
   useEffect(() => {
@@ -48,9 +51,16 @@ export function useTasks(currentUser: Profile | null) {
   }, [tasks, submissions, comments]);
 
   // Load Tasks, Submissions, Comments from Supabase
-  const loadTasksFromSupabase = useCallback(async () => {
-    if (!isLiveSupabaseConfigured || !currentUser || currentUser.status !== 'approved') return;
-    setLoading(true);
+  const loadTasksFromSupabase = useCallback(async (isBackground = false) => {
+    if (!isLiveSupabaseConfigured || !currentUser || currentUser.status !== 'approved') {
+      setLoading(false);
+      return;
+    }
+    if (isBackground) {
+      setIsRefreshing(true);
+    } else {
+      setLoading(true);
+    }
     try {
       // 1. Fetch Tasks & Assignees
       let taskQuery = supabase
@@ -114,6 +124,7 @@ export function useTasks(currentUser: Profile | null) {
       console.error('Error fetching tasks from Supabase:', err);
     } finally {
       setLoading(false);
+      setIsRefreshing(false);
     }
   }, [currentUser]);
 
@@ -128,16 +139,16 @@ export function useTasks(currentUser: Profile | null) {
     const channel = supabase
       .channel('public:tasks_telemetry')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => {
-        loadTasksFromSupabase();
+        loadTasksFromSupabase(true);
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'task_assignees' }, () => {
-        loadTasksFromSupabase();
+        loadTasksFromSupabase(true);
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'task_submissions' }, () => {
-        loadTasksFromSupabase();
+        loadTasksFromSupabase(true);
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'task_comments' }, () => {
-        loadTasksFromSupabase();
+        loadTasksFromSupabase(true);
       })
       .subscribe();
 
@@ -222,7 +233,7 @@ export function useTasks(currentUser: Profile | null) {
       if (assignErr) console.warn('Assignees insert warning:', assignErr.message);
     }
 
-    await loadTasksFromSupabase();
+    await loadTasksFromSupabase(true);
     return createdTask;
   };
 
@@ -258,13 +269,22 @@ export function useTasks(currentUser: Profile | null) {
     }
 
     // Also update tasks directly for admin/heads or direct status overrides
-    const { error } = await supabase
+    const { data: updatedRows, error } = await supabase
       .from('tasks')
       .update({ status: newStatus, updated_at: new Date().toISOString() })
-      .eq('id', taskId);
+      .eq('id', taskId)
+      .select('id');
 
-    if (error) console.warn('Direct task status update note:', error.message);
-    await loadTasksFromSupabase();
+    if (error) {
+      console.error('Direct task status update error:', error.message);
+      throw error;
+    }
+
+    if (!assigneeMatch && (!updatedRows || updatedRows.length === 0)) {
+      throw new Error('Permission denied: You do not have permission to change this task.');
+    }
+
+    await loadTasksFromSupabase(true);
   };
 
   // Submit Work (Member)
@@ -328,7 +348,7 @@ export function useTasks(currentUser: Profile | null) {
       .eq('task_id', taskId)
       .eq('user_id', currentUser.id);
 
-    await loadTasksFromSupabase();
+    await loadTasksFromSupabase(true);
     return data;
   };
 
@@ -393,7 +413,7 @@ export function useTasks(currentUser: Profile | null) {
         .eq('user_id', subRow.submitted_by);
     }
 
-    await loadTasksFromSupabase();
+    await loadTasksFromSupabase(true);
   };
 
   // Add Comment to Task Discussion Thread
@@ -429,7 +449,7 @@ export function useTasks(currentUser: Profile | null) {
       .single();
 
     if (error) throw error;
-    await loadTasksFromSupabase();
+    await loadTasksFromSupabase(true);
     return data;
   };
 
@@ -462,7 +482,7 @@ export function useTasks(currentUser: Profile | null) {
       throw error;
     }
 
-    await loadTasksFromSupabase();
+    await loadTasksFromSupabase(true);
   };
 
   return {
@@ -471,6 +491,7 @@ export function useTasks(currentUser: Profile | null) {
     submissions,
     comments,
     loading,
+    isRefreshing,
     createTask,
     updateTaskStatus,
     deleteTask,

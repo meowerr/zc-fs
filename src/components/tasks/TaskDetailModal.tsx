@@ -412,7 +412,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  {task.status === 'todo' && (
+                  {task.status === 'todo' && (isAssignee || isHeadOrAdmin) && (
                     <GlossyButton
                       size="sm"
                       variant="primary"
@@ -427,7 +427,10 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     <GlossyButton
                       size="sm"
                       variant="action"
-                      onClick={() => setIsSubmittingWork(true)}
+                      onClick={() => {
+                        setIsSubmittingWork(true);
+                        setActiveTab('submissions');
+                      }}
                     >
                       Submit Work Deliverable
                     </GlossyButton>
@@ -761,8 +764,20 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
       {/* Delete Task Confirmation Modal */}
       {isConfirmingDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-md p-6 rounded-xl bg-cyber-surface border border-accent-red/40 shadow-cyber-elevated space-y-4">
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isDeleting) {
+              setIsConfirmingDelete(false);
+              setDeleteError(null);
+            }
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md p-6 rounded-xl bg-cyber-surface border border-accent-red/40 shadow-cyber-elevated space-y-4"
+          >
             <div className="flex items-center gap-3 text-accent-red">
               <AlertTriangle className="w-5 h-5 shrink-0" />
               <h3 className="font-display font-black text-base sm:text-lg uppercase tracking-wider text-cyber-primary">

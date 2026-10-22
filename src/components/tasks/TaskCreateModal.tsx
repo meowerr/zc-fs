@@ -9,7 +9,7 @@ import { ModalShell } from '../common/ModalShell';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { GlowInput } from '../common/GlowInput';
-import { SUB_TEAMS } from '../admin/AdminApprovalHub';
+import { SUB_TEAMS } from '../../lib/constants';
 import { TaskType, TaskPriority, Profile } from '../../lib/database.types';
 
 interface TaskCreateModalProps {

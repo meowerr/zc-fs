@@ -80,7 +80,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
 }) => {
   const [filter, setFilter] = useState<'all' | 'my_tasks' | 'submitted' | 'in_progress' | 'approved' | 'overdue'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('all');
@@ -92,10 +92,16 @@ export const TasksHub: React.FC<TasksHubProps> = ({
     if (initialTaskId) {
       const found = tasks.find((t) => t.id === initialTaskId);
       if (found) {
-        setSelectedTask(found);
+        setSelectedTaskId(found.id);
+      } else if (tasks.length > 0 && !loading) {
+        onClearInitialTaskId?.();
       }
     }
-  }, [initialTaskId, tasks]);
+  }, [initialTaskId, tasks, loading, onClearInitialTaskId]);
+
+  const selectedTask = React.useMemo(() => {
+    return selectedTaskId ? tasks.find((t) => t.id === selectedTaskId) ?? null : null;
+  }, [selectedTaskId, tasks]);
 
   const isHeadOrAdmin = currentUser.role === 'admin' || currentUser.role === 'head';
   const now = new Date();
@@ -288,7 +294,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
           Refreshing telemetry queue…
         </div>
       )}
-      {loading ? (
+      {loading && tasks.length === 0 ? (
         <SkeletonCard count={3} />
       ) : filteredTasks.length === 0 ? (
         <EmptyState
@@ -312,7 +318,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
                 task={task}
                 groupName={group ? group.name.replace(/^Technical - |^Operations - /, '') : undefined}
                 groupAccent={group?.color_accent}
-                onSelect={(t) => setSelectedTask(t)}
+                onSelect={(t) => setSelectedTaskId(t.id)}
               />
             );
           })}
@@ -350,20 +356,20 @@ export const TasksHub: React.FC<TasksHubProps> = ({
           task={selectedTask}
           isOpen={Boolean(selectedTask)}
           onClose={() => {
-            setSelectedTask(null);
+            setSelectedTaskId(null);
             onClearInitialTaskId?.();
           }}
           currentUser={currentUser}
           submissions={submissions[selectedTask.id] || []}
           comments={comments[selectedTask.id] || []}
-          onUpdateStatus={async (taskId, status) => {
-            await onUpdateStatus(taskId, status);
-            setSelectedTask((prev) => (prev ? { ...prev, status } : null));
-          }}
+          onUpdateStatus={onUpdateStatus}
           onSubmitWork={onSubmitWork}
           onReviewSubmission={onReviewSubmission}
           onAddComment={onAddComment}
-          onDeleteTask={onDeleteTask}
+          onDeleteTask={async (taskId) => {
+            await onDeleteTask(taskId);
+            setSelectedTaskId(null);
+          }}
         />
       )}
 
