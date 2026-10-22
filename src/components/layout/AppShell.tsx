@@ -164,6 +164,8 @@ export const AppShell: React.FC<AppShellProps> = ({
           isDarkMode={isDarkMode}
           onToggleTheme={toggleTheme}
           onSignOut={onSignOut}
+          onOpenGuide={onOpenGuide}
+          onOpenStyleGuide={onOpenStyleGuide}
         />
       ) : (
         <BottomNav

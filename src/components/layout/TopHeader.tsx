@@ -58,7 +58,18 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   onOpenSearch,
 }) => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isAppearanceOpen, setIsAppearanceOpen] = useState(false);
+  const appearanceRef = useRef<HTMLDivElement>(null);
   const lastY = useRef(0);
+
+  useEffect(() => {
+    if (!isAppearanceOpen) return;
+    const h = (e: MouseEvent) => {
+      if (appearanceRef.current && !appearanceRef.current.contains(e.target as Node)) setIsAppearanceOpen(false);
+    };
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
+  }, [isAppearanceOpen]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -134,37 +145,79 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
         {/* Telemetry Live Indicator & Controls */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-          {/* User Email Context Pill */}
+          {/* User Email Context Trigger */}
           {userEmail && (
-            <div
-              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded bg-cyber-bg-alt border border-cyber-border font-mono text-label text-cyber-secondary truncate max-w-[220px]"
-              title={userEmail}
-            >
-              <span className="text-accent-cyan font-bold truncate">{userEmail}</span>
-            </div>
-          )}
-
-          {/* Design System Style Guide Shortcut (Desktop Only) */}
-          {onOpenStyleGuide && (
             <button
-              onClick={onOpenStyleGuide}
-              aria-label="Style Guide"
-              title="Design System & Style Guide"
-              className={`hidden md:flex ${DESK_BTN} hover:text-accent-cyan hover:border-accent-cyan/50`}
+              onClick={onOpenProfile}
+              aria-label={`Logged in as ${userEmail}`}
+              title={`Logged in as ${userEmail} (Open Profile)`}
+              className="hidden xl:flex items-center gap-1.5 text-xs text-text-muted hover:text-cyber-primary transition font-sans cursor-pointer focus:outline-none"
             >
-              <Palette className="w-4 h-4 text-accent-cyan" />
+              <span className="truncate max-w-[180px]">{userEmail}</span>
             </button>
           )}
 
-          {/* Protocol Operations Guide (Tablet & Desktop Only) */}
-          <button
-            onClick={onOpenGuide}
-            aria-label="Engineering Protocol Guide"
-            title="Engineering Protocol Guide"
-            className={`hidden sm:flex ${DESK_BTN} hover:text-cyber-primary hover:border-cyber-border-strong`}
-          >
-            <BookOpen className="w-4 h-4" />
-          </button>
+          {/* Consolidated Appearance Menu (Theme & Style Guide, >= 1280px) */}
+          <div className="relative hidden xl:block" ref={appearanceRef}>
+            <button
+              onClick={() => setIsAppearanceOpen((p) => !p)}
+              aria-label="Appearance settings"
+              title="Appearance & Theme"
+              className={`${DESK_BTN} hover:text-accent-cyan hover:border-accent-cyan/50 flex items-center justify-center`}
+            >
+              <Palette className="w-4 h-4 text-accent-cyan" />
+            </button>
+
+            {isAppearanceOpen && (
+              <div className="absolute right-0 mt-2 w-48 rounded-xl bg-cyber-surface-elevated border border-cyber-border shadow-cyber-lg p-1.5 z-50 text-xs font-sans">
+                <div className="px-2.5 py-1 text-label font-mono uppercase text-text-muted">Appearance</div>
+                {[
+                  { l: 'Chrome Mode', active: !isDarkMode, icon: <Sun className="w-3.5 h-3.5 text-accent-yellow" />, toggle: isDarkMode },
+                  { l: 'Midnight Mode', active: isDarkMode, icon: <Moon className="w-3.5 h-3.5 text-accent-cyan" />, toggle: !isDarkMode },
+                ].map(({ l, active, icon, toggle }) => (
+                  <button
+                    key={l}
+                    type="button"
+                    onClick={() => {
+                      if (toggle) onToggleTheme();
+                      setIsAppearanceOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                      active ? 'bg-cyber-surface-hover text-accent-cyan font-bold' : 'text-cyber-primary hover:bg-cyber-surface-hover'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">{icon}<span>{l}</span></div>
+                    {active && <span className="text-label font-mono text-accent-cyan">ON</span>}
+                  </button>
+                ))}
+                {onOpenStyleGuide && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsAppearanceOpen(false);
+                      onOpenStyleGuide();
+                    }}
+                    className="w-full mt-1 pt-1 border-t border-cyber-border flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-cyber-secondary hover:text-accent-cyan hover:bg-cyber-surface-hover transition-colors cursor-pointer"
+                  >
+                    <Palette className="w-3.5 h-3.5 text-accent-cyan" />
+                    <span>Style Guide</span>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Protocol Operations Guide (>= 1280px Only, collapsed on < 1280px) */}
+          {onOpenGuide && (
+            <button
+              onClick={onOpenGuide}
+              aria-label="Engineering Protocol Guide"
+              title="Engineering Protocol Guide"
+              className={`hidden xl:flex ${DESK_BTN} hover:text-cyber-primary hover:border-cyber-border-strong`}
+            >
+              <BookOpen className="w-4 h-4" />
+            </button>
+          )}
 
           {/* Global Telemetry Search (Ctrl+K) */}
           {onOpenSearch && (
@@ -197,12 +250,12 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             )}
           </button>
 
-          {/* Light / Dark Mode Toggle (Desktop only) */}
+          {/* Quick Theme Toggle for Tablet (768px - 1279px) */}
           <button
             onClick={onToggleTheme}
             aria-label="Toggle theme"
             title={isDarkMode ? 'Switch to Chrome mode' : 'Switch to Midnight mode'}
-            className={`hidden md:flex ${DESK_BTN} hover:text-accent-yellow hover:border-accent-yellow/50`}
+            className={`hidden md:flex xl:hidden ${DESK_BTN} hover:text-accent-yellow hover:border-accent-yellow/50`}
           >
             {isDarkMode ? (
               <Sun className="w-4 h-4 text-accent-yellow" />

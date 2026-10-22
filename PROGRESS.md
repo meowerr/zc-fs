@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** UI/UX QA & Polish Pass (Branch: `feature/ui-qa-polish`)
-- **Active Status:** FIX 4 completed and verified (Chat bubble contrast elevated with subtle 1px border & clean surface separation). Awaiting confirmation to proceed to FIX 5.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | Contrast audit passing (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.95 KB < 200 KB, main App JS gzip: 38.35 KB < 50 KB).
+- **Active Status:** FIX 5 completed and verified (Consolidated top header icon cluster, plain text email trigger, unified Appearance dropdown, and collapsed book/palette on <1280px). Awaiting confirmation to proceed to FIX 6.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | Contrast audit passing (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.93 KB < 200 KB, main App JS gzip: 38.79 KB < 50 KB).
 
 ---
 

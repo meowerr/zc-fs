@@ -12,7 +12,7 @@ import {
   Moon, 
   Sparkles 
 } from 'lucide-react';
-import { ZfsLogo } from '../brand/ZfsLogo';
+import { ZfsMonogram } from '../brand/ZfsMonogram';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
@@ -51,14 +51,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
 
   const foundationColors = [
     ['Canvas', '#070A0E', 'Main'],
-    ['Sidebars', '#0B0F14', 'Nav'],
     ['Surface', '#11161D', 'Card'],
     ['Elevated', '#181E26', 'Modal'],
-    ['Hover', '#202731', 'Hover'],
     ['Border', '#2A323C', 'Border'],
-    ['Border St.', '#39434F', 'Frame'],
     ['Primary', '#F2F4F7', 'Headings'],
-    ['Secondary', '#B0B8C2', 'Body'],
     ['Muted', '#737D89', 'Captions'],
   ] as const;
 
@@ -440,43 +436,23 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <GlassCard className="p-5 space-y-3">
-            <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
-              <span className="text-xs font-mono font-medium text-accent-cyan uppercase">
-                // Desktop Hybrid Racing Rail (72px → 288px)
-              </span>
-              <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
-                OVERLAY Z-35
-              </span>
-            </div>
-            <p className="text-xs text-cyber-secondary leading-relaxed">
-              Console reserving fixed left offset (<code className="text-accent-cyan">--rail-offset</code>).
-            </p>
-            <div className="flex gap-2 text-label font-mono text-cyber-muted">
-              {['Collapsed 72px', 'Expanded 288px', '≥1280px Docking'].map((t) => (
-                <span key={t} className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">{t}</span>
-              ))}
-            </div>
-          </GlassCard>
-
-          <GlassCard className="p-5 space-y-3">
-            <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
-              <span className="text-xs font-mono font-medium text-brand-orange uppercase">
-                // Mobile "Garage Door" Navigation (&lt;768px)
-              </span>
-              <span className="text-label font-mono px-2 py-0.5 rounded bg-brand-orange/10 text-brand-orange border border-brand-orange/30">
-                THUMB-ARC TAB
-              </span>
-            </div>
-            <p className="text-xs text-cyber-secondary leading-relaxed">
-              Edge thumb-arc glass tab opening into responsive navigation sheet.
-            </p>
-            <div className="flex gap-2 text-label font-mono text-cyber-muted">
-              {['Floating Tab (56px)', '78vh Sheet', 'Swipe Dismiss'].map((t) => (
-                <span key={t} className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">{t}</span>
-              ))}
-            </div>
-          </GlassCard>
+          {([
+            ['Desktop Racing Rail', 'OVERLAY Z-35', 'text-accent-cyan', 'Console reserving fixed left offset (--rail-offset).', ['Collapsed 72px', 'Expanded 288px', '≥1280px Docking']],
+            ['Mobile Navigation', 'THUMB-ARC TAB', 'text-brand-orange', 'Edge thumb-arc glass tab opening into responsive navigation sheet.', ['Floating Tab (56px)', '78vh Sheet', 'Swipe Dismiss']],
+          ] as const).map(([title, badge, color, desc, tags]) => (
+            <GlassCard key={title} className="p-5 space-y-3">
+              <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
+                <span className={`text-xs font-mono font-medium ${color} uppercase`}>// {title}</span>
+                <span className={`text-label font-mono px-2 py-0.5 rounded bg-white/5 border border-cyber-border ${color}`}>{badge}</span>
+              </div>
+              <p className="text-xs text-cyber-secondary leading-relaxed">{desc}</p>
+              <div className="flex gap-2 text-label font-mono text-cyber-muted">
+                {tags.map((t) => (
+                  <span key={t} className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">{t}</span>
+                ))}
+              </div>
+            </GlassCard>
+          ))}
         </div>
       </section>
 
@@ -537,7 +513,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                   <span className="text-label font-mono uppercase tracking-widest text-cyber-muted">
                     // {sub}
                   </span>
-                  <ZfsLogo variant={theme === 'dark' ? 'full' : 'horizontal'} theme={theme} glow={glow} className={logoCls} />
+                  <ZfsMonogram glow={glow} className={logoCls} />
                 </div>
 
 
@@ -558,12 +534,10 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
             {([
               ['Orange', '#E07212', 'text-black', 'Primary'],
-              ['Hover', '#ED7D0D', 'text-black', 'Hover'],
               ['Pressed', '#C6620A', 'text-white', 'Active'],
               ['Light', '#C2410C', 'text-white', '5.5:1 AA'],
               ['Ink', '#070B0E', 'text-white', 'Dark Base'],
               ['White', '#F2F4F7', 'text-black', 'Outline'],
-              ['Soft', 'rgba(224,114,18,0.12)', 'text-brand-orange', 'Tint'],
             ] as const).map(([name, hex, text, role]) => (
               <button
                 key={name}
@@ -602,17 +576,11 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button className="px-4 py-2 rounded-lg bg-brand-orange text-black font-display font-black text-xs uppercase shadow-glow-brand active:scale-95 cursor-pointer focus:ring-2 focus:ring-brand-orange">
+              <button className="px-4 py-2 rounded-lg bg-brand-orange text-black font-display font-bold text-xs uppercase">
                 Primary Brand
               </button>
-              <button className="px-4 py-2 rounded-lg bg-brand-orange/10 border border-brand-orange/50 text-brand-orange font-display font-bold text-xs uppercase active:scale-95 cursor-pointer">
+              <button className="px-4 py-2 rounded-lg bg-brand-orange/10 border border-brand-orange/50 text-brand-orange font-display font-bold text-xs uppercase">
                 Secondary Brand
-              </button>
-              <button
-                tabIndex={0}
-                className="px-3.5 py-2 rounded-lg bg-cyber-surface border border-cyber-border text-xs font-mono text-cyber-secondary focus:ring-2 focus:ring-brand-orange cursor-pointer"
-              >
-                Focus Ring Test
               </button>
             </div>
           </GlassCard>
@@ -653,34 +621,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </GlassCard>
         </div>
 
-        {/* 10.5 Sub-Team Palette Isolation */}
-        <GlassCard className="p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-cyber-border pb-3">
-            <span className="text-xs font-mono font-medium text-cyber-primary uppercase">
-              // 10.5 Sub-Team Scoped Palette (All 5 Sub-Teams Side-by-Side)
-            </span>
-            <span className="text-label font-mono px-2 py-0.5 rounded bg-purple-500/15 text-purple-400 border border-purple-500/30">
-              LOW-VOLTAGE RE-MAPPED
-            </span>
-          </div>
-
-          <p className="text-xs text-cyber-secondary leading-relaxed">
-            <strong>Low-Voltage</strong> re-mapped to <strong className="text-purple-400">Cyber Violet</strong>.
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
-            {SUB_TEAMS.map((t) => (
-              <div key={t.id} className="p-3 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <span style={{ backgroundColor: t.color_accent || '#00D9FF' }} className="w-2.5 h-2.5 rounded-full" />
-                  <span className="text-label font-mono text-cyber-muted">{t.color_accent || '#00D9FF'}</span>
-                </div>
-                <div className="font-display font-bold text-xs text-cyber-primary leading-tight">{t.name.replace('Technical - ', '').replace('Operations - ', '')}</div>
-                <div className="text-label font-mono text-cyber-muted">{t.slug}</div>
-              </div>
-            ))}
-          </div>
-        </GlassCard>
+        
 
         {/* 10.6 WCAG 2.1 AA Contrast Verification Matrix */}
         <GlassCard className="p-6 space-y-4">
@@ -696,10 +637,8 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs font-mono">
             {([
               ['Brand Btn', '#E07212', '5.23:1', 'PASS AA'],
-              ['Light Links', '#C2410C', '5.53:1', 'PASS AA'],
               ['Chrome Text', '#C2410C', '5.39:1', 'PASS AA'],
               ['Dark Body', '#F2F4F7', '17.8:1', 'PASS AAA'],
-              ['Focus Rings', '#E07212', '5.23:1', 'PASS AA'],
               ['Prohibited', '#FFFFFF', '3.18:1', 'FAIL'],
             ] as const).map(([el, col, rat, v]) => (
               <div key={el} className="p-2.5 rounded-lg bg-cyber-surface border border-cyber-border space-y-1">

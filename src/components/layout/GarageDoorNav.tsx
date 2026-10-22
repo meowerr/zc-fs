@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
+  BookOpen,
+  Palette,
   ChevronUp, 
   ChevronRight,
   X, 
@@ -33,6 +35,8 @@ export interface GarageDoorNavProps {
   isDarkMode?: boolean;
   onToggleTheme?: () => void;
   onSignOut?: () => void;
+  onOpenGuide?: () => void;
+  onOpenStyleGuide?: () => void;
 }
 
 export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
@@ -46,6 +50,8 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
   isDarkMode,
   onToggleTheme,
   onSignOut,
+  onOpenGuide,
+  onOpenStyleGuide,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -166,85 +172,24 @@ export const GarageDoorNav: React.FC<GarageDoorNavProps> = ({
 
   const ActiveIcon = activeItem.icon;
 
+  const act = (fn?: () => void) => () => { triggerHaptic(8); closeGarage(); fn?.(); };
+
   const moreListItems = [
-    {
-      id: 'team',
-      label: 'Team Directory',
-      subtitle: 'Roster, engineering roles & contacts',
-      icon: Users,
-      isActive: activeTab === 'team',
-      onClick: () => {
-        triggerHaptic(8);
-        handleSelectTab('team');
-      },
-    },
-    ...(role === 'admin'
-      ? [
-          {
-            id: 'admin',
-            label: 'Admin Hub',
-            subtitle: 'User access, approvals & governance',
-            icon: ShieldAlert,
-            isActive: activeTab === 'admin',
-            onClick: () => {
-              triggerHaptic(8);
-              handleSelectTab('admin');
-            },
-          },
-        ]
-      : []),
-    ...(onOpenProfile
-      ? [
-          {
-            id: 'profile',
-            label: userName || 'Profile',
-            subtitle: `${currentGroupName} • ${role.toUpperCase()}`,
-            icon: User,
-            isActive: false,
-            onClick: () => {
-              triggerHaptic(8);
-              closeGarage();
-              onOpenProfile();
-            },
-          },
-        ]
-      : []),
-    ...(onToggleTheme
-      ? [
-          {
-            id: 'theme',
-            label: 'Appearance',
-            subtitle: isDarkMode ? 'Switch to Chrome (Light) mode' : 'Switch to Midnight (Dark) mode',
-            icon: isDarkMode ? Sun : Moon,
-            isActive: false,
-            badge: (
-              <span className="px-2 py-0.5 rounded text-label font-mono font-medium bg-cyber-bg border border-cyber-border text-cyber-secondary">
-                {isDarkMode ? 'Dark' : 'Light'}
-              </span>
-            ),
-            onClick: () => {
-              triggerHaptic(8);
-              onToggleTheme();
-            },
-          },
-        ]
-      : []),
-    ...(onSignOut
-      ? [
-          {
-            id: 'signout',
-            label: 'Sign Out',
-            subtitle: 'End session on this device',
-            icon: LogOut,
-            isActive: false,
-            onClick: () => {
-              triggerHaptic(8);
-              closeGarage();
-              onSignOut();
-            },
-          },
-        ]
-      : []),
+    { id: 'team', label: 'Team Directory', subtitle: 'Roster & roles', icon: Users, isActive: activeTab === 'team', onClick: () => { triggerHaptic(8); handleSelectTab('team'); } },
+    ...(role === 'admin' ? [{ id: 'admin', label: 'Admin Hub', subtitle: 'Governance', icon: ShieldAlert, isActive: activeTab === 'admin', onClick: () => { triggerHaptic(8); handleSelectTab('admin'); } }] : []),
+    ...(onOpenProfile ? [{ id: 'profile', label: userName || 'Profile', subtitle: `${currentGroupName} • ${role.toUpperCase()}`, icon: User, isActive: false, onClick: act(onOpenProfile) }] : []),
+    ...(onOpenGuide ? [{ id: 'guide', label: 'Protocol Guide', subtitle: 'Operations manual', icon: BookOpen, isActive: false, onClick: act(onOpenGuide) }] : []),
+    ...(onOpenStyleGuide ? [{ id: 'styleguide', label: 'Style Guide', subtitle: 'Design system', icon: Palette, isActive: false, onClick: act(onOpenStyleGuide) }] : []),
+    ...(onToggleTheme ? [{
+      id: 'theme',
+      label: 'Appearance',
+      subtitle: isDarkMode ? 'Switch to Chrome (Light)' : 'Switch to Midnight (Dark)',
+      icon: isDarkMode ? Sun : Moon,
+      isActive: false,
+      badge: <span className="px-2 py-0.5 rounded text-label font-mono bg-cyber-bg border border-cyber-border text-cyber-secondary">{isDarkMode ? 'Dark' : 'Light'}</span>,
+      onClick: () => { triggerHaptic(8); onToggleTheme(); }
+    }] : []),
+    ...(onSignOut ? [{ id: 'signout', label: 'Sign Out', subtitle: 'End session', icon: LogOut, isActive: false, onClick: act(onSignOut) }] : []),
   ];
 
   return (
