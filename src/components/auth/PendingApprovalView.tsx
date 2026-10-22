@@ -4,6 +4,7 @@ import { GlassCard } from '../common/GlassCard';
 import { GhostButton } from '../common/GhostButton';
 import { ZfsLogo } from '../brand/ZfsLogo';
 import { Profile } from '../../lib/database.types';
+import HyperspeedBackground from '../Hyperspeed/HyperspeedBackground';
 
 interface PendingApprovalViewProps {
   user: Profile;
@@ -15,7 +16,16 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
   onSignOut,
 }) => {
   return (
-    <div className="min-h-dvh flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative overflow-hidden">
+    <div className="min-h-dvh flex items-center justify-center p-4 bg-cyber-bg text-cyber-primary relative isolate overflow-hidden">
+      {/* 3D Hyperspeed Highway Warp Background (Three.js WebGL) */}
+      <HyperspeedBackground />
+
+      {/* Contrast scrim & backdrop blur so card stays legible */}
+      <div 
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-black/60 backdrop-blur-sm pointer-events-none" 
+      />
+
       {/* Background Subtle Tech-Grid Texture */}
       <div 
         className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"

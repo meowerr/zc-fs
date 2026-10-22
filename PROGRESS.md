@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Pitlane UI/UX Fix Pass (Fixes 7–23 on `feature/hyperspeed-login`)
-- **Active Status:** Fix 17 (Login desktop: empty top half of screen) completed and verified on desktop.
-- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 199.11 KB < 200 KB, Main JS gzip: 40.78 KB < 50 KB).
+- **Active Status:** Fix 18 (Pending Approval screen should reuse Hyperspeed/gradient background) completed and verified on desktop & mobile.
+- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 199.14 KB < 200 KB, Main JS gzip: 40.78 KB < 50 KB).
 
 ---
 
@@ -19,7 +19,8 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 15 — Missing Empty State Under "CHANNELS" (Desktop Pit Wall Chat):** In [`src/components/chat/ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx), added clean empty-state message (`"No channels accessible for your role."`) when `accessibleChannels.length === 0`, matching the existing DMs empty-state styling. Verified on desktop viewport.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 16 / Fix 21 — Horizontally-Clipped Chips/Tabs Need Fade Mask:** Created `.scroll-fade-right` utility class in [`src/index.css`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/index.css) (`mask-image: linear-gradient(to right, black calc(100% - 28px), transparent 100%)`). Applied across horizontal scroll containers: Admin Hub sub-tabs (`AdminApprovalHub.tsx`), Deliverables filter pills (`TasksHub.tsx`), Task Detail modal tabs (`TaskDetailModal.tsx`), Document categories (`DocumentHub.tsx`), and Team Directory filters (`TeamDirectory.tsx`). Verified smooth gradient fade on 375px mobile viewport.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 17 — Login Desktop: Empty Top Half of Screen:** In [`src/components/Hyperspeed/HyperspeedBackground.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/Hyperspeed/HyperspeedBackground.tsx), raised desktop camera FOV (`fov={isMobile ? 88 : 100}`) and curvature (`curvature={isMobile ? 0.6 : 1.2}`), pulling distant light trails and road curvature higher into the upper 50% of 1440px+ viewports without moving the login card. Verified on desktop viewport.
-- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), captured screenshots/17_desktop_login_hyperspeed_fov.png]`
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 18 — Pending Approval Screen Should Reuse Hyperspeed/Gradient Background:** In [`src/components/auth/PendingApprovalView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/PendingApprovalView.tsx), rendered `HyperspeedBackground` behind the card container within an `isolate` stacking context, protected by a dark scrim (`absolute inset-0 bg-black/60 backdrop-blur-sm -z-10 pointer-events-none`). This establishes cohesive visual continuity between the login view and pending approval screen while preserving high text contrast and click targets. Verified on desktop (1440x900) and mobile (375px).
+- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), captured screenshots/18_pending_approval_desktop.png & screenshots/18_pending_approval_mobile_375px.png]`
 
 ---
 
