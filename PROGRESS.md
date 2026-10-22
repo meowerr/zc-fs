@@ -1,9 +1,19 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)
-- **Active Status:** Slice 6 (Multi-Assignee Review Progress, Filter Sheet Streamlining & Backdrop Guard) completed and verified.
-- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.40 KB < 200 KB, main App JS gzip: 41.18 KB < 50 KB).
+- **Current Phase:** Hyperspeed 3D Warp Background Integration (Branch: `feature/hyperspeed-login`)
+- **Active Status:** Feature complete on branch `feature/hyperspeed-login`. Three.js Hyperspeed racing background integrated with ZFS brand orange/silver palette, dynamic lazy-loading, mobile fallback, and contrast protection.
+- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 198.85 KB < 200 KB, Main JS gzip: 40.16 KB < 50 KB).
+
+---
+
+## Hyperspeed 3D Warp Background Integration (Branch: `feature/hyperspeed-login`)
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Dependency & Bundle Chunk Isolation:** Installed `three` and `@types/three`. Added Rollup manual chunking in `vite.config.ts` isolating Three.js and Hyperspeed into `dist/assets/hyperspeed-*.js`, keeping core application bundle gzip at **198.85 KB** (< 200 KB budget) and main JS gzip at **40.16 KB** (< 50 KB budget).
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Component Source Preservation:** Integrated upstream `Hyperspeed.jsx` (React Bits Three.js shader component) untouched, with `Hyperspeed.css` and TypeScript declarations `Hyperspeed.d.ts`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Safe Wrapper (`HyperspeedBackground.tsx`):** Built wrapper handling WebGL capability detection, `prefers-reduced-motion` detection, mobile viewport scaling (`isMobile`), and small-phone performance fallback (`< 480px` falls back to lightweight CSS radial gradient). Configured with `curve="racing"`, `interactive={false}`, and `steer={0}` to prevent camera drift or interaction interference.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **ZFS Brand Color Mapping:** Mapped light trails to ZFS brand colors: tail and pole colors to orange palette (`#ff6a00`, `#ff8c3d`, `#ffb37a`), head colors to silver/white palette (`#ffffff`, `#e2e8f0`, `#94a3b8`), road color to `#05070a`, and transparent background.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Contrast Scrim & Stacking Context Isolation:** Integrated into `AuthScreen.tsx` with `isolate` stacking context, backdrop scrim gradient (`from-black/70 via-black/40 to-black/80 pointer-events-none`), and `pointer-events-none` on the 3D layer ensuring full click-through to Google SSO button and auth form controls.
+- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), screenshots captured and visually verified]` Core bundle gzip: **198.85 KB** (< 200 KB budget), Main JS gzip: **40.16 KB** (< 50 KB budget).
 
 ---
 

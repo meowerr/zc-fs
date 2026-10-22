@@ -16,6 +16,7 @@ import { GlowInput } from '../common/GlowInput';
 import { ZfsLogo } from '../brand/ZfsLogo';
 import { UNIVERSITY_DOMAIN, isUniversityEmail } from '../../hooks/useAuth';
 import { IS_GOOGLE_AUTH_ENABLED, IS_AUTH_EMAIL_ENABLED } from '../../config/authFeatures';
+import HyperspeedBackground from '../Hyperspeed/HyperspeedBackground';
 
 interface AuthScreenProps {
   onLogin: (email: string, password?: string) => Promise<void>;
@@ -132,7 +133,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   };
 
   return (
-    <div className="min-h-dvh flex items-center justify-center p-3 sm:p-6 lg:p-10 relative overflow-y-auto bg-cyber-bg text-cyber-primary">
+    <div className="min-h-dvh flex items-center justify-center p-3 sm:p-6 lg:p-10 relative isolate overflow-y-auto bg-cyber-bg text-cyber-primary">
+      {/* 3D Hyperspeed Highway Warp Background (Three.js WebGL) */}
+      <HyperspeedBackground />
+
+      {/* Protects contrast of text/card against moving lights */}
+      <div 
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-gradient-to-b from-black/70 via-black/40 to-black/80 pointer-events-none" 
+      />
+
       {/* Background Subtle Tech-Grid Texture */}
       <div 
         className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"

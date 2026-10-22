@@ -550,6 +550,13 @@ zc-fs/
     - **B7 F1HorizontalTransition:** [OPTIONAL] Livery re-skin.
     - **B8 A11y & Docs Pass:** [PENDING] Final WCAG AA audit, phone verification.
 
+  - **Hyperspeed 3D Warp Background Integration (Branch: `feature/hyperspeed-login`)**
+    - **Chunk Isolation & Dependency Management:** [COMPLETED] Installed `three` and `@types/three`. Configured Rollup manual chunking in `vite.config.ts` isolating Three.js into dynamic chunk, maintaining core application bundle gzip at **198.85 KB** (< 200 KB) and main JS gzip at **40.16 KB** (< 50 KB).
+    - **Shader & Source Preservation:** [COMPLETED] Integrated upstream React Bits `Hyperspeed.jsx` component code untouched, with `Hyperspeed.css` and `Hyperspeed.d.ts`.
+    - **Safe Wrapper & Mobile Safety Net:** [COMPLETED] Created `HyperspeedBackground.tsx` with WebGL support check, `prefers-reduced-motion` detection, small phone fallback (`< 480px` renders lightweight CSS radial gradient), `interactive={false}`, and `steer={0}`.
+    - **Brand Color Palette:** [COMPLETED] Configured ZFS racing identity palette: orange tails/poles (`#ff6a00`, `#ff8c3d`, `#ffb37a`), silver/white heads (`#ffffff`, `#e2e8f0`, `#94a3b8`), `#05070a` road, and transparent background.
+    - **Contrast Scrim & Stacking Context Isolation:** [COMPLETED] Added `isolate` stacking context on `AuthScreen.tsx` with backdrop scrim gradient (`from-black/70 via-black/40 to-black/80 pointer-events-none`) and `pointer-events-none` on background layer, keeping all form inputs and Google SSO button 100% clickable.
+
   - **Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)**
     - **Slice 1 Broken Interactions & State:** [COMPLETED] Overview "Submit Work" tab switch, Delete modal event propagation fix, skeleton list flashing elimination, reactive derived modal state, and 0-row RLS refusal detection.
     - **Slice 2 Modal Hardening & Precision:** [COMPLETED] Form reset, local Cairo timezone safety, uncommitted link auto-commit, visible error banners, double-fire action locks, minute-accurate deadline countdown (`Due 45m`, `Overdue 15m`), pulse noise elimination (reserved for `urgent`), safe URI scheme sanitization (`safeHref`), card semantic keyboard accessibility, and page title polish.

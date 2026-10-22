@@ -161,7 +161,7 @@ async function run() {
         localStorage.clear();
         window.location.reload();
       `);
-      await sleep(1200);
+      await sleep(2500); // Allow Three.js shader to animate
       await client.captureScreenshot(`01_auth_screen_${vp.name}.png`);
 
       // 2. Pending Approval Screen

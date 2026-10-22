@@ -84,6 +84,7 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules/@supabase')) return 'supabase';
+          if (id.includes('node_modules/three') || id.includes('Hyperspeed')) return 'hyperspeed';
           if (id.includes('node_modules/react') || id.includes('node_modules/lucide-react')) return 'vendor';
           if (id.includes('src/components/auth/')) return 'auth';
         },
