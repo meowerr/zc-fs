@@ -15,6 +15,7 @@ import { PageHeader } from '../common/PageHeader';
 import { StatStrip } from '../common/StatStrip';
 import { GlossyButton } from '../common/GlossyButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
+import { parseUserIdentity } from '../common/UserLabel';
 import { ModalShell } from '../common/ModalShell';
 import { SkeletonCard } from '../common/SkeletonCard';
 import { usePullToRefresh } from '../../hooks/usePullToRefresh';
@@ -476,6 +477,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
             const groupColor = getGroupColor(person.group_id);
             const taskCount = getMemberTaskCount(person.id);
             const isSelf = person.id === currentUser.id;
+            const { displayName, studentId } = parseUserIdentity(person.full_name, person.email);
 
             return (
               <GlassCard
@@ -494,7 +496,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                   <div className="flex items-start justify-between gap-2.5">
                     <div className="flex items-center gap-2.5 min-w-0">
                       <ChromeAvatar
-                        name={person.full_name}
+                        name={displayName}
                         role={person.role}
                         size="md"
                         className="flex-shrink-0"
@@ -502,7 +504,7 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                       <div className="min-w-0">
                         <div className="flex items-center gap-1.5">
                           <h4 className="font-sans font-semibold text-base text-cyber-primary truncate">
-                            {person.full_name}
+                            {displayName}
                           </h4>
                           {isSelf && (
                             <span className="hidden sm:inline-block text-label font-mono px-1 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30">
@@ -510,9 +512,16 @@ export const TeamDirectory: React.FC<TeamDirectoryProps> = ({
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 text-label font-mono text-cyber-muted truncate mt-0.5">
-                          <Mail className="w-3 h-3 flex-shrink-0" />
-                          <span className="truncate">{person.email}</span>
+                        <div className="flex items-center gap-2 text-label font-mono text-cyber-muted truncate mt-0.5">
+                          <span className="inline-flex items-center gap-1 truncate">
+                            <Mail className="w-3 h-3 flex-shrink-0" />
+                            <span className="truncate">{person.email}</span>
+                          </span>
+                          {studentId && (
+                            <span className="shrink-0 px-1 rounded bg-cyber-bg-alt border border-cyber-border text-cyber-muted">
+                              #{studentId}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>

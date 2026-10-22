@@ -242,30 +242,25 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               // Core Variant Matrix
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {[
-                { label: 'Primary', variant: 'primary' as const, icon: Activity, text: 'Launch' },
-                { label: 'Secondary', variant: 'secondary' as const, icon: Layers, text: 'Inspect' },
-                { label: 'Outline', variant: 'outline' as const, icon: Activity, text: 'Status' },
-                { label: 'Action', variant: 'action' as const, icon: Flame, text: 'Run' },
-                { label: 'Warning', variant: 'warning' as const, icon: Clock, text: 'Alert' },
-                { label: 'Danger', variant: 'danger' as const, icon: Flame, text: 'Halt' },
-                { label: 'Metallic', variant: 'metallic' as const, icon: Layers, text: 'System' },
-              ].map((btn) => {
-                const IconComp = btn.icon;
-                return (
-                  <div key={btn.label} className="space-y-1.5">
-                    <span className="font-mono text-label text-cyber-muted uppercase block">{btn.label}</span>
-                    <GlossyButton variant={btn.variant} icon={<IconComp className="w-4 h-4" />}>
-                      {btn.text}
-                    </GlossyButton>
-                  </div>
-                );
-              })}
+              {([
+                ['Primary', 'primary', Activity, 'Launch'],
+                ['Secondary', 'secondary', Layers, 'Inspect'],
+                ['Outline', 'outline', Activity, 'Status'],
+                ['Action', 'action', Flame, 'Run'],
+                ['Warning', 'warning', Clock, 'Alert'],
+                ['Danger', 'danger', Flame, 'Halt'],
+                ['Metallic', 'metallic', Layers, 'System'],
+              ] as const).map(([label, variant, IconComp, text]) => (
+                <div key={label} className="space-y-1.5">
+                  <span className="font-mono text-label text-cyber-muted uppercase block">{label}</span>
+                  <GlossyButton variant={variant} icon={<IconComp className="w-4 h-4" />}>
+                    {text}
+                  </GlossyButton>
+                </div>
+              ))}
               <div className="space-y-1.5">
-                <span className="font-mono text-label text-cyber-muted uppercase block">// Ghost (Low Weight)</span>
-                <GhostButton icon={<ArrowLeft className="w-4 h-4" />}>
-                  Cancel Op
-                </GhostButton>
+                <span className="font-mono text-label text-cyber-muted uppercase block">// Ghost</span>
+                <GhostButton icon={<ArrowLeft className="w-4 h-4" />}>Cancel Op</GhostButton>
               </div>
             </div>
           </div>
@@ -306,17 +301,17 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
 
         <GlassCard className="p-6 space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-            {[
-              { label: 'To Do', status: 'todo' as const },
-              { label: 'In Progress', status: 'in_progress' as const },
-              { label: 'Submitted', status: 'submitted' as const },
-              { label: 'Approved', status: 'approved' as const },
-              { label: 'Revisions', status: 'changes_requested' as const },
-              { label: 'Done', status: 'done' as const },
-            ].map((chip) => (
-              <div key={chip.label} className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
-                <span className="text-label font-mono text-cyber-muted uppercase block">{chip.label}</span>
-                <div className="flex justify-center"><LedStatusChip status={chip.status} /></div>
+            {([
+              ['To Do', 'todo'],
+              ['In Progress', 'in_progress'],
+              ['Submitted', 'submitted'],
+              ['Approved', 'approved'],
+              ['Revisions', 'changes_requested'],
+              ['Done', 'done'],
+            ] as const).map(([label, status]) => (
+              <div key={label} className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
+                <span className="text-label font-mono text-cyber-muted uppercase block">{label}</span>
+                <div className="flex justify-center"><LedStatusChip status={status} /></div>
               </div>
             ))}
           </div>
@@ -394,19 +389,17 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
-            { title: 'Battery State of Charge', val: '88%', color: 'text-accent-lime', hex: '#10E57A', gauge: 88, note: 'Accumulator nominal' },
-            { title: 'Brake Thermal Quota', val: '92%', color: 'text-accent-red', hex: '#FF304F', gauge: 92, note: 'Rotor elevated' },
-          ].map((g) => (
-            <GlassCard key={g.title} className="p-5 space-y-3">
+          {([
+            ['Battery State of Charge', '88%', 'text-accent-lime', '#10E57A', 88, 'Accumulator nominal'],
+            ['Brake Thermal Quota', '92%', 'text-accent-red', '#FF304F', 92, 'Rotor elevated'],
+          ] as const).map(([title, val, color, hex, gauge, note]) => (
+            <GlassCard key={title} className="p-5 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-cyber-secondary uppercase">{g.title}</span>
-                <span className={`font-mono font-medium text-sm ${g.color}`}>{g.val}</span>
+                <span className="font-mono text-xs text-cyber-secondary uppercase">{title}</span>
+                <span className={`font-mono font-medium text-sm ${color}`}>{val}</span>
               </div>
-              <SegmentedGauge value={g.gauge} totalSegments={10} accentColor={g.hex} />
-              <span className="text-label font-mono block pt-1 text-cyber-muted">
-                {g.note}
-              </span>
+              <SegmentedGauge value={gauge} totalSegments={10} accentColor={hex} />
+              <span className="text-label font-mono block pt-1 text-cyber-muted">{note}</span>
             </GlassCard>
           ))}
         </div>
@@ -425,14 +418,14 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         </div>
 
         <GlassCard className="p-5 space-y-3">
-          {[
-            { tag: '// Orbitron — Headers', cls: 'text-accent-cyan', body: <div className="text-xl font-display font-black uppercase">ZEWAIL FORMULA STUDENT</div> },
-            { tag: '// Exo 2 — Body', cls: 'text-brand-orange', body: <p className="text-xs font-sans text-cyber-primary">Motorsport telemetry meets clean cyber-optimism.</p> },
-            { tag: '// Share Tech Mono — Telemetry', cls: 'text-accent-yellow', body: <div className="font-mono text-xs text-cyber-secondary">SYS.ID: ZCFS-2026-CHASSIS-004 // 384.2V</div> },
-          ].map((t) => (
-            <div key={t.tag} className="space-y-1 border-b last:border-b-0 border-cyber-border pb-2.5 last:pb-0">
-              <span className={`text-label font-mono ${t.cls} uppercase block`}>{t.tag}</span>
-              {t.body}
+          {([
+            ['// Orbitron — Headers', 'text-accent-cyan', <div className="text-xl font-display font-black uppercase">ZEWAIL FORMULA STUDENT</div>],
+            ['// Exo 2 — Body', 'text-brand-orange', <p className="text-xs font-sans text-cyber-primary">Motorsport telemetry meets clean cyber-optimism.</p>],
+            ['// Share Tech Mono — Telemetry', 'text-accent-yellow', <div className="font-mono text-xs text-cyber-secondary">SYS.ID: ZCFS-2026-CHASSIS-004 // 384.2V</div>],
+          ] as const).map(([tag, cls, body]) => (
+            <div key={tag} className="space-y-1 border-b last:border-b-0 border-cyber-border pb-2.5 last:pb-0">
+              <span className={`text-label font-mono ${cls} uppercase block`}>{tag}</span>
+              {body}
             </div>
           ))}
         </GlassCard>
@@ -648,20 +641,20 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             </p>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-              {[
-                { label: 'PROGRESS', hex: '#00D9FF', icon: Activity, style: 'bg-accent-cyan/10 border-accent-cyan/30 text-accent-cyan' },
-                { label: 'REVIEW', hex: '#A855F7', icon: Clock, style: 'bg-purple-500/10 border-purple-500/30 text-purple-400' },
-                { label: 'DUE SOON', hex: '#FFD43B', icon: Clock, style: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400' },
-                { label: 'OVERDUE', hex: '#FF304F', icon: Flame, style: 'bg-red-500/10 border-red-500/30 text-red-400' },
-                { label: 'APPROVED', hex: '#10E57A', icon: CheckCircle2, style: 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime' },
-                { label: 'IDENTITY', hex: '#E07212', icon: Sparkles, style: 'bg-brand-orange/15 border-brand-orange/40 text-brand-orange' },
-              ].map((item) => (
-                <div key={item.label} className={`p-2 rounded-lg border space-y-0.5 ${item.style}`}>
+              {([
+                ['PROGRESS', '#00D9FF', Activity, 'bg-accent-cyan/10 border-accent-cyan/30 text-accent-cyan'],
+                ['REVIEW', '#A855F7', Clock, 'bg-purple-500/10 border-purple-500/30 text-purple-400'],
+                ['DUE SOON', '#FFD43B', Clock, 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400'],
+                ['OVERDUE', '#FF304F', Flame, 'bg-red-500/10 border-red-500/30 text-red-400'],
+                ['APPROVED', '#10E57A', CheckCircle2, 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'],
+                ['IDENTITY', '#E07212', Sparkles, 'bg-brand-orange/15 border-brand-orange/40 text-brand-orange'],
+              ] as const).map(([label, hex, IconComp, style]) => (
+                <div key={label} className={`p-2 rounded-lg border space-y-0.5 ${style}`}>
                   <div className="flex items-center gap-1.5 text-label font-mono font-medium">
-                    <item.icon className="w-3.5 h-3.5" />
-                    {item.label}
+                    <IconComp className="w-3.5 h-3.5" />
+                    {label}
                   </div>
-                  <div className="text-label font-mono text-cyber-muted">{item.hex}</div>
+                  <div className="text-label font-mono text-cyber-muted">{hex}</div>
                 </div>
               ))}
             </div>
@@ -684,20 +677,14 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-2">
-            {[
-              ['vd', 'Vehicle Dynamics', '#00D9FF', 'CHASSIS'],
-              ['aero', 'Aerodynamics', '#FF304F', 'WINGS'],
-              ['elec', 'Low-Voltage Electronics', '#A855F7', 'SENSORS'],
-              ['pt', 'Powertrain & Drivetrain', '#FFD43B', 'MOTOR'],
-              ['ops', 'Business & Ops', '#10E57A', 'MEDIA'],
-            ].map(([id, name, hex, tag]) => (
-              <div key={id} className="p-3 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-1.5">
+            {SUB_TEAMS.map((t) => (
+              <div key={t.id} className="p-3 rounded-xl bg-cyber-bg-alt border border-cyber-border space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span style={{ backgroundColor: hex }} className="w-2.5 h-2.5 rounded-full" />
-                  <span className="text-label font-mono text-cyber-muted">{hex}</span>
+                  <span style={{ backgroundColor: t.color_accent || '#00D9FF' }} className="w-2.5 h-2.5 rounded-full" />
+                  <span className="text-label font-mono text-cyber-muted">{t.color_accent || '#00D9FF'}</span>
                 </div>
-                <div className="font-display font-bold text-xs text-cyber-primary leading-tight">{name}</div>
-                <div className="text-label font-mono text-cyber-muted">{tag}</div>
+                <div className="font-display font-bold text-xs text-cyber-primary leading-tight">{t.name.replace('Technical - ', '').replace('Operations - ', '')}</div>
+                <div className="text-label font-mono text-cyber-muted">{t.slug}</div>
               </div>
             ))}
           </div>
@@ -715,14 +702,14 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs font-mono">
-            {[
-              ['Brand Button', '#E07212', '5.23:1', 'PASS AA'],
+            {([
+              ['Brand Btn', '#E07212', '5.23:1', 'PASS AA'],
               ['Light Links', '#C2410C', '5.53:1', 'PASS AA'],
               ['Chrome Text', '#C2410C', '5.39:1', 'PASS AA'],
               ['Dark Body', '#F2F4F7', '17.8:1', 'PASS AAA'],
               ['Focus Rings', '#E07212', '5.23:1', 'PASS AA'],
               ['Prohibited', '#FFFFFF', '3.18:1', 'FAIL'],
-            ].map(([el, col, rat, v]) => (
+            ] as const).map(([el, col, rat, v]) => (
               <div key={el} className="p-2.5 rounded-lg bg-cyber-surface border border-cyber-border space-y-1">
                 <div className="text-label text-cyber-muted uppercase">{el}</div>
                 <div className="font-bold" style={{ color: col }}>{rat}</div>

@@ -3,6 +3,7 @@ import { Search } from 'lucide-react';
 import { ModalShell } from '../common/ModalShell';
 import { GhostButton } from '../common/GhostButton';
 import { ChromeAvatar } from '../common/ChromeAvatar';
+import { parseUserIdentity } from '../common/UserLabel';
 import { Profile } from '../../lib/database.types';
 import { SUB_TEAMS } from '../admin/AdminApprovalHub';
 
@@ -92,6 +93,7 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
           ) : (
             filtered.map((user) => {
               const team = SUB_TEAMS.find((t) => t.id === user.group_id);
+                  const { displayName, studentId } = parseUserIdentity(user.full_name, user.email);
 
               return (
                 <button
@@ -103,13 +105,14 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
                   className="w-full p-2.5 rounded-xl flex items-center justify-between gap-3 text-left hover:bg-cyber-surface-hover transition-all cursor-pointer border border-cyber-border/40 hover:border-accent-cyan/40 bg-cyber-surface min-h-[48px]"
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <ChromeAvatar name={user.full_name} role={user.role} size="sm" />
+                    <ChromeAvatar name={displayName} role={user.role} size="sm" />
                     <div className="min-w-0">
                       <div className="font-bold text-xs sm:text-sm text-cyber-primary truncate">
-                        {user.full_name}
+                        {displayName}
                       </div>
-                      <div className="font-mono text-label text-cyber-muted truncate">
-                        {team ? team.name.replace('Technical - ', '') : 'Club Leadership'} • {user.role.toUpperCase()}
+                      <div className="font-mono text-label text-cyber-muted truncate flex items-center gap-1.5">
+                        <span>{team ? team.name.replace('Technical - ', '') : 'Club Leadership'} • {user.role.toUpperCase()}</span>
+                        {studentId && <span className="text-cyber-muted/80">#{studentId}</span>}
                       </div>
                     </div>
                   </div>

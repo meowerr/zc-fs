@@ -17,6 +17,7 @@ import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { LedStatusChip } from '../common/LedStatusChip';
 import { ChromeAvatar } from '../common/ChromeAvatar';
+import { parseUserIdentity } from '../common/UserLabel';
 import { GlowInput } from '../common/GlowInput';
 import { 
   Task, 
@@ -357,12 +358,16 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     {task.assignees && task.assignees.length > 0 ? (
-                      task.assignees.map((a) => (
-                        <div key={a.id} className="flex items-center gap-1.5 text-xs font-semibold text-cyber-primary">
-                          <ChromeAvatar name={a.full_name} role={a.role} size="sm" />
-                          <span>{a.full_name}</span>
-                        </div>
-                      ))
+                      task.assignees.map((a) => {
+                        const { displayName, studentId } = parseUserIdentity(a.full_name, a.email);
+                        return (
+                          <div key={a.id} className="flex items-center gap-1.5 text-xs font-semibold text-cyber-primary">
+                            <ChromeAvatar name={displayName} role={a.role} size="sm" />
+                            <span className="truncate">{displayName}</span>
+                            {studentId && <span className="text-label font-mono text-cyber-muted">#{studentId}</span>}
+                          </div>
+                        );
+                      })
                     ) : (
                       <span className="text-xs text-cyber-muted italic font-mono">
                         Unassigned

@@ -30,14 +30,8 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
     pending: 'bg-accent-yellow border-cyber-bg text-black',
   };
 
-  const getInitials = (n: string) => {
-    return n
-      .split(' ')
-      .map((part) => part[0])
-      .slice(0, 2)
-      .join('')
-      .toUpperCase();
-  };
+  const getInitials = (n: string) =>
+    n.replace(/\d+/g, '').trim().split(/\s+/).map((p) => p[0]).slice(0, 2).join('').toUpperCase() || 'ZC';
 
   return (
     <div className={`relative inline-block ${className}`}>

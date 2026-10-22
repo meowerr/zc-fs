@@ -16,6 +16,7 @@ import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
 import { LedStatusChip } from '../common/LedStatusChip';
 import { ChromeAvatar } from '../common/ChromeAvatar';
+import { parseUserIdentity } from '../common/UserLabel';
 import { MessageBubble } from './MessageBubble';
 import { NewDMModal } from './NewDMModal';
 import { Channel, Conversation, Message, Profile } from '../../lib/database.types';
@@ -171,12 +172,16 @@ export const ChatView: React.FC<ChatViewProps> = ({
     }
   };
 
-  const chatTitle = activeConversationId && otherParticipant
-    ? otherParticipant.full_name
+  const otherIdentity = otherParticipant
+    ? parseUserIdentity(otherParticipant.full_name, otherParticipant.email)
+    : null;
+
+  const chatTitle = activeConversationId && otherIdentity
+    ? otherIdentity.displayName
     : currentChannel?.name || 'Telemetry Channel';
 
   const chatSubtitle = activeConversationId && otherParticipant
-    ? `Direct · ${otherParticipant.role} · ${otherParticipant.email}`
+    ? `Direct · ${otherParticipant.role}${otherIdentity?.studentId ? ` · ID: ${otherIdentity.studentId}` : ''}`
     : currentChannel?.description || 'Active sub-team telemetry channel';
 
   // Helper for date separator chip formatting
@@ -313,6 +318,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       : partner.role === 'head'
                       ? 'Group Head'
                       : 'Engineer';
+                  const { displayName, studentId } = parseUserIdentity(partner.full_name, partner.email);
 
                   return (
                     <button
@@ -331,13 +337,14 @@ export const ChatView: React.FC<ChatViewProps> = ({
                         }
                       `}
                     >
-                      <ChromeAvatar name={partner.full_name} role={partner.role} size="sm" className="shrink-0" />
+                      <ChromeAvatar name={displayName} role={partner.role} size="sm" className="shrink-0" />
                       <div className="min-w-0 flex-1">
                         <div className="text-body sm:text-xs font-sans font-medium text-cyber-primary truncate">
-                          {partner.full_name}
+                          {displayName}
                         </div>
-                        <div className="text-label font-sans text-cyber-muted truncate mt-0.5">
-                          {partnerRole}
+                        <div className="text-label font-sans text-cyber-muted truncate mt-0.5 flex items-center gap-1.5">
+                          <span>{partnerRole}</span>
+                          {studentId && <span className="font-mono text-cyber-muted/80">#{studentId}</span>}
                         </div>
                       </div>
                     </button>
