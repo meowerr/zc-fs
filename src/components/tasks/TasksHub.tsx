@@ -358,11 +358,11 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             triggerHaptic(8);
             setIsCreateModalOpen(true);
           }}
-          className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
+          className="md:hidden fixed bottom-[calc(4.75rem+env(safe-area-inset-bottom))] right-4 z-40 h-14 w-14 rounded-full bg-brand-orange text-black shadow-lg shadow-orange-900/40 flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
           aria-label="Add new deliverable"
           title="Add new deliverable"
         >
-          <Plus className="w-6 h-6" />
+          <Plus className="h-6 w-6 text-black" />
         </button>
       )}
 

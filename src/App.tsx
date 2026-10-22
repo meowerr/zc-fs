@@ -40,7 +40,15 @@ const SuspenseFallback = () => (
 );
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<NavTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<NavTab>(() => {
+    try {
+      const p = new URLSearchParams(window.location.search).get('tab');
+      if (p && ['dashboard', 'tasks', 'chat', 'docs', 'team', 'admin'].includes(p)) {
+        return p as NavTab;
+      }
+    } catch {}
+    return 'dashboard';
+  });
   const [isNotifDrawerOpen, setIsNotifDrawerOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);

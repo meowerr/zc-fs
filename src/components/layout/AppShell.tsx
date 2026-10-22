@@ -122,9 +122,9 @@ export const AppShell: React.FC<AppShellProps> = ({
               <div className="flex-1">
                 {children}
               </div>
-              <footer className="mt-auto pt-8 pb-3 text-center app-footer">
+              <footer className="mt-auto pt-8 mb-32 md:mb-0 text-center app-footer relative z-0">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-surface/60 border border-cyber-border text-label font-mono text-cyber-muted">
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse shrink-0" />
                   <span>Built for Zewail Formula Team • PitLane Telemetry</span>
                 </div>
               </footer>

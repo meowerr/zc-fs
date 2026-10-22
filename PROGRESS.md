@@ -2,15 +2,16 @@
 
 ## Current Status
 - **Current Phase:** Pitlane UI/UX Fix Pass (Fixes 7–23 on `feature/hyperspeed-login`)
-- **Active Status:** Fix 8 (Sidebar "SYSTEM LIVE" badge truncated when collapsed) completed and verified in collapsed and expanded states.
-- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 198.82 KB < 200 KB, Main JS gzip: 40.72 KB < 50 KB).
+- **Active Status:** Fix 9 (Mobile Deliverables FAB overlaps footer pill) completed and verified at 375px and 414px mobile viewports.
+- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 199.02 KB < 200 KB, Main JS gzip: 40.82 KB < 50 KB).
 
 ---
 
 ## Pitlane UI/UX Fix Pass (Fixes 7–23 on `feature/hyperspeed-login`)
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 7 — Pending Approval Badge Overflow (Mobile):** In [`src/components/auth/PendingApprovalView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/PendingApprovalView.tsx), upgraded status badge to responsive flex pill with `max-w-full`, `break-words`, `whitespace-normal sm:whitespace-nowrap`, and `text-label sm:text-xs`. Verified cleanly at 375px mobile width without right-edge overflow or clipping.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 8 — Sidebar "SYSTEM LIVE" Badge Truncated When Collapsed:** In [`src/components/layout/HybridRacingRail.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/layout/HybridRacingRail.tsx), replaced the truncated text badge ("LI" / "L]") in collapsed mode with a centered pulsing status dot (`h-2 w-2 rounded-full bg-accent-lime animate-pulse`) with full label via `title="SYSTEM LIVE"` tooltip, preserving full label pill in expanded mode.
-- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), captured screenshots/08_sidebar_collapsed_desktop.png and 08_sidebar_expanded_desktop.png]`
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 9 — Mobile Deliverables FAB Overlaps Footer Pill:** In [`src/components/tasks/TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx) and [`src/components/layout/AppShell.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/layout/AppShell.tsx), restyled FAB to brand orange circle (`h-14 w-14 rounded-full bg-brand-orange text-black shadow-lg shadow-orange-900/40 z-40`) positioned 16px above bottom nav. Added `mb-32 md:mb-0` on mobile footer container, providing 68px vertical clearance over the FAB at both 375px and 414px widths.
+- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), captured screenshots/09_deliverables_fab_375px.png and 09_deliverables_fab_414px.png]`
 
 ---
 
