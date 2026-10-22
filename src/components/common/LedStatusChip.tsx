@@ -38,14 +38,14 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
         return {
           label: customLabel || 'IN REVIEW',
           colorClasses: 'bg-purple-500/10 text-purple-400 border-purple-500/30',
-          dotColor: 'bg-purple-500 shadow-[0_0_6px_rgba(168,85,247,0.4)] animate-pulse',
+          dotColor: 'bg-purple-500 shadow-[0_0_6px_rgba(168,85,247,0.4)]',
           icon: <Clock className="w-3 h-3" />,
         };
       case 'pending':
         return {
           label: customLabel || 'PENDING',
           colorClasses: 'bg-accent-yellow/10 text-accent-yellow border-accent-yellow/30',
-          dotColor: 'bg-accent-yellow shadow-[0_0_6px_rgba(255,212,59,0.4)] animate-pulse',
+          dotColor: 'bg-accent-yellow shadow-[0_0_6px_rgba(255,212,59,0.4)]',
           icon: <Clock className="w-3 h-3" />,
         };
       case 'in_progress':
@@ -61,7 +61,7 @@ export const LedStatusChip: React.FC<LedStatusChipProps> = ({
         return {
           label: customLabel || (status === 'changes_requested' ? 'REVISIONS REQ' : status === 'urgent' ? 'CRITICAL' : 'HIGH PRIORITY'),
           colorClasses: 'bg-accent-red/10 text-accent-red border-accent-red/30',
-          dotColor: 'bg-accent-red shadow-[0_0_6px_rgba(255,48,79,0.5)] animate-pulse',
+          dotColor: `bg-accent-red shadow-[0_0_6px_rgba(255,48,79,0.5)] ${status === 'urgent' ? 'animate-pulse' : ''}`,
           icon: status === 'urgent' ? <Flame className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />,
         };
       case 'medium':

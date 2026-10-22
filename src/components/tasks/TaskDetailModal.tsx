@@ -19,6 +19,7 @@ import { LedStatusChip } from '../common/LedStatusChip';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { parseUserIdentity } from '../common/UserLabel';
 import { GlowInput } from '../common/GlowInput';
+import { safeHref } from '../../lib/constants';
 import { 
   Task, 
   TaskSubmission, 
@@ -174,9 +175,14 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   // Review state
   const [reviewingSubId, setReviewingSubId] = useState<string | null>(null);
   const [reviewFeedback, setReviewFeedback] = useState('');
+  const [reviewError, setReviewError] = useState<string | null>(null);
 
   // Comment state
   const [newComment, setNewComment] = useState('');
+  const [commentError, setCommentError] = useState<string | null>(null);
+
+  // Unified submission action lock
+  const [submittingAction, setSubmittingAction] = useState<'work' | 'review' | 'comment' | null>(null);
 
   React.useEffect(() => {
     if (!isOpen || !task) return;
@@ -202,9 +208,15 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
       setSubError('Deliverable link or content is required.');
       return;
     }
+    if (subType === 'link' && !safeHref(subContent.trim())) {
+      setSubError('Please enter a valid HTTP or HTTPS deliverable URL.');
+      return;
+    }
+    if (submittingAction) return;
 
+    setSubmittingAction('work');
     try {
-      await onSubmitWork(task.id, subType, subContent, subNotes);
+      await onSubmitWork(task.id, subType, subContent.trim(), subNotes.trim());
       setIsSubmittingWork(false);
       setSubContent('');
       setSubNotes('');
@@ -212,27 +224,40 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Submission failed';
       setSubError(msg);
+    } finally {
+      setSubmittingAction(null);
     }
   };
 
   const handleReviewSubmit = async (subId: string, status: SubmissionReviewStatus) => {
+    if (submittingAction) return;
+    setSubmittingAction('review');
+    setReviewError(null);
     try {
-      await onReviewSubmission(subId, task.id, status, reviewFeedback);
+      await onReviewSubmission(subId, task.id, status, reviewFeedback.trim());
       setReviewingSubId(null);
       setReviewFeedback('');
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Review submission failed';
+      setReviewError(msg);
+    } finally {
+      setSubmittingAction(null);
     }
   };
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
+    if (!newComment.trim() || submittingAction) return;
+    setSubmittingAction('comment');
+    setCommentError(null);
     try {
-      await onAddComment(task.id, newComment);
+      await onAddComment(task.id, newComment.trim());
       setNewComment('');
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to post reply';
+      setCommentError(msg);
+    } finally {
+      setSubmittingAction(null);
     }
   };
 
@@ -389,7 +414,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     {task.links.map((link, idx) => (
                       <a
                         key={idx}
-                        href={link.url}
+                        href={safeHref(link.url)}
                         target="_blank"
                         rel="noreferrer"
                         className="flex items-center justify-between p-2.5 rounded-xl bg-cyber-surface border border-cyber-border hover:border-accent-cyan/60 transition-all text-xs font-mono group"
@@ -515,11 +540,11 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     </div>
 
                     <div className="flex justify-end gap-2">
-                      <GhostButton size="sm" type="button" onClick={() => setIsSubmittingWork(false)}>
+                      <GhostButton size="sm" type="button" onClick={() => setIsSubmittingWork(false)} disabled={submittingAction === 'work'}>
                         Cancel
                       </GhostButton>
-                      <GlossyButton size="sm" variant="primary" type="submit">
-                        Confirm Submission
+                      <GlossyButton size="sm" variant="primary" type="submit" disabled={submittingAction === 'work' || !subContent.trim()}>
+                        {submittingAction === 'work' ? 'Submitting...' : 'Confirm Submission'}
                       </GlossyButton>
                     </div>
                   </form>
@@ -566,7 +591,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                         <span className="font-bold text-cyber-primary">Content: </span>
                         {sub.submission_type === 'link' ? (
                           <a
-                            href={sub.content}
+                            href={safeHref(sub.content)}
                             target="_blank"
                             rel="noreferrer"
                             className="text-accent-cyan hover:underline inline-flex items-center gap-1 font-mono"
@@ -600,6 +625,11 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                         <div className="pt-2 border-t border-cyber-border">
                           {reviewingSubId === sub.id ? (
                             <div className="space-y-2">
+                              {reviewError && (
+                                <div className="p-2 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono">
+                                  {reviewError}
+                                </div>
+                              )}
                               <textarea
                                 rows={2}
                                 value={reviewFeedback}
@@ -608,22 +638,24 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                                 className="w-full p-2 text-xs rounded-lg bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
                               />
                               <div className="flex justify-end gap-2">
-                                <GhostButton size="sm" onClick={() => setReviewingSubId(null)}>
+                                <GhostButton size="sm" onClick={() => { setReviewingSubId(null); setReviewError(null); }} disabled={submittingAction === 'review'}>
                                   Cancel
                                 </GhostButton>
                                 <GlossyButton
                                   size="sm"
                                   variant="warning"
+                                  disabled={submittingAction === 'review'}
                                   onClick={() => handleReviewSubmit(sub.id, 'changes_requested')}
                                 >
-                                  Request Changes
+                                  {submittingAction === 'review' ? 'Submitting...' : 'Request Changes'}
                                 </GlossyButton>
                                 <GlossyButton
                                   size="sm"
                                   variant="action"
+                                  disabled={submittingAction === 'review'}
                                   onClick={() => handleReviewSubmit(sub.id, 'approved')}
                                 >
-                                  Approve Work
+                                  {submittingAction === 'review' ? 'Approving...' : 'Approve Work'}
                                 </GlossyButton>
                               </div>
                             </div>
@@ -681,6 +713,11 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 </div>
               )}
 
+              {commentError && (
+                <div className="p-2 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono">
+                  {commentError}
+                </div>
+              )}
               {/* Add Comment Input */}
               <form onSubmit={handleCommentSubmit} className="pt-2 flex items-center gap-2">
                 <input
@@ -690,8 +727,14 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   onChange={(e) => setNewComment(e.target.value)}
                   className="flex-1 h-10 px-3 rounded-xl text-xs bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan placeholder:text-cyber-muted font-sans"
                 />
-                <GlossyButton size="sm" variant="primary" type="submit" icon={<Send className="w-3.5 h-3.5" />}>
-                  Reply
+                <GlossyButton
+                  size="sm"
+                  variant="primary"
+                  type="submit"
+                  disabled={submittingAction === 'comment' || !newComment.trim()}
+                  icon={<Send className="w-3.5 h-3.5" />}
+                >
+                  {submittingAction === 'comment' ? 'Posting...' : 'Reply'}
                 </GlossyButton>
               </form>
             </div>

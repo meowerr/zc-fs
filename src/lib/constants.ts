@@ -151,3 +151,16 @@ export const triggerHaptic = (ms = 8) => {
     }
   } catch {}
 };
+
+/**
+ * Sanitizes URLs to prevent javascript: and data: XSS injections
+ */
+export const safeHref = (url?: string | null): string | undefined => {
+  if (!url) return undefined;
+  try {
+    const parsed = new URL(url);
+    return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : undefined;
+  } catch {
+    return undefined;
+  }
+};

@@ -6,7 +6,6 @@ import {
   Gauge, 
   Layers, 
   CheckCircle2, 
-  Clock, 
   Send, 
   Sun, 
   Moon, 
@@ -191,15 +190,12 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             <div className="text-xs font-mono text-cyber-muted uppercase tracking-wider mb-3">
               // Core Variant Matrix
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {([
                 ['Primary', 'primary', Activity, 'Launch'],
                 ['Secondary', 'secondary', Layers, 'Inspect'],
-                ['Outline', 'outline', Activity, 'Status'],
                 ['Action', 'action', Flame, 'Run'],
-                ['Warning', 'warning', Clock, 'Alert'],
                 ['Danger', 'danger', Flame, 'Halt'],
-                ['Metallic', 'metallic', Layers, 'System'],
               ] as const).map(([label, variant, IconComp, text]) => (
                 <div key={label} className="space-y-1.5">
                   <span className="font-mono text-label text-cyber-muted uppercase block">{label}</span>
@@ -208,10 +204,6 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                   </GlossyButton>
                 </div>
               ))}
-              <div className="space-y-1.5">
-                <span className="font-mono text-label text-cyber-muted uppercase block">// Ghost</span>
-                <GhostButton icon={<ArrowLeft className="w-4 h-4" />}>Cancel Op</GhostButton>
-              </div>
             </div>
           </div>
 
@@ -221,15 +213,13 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               // Motorsport Chamfer & Touch Target Sizing (36px sm / 44px md / 48px lg)
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              {(['sm', 'md', 'lg'] as const).map((s) => (
-                <GlossyButton key={s} variant="primary" size={s} icon={<Activity className="w-4 h-4" />}>
-                  {s.toUpperCase()}
-                </GlossyButton>
-              ))}
+              <GlossyButton variant="primary" size="sm" icon={<Activity className="w-4 h-4" />}>
+                SM (36px)
+              </GlossyButton>
               <GlossyButton variant="action" size="md" chamfer icon={<Flame className="w-4 h-4" />}>
                 Chamfered
               </GlossyButton>
-              <GhostButton size="md" active icon={<Activity className="w-4 h-4" />}>
+              <GhostButton size="md" icon={<ArrowLeft className="w-4 h-4" />}>
                 Ghost
               </GhostButton>
             </div>
@@ -440,43 +430,17 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </span>
         </div>
 
-        {/* 10.1 Vector Lockups Showcase */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-medium text-brand-orange uppercase">
-              // 10.1 Vector Mark Lockups (SVG &lt;= 6.3 KB)
+        {/* 10.1 Vector Lockup Showcase */}
+        <div className="p-6 rounded-2xl border border-white/15 bg-cyber-bg space-y-4">
+          <div className="flex items-center justify-between border-b border-cyber-border/40 pb-3">
+            <span className="text-xs font-mono font-medium flex items-center gap-1.5 text-brand-orange">
+              <span className="w-2 h-2 rounded-full bg-brand-orange" />
+              // 10.1 Vector Mark Lockup (SVG &lt;= 6.3 KB)
             </span>
-            <span className="text-label font-mono text-cyber-muted">
-              INLINE VECTORS
-            </span>
+            <span className="text-label font-mono px-2 py-0.5 rounded bg-white/10">MIDNIGHT DEFAULT</span>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            {([
-              ['dark', 'MIDNIGHT (#070B0E)', 'DEFAULT', 'bg-cyber-bg border-white/15 text-brand-white', 'text-brand-orange', true, 'Full Lockup', 'w-full max-w-xs h-auto'],
-              ['light', 'CHROME (#FFFFFF)', 'INK', 'bg-white border-slate-200 text-slate-900 shadow-xl', 'text-brand-light-orange', false, 'Horizontal', 'w-44 h-auto'],
-            ] as const).map(([theme, title, tag, bg, titleCls, glow, sub, logoCls]) => (
-              <div key={theme} className={`p-6 rounded-2xl border space-y-6 relative overflow-hidden ${bg}`}>
-                <div className="flex items-center justify-between border-b border-cyber-border/40 pb-3">
-                  <span className={`text-xs font-mono font-medium flex items-center gap-1.5 ${titleCls}`}>
-                    <span className="w-2 h-2 rounded-full bg-brand-orange" />
-                    {title}
-                  </span>
-                  <span className="text-label font-mono px-2 py-0.5 rounded bg-white/10">
-                    {tag}
-                  </span>
-                </div>
-
-                <div className="flex flex-col items-center justify-center p-5 rounded-xl border border-white/5 space-y-2">
-                  <span className="text-label font-mono uppercase tracking-widest text-cyber-muted">
-                    // {sub}
-                  </span>
-                  <ZfsMonogram glow={glow} className={logoCls} />
-                </div>
-
-
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-center p-4 rounded-xl border border-white/5 space-y-2">
+            <ZfsMonogram glow className="w-full max-w-xs h-auto" />
           </div>
         </div>
 
@@ -517,94 +481,27 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           </div>
         </div>
 
-        {/* 10.3 Brand Actions & Focus Rings */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <GlassCard className="p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-cyber-border pb-3">
-              <span className="text-xs font-mono font-medium text-brand-orange uppercase">
-                // 10.3 Brand Action Controls &amp; Focus Ring
-              </span>
-              <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
-                5.23:1 RATIO (AA)
-              </span>
-            </div>
-
-            <p className="text-xs text-cyber-secondary leading-relaxed">
-              Actions use <code className="text-brand-orange">#E07212</code> (5.23:1 AA).
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <button className="px-4 py-2 rounded-lg bg-brand-orange text-black font-display font-bold text-xs uppercase">
-                Primary Brand
-              </button>
-              <button className="px-4 py-2 rounded-lg bg-brand-orange/10 border border-brand-orange/50 text-brand-orange font-display font-bold text-xs uppercase">
-                Secondary Brand
-              </button>
-            </div>
-          </GlassCard>
-
-          {/* 10.4 Status Semantics Collision Re-Map */}
-          <GlassCard className="p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-cyber-border pb-3">
-              <span className="text-xs font-mono font-medium text-accent-cyan uppercase">
-                // 10.4 Status Semantics Collision Re-Map
-              </span>
-              <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30">
-                PROPOSED B3
-              </span>
-            </div>
-
-            <p className="text-xs text-cyber-secondary leading-relaxed">
-              Status colors re-mapped for brand identity.
-            </p>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
-              {([
-                ['PROGRESS', '#00D9FF', Activity, 'bg-accent-cyan/10 border-accent-cyan/30 text-accent-cyan'],
-                ['REVIEW', '#A855F7', Clock, 'bg-purple-500/10 border-purple-500/30 text-purple-400'],
-                ['DUE SOON', '#FFD43B', Clock, 'bg-yellow-500/10 border-yellow-500/30 text-yellow-400'],
-                ['OVERDUE', '#FF304F', Flame, 'bg-red-500/10 border-red-500/30 text-red-400'],
-                ['APPROVED', '#10E57A', CheckCircle2, 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'],
-                ['IDENTITY', '#E07212', Sparkles, 'bg-brand-orange/15 border-brand-orange/40 text-brand-orange'],
-              ] as const).map(([label, hex, IconComp, style]) => (
-                <div key={label} className={`p-2 rounded-lg border space-y-0.5 ${style}`}>
-                  <div className="flex items-center gap-1.5 text-label font-mono font-medium">
-                    <IconComp className="w-3.5 h-3.5" />
-                    {label}
-                  </div>
-                  <div className="text-label font-mono text-cyber-muted">{hex}</div>
-                </div>
-              ))}
-            </div>
-          </GlassCard>
-        </div>
-
-        
-
-        {/* 10.6 WCAG 2.1 AA Contrast Verification Matrix */}
-        <GlassCard className="p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-cyber-border pb-3">
+        {/* 10.3 Brand Actions & Semantics */}
+        <GlassCard className="p-6 space-y-3">
+          <div className="flex items-center justify-between border-b border-cyber-border pb-2.5">
             <span className="text-xs font-mono font-medium text-brand-orange uppercase">
-              // 10.6 WCAG 2.1 AA Computed Contrast Ratios Matrix
+              // 10.3 Brand Action Controls &amp; Status Semantics
             </span>
             <span className="text-label font-mono px-2 py-0.5 rounded bg-accent-lime/15 text-accent-lime border border-accent-lime/30">
-              AUDITED COMPLIANCE
+              5.23:1 RATIO (AA)
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs font-mono">
-            {([
-              ['Brand Btn', '#E07212', '5.23:1', 'PASS AA'],
-              ['Chrome Text', '#C2410C', '5.39:1', 'PASS AA'],
-              ['Dark Body', '#F2F4F7', '17.8:1', 'PASS AAA'],
-              ['Prohibited', '#FFFFFF', '3.18:1', 'FAIL'],
-            ] as const).map(([el, col, rat, v]) => (
-              <div key={el} className="p-2.5 rounded-lg bg-cyber-surface border border-cyber-border space-y-1">
-                <div className="text-label text-cyber-muted uppercase">{el}</div>
-                <div className="font-bold" style={{ color: col }}>{rat}</div>
-                <div className={`text-label ${v === 'FAIL' ? 'text-accent-red font-bold' : 'text-accent-lime'}`}>{v}</div>
-              </div>
-            ))}
+          <p className="text-xs text-cyber-secondary leading-relaxed">
+            Actions use <code className="text-brand-orange">#E07212</code> (5.23:1 AA). Motorsport telemetry tokens re-mapped for high contrast.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <button className="px-4 py-2 rounded-lg bg-brand-orange text-black font-display font-bold text-xs uppercase">
+              Primary Brand
+            </button>
+            <span className="px-2.5 py-1 rounded bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan text-xs font-mono">PROGRESS #00D9FF</span>
+            <span className="px-2.5 py-1 rounded bg-accent-lime/10 border border-accent-lime/30 text-accent-lime text-xs font-mono">APPROVED #10E57A</span>
           </div>
         </GlassCard>
       </section>

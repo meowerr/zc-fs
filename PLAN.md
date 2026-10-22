@@ -550,6 +550,11 @@ zc-fs/
     - **B7 F1HorizontalTransition:** [OPTIONAL] Livery re-skin.
     - **B8 A11y & Docs Pass:** [PENDING] Final WCAG AA audit, phone verification.
 
+  - **Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)**
+    - **Slice 1 Broken Interactions & State:** [COMPLETED] Overview "Submit Work" tab switch, Delete modal event propagation fix, skeleton list flashing elimination, reactive derived modal state, and 0-row RLS refusal detection.
+    - **Slice 2 Modal Hardening & Precision:** [COMPLETED] Form reset, local Cairo timezone safety, uncommitted link auto-commit, visible error banners, double-fire action locks, minute-accurate deadline countdown (`Due 45m`, `Overdue 15m`), pulse noise elimination (reserved for `urgent`), safe URI scheme sanitization (`safeHref`), card semantic keyboard accessibility, and page title polish.
+    - **Slice 3 Safety, Mobile Export & A11y Polish:** [IN PROGRESS] Mobile export overflow menu, CSV UTF-8 BOM (`\uFEFF`) and CSV formula injection escaping, detail modal mobile tab layout and thread scroll.
+
   - **Mobile UI Overhaul (Branch: feature/mobile-ui-polish)**
     - **Phase 0 Recon & Baseline:** [COMPLETED] Baseline metrics recorded (285 micro-text, 42 small controls, 19 vh units, zoom-lock present).
     - **Phase 1 Foundations:** [COMPLETED] Unlocked zoom, forced 16px mobile form inputs, added typography scale and .tap-target utility.

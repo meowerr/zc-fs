@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)
-- **Active Status:** Slice 1 (High-Impact Broken Interactions & Realtime State Stability) completed and verified: Overview "Submit Work" tab switch, Delete confirmation event propagation fix, skeleton list flashing elimination, reactive derived modal state, and 0-row RLS refusal detection.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.89 KB < 200 KB, main App JS gzip: 38.97 KB < 50 KB).
+- **Active Status:** Slice 2 (Modal Hardening, Deadline Precision, LED De-Noising, Safe Link Protection & Card Accessibility) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.71 KB < 200 KB, main App JS gzip: 39.63 KB < 50 KB).
 
 ---
 
@@ -18,6 +18,17 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` **RLS 0-Row Refusal Detection (Item 3.1):** In `useTasks.ts`, updated `updateTaskStatus` to verify updated rows via `.select('id')` and throw a clear permission error when RLS blocks the update with 0 rows.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Chunk Isolation (Item 3.7):** Cleaned up `SUB_TEAMS` imports in `TaskCreateModal.tsx` and `NewDMModal.tsx` to reference `lib/constants` directly rather than the lazy `AdminApprovalHub`.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.89 KB** (< 200 KB budget), Main JS gzip: **38.97 KB** (< 50 KB budget).
+
+### Slice 2: Modal Hardening, Deadline Precision, LED De-Noising, Safe Link Protection & Card Accessibility
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Form Reset & Local Cairo Timezone Safety (Item 1.5):** In `TaskCreateModal.tsx`, implemented complete `resetForm()` lifecycle handler, auto-scoped available member assignees when admins toggle groups, and defaulted deadline to tomorrow in local browser timezone (`getTomorrowLocalDateTime()`) to prevent the UTC date-shift bug for Cairo users.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Uncommitted Draft Links Auto-Commit & Visible Error Banner (Item 1.5):** In `TaskCreateModal.tsx`, uncommitted draft link inputs are automatically committed upon form submit, preventing silent drop. Form validation and creation errors render in a prominent sticky error banner.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Double-Fire Locks & Error Affordances (Item 1.5b):** In `TaskDetailModal.tsx`, introduced unified `submittingAction: 'work' | 'review' | 'comment' | null`, locking buttons and showing "Submitting..." / "Approving..." states to prevent double submissions and rendering clear error banners on failure.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Minute-Accurate Deadline Readout (Item 2.3):** In `TaskCard.tsx`, fixed deadline countdown rounding logic. Durations under 2 hours now display minute precision (`Due 45m`, `Overdue 15m`), eliminating bizarre `OVERDUE -0d` and `Due 0h` artifacts.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Pulse Noise Elimination (Item 2.4):** In `LedStatusChip.tsx` and `TaskCard.tsx`, removed visual pulse animation from non-critical states (`submitted`, `pending`, `changes_requested`, `high`). Reserved `animate-pulse` strictly for `urgent` (CRITICAL telemetry alerts).
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Safe URI Scheme Sanitization (Item 4.1):** In `src/lib/constants.ts`, added `safeHref()` sanitizer validating that external links strictly use `http:` or `https:`, blocking `javascript:` and `data:` XSS vectors. Applied to both task reference links and submission review links.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Card Semantic Keyboard Accessibility & Admin Group Badges (Items 2.8 & 5):** In `TaskCard.tsx`, added `role="button"`, `tabIndex={0}`, dynamic `aria-label`, and Enter/Space keyboard trigger handlers. Wrapped assignee chips with `flex-wrap`, displayed sub-team names for admins, and tagged priority chips when high or urgent.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Pit Wall Renaming (Item 3.12):** In `TasksHub.tsx`, renamed page header from "Pit Wall" to "Team Deliverables" for clarity.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.71 KB** (< 200 KB budget), Main JS gzip: **39.63 KB** (< 50 KB budget).
 
 ---
 

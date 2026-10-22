@@ -3,7 +3,8 @@ import {
   Plus, 
   Calendar, 
   Link as LinkIcon, 
-  UserPlus
+  UserPlus,
+  AlertTriangle
 } from 'lucide-react';
 import { ModalShell } from '../common/ModalShell';
 import { GlossyButton } from '../common/GlossyButton';
@@ -39,16 +40,19 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
   teamMembers,
   onCreateTask,
 }) => {
+  const getInitialDate = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 4);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  };
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [groupId, setGroupId] = useState<string>(currentUserGroup || SUB_TEAMS[0].id);
   const [taskType, setTaskType] = useState<TaskType>('design');
   const [priority, setPriority] = useState<TaskPriority>('medium');
-  const [deadlineDate, setDeadlineDate] = useState<string>(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 4);
-    return d.toISOString().split('T')[0];
-  });
+  const [deadlineDate, setDeadlineDate] = useState<string>(getInitialDate);
   const [deadlineTime, setDeadlineTime] = useState('18:00');
   const [linkTitle, setLinkTitle] = useState('');
   const [linkUrl, setLinkUrl] = useState('');
@@ -57,9 +61,24 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Filter members eligible for this task's sub-team
+  const resetForm = () => {
+    setTitle('');
+    setDescription('');
+    setGroupId(currentUserGroup || SUB_TEAMS[0].id);
+    setTaskType('design');
+    setPriority('medium');
+    setDeadlineDate(getInitialDate());
+    setDeadlineTime('18:00');
+    setLinkTitle('');
+    setLinkUrl('');
+    setLinks([]);
+    setSelectedAssigneeIds([]);
+    setError(null);
+  };
+
+  // Filter members eligible for this task's sub-team (scoped to selected group)
   const availableMembers = teamMembers.filter(
-    (m) => m.status === 'approved' && (isAdmin || m.group_id === groupId)
+    (m) => m.status === 'approved' && m.group_id === groupId
   );
 
   const handleAddLink = () => {
@@ -93,21 +112,36 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
     }
 
     const fullDeadline = new Date(`${deadlineDate}T${deadlineTime}:00`).toISOString();
+    if (new Date(fullDeadline) <= new Date()) {
+      setError('Deadline must be in the future.');
+      return;
+    }
+
     const chosenAssignees = teamMembers.filter((m) => selectedAssigneeIds.includes(m.id));
+
+    // Auto-commit pending uncommitted link if present (Item 1.5)
+    let finalLinks = [...links];
+    if (linkUrl.trim()) {
+      finalLinks.push({
+        title: linkTitle.trim() || 'Reference CAD / Doc',
+        url: linkUrl.trim(),
+      });
+    }
 
     setIsSubmitting(true);
     try {
       await onCreateTask({
-        title,
-        description,
+        title: title.trim(),
+        description: description.trim(),
         groupId,
         taskType,
         priority,
         deadline: fullDeadline,
-        links,
+        links: finalLinks,
         assigneeIds: selectedAssigneeIds,
         assignees: chosenAssignees,
       });
+      resetForm();
       onClose();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to create task';
@@ -117,28 +151,41 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
     }
   };
 
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
   const modalFooter = (
-    <div className="flex items-center justify-end gap-2">
-      <GhostButton type="button" size="sm" onClick={onClose} disabled={isSubmitting}>
-        Cancel
-      </GhostButton>
-      <GlossyButton
-        type="submit"
-        form="task-create-form"
-        variant="primary"
-        size="sm"
-        disabled={isSubmitting || !title.trim()}
-        icon={<Plus className="w-4 h-4" />}
-      >
-        {isSubmitting ? 'Dispatching...' : 'Launch Task'}
-      </GlossyButton>
+    <div className="space-y-2.5 w-full">
+      {error && (
+        <div className="p-2.5 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-mono font-medium flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+      <div className="flex items-center justify-end gap-2">
+        <GhostButton type="button" size="sm" onClick={handleClose} disabled={isSubmitting}>
+          Cancel
+        </GhostButton>
+        <GlossyButton
+          type="submit"
+          form="task-create-form"
+          variant="primary"
+          size="sm"
+          disabled={isSubmitting || !title.trim()}
+          icon={<Plus className="w-4 h-4" />}
+        >
+          {isSubmitting ? 'Dispatching...' : 'Launch Task'}
+        </GlossyButton>
+      </div>
     </div>
   );
 
   return (
     <ModalShell
       open={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Create Sub-Team Task"
       footer={modalFooter}
       maxWidth="md:max-w-xl"
@@ -180,7 +227,16 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
               </label>
               <select
                 value={groupId}
-                onChange={(e) => setGroupId(e.target.value)}
+                onChange={(e) => {
+                  const newGid = e.target.value;
+                  setGroupId(newGid);
+                  setSelectedAssigneeIds((prev) =>
+                    prev.filter((id) => {
+                      const m = teamMembers.find((member) => member.id === id);
+                      return m && m.group_id === newGid;
+                    })
+                  );
+                }}
                 className="w-full min-h-[44px] px-3 rounded-xl text-base sm:text-xs font-mono font-medium uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
               >
                 {SUB_TEAMS.map((team) => (

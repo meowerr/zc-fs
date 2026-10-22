@@ -19,14 +19,16 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
   
   // Format deadline human-readably
   const formatDeadline = (d: Date) => {
-    const diffHours = Math.round((d.getTime() - now.getTime()) / (1000 * 60 * 60));
-    if (diffHours < 0) {
-      return `OVERDUE -${Math.abs(Math.round(diffHours / 24))}d`;
+    const diffMins = Math.round((d.getTime() - now.getTime()) / 60000);
+    if (diffMins < 0) {
+      const absM = Math.abs(diffMins);
+      if (absM < 60) return `Overdue ${absM}m`;
+      if (absM < 1440) return `Overdue ${Math.floor(absM / 60)}h`;
+      return `Overdue ${Math.floor(absM / 1440)}d`;
     }
-    if (diffHours < 24) {
-      return `Due ${diffHours}h`;
-    }
-    return `Due ${Math.round(diffHours / 24)}d`;
+    if (diffMins < 60) return `Due ${diffMins}m`;
+    if (diffMins < 1440) return `Due ${Math.floor(diffMins / 60)}h`;
+    return `Due ${Math.floor(diffMins / 1440)}d`;
   };
 
   const typeColorClasses: Record<string, string> = {
@@ -41,13 +43,22 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
   return (
     <GlassCard
       onClick={() => onSelect(task)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect(task);
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label={`Deliverable: ${task.title}. Status: ${task.status}. Priority: ${task.priority}.`}
       accentColor={groupAccent}
-      className="p-4 hover:border-accent-cyan/60 active:bg-cyber-surface-hover active:scale-[0.99] transition-all cursor-pointer group shadow-cyber-sm hover:shadow-cyber"
+      className="p-4 hover:border-accent-cyan/60 focus:outline-none focus:ring-2 focus:ring-accent-cyan/60 active:bg-cyber-surface-hover active:scale-[0.99] transition-all cursor-pointer group shadow-cyber-sm hover:shadow-cyber"
     >
       <div className="flex flex-col gap-2.5">
         {/* Top Badges Row */}
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 flex-wrap min-w-0">
+          <div className="flex items-center gap-1.5 flex-wrap min-w-0">
             {groupAccent && (
               <span 
                 className="w-2 h-2 rounded-full shrink-0" 
@@ -59,9 +70,12 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
               {task.task_type}
             </span>
             {groupName && (
-              <span className="hidden sm:inline text-label font-mono text-cyber-muted truncate max-w-[130px]">
+              <span className="text-label font-mono text-cyber-muted truncate max-w-[120px]">
                 {groupName}
               </span>
+            )}
+            {(task.priority === 'urgent' || task.priority === 'high') && (
+              <LedStatusChip status={task.priority} size="sm" />
             )}
           </div>
 
@@ -81,9 +95,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
         </div>
 
         {/* Footer: Assignees + Deadline + Links Count */}
-        <div className="flex items-center justify-between pt-2 border-t border-cyber-border text-xs">
+        <div className="flex items-center justify-between pt-2 border-t border-cyber-border text-xs gap-2">
           {/* Assignees */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 flex-wrap min-w-0">
             {task.assignees && task.assignees.length > 0 ? (
               <div className="flex items-center -space-x-1.5">
                 {task.assignees.slice(0, 3).map((a) => (
@@ -109,13 +123,13 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, onSelect, groupName, g
           </div>
 
           {/* Deadline Chip */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 shrink-0">
             <span
               className={`
                 inline-flex items-center gap-1 font-mono text-label px-1.5 py-0.5 rounded
                 ${
                   isOverdue
-                    ? 'bg-accent-red/10 text-accent-red border border-accent-red/30 animate-pulse'
+                    ? 'bg-accent-red/10 text-accent-red border border-accent-red/30'
                     : 'text-cyber-muted'
                 }
               `}
