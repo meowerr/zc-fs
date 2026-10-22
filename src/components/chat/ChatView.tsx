@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
-import { LedStatusChip } from '../common/LedStatusChip';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { parseUserIdentity } from '../common/UserLabel';
 import { MessageBubble } from './MessageBubble';
@@ -366,30 +365,34 @@ export const ChatView: React.FC<ChatViewProps> = ({
         `}
       >
         {/* Chat Stream Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
-          <div className="flex items-center gap-2.5 min-w-0">
+        <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0 gap-2 min-w-0">
+          <div className="flex-1 flex items-center gap-2 min-w-0">
             <button
               onClick={() => setShowMobileList(true)}
-              className="md:hidden inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary text-xs font-sans font-medium cursor-pointer"
+              className="md:hidden shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary text-xs font-sans font-medium cursor-pointer"
               title="Channels & DMs"
+              aria-label="Back to Channels list"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
               <span>Channels</span>
             </button>
 
-            <div className="min-w-0">
-              <h3 className="font-display font-bold text-xs sm:text-sm text-cyber-primary truncate uppercase tracking-wider">
+            <div className="flex-1 min-w-0">
+              <h3 className="flex-1 min-w-0 truncate font-display font-bold text-xs sm:text-sm text-cyber-primary uppercase tracking-wider">
                 {chatTitle}
               </h3>
-              <p className="text-label font-sans text-cyber-muted truncate max-w-xs sm:max-w-md">
-                {chatSubtitle}
-              </p>
+              {chatSubtitle && (
+                <p className="text-label font-sans text-cyber-muted truncate max-w-xs sm:max-w-md">
+                  {chatSubtitle}
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="flex-shrink-0">
-            <LedStatusChip status="online" customLabel="TELEMETRY LIVE" size="sm" />
-          </div>
+          <span className="flex-shrink-0 text-label font-mono text-accent-lime bg-accent-lime/10 border border-accent-lime/30 px-2 py-0.5 rounded-full inline-flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse" />
+            <span>TELEMETRY LIVE</span>
+          </span>
         </div>
 
         {/* Message Stream */}

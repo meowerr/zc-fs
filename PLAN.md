@@ -554,7 +554,7 @@ zc-fs/
     - **Fix 7 — Pending Approval Badge Overflow (Mobile):** [COMPLETED] Responsive text wrapping and sizing (`text-label sm:text-xs`, `whitespace-normal sm:whitespace-nowrap`, `break-words`, `max-w-full`). Verified at 375px mobile viewport.
     - **Fix 8 — Sidebar "SYSTEM LIVE" badge truncated when collapsed:** [COMPLETED] Render centered status dot with tooltip on collapsed rail and full badge when expanded.
     - **Fix 9 — Mobile Deliverables FAB overlaps footer pill:** [COMPLETED] Reconfigured brand orange round FAB and added mobile footer bottom margin with 68px clearance at 375px/414px.
-    - **Fix 10 — Mobile chat header title crushed by "TELEMETRY LIVE" badge:** [PENDING]
+    - **Fix 10 — Mobile chat header title crushed by "TELEMETRY LIVE" badge:** [COMPLETED] Gave chat title flex-1 min-w-0 and status badge flex-shrink-0 to prevent title crushing. Verified at 375px mobile viewport.
     - **Fix 11 — Mobile Control/Dashboard stat cards: half-width gap + missing cards:** [PENDING]
     - **Fix 12 — Stray decorative "+" icon overlapping functional "+" button (desktop chat):** [PENDING]
     - **Fix 13 — Global unlabeled "+" icons sweep:** [PENDING]
