@@ -2,6 +2,7 @@ import React from 'react';
 import { ExternalLink, Paperclip } from 'lucide-react';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { Message } from '../../lib/database.types';
+import { parseUserIdentity } from '../common/UserLabel';
 
 export interface MessageBubbleProps {
   message: Message;
@@ -21,7 +22,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   showTimestamp = true,
   isLastInGroup = true,
 }) => {
-  const senderName = message.sender?.full_name || 'Engineer';
+  const senderIdentity = parseUserIdentity(message.sender?.full_name, message.sender?.email);
+  const senderName = senderIdentity.displayName;
   const senderRole = message.sender?.role || 'member';
   const timeFormatted = new Date(message.created_at).toLocaleTimeString([], {
     hour: '2-digit',
@@ -82,7 +84,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
             ${bubbleRadius}
             ${
               isOwn
-                ? 'bg-accent-cyan/15 text-cyber-primary border border-accent-cyan/40 shadow-[0_1px_8px_rgba(0,217,255,0.12)] ml-auto'
+                ? 'ml-auto bg-cyber-surface-elevated border border-accent-cyan/30 text-cyber-primary shadow-cyber-sm'
                 : 'bg-cyber-surface text-cyber-primary border border-cyber-border shadow-cyber-sm'
             }
           `}
