@@ -51,9 +51,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
   const paletteColors = [
     ['Canvas', '#070A0E'],
     ['Surface', '#11161D'],
-    ['Elevated', '#181E26'],
     ['Cyan', '#00D9FF'],
-    ['Violet', '#A855F7'],
     ['Orange', '#E07212'],
   ] as const;
 
@@ -141,32 +139,15 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           <span className="text-label font-mono text-cyber-muted">5 DISTINCT ENGINEERING DISCIPLINES</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
           {SUB_TEAMS.map((team) => (
             <div
               key={team.id}
-              className="p-4 rounded-xl bg-cyber-surface-elevated border border-cyber-border flex flex-col justify-between gap-3 relative overflow-hidden"
+              className="p-3 rounded-xl bg-cyber-surface border border-cyber-border space-y-1"
               style={{ borderLeftColor: team.color_accent || '#00D9FF', borderLeftWidth: '3px' }}
             >
-              <div className="space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: team.color_accent || '#00D9FF' }}
-                  />
-                  <span className="font-mono text-label text-cyber-muted uppercase tracking-wider">
-                    {team.slug}
-                  </span>
-                </div>
-                <h4 className="font-bold text-xs text-cyber-primary">
-                  {team.name.replace('Technical - ', '').replace('Operations - ', '')}
-                </h4>
-              </div>
-
-              <div className="pt-2 border-t border-cyber-border flex items-center justify-between text-label font-mono">
-                <span className="text-cyber-muted">Accent</span>
-                <span className="font-bold" style={{ color: team.color_accent || '#00D9FF' }}>{team.color_accent}</span>
-              </div>
+              <span className="font-mono text-label text-cyber-muted uppercase block">{team.slug}</span>
+              <div className="font-bold text-xs text-cyber-primary truncate">{team.name.split(' - ')[1]}</div>
             </div>
           ))}
         </div>
@@ -328,21 +309,14 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
           <span className="text-label font-mono text-cyber-muted">PRECISION ENGINEERING DATA READOUTS</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {([
-            ['Battery State of Charge', '88%', 'text-accent-lime', '#10E57A', 88, 'Accumulator nominal'],
-            ['Brake Thermal Quota', '92%', 'text-accent-red', '#FF304F', 92, 'Rotor elevated'],
-          ] as const).map(([title, val, color, hex, gauge, note]) => (
-            <GlassCard key={title} className="p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-cyber-secondary uppercase">{title}</span>
-                <span className={`font-mono font-medium text-sm ${color}`}>{val}</span>
-              </div>
-              <SegmentedGauge value={gauge} totalSegments={10} accentColor={hex} />
-              <span className="text-label font-mono block pt-1 text-cyber-muted">{note}</span>
-            </GlassCard>
-          ))}
-        </div>
+        <GlassCard className="p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="font-mono text-xs text-cyber-secondary uppercase">Battery State of Charge</span>
+            <span className="font-mono font-medium text-sm text-accent-lime">88%</span>
+          </div>
+          <SegmentedGauge value={88} totalSegments={10} accentColor="#10E57A" />
+          <span className="text-label font-mono block pt-1 text-cyber-muted">Accumulator nominal</span>
+        </GlassCard>
       </section>
 
       {/* ─── 8. TYPOGRAPHY MATRIX ─── */}
@@ -453,13 +427,11 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             <span className="text-label font-mono text-cyber-muted">CLICK SWATCH TO COPY HEX</span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {([
               ['Orange', '#E07212', 'text-black', 'Primary'],
-              ['Pressed', '#C6620A', 'text-white', 'Active'],
               ['Light', '#C2410C', 'text-white', '5.5:1 AA'],
               ['Ink', '#070B0E', 'text-white', 'Dark Base'],
-              ['White', '#F2F4F7', 'text-black', 'Outline'],
             ] as const).map(([name, hex, text, role]) => (
               <button
                 key={name}

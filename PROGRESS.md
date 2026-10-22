@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)
-- **Active Status:** Slice 2 (Modal Hardening, Deadline Precision, LED De-Noising, Safe Link Protection & Card Accessibility) completed and verified.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.71 KB < 200 KB, main App JS gzip: 39.63 KB < 50 KB).
+- **Active Status:** Slice 3 (Safety, Mobile Export, Tab Responsiveness & Discussion Flow) completed and verified.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.96 KB < 200 KB, main App JS gzip: 40.10 KB < 50 KB).
 
 ---
 
@@ -29,6 +29,15 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Card Semantic Keyboard Accessibility & Admin Group Badges (Items 2.8 & 5):** In `TaskCard.tsx`, added `role="button"`, `tabIndex={0}`, dynamic `aria-label`, and Enter/Space keyboard trigger handlers. Wrapped assignee chips with `flex-wrap`, displayed sub-team names for admins, and tagged priority chips when high or urgent.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Pit Wall Renaming (Item 3.12):** In `TasksHub.tsx`, renamed page header from "Pit Wall" to "Team Deliverables" for clarity.
 - `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.71 KB** (< 200 KB budget), Main JS gzip: **39.63 KB** (< 50 KB budget).
+
+### Slice 3: Safety, Mobile Export, Tab Responsiveness & Discussion Flow
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Mobile Export Telemetry & Filtered Exports (Item 1.4 & 3.8):** Added dedicated CSV and JSON export buttons in `TasksHub.tsx` inside the mobile Filter sheet with haptic feedback. Connected both desktop and mobile exports to `filteredTasks`, ensuring downloaded spreadsheets/JSON files reflect active filters and search terms.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **CSV UTF-8 BOM & Excel Formula Injection Mitigation (Item 3.11):** In `exportUtils.ts`, prepended `\uFEFF` UTF-8 BOM to CSV blobs so Excel opens Arabic engineer names and sub-team labels without mojibake. Sanitized formula injection vectors (`=`, `+`, `-`, `@`, `\t`, `\r`) by escaping with a leading `'`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Reduced JSON Telemetry Export (Item 3.11):** In `exportUtils.ts`, sanitized exported JSON shape to core task telemetry fields, removing superfluous nested profile data for improved privacy.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Responsive 360px Modal Tabs with ARIA (Item 2.5 & 5):** In `TaskDetailModal.tsx`, converted tab list to `overflow-x-auto no-scrollbar` with `whitespace-nowrap`, `min-w-[70px]`, and semantic `role="tablist"` / `role="tab"` / `aria-selected` attributes. Tabs fit smoothly on narrow mobile screens (320–360px) without crushing text or wrapping.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Discussion Thread Scroll & Timestamps (Item 2.7):** In `TaskDetailModal.tsx`, removed restrictive `max-h-60 overflow-y-auto` double-scroll trap so thread flows naturally inside the modal scroll area. Added full date and time formatting and `commentEndRef` with smooth auto-scroll to latest technical discussion notes.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **StatStrip Total Tasks Mobile Clean-Up (Item 2.8):** Added `hideZeroOnMobile: true` to the 'Total Tasks' stat item in `TasksHub.tsx` to prevent showing an isolated 0 tile on empty task lists.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.96 KB** (< 200 KB budget), Main JS gzip: **40.10 KB** (< 50 KB budget).
 
 ---
 

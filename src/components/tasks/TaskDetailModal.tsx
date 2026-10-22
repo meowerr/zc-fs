@@ -180,6 +180,13 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   // Comment state
   const [newComment, setNewComment] = useState('');
   const [commentError, setCommentError] = useState<string | null>(null);
+  const commentEndRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (activeTab === 'discussion') {
+      commentEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [comments.length, activeTab]);
 
   // Unified submission action lock
   const [submittingAction, setSubmittingAction] = useState<'work' | 'review' | 'comment' | null>(null);
@@ -306,10 +313,15 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-1 my-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0 sticky top-0 z-10">
+        <div
+          role="tablist"
+          className="flex items-center gap-1 my-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border shrink-0 sticky top-0 z-10 overflow-x-auto no-scrollbar"
+        >
           <button
+            role="tab"
+            aria-selected={activeTab === 'overview'}
             onClick={() => setActiveTab('overview')}
-            className={`flex-1 min-h-[40px] py-2 px-3 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer ${
+            className={`flex-1 min-w-[70px] min-h-[40px] py-2 px-2.5 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1 whitespace-nowrap ${
               activeTab === 'overview'
                 ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
                 : 'text-cyber-muted hover:text-cyber-primary'
@@ -318,36 +330,42 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             Overview
           </button>
           <button
+            role="tab"
+            aria-selected={activeTab === 'submissions'}
             onClick={() => setActiveTab('submissions')}
-            className={`flex-1 min-h-[40px] py-2 px-3 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 min-w-[85px] min-h-[40px] py-2 px-2.5 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === 'submissions'
                 ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
                 : 'text-cyber-muted hover:text-cyber-primary'
             }`}
           >
-            <History className="w-3.5 h-3.5" />
+            <History className="w-3.5 h-3.5 hidden sm:inline" />
             Submissions ({submissions.length})
           </button>
           <button
+            role="tab"
+            aria-selected={activeTab === 'discussion'}
             onClick={() => setActiveTab('discussion')}
-            className={`flex-1 min-h-[40px] py-2 px-3 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 min-w-[75px] min-h-[40px] py-2 px-2.5 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === 'discussion'
                 ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
                 : 'text-cyber-muted hover:text-cyber-primary'
             }`}
           >
-            <MessageSquare className="w-3.5 h-3.5" />
+            <MessageSquare className="w-3.5 h-3.5 hidden sm:inline" />
             Thread ({comments.length})
           </button>
           <button
+            role="tab"
+            aria-selected={activeTab === 'timeline'}
             onClick={() => setActiveTab('timeline')}
-            className={`flex-1 min-h-[40px] py-2 px-3 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+            className={`flex-1 min-w-[75px] min-h-[40px] py-2 px-2.5 rounded text-label font-mono font-medium uppercase transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
               activeTab === 'timeline'
                 ? 'bg-cyber-surface-elevated text-accent-cyan border border-cyber-border shadow-cyber-sm'
                 : 'text-cyber-muted hover:text-cyber-primary'
             }`}
           >
-            <GitCommit className="w-3.5 h-3.5" />
+            <GitCommit className="w-3.5 h-3.5 hidden sm:inline" />
             Timeline ({timelineEvents.length})
           </button>
         </div>
@@ -684,7 +702,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   No discussion comments yet. Start the engineering thread below.
                 </div>
               ) : (
-                <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                <div className="space-y-2.5 pr-1">
                   {comments.map((comm) => (
                     <div
                       key={comm.id}
@@ -702,6 +720,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                           </span>
                         </div>
                         <span className="font-mono text-label text-cyber-muted">
+                          {new Date(comm.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}{' '}
                           {new Date(comm.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
@@ -710,6 +729,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                       </p>
                     </div>
                   ))}
+                  <div ref={commentEndRef} />
                 </div>
               )}
 

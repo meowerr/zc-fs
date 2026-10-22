@@ -15,8 +15,12 @@ export function exportTasksToCSV(tasks: Task[], subTeams: Array<{ id: string; na
 
   const escapeCSV = (val: string | null | undefined) => {
     if (!val) return '""';
-    const str = String(val).replace(/"/g, '""');
-    return `"${str}"`;
+    let str = String(val);
+    // Neutralize Excel formula injection (=, +, -, @, tabs)
+    if (/^[=+\-@\t\r]/.test(str)) {
+      str = `'${str}`;
+    }
+    return `"${str.replace(/"/g, '""')}"`;
   };
 
   const rows = tasks.map((task) => {
@@ -27,16 +31,17 @@ export function exportTasksToCSV(tasks: Task[], subTeams: Array<{ id: string; na
       escapeCSV(task.id),
       escapeCSV(groupName),
       escapeCSV(task.title),
-      escapeCSV(task.task_type.toUpperCase()),
-      escapeCSV(task.priority.toUpperCase()),
-      escapeCSV(task.status.toUpperCase()),
-      escapeCSV(new Date(task.deadline).toISOString()),
+      escapeCSV(task.task_type ? task.task_type.toUpperCase() : ''),
+      escapeCSV(task.priority ? task.priority.toUpperCase() : ''),
+      escapeCSV(task.status ? task.status.toUpperCase() : ''),
+      escapeCSV(task.deadline ? new Date(task.deadline).toISOString() : ''),
       escapeCSV(assigneesStr),
-      escapeCSV(new Date(task.created_at).toISOString()),
+      escapeCSV(task.created_at ? new Date(task.created_at).toISOString() : ''),
     ].join(',');
   });
 
-  const csvContent = [headers.join(','), ...rows].join('\n');
+  // Prepend \uFEFF UTF-8 BOM so Excel properly displays international and Arabic characters
+  const csvContent = '\uFEFF' + [headers.join(','), ...rows].join('\n');
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -49,7 +54,22 @@ export function exportTasksToCSV(tasks: Task[], subTeams: Array<{ id: string; na
 }
 
 export function exportTasksToJSON(tasks: Task[]) {
-  const jsonContent = JSON.stringify(tasks, null, 2);
+  const sanitized = tasks.map((t) => ({
+    id: t.id,
+    title: t.title,
+    description: t.description,
+    status: t.status,
+    priority: t.priority,
+    task_type: t.task_type,
+    deadline: t.deadline,
+    created_at: t.created_at,
+    assignees: t.assignees?.map((a) => ({
+      id: a.id,
+      full_name: a.full_name,
+    })),
+  }));
+
+  const jsonContent = JSON.stringify(sanitized, null, 2);
   const blob = new Blob([jsonContent], { type: 'application/json;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

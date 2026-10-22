@@ -166,7 +166,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             <GhostButton
               size="sm"
               icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
-              onClick={() => exportTasksToCSV(tasks, effectiveGroups)}
+              onClick={() => exportTasksToCSV(filteredTasks, effectiveGroups)}
               title="Download tasks as CSV spreadsheet"
             >
               CSV Export
@@ -174,7 +174,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             <GhostButton
               size="sm"
               icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
-              onClick={() => exportTasksToJSON(tasks)}
+              onClick={() => exportTasksToJSON(filteredTasks)}
               title="Download JSON telemetry dump"
             >
               JSON
@@ -194,7 +194,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
         stats={
           <StatStrip
             items={[
-              { label: 'Total Tasks', value: tasks.length },
+              { label: 'Total Tasks', value: tasks.length, hideZeroOnMobile: true },
               { label: 'In Review', value: inReviewCount, tone: 'yellow', hideZeroOnMobile: true },
               { label: 'Critical Overdue', value: overdueCount, tone: 'red', hideZeroOnMobile: true },
               { label: 'Deliverables Approved', value: completedCount, tone: 'lime', hideZeroOnMobile: true },
@@ -446,6 +446,37 @@ export const TasksHub: React.FC<TasksHubProps> = ({
                   {pill.label}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Mobile Export Telemetry */}
+          <div className="pt-3 border-t border-cyber-border space-y-2">
+            <label className="block text-label font-mono uppercase text-cyber-muted">
+              Export Filtered Telemetry
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic(8);
+                  exportTasksToCSV(filteredTasks, effectiveGroups);
+                }}
+                className="tap-target px-3 py-2 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-xs font-mono font-medium text-cyber-primary hover:text-accent-cyan flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <FileSpreadsheet className="w-4 h-4 text-accent-cyan" />
+                CSV
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  triggerHaptic(8);
+                  exportTasksToJSON(filteredTasks);
+                }}
+                className="tap-target px-3 py-2 rounded-lg bg-cyber-surface-elevated border border-cyber-border text-xs font-mono font-medium text-cyber-primary hover:text-accent-cyan flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Download className="w-4 h-4 text-cyber-chrome" />
+                JSON
+              </button>
             </div>
           </div>
         </div>
