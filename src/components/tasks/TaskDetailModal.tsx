@@ -271,6 +271,8 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             )}
             <button
               onClick={onClose}
+              aria-label="Close deliverable details"
+              title="Close"
               className="tap-target rounded-lg flex items-center justify-center hover:bg-cyber-surface-hover transition-colors text-cyber-muted hover:text-cyber-primary border border-transparent hover:border-cyber-border cursor-pointer"
             >
               <X className="w-4 h-4" />

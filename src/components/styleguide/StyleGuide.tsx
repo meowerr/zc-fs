@@ -78,9 +78,9 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="px-2 py-0.5 rounded bg-accent-cyan/10 border border-accent-cyan/20 text-accent-cyan text-label font-mono font-medium tracking-widest uppercase">
-              // SPECIFICATION: CYBER-RACING-Y2K
+              // DESIGN SYSTEM
             </span>
-            <span className="font-mono text-xs text-cyber-muted">BUILD v2.40</span>
+            <span className="font-mono text-xs text-cyber-muted">v2.4</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-display font-black tracking-wider uppercase">
             PitLane Design System
@@ -128,16 +128,16 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             <div
               key={name}
               onClick={() => copyToClipboard(hex)}
-              className="p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-accent-cyan/40 transition-all cursor-pointer group space-y-2"
+              className="p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-accent-cyan/40 transition-all cursor-pointer space-y-2"
             >
               <div 
-                className="w-full h-10 rounded-lg border border-white/10 flex items-center justify-center font-mono text-label font-medium"
+                className="w-full h-10 rounded-lg flex items-center justify-center font-mono text-label font-medium"
                 style={{ backgroundColor: hex }}
               >
                 {copiedColor === hex ? 'COPIED' : ''}
               </div>
               <div>
-                <div className="font-bold text-xs text-cyber-primary group-hover:text-accent-cyan">{name}</div>
+                <div className="font-bold text-xs text-cyber-primary">{name}</div>
                 <div className="font-mono text-label text-cyber-muted">{hex}</div>
                 <p className="text-label text-cyber-secondary mt-0.5">{desc}</p>
               </div>
@@ -163,18 +163,14 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
             <div
               key={name}
               onClick={() => copyToClipboard(hex)}
-              className="p-3.5 rounded-xl bg-cyber-surface border border-cyber-border hover:border-cyber-border-strong transition-all cursor-pointer group space-y-2"
-              style={{ borderTopColor: hex, borderTopWidth: '3px' }}
+              className="p-3.5 rounded-xl bg-cyber-surface border border-cyber-border hover:border-cyber-border-strong transition-all cursor-pointer space-y-2"
+              style={{ borderTop: `3px solid ${hex}` }}
             >
               <div className="flex items-center justify-between">
-                <span className="font-display font-black text-sm tracking-wider" style={{ color: hex }}>
-                  {name}
-                </span>
+                <span className="font-display font-black text-sm tracking-wider" style={{ color: hex }}>{name}</span>
                 <span className="font-mono text-label text-cyber-muted">{hex}</span>
               </div>
-              <p className="text-xs text-cyber-secondary leading-snug">
-                {role}
-              </p>
+              <p className="text-xs text-cyber-secondary leading-snug">{role}</p>
             </div>
           ))}
         </div>
@@ -457,9 +453,9 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               Console reserving fixed left offset (<code className="text-accent-cyan">--rail-offset</code>).
             </p>
             <div className="flex gap-2 text-label font-mono text-cyber-muted">
-              <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-accent-lime">Collapsed 72px</span>
-              <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-accent-cyan">Expanded 288px</span>
-              <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">≥1280px Docking</span>
+              {['Collapsed 72px', 'Expanded 288px', '≥1280px Docking'].map((t) => (
+                <span key={t} className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">{t}</span>
+              ))}
             </div>
           </GlassCard>
 
@@ -476,9 +472,9 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               Edge thumb-arc glass tab opening into responsive navigation sheet.
             </p>
             <div className="flex gap-2 text-label font-mono text-cyber-muted">
-              <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-accent-yellow">Floating Tab (56px)</span>
-              <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border text-brand-orange">78vh Sheet</span>
-              <span className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">Swipe Dismiss</span>
+              {['Floating Tab (56px)', '78vh Sheet', 'Swipe Dismiss'].map((t) => (
+                <span key={t} className="px-2 py-1 rounded bg-cyber-bg-alt border border-cyber-border">{t}</span>
+              ))}
             </div>
           </GlassCard>
         </div>
@@ -517,7 +513,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               // 10.1 Vector Mark Lockups (SVG &lt;= 6.3 KB)
             </span>
             <span className="text-label font-mono text-cyber-muted">
-              PURE INLINE VECTORS • ZERO RASTER LATENCY
+              INLINE VECTORS
             </span>
           </div>
 
@@ -572,21 +568,17 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
               <button
                 key={name}
                 onClick={() => copyToClipboard(hex)}
-                className="group p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-brand-orange/50 transition-all text-left space-y-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-orange"
+                className="p-3 rounded-xl bg-cyber-surface border border-cyber-border hover:border-brand-orange/50 transition-all text-left space-y-2 cursor-pointer focus:ring-2 focus:ring-brand-orange"
               >
                 <div
                   style={{ backgroundColor: hex }}
-                  className={`w-full h-12 rounded-lg flex items-center justify-center font-mono text-label font-medium ${text} shadow-sm group-hover:scale-[1.02] transition-transform`}
+                  className={`w-full h-10 rounded-lg flex items-center justify-center font-mono text-label font-medium ${text}`}
                 >
-                  {copiedColor === hex ? 'COPIED!' : hex}
+                  {copiedColor === hex ? 'COPIED' : hex}
                 </div>
                 <div>
-                  <div className="font-display font-bold text-xs text-cyber-primary group-hover:text-brand-orange transition-colors">
-                    {name}
-                  </div>
-                  <div className="text-label font-mono text-cyber-muted">
-                    {role}
-                  </div>
+                  <div className="font-display font-bold text-xs text-cyber-primary">{name}</div>
+                  <div className="text-label font-mono text-cyber-muted">{role}</div>
                 </div>
               </button>
             ))}

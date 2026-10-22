@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** UI/UX QA & Polish Pass (Branch: `feature/ui-qa-polish`)
-- **Active Status:** FIX 2 completed and verified (Low-contrast secondary text & semantic text-muted tokens). Awaiting confirmation to proceed to FIX 3.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | Contrast audit passing (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.96 KB < 200 KB, main App JS gzip: 38.28 KB < 50 KB).
+- **Active Status:** FIX 3 completed and verified (Aria-labels and tooltips added to floating "+" and standalone icon controls). Awaiting confirmation to proceed to FIX 4.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | Contrast audit passing (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.99 KB < 200 KB, main App JS gzip: 38.35 KB < 50 KB).
 
 ---
 

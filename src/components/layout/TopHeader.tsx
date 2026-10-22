@@ -149,6 +149,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             <button
               onClick={onOpenStyleGuide}
               aria-label="Style Guide"
+              title="Design System & Style Guide"
               className={`hidden md:flex ${DESK_BTN} hover:text-accent-cyan hover:border-accent-cyan/50`}
             >
               <Palette className="w-4 h-4 text-accent-cyan" />
@@ -159,6 +160,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={onOpenGuide}
             aria-label="Engineering Protocol Guide"
+            title="Engineering Protocol Guide"
             className={`hidden sm:flex ${DESK_BTN} hover:text-cyber-primary hover:border-cyber-border-strong`}
           >
             <BookOpen className="w-4 h-4" />
@@ -184,6 +186,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={onOpenNotifications}
             aria-label="Open notifications"
+            title="Notifications"
             className={`relative ${GHOST_BTN}`}
           >
             <Bell className="w-4 h-4" />
@@ -198,6 +201,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           <button
             onClick={onToggleTheme}
             aria-label="Toggle theme"
+            title={isDarkMode ? 'Switch to Chrome mode' : 'Switch to Midnight mode'}
             className={`hidden md:flex ${DESK_BTN} hover:text-accent-yellow hover:border-accent-yellow/50`}
           >
             {isDarkMode ? (

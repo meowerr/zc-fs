@@ -215,10 +215,12 @@ export const ChatView: React.FC<ChatViewProps> = ({
           <div className="flex items-center gap-1">
             <button
               onClick={() => setIsDMModalOpen(true)}
-              className="p-1.5 rounded-lg bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-cyber-border hover:border-accent-cyan text-cyber-secondary hover:text-accent-cyan transition-all cursor-pointer"
-              title="Start Direct Message"
+              aria-label="New direct message"
+              title="New direct message"
+              className="group relative p-1.5 rounded-lg bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-cyber-border hover:border-accent-cyan text-cyber-secondary hover:text-accent-cyan transition-all cursor-pointer min-h-[36px] min-w-[36px] flex items-center justify-center"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-4 h-4 text-accent-cyan" />
+              <span className="pointer-events-none absolute -top-8 right-0 whitespace-nowrap bg-cyber-surface-elevated border border-cyber-border text-label text-cyber-primary px-2 py-0.5 rounded shadow-cyber opacity-0 group-hover:opacity-100 transition z-20">New DM</span>
             </button>
             <button
               onClick={() => setShowMobileList(false)}

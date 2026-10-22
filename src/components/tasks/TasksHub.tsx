@@ -327,7 +327,8 @@ export const TasksHub: React.FC<TasksHubProps> = ({
             setIsCreateModalOpen(true);
           }}
           className="md:hidden fixed right-4 z-30 w-14 h-14 rounded-2xl bg-accent-cyan text-black shadow-glow-cyan bottom-[calc(5rem+env(safe-area-inset-bottom))] flex items-center justify-center cursor-pointer active:scale-95 transition-transform"
-          aria-label="New task"
+          aria-label="Add new deliverable"
+          title="Add new deliverable"
         >
           <Plus className="w-6 h-6" />
         </button>

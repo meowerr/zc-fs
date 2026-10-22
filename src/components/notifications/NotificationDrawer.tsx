@@ -84,6 +84,8 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
             <button
               onClick={onClose}
+              aria-label="Close notifications"
+              title="Close"
               className="tap-target rounded-lg hover:bg-cyber-surface-hover text-cyber-secondary hover:text-cyber-primary cursor-pointer"
             >
               <X className="w-4 h-4" />
