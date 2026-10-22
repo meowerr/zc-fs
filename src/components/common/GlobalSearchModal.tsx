@@ -51,7 +51,16 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<'all' | 'tasks' | 'people' | 'channels' | 'documents'>('all');
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [isMobile, setIsMobile] = useState<boolean>(() => 
+    typeof window !== 'undefined' ? window.innerWidth < 640 : false
+  );
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Focus input on open
   useEffect(() => {
@@ -205,9 +214,9 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[max(1rem,env(safe-area-inset-top))] sm:pt-24 px-2 sm:px-4 bg-black/80 backdrop-blur-md animate-fade-in" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[max(1rem,env(safe-area-inset-top))] sm:pt-20 px-2 sm:px-4 bg-black/80 backdrop-blur-md animate-fade-in" onClick={onClose}>
       <div 
-        className="w-full max-w-2xl rounded-2xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-2xl overflow-hidden flex flex-col max-h-[75dvh]"
+        className="w-full max-w-xl rounded-2xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-2xl overflow-hidden flex flex-col max-h-[80dvh]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Search Header Input */}
@@ -216,7 +225,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           <input
             ref={inputRef}
             type="text"
-            placeholder="Type a command or search deliverables, engineers, comms..."
+            placeholder={isMobile ? "Search workspace..." : "Search deliverables, telemetry, commands... (Cmd+K)"}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -238,7 +247,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 px-4 py-2 border-b border-cyber-border/60 bg-cyber-surface text-xs font-mono overflow-x-auto">
+        <div className="flex items-center gap-1.5 px-4 py-2 border-b border-cyber-border/60 bg-cyber-surface text-xs font-mono overflow-x-auto scrollbar-none scroll-fade-right">
           <button
             onClick={() => setActiveCategory('all')}
             className={`px-2.5 py-1 rounded transition-all cursor-pointer ${
@@ -296,7 +305,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         </div>
 
         {/* Results Stream */}
-        <div className="flex-1 overflow-y-auto p-2 space-y-1">
+        <div className="flex-1 min-h-0 overflow-y-auto p-2 space-y-1">
           {!query.trim() ? (
             <div className="py-12 text-center text-xs font-mono text-cyber-muted">
               Start typing to search cross-subteam deliverables, personnel, and telemetry channels.
