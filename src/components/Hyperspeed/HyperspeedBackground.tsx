@@ -69,10 +69,10 @@ export default function HyperspeedBackground(): React.ReactElement | null {
       <Suspense fallback={null}>
         <Hyperspeed
           curve="racing"
-          curvature={isMobile ? 0.6 : 1}
+          curvature={isMobile ? 0.6 : 1.2}
           speed={0.8}
           boost={isMobile ? 1 : 2.2}
-          fov={88}
+          fov={isMobile ? 88 : 100}
           boostFov={110}
           lanes={isMobile ? 2 : 3}
           roadWidth={10}
