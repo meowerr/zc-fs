@@ -550,6 +550,24 @@ zc-fs/
     - **B7 F1HorizontalTransition:** [OPTIONAL] Livery re-skin.
     - **B8 A11y & Docs Pass:** [PENDING] Final WCAG AA audit, phone verification.
 
+  - **Pitlane UI/UX Fix Pass (Fixes 7–23 on `feature/hyperspeed-login`)**
+    - **Fix 7 — Pending Approval Badge Overflow (Mobile):** [COMPLETED] Responsive text wrapping and sizing (`text-label sm:text-xs`, `whitespace-normal sm:whitespace-nowrap`, `break-words`, `max-w-full`). Verified at 375px mobile viewport.
+    - **Fix 8 — Sidebar "SYSTEM LIVE" badge truncated when collapsed:** [PENDING]
+    - **Fix 9 — Mobile Deliverables FAB overlaps footer pill:** [PENDING]
+    - **Fix 10 — Mobile chat header title crushed by "TELEMETRY LIVE" badge:** [PENDING]
+    - **Fix 11 — Mobile Control/Dashboard stat cards: half-width gap + missing cards:** [PENDING]
+    - **Fix 12 — Stray decorative "+" icon overlapping functional "+" button (desktop chat):** [PENDING]
+    - **Fix 13 — Global unlabeled "+" icons sweep:** [PENDING]
+    - **Fix 14 — Empty gap at top of mobile Deliverables page:** [PENDING]
+    - **Fix 15 — Missing empty state under "CHANNELS" (desktop Pit Wall Chat):** [PENDING]
+    - **Fix 16 / Fix 21 — Horizontally-clipped chips/tabs need fade mask:** [PENDING]
+    - **Fix 17 — Login desktop: empty top half of screen:** [PENDING]
+    - **Fix 18 — Pending Approval screen should reuse Hyperspeed/gradient background:** [PENDING]
+    - **Fix 19 — Engineering Protocol Guide modal: broken role tabs on mobile:** [PENDING]
+    - **Fix 20 — Command Palette input: placeholder text clips on mobile:** [PENDING]
+    - **Fix 22 — Command Palette backdrop is not opaque enough (mobile):** [PENDING]
+    - **Fix 23 — Command Palette: dead empty space below footer on mobile:** [PENDING]
+
   - **Hyperspeed 3D Warp Background Integration (Branch: `feature/hyperspeed-login`)**
     - **Chunk Isolation & Dependency Management:** [COMPLETED] Installed `three` and `@types/three`. Configured Rollup manual chunking in `vite.config.ts` isolating Three.js into dynamic chunk, maintaining core application bundle gzip at **198.85 KB** (< 200 KB) and main JS gzip at **40.16 KB** (< 50 KB).
     - **Shader & Source Preservation:** [COMPLETED] Integrated upstream React Bits `Hyperspeed.jsx` component code untouched, with `Hyperspeed.css` and `Hyperspeed.d.ts`.

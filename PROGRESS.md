@@ -1,9 +1,15 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** Hyperspeed 3D Warp Background Integration (Branch: `feature/hyperspeed-login`)
-- **Active Status:** Feature complete on branch `feature/hyperspeed-login`. Three.js Hyperspeed racing background integrated with ZFS brand orange/silver palette, dynamic lazy-loading, mobile fallback, and contrast protection.
-- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 198.85 KB < 200 KB, Main JS gzip: 40.16 KB < 50 KB).
+- **Current Phase:** Pitlane UI/UX Fix Pass (Fixes 7–23 on `feature/hyperspeed-login`)
+- **Active Status:** Fix 7 (Pending Approval Badge Overflow) completed and verified at 375px mobile viewport.
+- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 198.84 KB < 200 KB, Main JS gzip: 40.73 KB < 50 KB).
+
+---
+
+## Pitlane UI/UX Fix Pass (Fixes 7–23 on `feature/hyperspeed-login`)
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 7 — Pending Approval Badge Overflow (Mobile):** In [`src/components/auth/PendingApprovalView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/auth/PendingApprovalView.tsx), upgraded status badge to responsive flex pill with `max-w-full`, `break-words`, `whitespace-normal sm:whitespace-nowrap`, and `text-label sm:text-xs`. Verified cleanly at 375px mobile width without right-edge overflow or clipping.
+- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), verified at 375px in screenshots/02_pending_approval_mobile_375px.png]`
 
 ---
 

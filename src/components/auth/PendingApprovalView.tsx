@@ -2,7 +2,6 @@ import React from 'react';
 import { ShieldAlert, LogOut, CheckCircle2 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { GhostButton } from '../common/GhostButton';
-import { LedStatusChip } from '../common/LedStatusChip';
 import { ZfsLogo } from '../brand/ZfsLogo';
 import { Profile } from '../../lib/database.types';
 
@@ -41,8 +40,11 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
             </div>
 
             {/* Status Pill */}
-            <div className="inline-flex items-center gap-1.5 pt-1">
-              <LedStatusChip status="pending" customLabel="GATEWAY LOCKED • PENDING APPROVAL" size="sm" />
+            <div className="inline-flex items-center gap-2 max-w-full px-3 py-1.5 rounded-full border border-accent-yellow/30 bg-accent-yellow/10">
+              <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-accent-yellow shadow-[0_0_6px_rgba(255,212,59,0.4)]" />
+              <span className="text-label sm:text-xs font-mono tracking-wide text-accent-yellow whitespace-normal sm:whitespace-nowrap break-words">
+                GATEWAY LOCKED · PENDING APPROVAL
+              </span>
             </div>
 
             {/* Branded Welcome Message */}
