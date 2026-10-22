@@ -54,6 +54,7 @@ export interface Task {
   group?: Group;
   creator?: Profile;
   assignees?: Profile[];
+  assigneeDetails?: TaskAssignee[];
 }
 
 export interface TaskAssignee {

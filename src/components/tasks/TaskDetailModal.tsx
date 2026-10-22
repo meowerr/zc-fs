@@ -181,6 +181,19 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   const [newComment, setNewComment] = useState('');
   const [commentError, setCommentError] = useState<string | null>(null);
   const commentEndRef = React.useRef<HTMLDivElement>(null);
+  const mouseDownTargetRef = React.useRef<EventTarget | null>(null);
+
+  // Multi-assignee approval statistics
+  const assigneeStats = useMemo(() => {
+    if (!task?.assignees || task.assignees.length <= 1) return null;
+    const details = task.assigneeDetails || [];
+    const approved = details.filter((d) => d.status === 'approved').length;
+    return {
+      total: task.assignees.length,
+      approved,
+      isFullyApproved: approved === task.assignees.length,
+    };
+  }, [task?.assignees, task?.assigneeDetails]);
 
   React.useEffect(() => {
     if (activeTab === 'discussion') {
@@ -269,7 +282,19 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm overflow-hidden" role="dialog" aria-modal="true" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm overflow-hidden"
+      role="dialog"
+      aria-modal="true"
+      onMouseDown={(e) => {
+        mouseDownTargetRef.current = e.target;
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget && mouseDownTargetRef.current === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
       <div onClick={(e) => e.stopPropagation()} className="w-full sm:max-w-2xl max-h-[92dvh] sm:max-h-[85dvh] flex flex-col rounded-t-2xl sm:rounded-2xl p-4 sm:p-6 border border-cyber-border-strong shadow-cyber-elevated overflow-hidden bg-cyber-surface">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-cyber-border flex-shrink-0">
@@ -397,19 +422,38 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-cyber-surface border border-cyber-border">
-                  <div className="text-label font-mono text-cyber-muted uppercase">
-                    Assigned Engineers
+                <div className="p-3 rounded-xl bg-cyber-surface border border-cyber-border space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="text-label font-mono text-cyber-muted uppercase">
+                      Assigned Engineers
+                    </div>
+                    {assigneeStats && (
+                      <span className="text-label font-mono px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-cyber-secondary font-medium">
+                        {assigneeStats.approved}/{assigneeStats.total} APPROVED
+                      </span>
+                    )}
                   </div>
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex flex-wrap items-center gap-2 mt-1">
                     {task.assignees && task.assignees.length > 0 ? (
                       task.assignees.map((a) => {
                         const { displayName, studentId } = parseUserIdentity(a.full_name, a.email);
+                        const detail = task.assigneeDetails?.find((d) => d.user_id === a.id);
                         return (
-                          <div key={a.id} className="flex items-center gap-1.5 text-xs font-semibold text-cyber-primary">
+                          <div key={a.id} className="flex items-center gap-1.5 p-1 px-2 rounded-lg bg-cyber-bg border border-cyber-border text-xs font-semibold text-cyber-primary">
                             <ChromeAvatar name={displayName} role={a.role} size="sm" />
-                            <span className="truncate">{displayName}</span>
+                            <span className="truncate max-w-[120px]">{displayName}</span>
                             {studentId && <span className="text-label font-mono text-cyber-muted">#{studentId}</span>}
+                            {detail?.status && (
+                              <span className={`text-label font-mono uppercase px-1.5 py-0.5 rounded border ${
+                                detail.status === 'approved'
+                                  ? 'bg-accent-lime/10 border-accent-lime/30 text-accent-lime'
+                                  : detail.status === 'submitted'
+                                  ? 'bg-accent-cyan/10 border-accent-cyan/30 text-accent-cyan'
+                                  : 'bg-cyber-surface border-cyber-border text-cyber-muted'
+                              }`}>
+                                {detail.status.replace('_', ' ')}
+                              </span>
+                            )}
                           </div>
                         );
                       })
@@ -568,10 +612,17 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                   </form>
                 </GlassCard>
               ) : (
-                <div className="flex justify-between items-center">
-                  <span className="text-xs font-mono text-cyber-muted">
-                    Submission History & Review Records
-                  </span>
+                <div className="flex justify-between items-center flex-wrap gap-2">
+                  <div className="space-y-0.5">
+                    <span className="text-xs font-mono text-cyber-muted block">
+                      Submission History & Review Records
+                    </span>
+                    {assigneeStats && (
+                      <span className="text-label font-mono text-cyber-secondary">
+                        Multi-engineer deliverable: {assigneeStats.approved} of {assigneeStats.total} approved
+                      </span>
+                    )}
+                  </div>
                   {(isAssignee || isHeadOrAdmin) && (
                     <GlossyButton size="sm" variant="primary" onClick={() => setIsSubmittingWork(true)}>
                       + New Submission

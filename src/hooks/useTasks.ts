@@ -99,6 +99,7 @@ export function useTasks(currentUser: Profile | null) {
         const formatted: Task[] = taskData.map((t: any) => ({
           ...t,
           assignees: t.assignees?.map((a: any) => a.user).filter(Boolean) || [],
+          assigneeDetails: t.assignees || [],
         }));
         setTasks(formatted);
       }

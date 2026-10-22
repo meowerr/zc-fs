@@ -449,29 +449,31 @@ export const TasksHub: React.FC<TasksHubProps> = ({
 
           <div>
             <label className="block text-label font-mono uppercase text-cyber-muted mb-1.5">
-              Deliverable Status
+              Deliverables Scope
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {[
-                { id: 'all', label: 'All Tasks' },
-                { id: 'my_tasks', label: 'My Deliverables' },
-                { id: 'submitted', label: `In Review (${inReviewCount})` },
-                { id: 'in_progress', label: `In Progress (${inProgressCount})` },
-                { id: 'overdue', label: `Overdue (${overdueCount})` },
-                { id: 'approved', label: 'Approved' },
-              ].map((pill) => (
-                <button
-                  key={pill.id}
-                  onClick={() => setFilter(pill.id as any)}
-                  className={`min-h-[44px] px-3 py-2 rounded-lg text-xs font-mono font-medium uppercase border text-left transition-all ${
-                    filter === pill.id
-                      ? 'bg-accent-cyan text-black border-accent-cyan font-bold'
-                      : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border'
-                  }`}
-                >
-                  {pill.label}
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => setFilter('all')}
+                className={`min-h-[44px] px-3 py-2 rounded-lg text-xs font-mono font-medium uppercase border text-center transition-all ${
+                  filter !== 'my_tasks'
+                    ? 'bg-accent-cyan text-black border-accent-cyan font-bold'
+                    : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border'
+                }`}
+              >
+                Team Scope
+              </button>
+              <button
+                type="button"
+                onClick={() => setFilter(filter === 'my_tasks' ? 'all' : 'my_tasks')}
+                className={`min-h-[44px] px-3 py-2 rounded-lg text-xs font-mono font-medium uppercase border text-center transition-all ${
+                  filter === 'my_tasks'
+                    ? 'bg-accent-cyan text-black border-accent-cyan font-bold'
+                    : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border'
+                }`}
+              >
+                {filter === 'my_tasks' ? '✓ My Deliverables' : 'My Deliverables'}
+              </button>
             </div>
           </div>
 

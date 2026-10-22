@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Task Telemetry Review Remediation (Branch: `feature/task-telemetry-fixes`)
-- **Active Status:** Slice 5 (Pull-to-Refresh Safety, Timeline Reviewers, Intelligent Sorting & Task RLS Hardening) completed and verified.
-- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 198.98 KB < 200 KB, main App JS gzip: 40.76 KB < 50 KB).
+- **Active Status:** Slice 6 (Multi-Assignee Review Progress, Filter Sheet Streamlining & Backdrop Guard) completed and verified.
+- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | `tsc && vite build` passing (0 errors, total assets gzip: 199.40 KB < 200 KB, main App JS gzip: 41.18 KB < 50 KB).
 
 ---
 
@@ -52,6 +52,12 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Intelligent Engineering Priority Sorting (Item 2.9):** In `TasksHub.tsx`, implemented natural sorting hierarchy: (1) Overdue tasks first, (2) Active tasks (`in_progress`, `changes_requested`, `todo`) by earliest deadline, (3) Awaiting review (`submitted`), (4) Completed tasks (`approved`, `done`) with recent deadlines first at list bottom.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Database RLS Policy Hardening (Item 4.2):** Created `supabase/migrations/007_task_security_hardening.sql` enforcing `task_assignees` updates restrict to `('in_progress', 'submitted')` preventing self-approvals, `task_submissions` inserts require `review_status = 'pending'`, and direct `tasks` updates restricted to Admin and Group Head only. Added test suite coverage in `supabase/tests/rls_security_test.sql`.
 - `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **198.98 KB** (< 200 KB budget, >1 KB headroom), Main JS gzip: **40.76 KB** (< 50 KB budget).
+
+### Slice 6: Multi-Assignee Review Progress, Filter Sheet Streamlining & Backdrop Guard
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Multi-Assignee Review Progress (Item 3.3):** In `TaskDetailModal.tsx`, computed `assigneeStats` (`approved / total`) and rendered individual status badges (`approved`, `submitted`, `in_progress`) for each assigned engineer on multi-engineer tasks, providing transparent tracking of group approvals.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Mobile Filter Sheet Streamlining (Item 3.8):** In `TasksHub.tsx`, removed redundant status grid from mobile filter bottom sheet to avoid duplicating the always-visible horizontal toolbar chips. Kept admin sub-team scoping, My Deliverables scope toggle, and CSV/JSON export actions.
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Backdrop Drag-Off Dismissal Guard (Item 2.6):** In `TaskDetailModal.tsx`, tracked `mouseDownTargetRef` to verify that both pointer-down and click events originated strictly on the backdrop background, preventing accidental dismissals and lost drafts when selecting text inside form inputs.
+- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), node scripts/verify-slice-5-responsive.mjs (23/23 passed), node scripts/verify-slice-6-accessibility-styleguide.mjs (20/20 passed)]` Total bundle gzip: **199.40 KB** (< 200 KB budget), Main JS gzip: **41.18 KB** (< 50 KB budget).
 
 ---
 
