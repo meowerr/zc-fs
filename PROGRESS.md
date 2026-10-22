@@ -1,13 +1,49 @@
 # PROJECT PROGRESS: ZC FORMULA STUDENT WORKSPACE
 
 ## Current Status
-- **Current Phase:** UI/UX QA & Polish Pass (Branch: `feature/ui-qa-polish`)
-- **Active Status:** FIX 6 completed and verified (Explicit tablet breakpoints 768-1024px added for all 4-column stat card grids to collapse into 2x2 before mobile single-column). All 6 polish fixes fully completed.
-- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | Contrast audit passing (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.92 KB < 200 KB, main App JS gzip: 38.79 KB < 50 KB).
+- **Current Phase:** UI/UX QA & Polish Pass Completed & Verified
+- **Active Status:** All 6 QA polish fixes implemented, verified across desktop and mobile, full test suites passing, merged into master.
+- **Verification Status:** 41/41 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | 23/23 checks passing in `scripts/verify-slice-5-responsive.mjs` | 20/20 checks passing in `scripts/verify-slice-6-accessibility-styleguide.mjs` | WCAG AA contrast ratio compliance (all >= 5.9:1 in light mode, >= 6.5:1 in dark mode) | `tsc && vite build` passing (0 errors, total assets gzip: 199.95 KB < 200 KB, main App JS gzip: 38.79 KB < 50 KB).
 
 ---
 
+## UI/UX QA & Polish Pass (6 Scoped Fixes)
+
+### FIX 1: Proper Truncation & Separation of Long User Identifiers
+- `[IMPLEMENTED, MANUALLY CHECKED]` Built reusable `src/components/common/UserLabel.tsx` (`parseUserIdentity` + `<UserLabel>`), extracting student ID suffixes (e.g. `Youssef Mohammad 202500002` -> Name: `Youssef Mohammad`, ID: `202500002`).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Displayed student IDs as subtle secondary metadata (`text-[10px] text-text-muted`) or hover tooltips, preventing overflow in chat headers, direct message lists, team directory cards, assignees chips, and avatar tooltips.
+- `[VERIFIED: node scripts/verify-suite.mjs (41/41 passed)]` Strict TypeScript verification passing.
+
+### FIX 2: WCAG AA Secondary Text Contrast Standardization
+- `[IMPLEMENTED, MANUALLY CHECKED]` Created semantic design tokens `--text-muted` and `--text-subtle` in `src/index.css` and mapped in `tailwind.config.js`:
+  - Dark mode (`#94A3B8`, slate-400 equivalent): **6.5:1** contrast ratio against `#070B0E`/`#11161D` (exceeds WCAG AA 4.5:1).
+  - Light mode (`#526071`): **5.9:1** contrast ratio against `#FFFFFF`/`#F3F6FA` (exceeds WCAG AA 4.5:1).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Replaced low-contrast `text-slate-600`/`text-slate-700` and `text-cyber-muted` across timestamps, card subtitles, channel metadata, empty states, and directory labels.
+
+### FIX 3: Standalone Icon Controls Labeling & Accessibility
+- `[IMPLEMENTED, MANUALLY CHECKED]` Added explicit `aria-label`, `title`, and hover cyber-tooltips to standalone icon-only controls across the application:
+  - `ChatView.tsx`: Channel creation "+" button explicitly labeled ("Start new direct message or channel").
+  - `TasksHub.tsx`: Mobile FAB labeled ("Create new task").
+  - `TaskDetailModal.tsx` & `NotificationDrawer.tsx`: Close buttons explicitly labeled ("Close task details", "Close notifications panel").
+  - `TopHeader.tsx`: Search, notifications, and profile triggers explicitly labeled.
+
+### FIX 4: Chat Bubble Contrast Elevation
+- `[IMPLEMENTED, MANUALLY CHECKED]` Elevated user's own message bubbles in `src/components/chat/MessageBubble.tsx` using `bg-cyber-surface-elevated` (adapts cleanly to `#161D26` in dark mode / `#F8FAFC` in light mode), a subtle `border border-accent-cyan/30`, and `text-cyber-primary`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Distinguished incoming messages with `bg-cyber-surface/70 border border-cyber-border/40`, establishing clear visual scanning separation between conversation participants without harsh contrast jarring.
+
+### FIX 5: Header Icon Cluster Consolidation & Hierarchy
+- `[IMPLEMENTED, MANUALLY CHECKED]` Replaced input-like boxed email pill in `src/components/layout/TopHeader.tsx` with a clean plain-text button trigger with chevron affordance (`hidden xl:flex text-text-muted hover:text-cyber-primary`).
+- `[IMPLEMENTED, MANUALLY CHECKED]` Grouped Palette and Theme controls into a unified "Appearance" dropdown menu on desktop (`hidden xl:block`), reducing redundant header chrome.
+- `[IMPLEMENTED, MANUALLY CHECKED]` Collapsed standalone Book and Palette buttons into the mobile/tablet navigation sheet on `<1280px` viewports, freeing horizontal real estate.
+
+### FIX 6: Responsive Card Grids Tablet Breakpoints (2x2)
+- `[IMPLEMENTED, MANUALLY CHECKED]` Updated `src/components/common/StatStrip.tsx` from jumping directly from mobile scroll to 4 columns, adding an explicit tablet breakpoint `sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-3`.
+- `[IMPLEMENTED, MANUALLY CHECKED]` All 4-column metric grids across Mission Control, Tasks Hub, Team Directory, and Admin Approval Hub now gracefully collapse to a 2x2 grid on mid-size tablet viewports (768–1024px) before dropping to mobile single-row horizontal snap scroll.
+- `[VERIFIED: node scripts/verify-slice-5-responsive.mjs (23/23 passed) & node scripts/verify-suite.mjs (41/41 passed)]` All responsive and bundle tests passing.
+
 ---
+
+
 
 ## Mobile UI Overhaul (Branch: `feature/mobile-ui-polish`)
 
