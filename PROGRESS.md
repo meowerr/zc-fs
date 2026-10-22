@@ -2,8 +2,8 @@
 
 ## Current Status
 - **Current Phase:** Pitlane UI/UX Fix Pass (Fixes 7–23 on `feature/hyperspeed-login`)
-- **Active Status:** Fix 12 (Stray decorative "+" icon overlapping functional "+" button in desktop chat) completed and verified on desktop.
-- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 198.98 KB < 200 KB, Main JS gzip: 40.72 KB < 50 KB).
+- **Active Status:** Fix 13 (Global unlabeled "+" icons sweep) completed.
+- **Verification Status:** 43/43 tests passing in `scripts/verify-suite.mjs` | 5/5 checks passing in `scripts/verify-mobile-ui.mjs` | `tsc && vite build` passing (0 errors, Core gzipped bundle: 199.06 KB < 200 KB, Main JS gzip: 40.75 KB < 50 KB).
 
 ---
 
@@ -14,7 +14,8 @@
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 10 — Mobile Chat Header Title Crushed by "TELEMETRY LIVE" Badge:** In [`src/components/chat/ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx), assigned the header left container `flex-1 flex items-center gap-2 min-w-0`, the title container `flex-1 min-w-0`, and the title `flex-1 min-w-0 truncate font-display font-bold text-xs sm:text-sm text-cyber-primary uppercase tracking-wider`. The "TELEMETRY LIVE" badge is styled with `flex-shrink-0 text-label font-mono text-accent-lime bg-accent-lime/10 border border-accent-lime/30 px-2 py-0.5 rounded-full inline-flex items-center gap-1.5`. Verified on 375px mobile screen.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 11 — Mobile Control/Dashboard Stat Cards: Half-Width Gap + Missing Cards:** In [`src/components/common/StatStrip.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/StatStrip.tsx), [`src/components/dashboard/MissionControl.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/dashboard/MissionControl.tsx), and [`src/components/tasks/TasksHub.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/tasks/TasksHub.tsx), removed `hideZeroOnMobile` conditional which was hiding "Completed" and "Overdue" when 0. Replaced horizontal scrolling strip with a responsive 2x2 grid (`grid grid-cols-2 gap-2.5 sm:gap-3 sm:grid-cols-2 lg:grid-cols-4`). Verified all four stat cards render evenly across the full width without gaps or missing tiles on 375px mobile viewport.
 - `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 12 — Stray Decorative "+" Icon Overlapping Functional "+" Button (Desktop Chat):** In [`src/components/chat/ChatView.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/chat/ChatView.tsx), explicitly disabled decorative `cornerMark` (`cornerMark={false}`) on the sidebar and message container GlassCards, eliminating the conflicting absolute top-right registration mark glyph `+` that was double-rendering over the functional New DM action button. Verified on desktop viewport (1440x900).
-- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed), captured screenshots/12_desktop_chat_header.png]`
+- `[IMPLEMENTED, MANUALLY CHECKED]` **Fix 13 — Global Unlabeled "+" Icons Sweep:** In [`src/components/common/GlassCard.tsx`](file:///C:/Users/Abdullah/Desktop/zc-fs/src/components/common/GlassCard.tsx), disabled default `cornerMark = false`, removing decorative stray `+` marks globally across Team Directory, Deliverables, Documents, Pit Wall Chat, Upload modal, and Admin Hub. Added explicit `aria-label` tags to icon buttons across Chat (`aria-label="Start new direct message"`), Task Creation (`aria-label="Add external reference link"`), Task Details (`aria-label="Review this deliverable submission"`), Admin Hub (`aria-label="Close dialog"`), and Documents Hub (`aria-label="Close upload modal"`).
+- `[VERIFIED: node scripts/verify-suite.mjs (43/43 passed), node scripts/verify-mobile-ui.mjs (5/5 passed)]`
 
 ---
 

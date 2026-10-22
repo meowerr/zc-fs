@@ -737,6 +737,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                           ) : (
                             <button
                               onClick={() => setReviewingSubId(sub.id)}
+                              aria-label="Review this deliverable submission"
                               className="text-xs font-mono font-medium text-accent-cyan hover:underline cursor-pointer"
                             >
                               + Review this deliverable

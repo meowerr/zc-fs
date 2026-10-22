@@ -438,6 +438,7 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({
               </div>
               <button
                 onClick={() => setIsUploadModalOpen(false)}
+                aria-label="Close upload modal"
                 className="p-1.5 rounded-lg hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer"
               >
                 <X className="w-4 h-4" />

@@ -1072,7 +1072,8 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </div>
               <button
                 onClick={() => setIsCreateGroupOpen(false)}
-                className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-cyber-surface text-cyber-muted hover:text-cyber-primary"
+                aria-label="Close dialog"
+                className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-cyber-surface text-cyber-muted hover:text-cyber-primary cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>

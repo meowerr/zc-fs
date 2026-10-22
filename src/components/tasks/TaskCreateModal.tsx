@@ -380,6 +380,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
               <button
                 type="button"
                 onClick={handleAddLink}
+                aria-label="Add external reference link"
                 className="min-h-[44px] px-4 rounded-lg bg-cyber-surface-hover hover:bg-cyber-border border border-cyber-border text-label font-mono font-medium text-cyber-primary cursor-pointer transition-colors shrink-0"
               >
                 + Add Link

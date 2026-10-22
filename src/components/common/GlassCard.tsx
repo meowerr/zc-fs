@@ -15,7 +15,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   variant = 'default',
   className = '',
   hasShine = true,
-  cornerMark = true,
+  cornerMark = false,
   accentColor,
   chamfer = false,
   style,

@@ -291,6 +291,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
               <span>DIRECT MESSAGES</span>
               <button
                 onClick={() => setIsDMModalOpen(true)}
+                aria-label="Start new direct message"
                 className="text-accent-cyan hover:underline cursor-pointer font-sans text-label font-medium"
               >
                 + New DM
