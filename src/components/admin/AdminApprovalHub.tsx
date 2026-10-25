@@ -268,10 +268,10 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                       <div>
-                        <label className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                        <label htmlFor={`approve-group-${user.id}`} className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                           Assign Sub-Team
                         </label>
-                        <select
+                        <select id={`approve-group-${user.id}`}
                           value={currentGroupChoice}
                           onChange={(e) => handleGroupSelect(user.id, e.target.value)}
                           className="w-full h-10 px-3 rounded-lg text-xs font-sans bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
@@ -285,10 +285,10 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
                       </div>
 
                       <div>
-                        <label className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                        <label htmlFor={`approve-role-${user.id}`} className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                           Assign Role
                         </label>
-                        <select
+                        <select id={`approve-role-${user.id}`}
                           value={currentRoleChoice}
                           onChange={(e) => handleRoleSelect(user.id, e.target.value as UserRole)}
                           className="w-full h-10 px-3 rounded-lg text-xs font-sans bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
@@ -462,10 +462,10 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
             <form onSubmit={handleCreateGroupSubmit} className="space-y-3.5">
               <div>
-                <label className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                <label htmlFor="admin-field-3" className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                   Sub-Team Official Name *
                 </label>
-                <input
+                <input id="admin-field-3"
                   type="text"
                   placeholder="e.g., Technical - Aerodynamics & Cooling"
                   value={newGroupName}
@@ -481,10 +481,10 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </div>
 
               <div>
-                <label className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                <label htmlFor="admin-field-4" className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                   Identifier / Slug (Unique) *
                 </label>
-                <input
+                <input id="admin-field-4"
                   type="text"
                   placeholder="e.g., aerodynamics-cooling"
                   value={newGroupSlug}
@@ -495,10 +495,10 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </div>
 
               <div>
-                <label className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
+                <label htmlFor="admin-field-5" className="block text-2xs font-mono uppercase tracking-wider text-cyber-secondary mb-1">
                   Mission & Scope Description
                 </label>
-                <textarea
+                <textarea id="admin-field-5"
                   rows={2}
                   placeholder="Describe engineering scope, deliverables, and team responsibilities..."
                   value={newGroupDesc}

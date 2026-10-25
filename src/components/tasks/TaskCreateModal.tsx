@@ -162,10 +162,10 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           />
 
           <div>
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+            <label htmlFor="task-create-field-1" className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
               Description & Specifications
             </label>
-            <textarea
+            <textarea id="task-create-field-1"
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -177,10 +177,10 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           {/* Sub-Team Selection (If Admin) */}
           {isAdmin && (
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label htmlFor="task-create-field-2" className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Assign to Sub-Team
               </label>
-              <select
+              <select id="task-create-field-2"
                 value={groupId}
                 onChange={(e) => setGroupId(e.target.value)}
                 className="w-full h-11 px-3 rounded-xl text-sm font-sans bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
@@ -197,10 +197,10 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           {/* Type & Priority Row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label htmlFor="task-create-field-3" className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Task Type
               </label>
-              <select
+              <select id="task-create-field-3"
                 value={taskType}
                 onChange={(e) => setTaskType(e.target.value as TaskType)}
                 className="w-full h-11 px-3 rounded-xl text-xs font-mono font-bold uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
@@ -215,10 +215,10 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label htmlFor="task-create-field-4" className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Priority
               </label>
-              <select
+              <select id="task-create-field-4"
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
                 className="w-full h-11 px-3 rounded-xl text-xs font-mono font-bold uppercase bg-cyber-surface border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
@@ -234,10 +234,10 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           {/* Deadline Row */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1">
+              <label htmlFor="task-create-field-5" className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5 flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5 text-accent-cyan" /> Deadline Date
               </label>
-              <input
+              <input id="task-create-field-5"
                 type="date"
                 value={deadlineDate}
                 onChange={(e) => setDeadlineDate(e.target.value)}
@@ -247,10 +247,10 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
+              <label htmlFor="task-create-field-6" className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary mb-1.5">
                 Time (UTC+2)
               </label>
-              <input
+              <input id="task-create-field-6"
                 type="time"
                 value={deadlineTime}
                 onChange={(e) => setDeadlineTime(e.target.value)}
@@ -296,12 +296,12 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
 
           {/* Reference Links */}
           <div className="space-y-2">
-            <label className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary flex items-center gap-1.5">
+            <label htmlFor="task-create-field-7" className="block text-xs font-mono font-semibold uppercase tracking-wider text-cyber-secondary flex items-center gap-1.5">
               <LinkIcon className="w-3.5 h-3.5 text-accent-cyan" /> Reference CAD / Repo Links
             </label>
 
             <div className="flex items-center gap-2">
-              <input
+              <input id="task-create-field-7"
                 type="text"
                 placeholder="Title (e.g. Onshape CAD)"
                 value={linkTitle}

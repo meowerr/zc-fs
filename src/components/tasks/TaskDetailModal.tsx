@@ -366,10 +366,10 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                     />
 
                     <div>
-                      <label className="block text-[11px] font-mono uppercase text-cyber-secondary mb-1">
+                      <label htmlFor="task-detail-field-1" className="block text-[11px] font-mono uppercase text-cyber-secondary mb-1">
                         Revision Notes for Reviewer
                       </label>
-                      <textarea
+                      <textarea id="task-detail-field-1"
                         rows={2}
                         value={subNotes}
                         onChange={(e) => setSubNotes(e.target.value)}
