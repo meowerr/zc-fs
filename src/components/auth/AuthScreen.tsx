@@ -6,7 +6,8 @@ import {
   User, 
   AlertCircle, 
   ArrowRight,
-  Gauge
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { GlassCard } from '../common/GlassCard';
 import { GlossyButton } from '../common/GlossyButton';
@@ -28,6 +29,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   const [fullName, setFullName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +52,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
         await onLogin(email, password);
       } else {
         if (!fullName.trim()) {
-          setError('Please provide your full engineering name.');
+          setError('Please enter your full name.');
           setLoading(false);
           return;
         }
@@ -72,150 +74,159 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
     }
   };
 
+  const switchMode = (login: boolean) => {
+    setIsLoginTab(login);
+    setError(null);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-cyber-bg text-cyber-primary">
-      {/* Background Subtle Tech-Grid Texture */}
-      <div 
-        className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
-        style={{
-          backgroundImage: `radial-gradient(currentColor 1px, transparent 1px)`,
-          backgroundSize: '20px 20px'
-        }}
+    <main className="min-h-screen flex items-center justify-center px-4 py-10 relative overflow-hidden bg-cyber-bg text-cyber-primary">
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.04] dark:opacity-[0.06]"
+        style={{ backgroundImage: 'radial-gradient(currentColor 1px, transparent 1px)', backgroundSize: '20px 20px' }}
+        aria-hidden="true"
+      />
+      <div
+        className="fixed -top-40 left-1/2 -translate-x-1/2 w-[640px] h-[640px] rounded-full bg-accent-cyan/10 blur-3xl pointer-events-none"
+        aria-hidden="true"
       />
 
-      <div className="w-full max-w-md relative z-10 space-y-4">
-        {/* Main Brand Header */}
-        <div className="text-center space-y-2 mb-2">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-cyber-bg-alt border border-cyber-border font-mono text-xs shadow-cyber-sm">
-            <Gauge className="w-3.5 h-3.5 text-accent-cyan animate-pulse" />
-            <span className="font-bold tracking-wider text-cyber-primary uppercase">
-              PitLane Telemetry v1.0
-            </span>
+      <div className="w-full max-w-md relative z-10 space-y-6">
+        <div className="text-center space-y-3">
+          <div className="mx-auto flex items-center justify-center w-12 h-12 rounded-xl bg-cyber-surface border border-accent-cyan/60 shadow-cyber-sm" aria-hidden="true">
+            <span className="font-display font-black text-accent-cyan text-lg tracking-tighter">ZC</span>
           </div>
-
-          <h1 className="font-display font-black text-2xl sm:text-3xl text-cyber-primary uppercase tracking-wider">
-            Zewail City Racing
-          </h1>
-          <p className="text-xs sm:text-sm font-sans text-cyber-secondary">
-            Formula Student Engineering & Project Workspace
-          </p>
+          <div className="space-y-1.5">
+            <h1 className="font-display font-black text-2xl sm:text-3xl text-cyber-primary uppercase tracking-wider">
+              PitLane
+            </h1>
+            <p className="text-sm text-cyber-secondary">
+              Zewail City Formula Student · engineering workspace
+            </p>
+          </div>
         </div>
 
-        {/* Auth Glass Card */}
-        <GlassCard variant="elevated" className="p-6 sm:p-7 border-cyber-border-strong shadow-cyber-elevated">
-          {/* Tab Selector: Login vs Register */}
-          <div className="grid grid-cols-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border mb-5">
-            <button
-              type="button"
-              onClick={() => { setIsLoginTab(true); setError(null); }}
-              className={`
-                py-1.5 text-xs font-mono font-bold uppercase rounded transition-all cursor-pointer
-                ${isLoginTab 
-                  ? 'bg-accent-cyan text-on-accent shadow-sm font-bold' 
-                  : 'text-cyber-secondary hover:text-cyber-primary'}
-              `}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              onClick={() => { setIsLoginTab(false); setError(null); }}
-              className={`
-                py-1.5 text-xs font-mono font-bold uppercase rounded transition-all cursor-pointer
-                ${!isLoginTab 
-                  ? 'bg-accent-cyan text-on-accent shadow-sm font-bold' 
-                  : 'text-cyber-secondary hover:text-cyber-primary'}
-              `}
-            >
-              Register
-            </button>
+        <GlassCard variant="elevated" cornerMark={false} className="p-5 sm:p-7 border-cyber-border-strong shadow-cyber-elevated">
+          <div role="tablist" aria-label="Account" className="grid grid-cols-2 p-1 rounded-lg bg-cyber-bg-alt border border-cyber-border mb-6">
+            {[
+              { login: true, label: 'Sign in' },
+              { login: false, label: 'Create account' },
+            ].map((tab) => {
+              const selected = isLoginTab === tab.login;
+              return (
+                <button
+                  key={tab.label}
+                  type="button"
+                  role="tab"
+                  id={`auth-tab-${tab.login ? 'login' : 'register'}`}
+                  aria-selected={selected}
+                  aria-controls="auth-panel"
+                  onClick={() => switchMode(tab.login)}
+                  className={`h-10 text-sm font-semibold rounded-md transition-colors duration-fast cursor-pointer ${
+                    selected ? 'bg-cyber-surface text-cyber-primary shadow-cyber-sm border border-cyber-border' : 'text-cyber-secondary hover:text-cyber-primary'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Error Banner */}
-          {error && (
-            <div className="mb-4 p-2.5 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red flex items-start gap-2 text-xs font-sans animate-fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-              <div className="leading-snug">{error}</div>
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3.5">
-            {!isLoginTab && (
-              <div>
-                <label className="block text-xs font-mono font-semibold uppercase text-cyber-secondary mb-1">
-                  Full Name
-                </label>
-                <GlowInput
-                  icon={<User className="w-4 h-4" />}
-                  placeholder="e.g. Mostafa Ibrahim"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required={!isLoginTab}
-                />
+          <div id="auth-panel" role="tabpanel" aria-labelledby={`auth-tab-${isLoginTab ? 'login' : 'register'}`}>
+            {error && (
+              <div role="alert" className="mb-5 p-3 rounded-lg bg-accent-red/10 border border-accent-red/30 text-accent-red flex items-start gap-2 text-sm animate-fade-in">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
+                <p className="leading-snug">{error}</p>
               </div>
             )}
 
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-mono font-semibold uppercase text-cyber-secondary">
-                  University Email
-                </label>
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              {!isLoginTab && (
+                <GlowInput
+                  label="Full name"
+                  icon={<User className="w-4 h-4" />}
+                  placeholder="e.g. Mostafa Ibrahim"
+                  autoComplete="name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
+              )}
+
+              <div className="space-y-1.5">
+                <GlowInput
+                  label="University email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete={isLoginTab ? 'username' : 'email'}
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  icon={<Mail className="w-4 h-4" />}
+                  placeholder={`username@${UNIVERSITY_DOMAIN}`}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
                 {!email.includes('@') && email.length > 2 && (
                   <button
                     type="button"
                     onClick={handleAppendDomain}
-                    className="text-2xs font-mono text-accent-cyan hover:underline cursor-pointer"
+                    className="h-8 px-2 -ml-2 rounded-md text-xs font-mono text-accent-cyan hover:bg-accent-cyan/10 transition-colors duration-fast cursor-pointer"
                   >
-                    +@{UNIVERSITY_DOMAIN}
+                    Use {email.split('@')[0]}@{UNIVERSITY_DOMAIN}
                   </button>
                 )}
               </div>
-              <GlowInput
-                type="email"
-                icon={<Mail className="w-4 h-4" />}
-                placeholder={`username@${UNIVERSITY_DOMAIN}`}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
 
-            <div>
-              <label className="block text-xs font-mono font-semibold uppercase text-cyber-secondary mb-1">
-                Password
-              </label>
               <GlowInput
-                type="password"
+                label="Password"
+                hint={isLoginTab ? undefined : 'At least 6 characters'}
+                type={showPassword ? 'text' : 'password'}
+                autoComplete={isLoginTab ? 'current-password' : 'new-password'}
                 icon={<Lock className="w-4 h-4" />}
-                placeholder="••••••••••••"
+                placeholder={isLoginTab ? 'Your password' : 'Create a password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                trailing={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
+                    className="w-9 h-9 rounded-md flex items-center justify-center text-cyber-muted hover:text-cyber-primary hover:bg-cyber-surface-hover transition-colors duration-fast cursor-pointer"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" aria-hidden="true" /> : <Eye className="w-4 h-4" aria-hidden="true" />}
+                  </button>
+                }
               />
-            </div>
 
-            <div className="pt-2">
               <GlossyButton
                 type="submit"
                 variant="primary"
                 size="lg"
                 fullWidth
-                disabled={loading}
+                loading={loading}
                 icon={<ArrowRight className="w-4 h-4" />}
+                className="!mt-6"
               >
-                {loading ? 'AUTHENTICATING...' : isLoginTab ? 'LOG IN TO PITLANE' : 'REGISTER FOR PITLANE'}
+                {loading ? (isLoginTab ? 'Signing in…' : 'Creating account…') : isLoginTab ? 'Sign in' : 'Create account'}
               </GlossyButton>
-            </div>
-          </form>
+            </form>
 
-          {/* Domain Security Badge */}
-          <div className="mt-5 pt-3.5 border-t border-cyber-border flex items-center justify-center gap-1.5 text-2xs font-mono text-cyber-muted">
-            <ShieldCheck className="w-3.5 h-3.5 text-accent-lime" />
-            <span>Server-side restricted to @{UNIVERSITY_DOMAIN}</span>
+            {!isLoginTab && (
+              <p className="mt-4 text-xs text-cyber-muted text-center leading-relaxed">
+                New accounts are reviewed by a club admin before you can access tasks and chat.
+              </p>
+            )}
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-cyber-border flex items-center justify-center gap-1.5 text-xs text-cyber-muted">
+            <ShieldCheck className="w-4 h-4 text-accent-lime" aria-hidden="true" />
+            <span>Restricted to @{UNIVERSITY_DOMAIN} accounts</span>
           </div>
         </GlassCard>
       </div>
-    </div>
+    </main>
   );
 };

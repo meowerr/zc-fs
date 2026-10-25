@@ -61,7 +61,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
   // Auto-scroll to latest message
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    messagesEndRef.current?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'end' });
   }, [messages]);
 
   const handleSend = async (e: React.FormEvent) => {
@@ -96,31 +97,33 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
   const getChatSubtitle = () => {
     if (activeConversationId && otherParticipant) {
-      return `DIRECT // ${otherParticipant.role.toUpperCase()} // ${otherParticipant.email}`;
+      return `Direct message · ${otherParticipant.email}`;
     }
-    return currentChannel?.description || 'Active sub-team telemetry channel';
+    return currentChannel?.description || 'Sub-team channel';
   };
 
   return (
-    <div className="h-[calc(100vh-9.5rem)] md:h-[calc(100vh-7.5rem)] flex flex-col md:flex-row gap-3.5">
+    <div className="h-[calc(100dvh-10rem-env(safe-area-inset-bottom))] min-h-[420px] md:h-[calc(100dvh-8rem)] flex flex-col md:flex-row gap-3">
       {/* LEFT: Channels & Direct Messages Sidebar */}
       <GlassCard
+        cornerMark={false}
+        role="navigation"
+        aria-label="Conversations"
         className={`
-          w-full md:w-64 lg:w-72 flex-shrink-0 flex flex-col p-3.5 overflow-hidden
+          w-full md:w-64 lg:w-72 flex-shrink-0 flex-col p-3 overflow-hidden
           ${showMobileList ? 'flex' : 'hidden md:flex'}
         `}
       >
         <div className="flex items-center justify-between pb-2.5 border-b border-cyber-border">
-          <div className="flex items-center gap-1.5 font-mono text-xs text-cyber-primary font-bold">
-            <Radio className="w-3.5 h-3.5 text-accent-cyan animate-pulse" />
-            <span className="uppercase tracking-wider">PIT WALL // COMMS</span>
-          </div>
+          <h2 className="font-display font-bold text-sm text-cyber-primary tracking-wide px-1">Pit Wall</h2>
           <button
+            type="button"
             onClick={() => setIsDMModalOpen(true)}
-            className="p-1 rounded bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-cyber-border hover:border-accent-cyan text-cyber-secondary hover:text-accent-cyan transition-all cursor-pointer"
-            title="Start Direct Message"
+            aria-label="New direct message"
+            title="New direct message"
+            className="w-9 h-9 rounded-lg flex items-center justify-center bg-cyber-surface-elevated hover:bg-cyber-surface-hover border border-cyber-border hover:border-accent-cyan/60 text-cyber-secondary hover:text-accent-cyan transition-colors duration-fast cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
 
@@ -128,9 +131,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
         <div className="flex-1 overflow-y-auto space-y-3.5 py-2.5 pr-1">
           {/* Section: Channels */}
           <div>
-            <div className="text-2xs font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
-              // CHANNELS
-            </div>
+            <h3 className="micro-label mb-1.5 px-1.5">Channels</h3>
             <div className="space-y-1">
               {accessibleChannels.map((channel) => {
                 const isActive = !activeConversationId && activeChannelId === channel.id;
@@ -144,25 +145,22 @@ export const ChatView: React.FC<ChatViewProps> = ({
                       onSelectChannel(channel.id);
                       setShowMobileList(false);
                     }}
+                    aria-current={isActive ? 'true' : undefined}
                     className={`
-                      w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer border
-                      ${
-                        isActive
-                          ? 'bg-cyber-surface-elevated text-accent-cyan border-l-2 border-l-accent-cyan border-y border-r border-cyber-border font-bold shadow-cyber-sm'
-                          : 'bg-transparent border-transparent text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover hover:border-cyber-border'
-                      }
+                      w-full flex items-center gap-2.5 h-10 px-2.5 rounded-lg text-left transition-colors duration-fast cursor-pointer
+                      ${isActive ? 'bg-accent-cyan/10 text-cyber-primary font-semibold' : 'text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover'}
                     `}
                   >
                     <div className="flex-shrink-0">
                       {isHeadsOnly ? (
-                        <Lock className="w-3.5 h-3.5 text-accent-red" />
+                        <Lock className="w-4 h-4 text-accent-red" aria-label="Heads only" />
                       ) : isAnnouncements ? (
-                        <Radio className="w-3.5 h-3.5 text-accent-yellow" />
+                        <Radio className="w-4 h-4 text-accent-yellow" aria-label="Announcements" />
                       ) : (
-                        <Hash className="w-3.5 h-3.5" />
+                        <Hash className="w-4 h-4" aria-hidden="true" />
                       )}
                     </div>
-                    <span className="text-xs font-sans truncate">
+                    <span className="text-sm truncate">
                       {channel.name}
                     </span>
                   </button>
@@ -174,20 +172,21 @@ export const ChatView: React.FC<ChatViewProps> = ({
           {/* Section: Direct Messages */}
           <div>
             <div className="flex items-center justify-between text-2xs font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
-              <span>// DIRECT COMMS</span>
+              <h3 className="micro-label">Direct messages</h3>
               <button
+                type="button"
                 onClick={() => setIsDMModalOpen(true)}
-                className="text-accent-cyan hover:underline cursor-pointer lowercase font-mono text-2xs"
+                className="h-7 px-2 rounded-md text-accent-cyan hover:bg-accent-cyan/10 cursor-pointer normal-case font-sans font-semibold text-xs tracking-normal"
               >
-                + new
+                New
               </button>
             </div>
 
             <div className="space-y-1">
               {conversations.length === 0 ? (
-                <div className="px-2 py-2 text-2xs font-mono text-cyber-muted italic">
-                  No active DMs. Click + to transmit.
-                </div>
+                <p className="px-1.5 py-2 text-xs text-cyber-muted">
+                  No conversations yet. Start one with a teammate.
+                </p>
               ) : (
                 conversations.map((conv) => {
                   const partner = allProfiles.find(
@@ -208,17 +207,14 @@ export const ChatView: React.FC<ChatViewProps> = ({
                         onSelectConversation(conv.id);
                         setShowMobileList(false);
                       }}
+                      aria-current={isActive ? 'true' : undefined}
                       className={`
-                        w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-left transition-all cursor-pointer border
-                        ${
-                          isActive
-                            ? 'bg-cyber-surface-elevated text-accent-cyan border-l-2 border-l-accent-cyan border-y border-r border-cyber-border font-bold shadow-cyber-sm'
-                            : 'bg-transparent border-transparent text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover hover:border-cyber-border'
-                        }
+                        w-full flex items-center gap-2.5 h-11 px-2 rounded-lg text-left transition-colors duration-fast cursor-pointer
+                        ${isActive ? 'bg-accent-cyan/10 text-cyber-primary font-semibold' : 'text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover'}
                       `}
                     >
                       <ChromeAvatar name={partner.full_name} role={partner.role} size="sm" />
-                      <span className="text-xs font-sans truncate">
+                      <span className="text-sm truncate">
                         {partner.full_name}
                       </span>
                     </button>
@@ -232,8 +228,9 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
       {/* RIGHT: Chat Messages Stream & Input */}
       <GlassCard
+        cornerMark={false}
         className={`
-          flex-1 flex flex-col p-3.5 sm:p-4 overflow-hidden
+          flex-1 min-w-0 flex-col p-3 sm:p-4 overflow-hidden
           ${showMobileList ? 'hidden md:flex' : 'flex'}
         `}
       >
@@ -241,39 +238,39 @@ export const ChatView: React.FC<ChatViewProps> = ({
         <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
           <div className="flex items-center gap-2.5 min-w-0">
             <button
+              type="button"
               onClick={() => setShowMobileList(true)}
-              className="md:hidden p-1 rounded bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary"
+              aria-label="Show all conversations"
+              className="md:hidden w-10 h-10 shrink-0 rounded-lg flex items-center justify-center bg-cyber-surface-elevated border border-cyber-border text-cyber-secondary hover:text-cyber-primary"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4" aria-hidden="true" />
             </button>
 
             <div className="min-w-0">
-              <h3 className="font-display font-bold text-xs sm:text-sm text-cyber-primary truncate uppercase tracking-wider">
-                {getChatTitle()}
-              </h3>
-              <p className="text-2xs sm:text-[11px] font-mono text-cyber-muted truncate max-w-xs sm:max-w-md">
+              <h2 className="font-display font-bold text-sm text-cyber-primary truncate tracking-wide">
+                {activeConversationId ? '' : '# '}{getChatTitle()}
+              </h2>
+              <p className="text-xs text-cyber-muted truncate max-w-xs sm:max-w-md">
                 {getChatSubtitle()}
               </p>
             </div>
           </div>
 
-          <div className="flex-shrink-0">
-            <LedStatusChip status="online" customLabel="TELEMETRY LIVE" size="sm" />
+          <div className="hidden sm:block flex-shrink-0">
+            <LedStatusChip status="online" customLabel="Live" size="sm" />
           </div>
         </div>
 
         {/* Message Stream */}
-        <div className="flex-1 overflow-y-auto py-2.5 px-1 space-y-1">
+        <div role="log" aria-live="polite" aria-label={`Messages in ${getChatTitle()}`} className="flex-1 overflow-y-auto py-2.5 px-1 space-y-1">
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-2">
               <div className="w-10 h-10 rounded-lg bg-cyber-bg-alt border border-cyber-border flex items-center justify-center text-accent-cyan">
                 <MessageSquare className="w-5 h-5" />
               </div>
-              <h4 className="font-display font-bold text-xs sm:text-sm text-cyber-primary uppercase tracking-wider">
-                Channel Clear
-              </h4>
-              <p className="text-xs text-cyber-secondary max-w-xs">
-                No telemetry messages recorded yet. Begin the engineering discussion below.
+              <p className="font-semibold text-sm text-cyber-primary">No messages yet</p>
+              <p className="text-sm text-cyber-secondary max-w-xs">
+                {canPost ? 'Kick off the discussion — share an update, a question or a CAD link.' : 'Announcements from club leadership will appear here.'}
               </p>
             </div>
           ) : (
@@ -291,18 +288,20 @@ export const ChatView: React.FC<ChatViewProps> = ({
         {/* Chat Input Bar */}
         <div className="pt-2.5 border-t border-cyber-border flex-shrink-0">
           {!canPost ? (
-            <div className="p-2.5 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center text-xs font-mono text-cyber-muted flex items-center justify-center gap-2">
-              <Lock className="w-3.5 h-3.5 text-accent-yellow" />
-              <span>Broadcast Channel: Only Club Admins & Sub-team Heads may post official announcements.</span>
+            <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border text-center text-xs text-cyber-secondary flex items-center justify-center gap-2">
+              <Lock className="w-4 h-4 text-accent-yellow shrink-0" aria-hidden="true" />
+              <span>Read-only channel. Only club admins and group heads can post announcements.</span>
             </div>
           ) : (
             <form onSubmit={handleSend} className="space-y-2">
               {showAttachInput && (
                 <div className="flex items-center gap-2 p-2 rounded-lg bg-cyber-bg-alt border border-cyber-border animate-fade-in">
-                  <LinkIcon className="w-3.5 h-3.5 text-accent-cyan" />
+                  <LinkIcon className="w-4 h-4 text-accent-cyan shrink-0" aria-hidden="true" />
+                  <label htmlFor="chat-attachment" className="sr-only">Attachment link</label>
                   <input
+                    id="chat-attachment"
                     type="url"
-                    placeholder="Attach CAD URL or document link (https://...)"
+                    placeholder="Paste a CAD or document link (https://…)"
                     value={attachmentUrl}
                     onChange={(e) => setAttachmentUrl(e.target.value)}
                     className="flex-1 text-xs bg-transparent border-none text-cyber-primary focus:outline-none font-mono placeholder:text-cyber-muted"
@@ -310,7 +309,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   <button
                     type="button"
                     onClick={() => { setShowAttachInput(false); setAttachmentUrl(''); }}
-                    className="text-xs text-cyber-muted hover:text-accent-red font-mono"
+                    className="h-8 px-2 rounded-md text-xs text-cyber-muted hover:text-accent-red hover:bg-accent-red/10 cursor-pointer"
                   >
                     Remove
                   </button>
@@ -321,34 +320,42 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAttachInput((prev) => !prev)}
+                  aria-label={showAttachInput ? 'Hide attachment link' : 'Attach a link'}
+                  aria-pressed={showAttachInput}
                   className={`
-                    p-2 rounded-lg border transition-all cursor-pointer
+                    w-11 h-11 sm:w-10 sm:h-10 shrink-0 flex items-center justify-center rounded-lg border transition-colors duration-fast cursor-pointer
                     ${
                       showAttachInput
                         ? 'bg-accent-cyan text-on-accent border-accent-cyan'
                         : 'bg-cyber-surface-elevated border-cyber-border text-cyber-muted hover:text-cyber-primary hover:border-cyber-border-strong'
                     }
                   `}
-                  title="Attach CAD or Web Link"
+                  title="Attach a link"
                 >
-                  <Paperclip className="w-4 h-4" />
+                  <Paperclip className="w-4 h-4" aria-hidden="true" />
                 </button>
 
+                <label htmlFor="chat-message" className="sr-only">Message</label>
                 <input
+                  id="chat-message"
                   type="text"
-                  placeholder={`Transmit message to ${getChatTitle()}...`}
+                  autoComplete="off"
+                  enterKeyHint="send"
+                  placeholder={`Message ${activeConversationId ? '' : '#'}${getChatTitle()}`}
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  className="flex-1 h-9 px-3 rounded-lg text-xs sm:text-sm bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+                  className="flex-1 min-w-0 h-11 sm:h-10 px-3 rounded-lg text-sm"
                 />
 
                 <GlossyButton
                   size="sm"
                   variant="primary"
                   type="submit"
-                  icon={<Send className="w-3.5 h-3.5" />}
+                  disabled={!inputText.trim() && !attachmentUrl.trim()}
+                  aria-label="Send message"
+                  icon={<Send className="w-4 h-4" />}
                 >
-                  Send
+                  <span className="hidden sm:inline">Send</span>
                 </GlossyButton>
               </div>
             </form>
