@@ -13,6 +13,7 @@ import { GhostButton } from '../common/GhostButton';
 import { GlowInput } from '../common/GlowInput';
 import { SUB_TEAMS } from '../admin/AdminApprovalHub';
 import { TaskType, TaskPriority, Profile } from '../../lib/database.types';
+import { Modal, ModalCloseButton } from '../common/Modal';
 
 interface TaskCreateModalProps {
   isOpen: boolean;
@@ -122,7 +123,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+    <Modal onClose={onClose} labelledBy="task-create-title">
       <GlassCard variant="elevated" className="w-full max-w-lg p-6 sm:p-7 my-8 border-cyber-border-strong shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between pb-4 border-b border-cyber-border">
@@ -131,7 +132,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
               <Layers className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-display font-black text-lg text-cyber-primary uppercase tracking-wider">
+              <h3 id="task-create-title" className="font-display font-black text-lg text-cyber-primary uppercase tracking-wider">
                 Create Sub-Team Task
               </h3>
               <p className="text-xs font-mono text-cyber-muted">
@@ -140,12 +141,9 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover transition-colors text-cyber-muted hover:text-cyber-primary cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <ModalCloseButton onClick={onClose}>
+            <X className="w-4 h-4" aria-hidden="true" />
+          </ModalCloseButton>
         </div>
 
         {error && (
@@ -365,6 +363,6 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
           </div>
         </form>
       </GlassCard>
-    </div>
+    </Modal>
   );
 };

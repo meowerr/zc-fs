@@ -19,6 +19,7 @@ import { LedStatusChip } from '../common/LedStatusChip';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { Profile, UserRole, Group } from '../../lib/database.types';
 import { SUB_TEAMS, PRESET_COLORS } from '../../lib/constants';
+import { Modal, ModalCloseButton } from '../common/Modal';
 
 export { SUB_TEAMS, PRESET_COLORS };
 
@@ -445,21 +446,18 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
 
       {/* ─── MODAL: CREATE NEW SUB-TEAM ─── */}
       {isCreateGroupOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <Modal onClose={() => setIsCreateGroupOpen(false)} labelledBy="create-group-title">
           <div className="w-full max-w-md p-6 rounded-2xl bg-cyber-surface-elevated border border-cyber-border-strong shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-cyber-border pb-3">
               <div className="flex items-center gap-2">
                 <FolderPlus className="w-5 h-5 text-accent-cyan" />
-                <h3 className="font-display font-black text-lg uppercase tracking-wider text-cyber-primary">
+                <h3 id="create-group-title" className="font-display font-black text-lg uppercase tracking-wider text-cyber-primary">
                   Register Sub-Team
                 </h3>
               </div>
-              <button
-                onClick={() => setIsCreateGroupOpen(false)}
-                className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <ModalCloseButton onClick={() => setIsCreateGroupOpen(false)}>
+                <X className="w-4 h-4" aria-hidden="true" />
+              </ModalCloseButton>
             </div>
 
             <form onSubmit={handleCreateGroupSubmit} className="space-y-3.5">
@@ -559,16 +557,16 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </div>
             </form>
           </div>
-        </div>
+        </Modal>
       )}
 
       {/* ─── MODAL: REMOVE MEMBER CONFIRMATION ─── */}
       {memberToRemove && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <Modal onClose={() => setMemberToRemove(null)} role="alertdialog" labelledBy="remove-member-title">
           <div className="w-full max-w-md p-6 rounded-2xl bg-cyber-surface-elevated border border-accent-red/40 shadow-2xl space-y-4">
             <div className="flex items-center gap-3 text-accent-red">
               <AlertTriangle className="w-6 h-6 shrink-0" />
-              <h3 className="font-display font-black text-lg uppercase tracking-wider text-cyber-primary">
+              <h3 id="remove-member-title" className="font-display font-black text-lg uppercase tracking-wider text-cyber-primary">
                 Remove from Sub-Team?
               </h3>
             </div>
@@ -604,7 +602,7 @@ export const AdminApprovalHub: React.FC<AdminApprovalHubProps> = ({
               </button>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
     </div>
   );

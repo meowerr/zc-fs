@@ -1,18 +1,18 @@
 import React from 'react';
-import { 
-  X, 
-  Bell, 
-  CheckCheck, 
-  Volume2, 
-  VolumeX, 
-  Sparkles, 
-  Clock, 
-  CheckCircle2, 
-  AlertCircle 
+import {
+  X,
+  Bell,
+  BellRing,
+  CheckCheck,
+  Volume2,
+  VolumeX,
+  Sparkles,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
 } from 'lucide-react';
-import { GlassCard } from '../common/GlassCard';
-import { GhostButton } from '../common/GhostButton';
 import { NotificationItem, NotificationType } from '../../lib/database.types';
+import { Modal, ModalCloseButton } from '../common/Modal';
 
 interface NotificationDrawerProps {
   isOpen: boolean;
@@ -25,6 +25,27 @@ interface NotificationDrawerProps {
   onMarkAllAsRead: () => void;
   onRequestWebPush: () => void;
 }
+
+const typeIcon = (type: NotificationType) => {
+  switch (type) {
+    case 'review_result':
+      return <CheckCircle2 className="w-4 h-4 text-accent-lime" aria-hidden="true" />;
+    case 'task_due_soon':
+      return <AlertCircle className="w-4 h-4 text-accent-yellow" aria-hidden="true" />;
+    case 'announcement':
+      return <Sparkles className="w-4 h-4 text-accent-orange" aria-hidden="true" />;
+    default:
+      return <Clock className="w-4 h-4 text-accent-cyan" aria-hidden="true" />;
+  }
+};
+
+const formatTime = (iso: string) => {
+  const date = new Date(iso);
+  const sameDay = date.toDateString() === new Date().toDateString();
+  return sameDay
+    ? date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    : date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+};
 
 export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
   isOpen,
@@ -39,121 +60,114 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const getTypeIcon = (type: NotificationType) => {
-    switch (type) {
-      case 'review_result':
-        return <CheckCircle2 className="w-4 h-4 text-accent-lime" />;
-      case 'task_due_soon':
-        return <AlertCircle className="w-4 h-4 text-accent-yellow" />;
-      case 'announcement':
-        return <Sparkles className="w-4 h-4 text-accent-orange" />;
-      default:
-        return <Clock className="w-4 h-4 text-accent-cyan" />;
-    }
-  };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end p-4 sm:p-6 bg-black/75 backdrop-blur-md">
-      <GlassCard
-        variant="elevated"
-        className="w-full max-w-sm sm:max-w-md max-h-[85vh] flex flex-col p-5 border-cyber-border-strong shadow-2xl space-y-3"
-      >
-        {/* Drawer Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20">
+    <Modal onClose={onClose} placement="right" labelledBy="notif-title">
+      <div className="w-full sm:max-w-md h-full sm:h-auto sm:max-h-[calc(100vh-2rem)] flex flex-col bg-cyber-surface-elevated border-l sm:border border-cyber-border-strong sm:rounded-xl shadow-cyber-elevated">
+        <header className="flex items-center justify-between gap-3 px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-3 border-b border-cyber-border">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="p-1.5 rounded-lg bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20" aria-hidden="true">
               <Bell className="w-4 h-4" />
             </div>
-            <div>
-              <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
-                Telemetry Notifications
+            <div className="min-w-0">
+              <h3 id="notif-title" className="font-display font-bold text-base text-cyber-primary tracking-wide">
+                Notifications
               </h3>
-              <span className="text-2xs font-mono text-cyber-muted">
-                {unreadCount} UNREAD ALERTS
-              </span>
+              <p className="text-xs text-cyber-muted">
+                {unreadCount === 0 ? 'You’re all caught up' : `${unreadCount} unread`}
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-1">
-            {/* Audio Mute / Unmute Button */}
             <button
+              type="button"
               onClick={onToggleMute}
-              className="p-1.5 rounded-lg hover:bg-cyber-surface-hover transition-colors text-cyber-secondary hover:text-cyber-primary cursor-pointer"
-              title={isAudioMuted ? 'Unmute telemetry sound effects' : 'Mute sound effects'}
+              aria-pressed={!isAudioMuted}
+              aria-label={isAudioMuted ? 'Turn notification sounds on' : 'Turn notification sounds off'}
+              className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-cyber-surface-hover transition-colors duration-fast text-cyber-secondary hover:text-cyber-primary cursor-pointer"
             >
-              {isAudioMuted ? <VolumeX className="w-4 h-4 text-accent-red" /> : <Volume2 className="w-4 h-4 text-accent-cyan" />}
+              {isAudioMuted ? (
+                <VolumeX className="w-4 h-4" aria-hidden="true" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-accent-cyan" aria-hidden="true" />
+              )}
             </button>
-
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-cyber-surface-hover text-cyber-secondary hover:text-cyber-primary cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <ModalCloseButton onClick={onClose} label="Close notifications">
+              <X className="w-4 h-4" aria-hidden="true" />
+            </ModalCloseButton>
           </div>
-        </div>
+        </header>
 
-        {/* Action Controls Bar */}
-        <div className="flex items-center justify-between text-xs py-1 px-1 border-b border-cyber-border flex-shrink-0">
+        <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-cyber-border">
           <button
+            type="button"
             onClick={onMarkAllAsRead}
             disabled={unreadCount === 0}
-            className="flex items-center gap-1 font-mono text-[11px] text-accent-cyan hover:underline disabled:opacity-30 cursor-pointer"
+            className="h-9 px-2.5 rounded-lg flex items-center gap-1.5 text-xs font-semibold text-accent-cyan hover:bg-accent-cyan/10 disabled:text-cyber-muted disabled:hover:bg-transparent disabled:cursor-not-allowed transition-colors duration-fast cursor-pointer"
           >
-            <CheckCheck className="w-3.5 h-3.5" /> Mark all read
+            <CheckCheck className="w-4 h-4" aria-hidden="true" /> Mark all as read
           </button>
-
           <button
+            type="button"
             onClick={onRequestWebPush}
-            className="font-mono text-2xs text-cyber-muted hover:text-cyber-primary hover:underline cursor-pointer"
+            className="h-9 px-2.5 rounded-lg flex items-center gap-1.5 text-xs font-semibold text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover transition-colors duration-fast cursor-pointer"
           >
-            Enable Web Push
+            <BellRing className="w-4 h-4" aria-hidden="true" /> Enable push alerts
           </button>
         </div>
 
-        {/* Notifications Scroll Stream */}
-        <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+        <div className="flex-1 overflow-y-auto p-3">
           {notifications.length === 0 ? (
-            <div className="py-12 text-center text-xs font-mono text-cyber-muted italic">
-              No notifications. System telemetry is nominal.
+            <div className="py-16 px-6 text-center flex flex-col items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-accent-lime/10 border border-accent-lime/25 text-accent-lime flex items-center justify-center" aria-hidden="true">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <p className="font-semibold text-sm text-cyber-primary">No notifications yet</p>
+              <p className="text-sm text-cyber-secondary max-w-xs">
+                Task assignments, review results and mentions will show up here.
+              </p>
             </div>
           ) : (
-            notifications.map((notif) => (
-              <div
-                key={notif.id}
-                onClick={() => onMarkAsRead(notif.id)}
-                className={`
-                  p-3 rounded-xl transition-all cursor-pointer border space-y-1
-                  ${
-                    notif.is_read
-                      ? 'bg-cyber-surface/60 border-cyber-border opacity-70'
-                      : 'bg-cyber-surface-elevated border-accent-cyan/30 shadow-sm'
-                  }
-                `}
-              >
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2 font-bold text-cyber-primary">
-                    {getTypeIcon(notif.type)}
-                    <span>{notif.title}</span>
-                  </div>
-                  <span className="font-mono text-2xs text-cyber-muted">
-                    {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-                <p className="text-xs text-cyber-secondary pl-6 leading-relaxed font-sans">
-                  {notif.message}
-                </p>
-              </div>
-            ))
+            <ul className="space-y-2">
+              {notifications.map((notif) => (
+                <li key={notif.id}>
+                  <button
+                    type="button"
+                    onClick={() => onMarkAsRead(notif.id)}
+                    aria-label={`${notif.is_read ? '' : 'Unread: '}${notif.title}. ${notif.message}`}
+                    className={`
+                      relative w-full text-left p-3 pl-4 rounded-lg border transition-colors duration-fast cursor-pointer
+                      ${
+                        notif.is_read
+                          ? 'bg-transparent border-cyber-border hover:bg-cyber-surface-hover'
+                          : 'bg-cyber-surface border-accent-cyan/30 hover:border-accent-cyan/60'
+                      }
+                    `}
+                  >
+                    {!notif.is_read && (
+                      <span className="absolute left-1.5 top-4 w-1.5 h-1.5 rounded-full bg-accent-cyan" aria-hidden="true" />
+                    )}
+                    <span className="flex items-start justify-between gap-3">
+                      <span className="flex items-center gap-2 min-w-0">
+                        {typeIcon(notif.type)}
+                        <span className={`text-sm truncate ${notif.is_read ? 'text-cyber-secondary' : 'font-semibold text-cyber-primary'}`}>
+                          {notif.title}
+                        </span>
+                      </span>
+                      <time dateTime={notif.created_at} className="font-mono text-2xs text-cyber-muted shrink-0 mt-0.5">
+                        {formatTime(notif.created_at)}
+                      </time>
+                    </span>
+                    <span className="block text-xs text-cyber-secondary mt-1 pl-6 leading-relaxed">
+                      {notif.message}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
-
-        <div className="pt-2 border-t border-cyber-border flex justify-end flex-shrink-0">
-          <GhostButton size="sm" onClick={onClose}>
-            Close
-          </GhostButton>
-        </div>
-      </GlassCard>
-    </div>
+      </div>
+    </Modal>
   );
 };

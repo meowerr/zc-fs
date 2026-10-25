@@ -7,6 +7,12 @@ interface GhostButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
   active?: boolean;
 }
 
+const sizeStyles = {
+  sm: 'h-10 sm:h-8 px-2.5 text-xs',
+  md: 'h-11 sm:h-9 px-3.5 text-xs sm:text-sm',
+  lg: 'h-12 sm:h-11 px-5 text-sm sm:text-base',
+};
+
 export const GhostButton: React.FC<GhostButtonProps> = ({
   children,
   size = 'md',
@@ -14,23 +20,21 @@ export const GhostButton: React.FC<GhostButtonProps> = ({
   active = false,
   className = '',
   disabled,
+  type = 'button',
   ...props
 }) => {
-  const sizeStyles = {
-    sm: 'h-8 px-2.5 text-xs',
-    md: 'min-h-[44px] h-9 px-3.5 text-xs sm:text-sm',
-    lg: 'min-h-[48px] h-11 px-5 text-sm sm:text-base',
-  };
-
   return (
     <button
+      type={type}
       className={`
-        inline-flex items-center justify-center gap-2 rounded-lg font-mono tracking-wider
-        transition-all duration-150 active:scale-[0.98] disabled:opacity-40 cursor-pointer
+        inline-flex items-center justify-center gap-1.5 rounded-lg font-mono tracking-wide uppercase whitespace-nowrap
+        border transition-colors duration-fast ease-out active:scale-[0.98] cursor-pointer
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan
+        disabled:opacity-50 disabled:cursor-not-allowed
         ${
           active
-            ? 'bg-cyber-surface-hover text-accent-cyan border border-accent-cyan/40 shadow-cyber-sm'
-            : 'bg-transparent text-cyber-secondary hover:text-cyber-primary hover:bg-cyber-surface-hover border border-transparent hover:border-cyber-border'
+            ? 'bg-accent-cyan/10 text-accent-cyan border-accent-cyan/40'
+            : 'bg-transparent text-cyber-secondary border-transparent hover:text-cyber-primary hover:bg-cyber-surface-hover hover:border-cyber-border'
         }
         ${sizeStyles[size]}
         ${className}
@@ -38,8 +42,8 @@ export const GhostButton: React.FC<GhostButtonProps> = ({
       disabled={disabled}
       {...props}
     >
-      {icon && <span className="flex items-center">{icon}</span>}
-      <span>{children}</span>
+      {icon && <span className="flex items-center" aria-hidden="true">{icon}</span>}
+      <span className="flex items-center">{children}</span>
     </button>
   );
 };

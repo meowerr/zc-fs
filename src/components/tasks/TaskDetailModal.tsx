@@ -26,6 +26,7 @@ import {
   SubmissionReviewStatus, 
   Profile 
 } from '../../lib/database.types';
+import { Modal, ModalCloseButton } from '../common/Modal';
 
 interface TaskDetailModalProps {
   task: Task | null;
@@ -122,7 +123,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+    <Modal onClose={onClose} labelledBy="task-detail-title">
       <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[92vh] flex flex-col p-4 sm:p-6 my-auto border-cyber-border-strong shadow-cyber-elevated overflow-hidden">
         {/* Header */}
         <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-cyber-border flex-shrink-0">
@@ -137,7 +138,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               <LedStatusChip status={task.priority} size="sm" />
             </div>
 
-            <h3 className="font-sans font-bold text-base sm:text-lg text-cyber-primary leading-snug">
+            <h3 id="task-detail-title" className="font-sans font-bold text-base sm:text-lg text-cyber-primary leading-snug">
               {task.title}
             </h3>
           </div>
@@ -146,20 +147,18 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             <LedStatusChip status={task.status} />
             {isHeadOrAdmin && onDeleteTask && (
               <button
+                type="button"
                 onClick={() => setIsConfirmingDelete(true)}
-                className="p-1 px-2.5 rounded text-accent-red hover:bg-accent-red/10 border border-accent-red/30 transition-all flex items-center gap-1.5 text-xs font-mono font-bold cursor-pointer"
-                title="Delete Deliverable"
+                aria-label="Delete task"
+                className="h-10 px-3 rounded-lg text-accent-red hover:bg-accent-red/10 border border-accent-red/30 transition-colors duration-fast flex items-center gap-1.5 text-xs font-mono font-bold uppercase cursor-pointer"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-4 h-4" aria-hidden="true" />
                 <span className="hidden sm:inline">Delete</span>
               </button>
             )}
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-cyber-surface-hover transition-colors text-cyber-muted hover:text-cyber-primary border border-transparent hover:border-cyber-border cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
+            <ModalCloseButton onClick={onClose}>
+              <X className="w-4 h-4" aria-hidden="true" />
+            </ModalCloseButton>
           </div>
         </div>
 
@@ -566,11 +565,11 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
 
       {/* Delete Task Confirmation Modal */}
       {isConfirmingDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <Modal onClose={() => setIsConfirmingDelete(false)} role="alertdialog" labelledBy="task-delete-title">
           <div className="w-full max-w-md p-6 rounded-xl bg-cyber-surface border border-accent-red/40 shadow-cyber-elevated space-y-4">
             <div className="flex items-center gap-3 text-accent-red">
               <AlertTriangle className="w-5 h-5 shrink-0" />
-              <h3 className="font-display font-black text-base sm:text-lg uppercase tracking-wider text-cyber-primary">
+              <h3 id="task-delete-title" className="font-display font-black text-base sm:text-lg uppercase tracking-wider text-cyber-primary">
                 Delete Task Permanently?
               </h3>
             </div>
@@ -618,8 +617,8 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               </GlossyButton>
             </div>
           </div>
-        </div>
+        </Modal>
       )}
-    </div>
+    </Modal>
   );
 };

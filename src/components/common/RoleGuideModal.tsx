@@ -12,6 +12,7 @@ import {
 import { GlassCard } from './GlassCard';
 import { GhostButton } from './GhostButton';
 import { UserRole } from '../../lib/database.types';
+import { Modal, ModalCloseButton } from './Modal';
 
 interface RoleGuideModalProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+    <Modal onClose={onClose} labelledBy="role-guide-title">
       <GlassCard variant="elevated" className="w-full max-w-2xl max-h-[90vh] flex flex-col p-6 border-cyber-border-strong shadow-2xl my-auto overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-cyber-border flex-shrink-0">
@@ -49,12 +50,9 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-cyber-surface-hover text-cyber-muted hover:text-cyber-primary cursor-pointer transition-colors"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <ModalCloseButton onClick={onClose}>
+            <X className="w-4 h-4" aria-hidden="true" />
+          </ModalCloseButton>
         </div>
 
         {/* Role Selector Tabs */}
@@ -195,6 +193,6 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
           </GhostButton>
         </div>
       </GlassCard>
-    </div>
+    </Modal>
   );
 };

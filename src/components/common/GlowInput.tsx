@@ -1,56 +1,66 @@
-import React from 'react';
+import React, { useId } from 'react';
+import { AlertCircle } from 'lucide-react';
 
 interface GlowInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   hint?: string;
   icon?: React.ReactNode;
+  trailing?: React.ReactNode;
 }
 
 export const GlowInput = React.forwardRef<HTMLInputElement, GlowInputProps>(
-  ({ label, error, hint, icon, className = '', disabled, ...props }, ref) => {
+  ({ label, error, hint, icon, trailing, className = '', disabled, id, ...props }, ref) => {
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
+    const hintId = hint ? `${inputId}-hint` : undefined;
+    const errorId = error ? `${inputId}-error` : undefined;
+    const describedBy = [hintId, errorId, props['aria-describedby']].filter(Boolean).join(' ') || undefined;
+
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label className="text-xs font-mono font-medium tracking-wider text-cyber-secondary uppercase flex items-center justify-between">
-            <span className="flex items-center gap-1.5">
-              <span className="text-accent-cyan opacity-80 font-bold">//</span>
+          <div className="flex items-center justify-between gap-2">
+            <label htmlFor={inputId} className="text-xs font-semibold tracking-wide text-cyber-secondary uppercase">
               {label}
-            </span>
-            {hint && <span className="text-2xs font-mono text-cyber-muted">{hint}</span>}
-          </label>
+            </label>
+            {hint && (
+              <span id={hintId} className="text-2xs font-mono text-cyber-muted">
+                {hint}
+              </span>
+            )}
+          </div>
         )}
 
         <div className="relative flex items-center">
           {icon && (
-            <span className="absolute left-3 text-cyber-muted pointer-events-none flex items-center">
+            <span className="absolute left-3 text-cyber-muted pointer-events-none flex items-center" aria-hidden="true">
               {icon}
             </span>
           )}
 
           <input
             ref={ref}
+            id={inputId}
             disabled={disabled}
+            aria-invalid={error ? true : undefined}
+            aria-describedby={describedBy}
             className={`
-              w-full min-h-[44px] h-10 rounded-lg text-xs sm:text-sm font-sans
-              bg-white dark:bg-[#181E26]
-              text-[#0D1522] dark:text-[#F2F4F7]
-              placeholder:text-[#94A3B8] dark:placeholder:text-[#737D89]
-              border border-[#D1DAE5] dark:border-[#2A323C]
-              transition-all duration-150
-              ${icon ? 'pl-9 pr-3.5' : 'px-3.5'}
-              focus:outline-none focus:border-accent-cyan focus:ring-1 focus:ring-accent-cyan/40
-              disabled:opacity-40 disabled:cursor-not-allowed
-              ${error ? 'border-accent-red focus:border-accent-red focus:ring-accent-red/30' : ''}
+              w-full h-11 rounded-lg text-sm font-sans
+              ${icon ? 'pl-10' : 'pl-3.5'} ${trailing ? 'pr-11' : 'pr-3.5'}
+              disabled:opacity-50 disabled:cursor-not-allowed
               ${className}
             `}
             {...props}
           />
+
+          {trailing && <span className="absolute right-1.5 flex items-center">{trailing}</span>}
         </div>
 
         {error && (
-          <span className="text-[11px] font-mono text-accent-red tracking-wide flex items-center gap-1">
-            ⚠ {error}
+          <span id={errorId} role="alert" className="text-xs text-accent-red flex items-center gap-1.5">
+            <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+            {error}
           </span>
         )}
       </div>
