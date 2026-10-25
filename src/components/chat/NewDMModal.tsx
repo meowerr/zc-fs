@@ -113,13 +113,13 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
                       <div className="font-bold text-xs text-cyber-primary truncate">
                         {user.full_name}
                       </div>
-                      <div className="font-mono text-[10px] text-cyber-muted truncate">
+                      <div className="font-mono text-2xs text-cyber-muted truncate">
                         {team ? team.name.replace('Technical - ', '') : 'Club Leadership'} • {user.role.toUpperCase()}
                       </div>
                     </div>
                   </div>
 
-                  <span className="font-mono text-[10px] text-accent-cyan font-bold flex-shrink-0">
+                  <span className="font-mono text-2xs text-accent-cyan font-bold flex-shrink-0">
                     Chat &rarr;
                   </span>
                 </button>

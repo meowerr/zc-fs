@@ -50,7 +50,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
       
       {/* Technical corner registration mark */}
       {cornerMark && (
-        <div className="absolute top-1.5 right-2 font-mono text-[9px] text-cyber-muted/40 select-none pointer-events-none tracking-widest">
+        <div className="absolute top-1.5 right-2 font-mono text-2xs text-cyber-muted/40 select-none pointer-events-none tracking-widest">
           +
         </div>
       )}

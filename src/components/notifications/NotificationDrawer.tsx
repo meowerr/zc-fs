@@ -68,7 +68,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
               <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
                 Telemetry Notifications
               </h3>
-              <span className="text-[10px] font-mono text-cyber-muted">
+              <span className="text-2xs font-mono text-cyber-muted">
                 {unreadCount} UNREAD ALERTS
               </span>
             </div>
@@ -105,7 +105,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
           <button
             onClick={onRequestWebPush}
-            className="font-mono text-[10px] text-cyber-muted hover:text-cyber-primary hover:underline cursor-pointer"
+            className="font-mono text-2xs text-cyber-muted hover:text-cyber-primary hover:underline cursor-pointer"
           >
             Enable Web Push
           </button>
@@ -136,7 +136,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                     {getTypeIcon(notif.type)}
                     <span>{notif.title}</span>
                   </div>
-                  <span className="font-mono text-[9px] text-cyber-muted">
+                  <span className="font-mono text-2xs text-cyber-muted">
                     {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>

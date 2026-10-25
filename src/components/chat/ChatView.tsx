@@ -128,7 +128,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
         <div className="flex-1 overflow-y-auto space-y-3.5 py-2.5 pr-1">
           {/* Section: Channels */}
           <div>
-            <div className="text-[10px] font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
+            <div className="text-2xs font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
               // CHANNELS
             </div>
             <div className="space-y-1">
@@ -173,11 +173,11 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
           {/* Section: Direct Messages */}
           <div>
-            <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
+            <div className="flex items-center justify-between text-2xs font-mono uppercase tracking-wider text-cyber-muted mb-1 px-1.5">
               <span>// DIRECT COMMS</span>
               <button
                 onClick={() => setIsDMModalOpen(true)}
-                className="text-accent-cyan hover:underline cursor-pointer lowercase font-mono text-[10px]"
+                className="text-accent-cyan hover:underline cursor-pointer lowercase font-mono text-2xs"
               >
                 + new
               </button>
@@ -185,7 +185,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
             <div className="space-y-1">
               {conversations.length === 0 ? (
-                <div className="px-2 py-2 text-[10px] font-mono text-cyber-muted italic">
+                <div className="px-2 py-2 text-2xs font-mono text-cyber-muted italic">
                   No active DMs. Click + to transmit.
                 </div>
               ) : (
@@ -251,7 +251,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
               <h3 className="font-display font-bold text-xs sm:text-sm text-cyber-primary truncate uppercase tracking-wider">
                 {getChatTitle()}
               </h3>
-              <p className="text-[10px] sm:text-[11px] font-mono text-cyber-muted truncate max-w-xs sm:max-w-md">
+              <p className="text-2xs sm:text-[11px] font-mono text-cyber-muted truncate max-w-xs sm:max-w-md">
                 {getChatSubtitle()}
               </p>
             </div>
@@ -325,7 +325,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
                     p-2 rounded-lg border transition-all cursor-pointer
                     ${
                       showAttachInput
-                        ? 'bg-accent-cyan text-black border-accent-cyan'
+                        ? 'bg-accent-cyan text-on-accent border-accent-cyan'
                         : 'bg-cyber-surface-elevated border-cyber-border text-cyber-muted hover:text-cyber-primary hover:border-cyber-border-strong'
                     }
                   `}

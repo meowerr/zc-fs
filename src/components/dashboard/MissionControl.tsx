@@ -53,7 +53,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                   ? 'SUB-TEAM // PIT WALL'
                   : 'ENGINEERING // WORKSPACE'}
               </span>
-              <span className="text-accent-lime text-[10px]">● LIVE</span>
+              <span className="text-accent-lime text-2xs">● LIVE</span>
             </div>
 
             <h2 className="font-display font-black text-xl sm:text-2xl lg:text-3xl text-cyber-primary tracking-wider uppercase">
@@ -94,12 +94,12 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 <Activity className="w-3.5 h-3.5 text-accent-orange" />
                 Active
               </span>
-              <span className="text-[9px] text-cyber-muted tracking-tighter">P1</span>
+              <span className="text-2xs text-cyber-muted tracking-tighter">P1</span>
             </div>
             <div className="text-2xl sm:text-3xl font-display font-black text-accent-orange mt-1">
               {inProgressCount}
             </div>
-            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">
+            <div className="text-2xs font-mono text-cyber-muted mt-0.5">
               In Progress Work
             </div>
           </div>
@@ -112,12 +112,12 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 <Clock className="w-3.5 h-3.5 text-accent-yellow" />
                 In Review
               </span>
-              <span className="text-[9px] text-cyber-muted tracking-tighter">QUEUE</span>
+              <span className="text-2xs text-cyber-muted tracking-tighter">QUEUE</span>
             </div>
             <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">
               {reviewCount}
             </div>
-            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">
+            <div className="text-2xs font-mono text-cyber-muted mt-0.5">
               Submissions Queued
             </div>
           </div>
@@ -130,12 +130,12 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
                 Approved
               </span>
-              <span className="text-[9px] text-cyber-muted tracking-tighter">PASSED</span>
+              <span className="text-2xs text-cyber-muted tracking-tighter">PASSED</span>
             </div>
             <div className="text-2xl sm:text-3xl font-display font-black text-accent-lime mt-1">
               {approvedCount}
             </div>
-            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">
+            <div className="text-2xs font-mono text-cyber-muted mt-0.5">
               Deliverables Verified
             </div>
           </div>
@@ -148,12 +148,12 @@ export const MissionControl: React.FC<MissionControlProps> = ({
                 <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
                 Critical
               </span>
-              <span className="text-[9px] text-cyber-muted tracking-tighter">ALERT</span>
+              <span className="text-2xs text-cyber-muted tracking-tighter">ALERT</span>
             </div>
             <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">
               {urgentCount}
             </div>
-            <div className="text-[10px] font-mono text-cyber-muted mt-0.5">
+            <div className="text-2xs font-mono text-cyber-muted mt-0.5">
               Urgent / High Priority
             </div>
           </div>
@@ -193,7 +193,7 @@ export const MissionControl: React.FC<MissionControlProps> = ({
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="space-y-0.5 min-w-0">
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-cyber-muted">
+                    <span className="font-mono text-2xs uppercase tracking-wider text-cyber-muted">
                       {t.task_type} // {t.priority}
                     </span>
                     <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-accent-cyan transition-colors leading-snug truncate">

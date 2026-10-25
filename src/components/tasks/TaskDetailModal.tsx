@@ -131,7 +131,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               <span className="font-mono text-xs font-bold text-accent-cyan">
                 {task.id.slice(0, 8)}
               </span>
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-cyber-bg-alt border border-cyber-border text-cyber-secondary font-bold">
+              <span className="px-1.5 py-0.5 rounded text-2xs font-mono uppercase bg-cyber-bg-alt border border-cyber-border text-cyber-secondary font-bold">
                 {task.task_type}
               </span>
               <LedStatusChip status={task.priority} size="sm" />
@@ -206,7 +206,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
             <div className="space-y-4">
               {/* Description */}
               <div className="p-4 rounded-xl bg-cyber-surface border border-cyber-border space-y-1">
-                <div className="text-[10px] font-mono text-cyber-muted uppercase tracking-wider">
+                <div className="text-2xs font-mono text-cyber-muted uppercase tracking-wider">
                   Technical Specifications & Objectives
                 </div>
                 <p className="text-sm text-cyber-primary leading-relaxed whitespace-pre-wrap">
@@ -217,7 +217,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
               {/* Deadline & Meta Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl bg-cyber-surface border border-cyber-border">
-                  <div className="text-[10px] font-mono text-cyber-muted uppercase">
+                  <div className="text-2xs font-mono text-cyber-muted uppercase">
                     Deadline Target
                   </div>
                   <div className="text-xs font-mono font-bold text-accent-yellow flex items-center gap-1.5 mt-1">
@@ -227,7 +227,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                 </div>
 
                 <div className="p-3 rounded-xl bg-cyber-surface border border-cyber-border">
-                  <div className="text-[10px] font-mono text-cyber-muted uppercase">
+                  <div className="text-2xs font-mono text-cyber-muted uppercase">
                     Assigned Engineers
                   </div>
                   <div className="flex items-center gap-2 mt-1">
@@ -349,7 +349,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                           onClick={() => setSubType(t)}
                           className={`py-1.5 rounded-lg text-xs font-mono font-bold uppercase transition-all cursor-pointer border ${
                             subType === t
-                              ? 'bg-accent-cyan text-black border-accent-cyan shadow-sm'
+                              ? 'bg-accent-cyan text-on-accent border-accent-cyan shadow-sm'
                               : 'bg-cyber-surface text-cyber-secondary border-cyber-border hover:text-cyber-primary'
                           }`}
                         >
@@ -534,7 +534,7 @@ export const TaskDetailModal: React.FC<TaskDetailModalProps> = ({
                             {comm.author?.full_name || 'Team Member'}
                           </span>
                         </div>
-                        <span className="font-mono text-[10px] text-cyber-muted">
+                        <span className="font-mono text-2xs text-cyber-muted">
                           {new Date(comm.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>

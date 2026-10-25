@@ -76,7 +76,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   return (
     <div className={`p-8 text-center space-y-3 rounded-xl border border-cyber-border bg-cyber-surface/60 ${className}`}>
       {/* Decorative Technical Header */}
-      <div className="flex items-center justify-center gap-2 font-mono text-[10px] text-cyber-muted tracking-widest uppercase">
+      <div className="flex items-center justify-center gap-2 font-mono text-2xs text-cyber-muted tracking-widest uppercase">
         <span>[</span>
         <span className="text-accent-cyan">//</span>
         <span>TELEMETRY STANDBY</span>

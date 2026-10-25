@@ -24,10 +24,10 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
   };
 
   const roleBadgeStyles: Record<UserRole, string> = {
-    admin: 'bg-accent-red border-cyber-bg text-white',
-    head: 'bg-accent-cyan border-cyber-bg text-black',
-    member: 'bg-accent-lime border-cyber-bg text-black',
-    pending: 'bg-accent-yellow border-cyber-bg text-black',
+    admin: 'bg-accent-red border-cyber-bg text-on-accent',
+    head: 'bg-accent-cyan border-cyber-bg text-on-accent',
+    member: 'bg-accent-lime border-cyber-bg text-on-accent',
+    pending: 'bg-accent-yellow border-cyber-bg text-on-accent',
   };
 
   const getInitials = (n: string) => {

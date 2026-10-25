@@ -73,7 +73,7 @@ export const PendingApprovalView: React.FC<PendingApprovalViewProps> = ({
         </GlassCard>
 
         {/* Technical Footer */}
-        <div className="text-center font-mono text-[10px] text-cyber-muted uppercase tracking-widest">
+        <div className="text-center font-mono text-2xs text-cyber-muted uppercase tracking-widest">
           Zewail City Racing Team // Telemetry Engine v1.0
         </div>
       </div>

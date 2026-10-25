@@ -287,7 +287,7 @@ export const TaskCreateModal: React.FC<TaskCreateModalProps> = ({
                     <span className="font-semibold text-cyber-primary">
                       {member.full_name}
                     </span>
-                    <span className="text-[10px] font-mono text-cyber-muted">
+                    <span className="text-2xs font-mono text-cyber-muted">
                       ({member.role})
                     </span>
                   </label>

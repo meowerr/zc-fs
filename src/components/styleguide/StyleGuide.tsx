@@ -83,7 +83,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
   ];
 
   return (
-    <div className="min-h-screen bg-cyber-bg text-cyber-primary p-4 sm:p-6 lg:p-8 space-y-10 max-w-7xl mx-auto selection:bg-accent-cyan selection:text-black">
+    <div className="min-h-screen bg-cyber-bg text-cyber-primary p-4 sm:p-6 lg:p-8 space-y-10 max-w-7xl mx-auto selection:bg-accent-cyan selection:text-on-accent">
       {/* ─── Top Telemetry Banner ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-cyber-border">
         <div className="space-y-1.5">
@@ -146,7 +146,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 style={{ backgroundColor: color.hex }}
               >
                 {copiedColor === color.hex && (
-                  <span className="bg-black/80 px-2 py-0.5 rounded text-accent-cyan text-[10px] flex items-center gap-1">
+                  <span className="bg-black/80 px-2 py-0.5 rounded text-accent-cyan text-2xs flex items-center gap-1">
                     <Check className="w-3 h-3" /> Copied
                   </span>
                 )}
@@ -158,8 +158,8 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                   </div>
                   <Copy className="w-3 h-3 text-cyber-muted opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="font-mono text-[10px] text-cyber-muted">{color.hex}</div>
-                <p className="text-[10px] text-cyber-secondary mt-1">{color.desc}</p>
+                <div className="font-mono text-2xs text-cyber-muted">{color.hex}</div>
+                <p className="text-2xs text-cyber-secondary mt-1">{color.desc}</p>
               </div>
             </div>
           ))}
@@ -225,7 +225,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                     className="w-2.5 h-2.5 rounded-full shrink-0"
                     style={{ backgroundColor: team.color_accent || '#00D9FF' }}
                   />
-                  <span className="font-mono text-[10px] text-cyber-muted uppercase tracking-wider">
+                  <span className="font-mono text-2xs text-cyber-muted uppercase tracking-wider">
                     {team.slug}
                   </span>
                 </div>
@@ -234,7 +234,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 </h4>
               </div>
 
-              <div className="pt-2 border-t border-cyber-border flex items-center justify-between text-[10px] font-mono">
+              <div className="pt-2 border-t border-cyber-border flex items-center justify-between text-2xs font-mono">
                 <span className="text-cyber-muted">Accent</span>
                 <span className="font-bold" style={{ color: team.color_accent || '#00D9FF' }}>{team.color_accent}</span>
               </div>
@@ -361,32 +361,32 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
         <GlassCard className="p-6 space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
             <div className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
-              <span className="text-[10px] font-mono text-cyber-muted uppercase block">To Do / Queued</span>
+              <span className="text-2xs font-mono text-cyber-muted uppercase block">To Do / Queued</span>
               <div className="flex justify-center"><LedStatusChip status="todo" /></div>
             </div>
 
             <div className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
-              <span className="text-[10px] font-mono text-cyber-muted uppercase block">In Progress</span>
+              <span className="text-2xs font-mono text-cyber-muted uppercase block">In Progress</span>
               <div className="flex justify-center"><LedStatusChip status="in_progress" /></div>
             </div>
 
             <div className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
-              <span className="text-[10px] font-mono text-cyber-muted uppercase block">Submitted / Review</span>
+              <span className="text-2xs font-mono text-cyber-muted uppercase block">Submitted / Review</span>
               <div className="flex justify-center"><LedStatusChip status="submitted" /></div>
             </div>
 
             <div className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
-              <span className="text-[10px] font-mono text-cyber-muted uppercase block">Approved / Done</span>
+              <span className="text-2xs font-mono text-cyber-muted uppercase block">Approved / Done</span>
               <div className="flex justify-center"><LedStatusChip status="approved" /></div>
             </div>
 
             <div className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
-              <span className="text-[10px] font-mono text-cyber-muted uppercase block">Revisions Req.</span>
+              <span className="text-2xs font-mono text-cyber-muted uppercase block">Revisions Req.</span>
               <div className="flex justify-center"><LedStatusChip status="changes_requested" /></div>
             </div>
 
             <div className="space-y-2 text-center p-3 rounded-lg bg-cyber-surface border border-cyber-border">
-              <span className="text-[10px] font-mono text-cyber-muted uppercase block">Completed</span>
+              <span className="text-2xs font-mono text-cyber-muted uppercase block">Completed</span>
               <div className="flex justify-center"><LedStatusChip status="done" /></div>
             </div>
           </div>
@@ -416,7 +416,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 onChange={(e) => setTestInput(e.target.value)}
                 hint={`${testInput.length} chars`}
               />
-              <div className="mt-1.5 text-[10px] font-mono text-cyber-muted truncate">
+              <div className="mt-1.5 text-2xs font-mono text-cyber-muted truncate">
                 Echo: <span className="text-accent-cyan font-semibold">{testInput || '(empty)'}</span>
               </div>
             </div>
@@ -430,7 +430,7 @@ export const StyleGuide: React.FC<StyleGuideProps> = ({ onBack }) => {
                 onChange={(e) => setTestEmail(e.target.value)}
                 hint="@zewailcity.edu.eg"
               />
-              <div className="mt-1.5 text-[10px] font-mono text-accent-lime flex items-center gap-1">
+              <div className="mt-1.5 text-2xs font-mono text-accent-lime flex items-center gap-1">
                 <Shield className="w-3 h-3" /> Validated ZC engineering domain
               </div>
             </div>

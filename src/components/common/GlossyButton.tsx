@@ -40,7 +40,7 @@ export const GlossyButton: React.FC<GlossyButtonProps> = ({
 
   const variantStyles = {
     primary: `
-      bg-accent-cyan text-black font-bold
+      bg-accent-cyan text-on-accent font-bold
       border border-accent-cyan
       shadow-[0_2px_12px_rgba(0,217,255,0.25)]
       hover:brightness-110 hover:shadow-[0_2px_16px_rgba(0,217,255,0.4)]
@@ -64,21 +64,21 @@ export const GlossyButton: React.FC<GlossyButtonProps> = ({
       active:scale-[0.98]
     `,
     action: `
-      bg-accent-orange text-white font-bold
+      bg-accent-orange text-on-accent font-bold
       border border-accent-orange
       shadow-[0_2px_12px_rgba(255,106,0,0.28)]
       hover:brightness-110 hover:shadow-[0_2px_16px_rgba(255,106,0,0.4)]
       active:scale-[0.98]
     `,
     warning: `
-      bg-accent-yellow text-black font-bold
+      bg-accent-yellow text-on-accent font-bold
       border border-accent-yellow
       shadow-[0_2px_12px_rgba(255,212,59,0.25)]
       hover:brightness-110 hover:shadow-[0_2px_16px_rgba(255,212,59,0.38)]
       active:scale-[0.98]
     `,
     danger: `
-      bg-accent-red text-white font-bold
+      bg-accent-red text-on-accent font-bold
       border border-accent-red
       shadow-[0_2px_12px_rgba(255,48,79,0.28)]
       hover:brightness-110 hover:shadow-[0_2px_16px_rgba(255,48,79,0.4)]

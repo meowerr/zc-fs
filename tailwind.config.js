@@ -22,6 +22,7 @@ export default {
           chrome: 'var(--chrome)',
           'chrome-dark': 'var(--chrome-dark)',
         },
+        'on-accent': 'var(--on-accent)',
         accent: {
           cyan: 'var(--accent-cyan)',
           red: 'var(--accent-red)',
@@ -61,9 +62,44 @@ export default {
         }
       },
       fontFamily: {
-        display: ['Orbitron', 'sans-serif'],
-        sans: ['"Exo 2"', 'sans-serif'],
-        mono: ['"Share Tech Mono"', 'monospace'],
+        display: ['Orbitron', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        sans: ['"Exo 2"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"Share Tech Mono"', 'ui-monospace', 'monospace'],
+      },
+      fontSize: {
+        '2xs': ['0.6875rem', { lineHeight: '1rem' }],
+      },
+      transitionDuration: {
+        fast: '150ms',
+        base: '200ms',
+        slow: '300ms',
+      },
+      transitionTimingFunction: {
+        out: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      },
+      keyframes: {
+        'fade-in': {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        'pop-in': {
+          from: { opacity: '0', transform: 'translateY(8px) scale(0.98)' },
+          to: { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        'slide-in-right': {
+          from: { opacity: '0', transform: 'translateX(16px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
+        },
+        'slide-up': {
+          from: { opacity: '0', transform: 'translateY(12px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+      },
+      animation: {
+        'fade-in': 'fade-in 200ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        'pop-in': 'pop-in 220ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        'slide-in-right': 'slide-in-right 240ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        'slide-up': 'slide-up 240ms cubic-bezier(0.22, 1, 0.36, 1) both',
       },
       boxShadow: {
         'cyber-sm': '0 1px 3px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',

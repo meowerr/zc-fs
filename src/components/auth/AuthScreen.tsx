@@ -111,7 +111,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               className={`
                 py-1.5 text-xs font-mono font-bold uppercase rounded transition-all cursor-pointer
                 ${isLoginTab 
-                  ? 'bg-accent-cyan text-black shadow-sm font-bold' 
+                  ? 'bg-accent-cyan text-on-accent shadow-sm font-bold' 
                   : 'text-cyber-secondary hover:text-cyber-primary'}
               `}
             >
@@ -123,7 +123,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
               className={`
                 py-1.5 text-xs font-mono font-bold uppercase rounded transition-all cursor-pointer
                 ${!isLoginTab 
-                  ? 'bg-accent-cyan text-black shadow-sm font-bold' 
+                  ? 'bg-accent-cyan text-on-accent shadow-sm font-bold' 
                   : 'text-cyber-secondary hover:text-cyber-primary'}
               `}
             >
@@ -165,7 +165,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                   <button
                     type="button"
                     onClick={handleAppendDomain}
-                    className="text-[10px] font-mono text-accent-cyan hover:underline cursor-pointer"
+                    className="text-2xs font-mono text-accent-cyan hover:underline cursor-pointer"
                   >
                     +@{UNIVERSITY_DOMAIN}
                   </button>
@@ -210,7 +210,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
           </form>
 
           {/* Domain Security Badge */}
-          <div className="mt-5 pt-3.5 border-t border-cyber-border flex items-center justify-center gap-1.5 text-[10px] font-mono text-cyber-muted">
+          <div className="mt-5 pt-3.5 border-t border-cyber-border flex items-center justify-center gap-1.5 text-2xs font-mono text-cyber-muted">
             <ShieldCheck className="w-3.5 h-3.5 text-accent-lime" />
             <span>Server-side restricted to @{UNIVERSITY_DOMAIN}</span>
           </div>

@@ -57,13 +57,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({
               <div className="relative mt-0.5">
                 <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-105' : ''}`} />
                 {Boolean(tab.badge && tab.badge > 0) && (
-                  <span className="absolute -top-1 -right-2 px-1 rounded-full text-[9px] font-mono font-bold bg-accent-red text-white shadow-sm">
+                  <span className="absolute -top-1 -right-2 px-1 rounded-full text-2xs font-mono font-bold bg-accent-red text-on-accent shadow-sm">
                     {tab.badge}
                   </span>
                 )}
               </div>
 
-              <span className={`text-[10px] font-display tracking-wider mt-1 ${isActive ? 'font-bold' : 'font-medium'}`}>
+              <span className={`text-2xs font-display tracking-wider mt-1 ${isActive ? 'font-bold' : 'font-medium'}`}>
                 {tab.label}
               </span>
             </button>

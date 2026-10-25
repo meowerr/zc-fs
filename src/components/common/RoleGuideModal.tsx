@@ -65,7 +65,7 @@ export const RoleGuideModal: React.FC<RoleGuideModalProps> = ({
               onClick={() => setSelectedRole(r)}
               className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-mono font-bold uppercase transition-all cursor-pointer ${
                 selectedRole === r
-                  ? 'bg-accent-cyan text-black font-bold shadow-sm'
+                  ? 'bg-accent-cyan text-on-accent font-bold shadow-sm'
                   : 'text-cyber-secondary hover:text-cyber-primary'
               }`}
             >

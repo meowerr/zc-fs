@@ -42,11 +42,11 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
               <h1 className="font-display font-black text-xs sm:text-sm tracking-widest text-cyber-primary uppercase">
                 PitLane
               </h1>
-              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
+              <span className="hidden sm:inline-block px-1.5 py-0.5 rounded text-2xs font-mono font-bold bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/30">
                 FS-2026
               </span>
             </div>
-            <p className="text-[10px] sm:text-[11px] font-mono text-cyber-muted tracking-wider flex items-center gap-1.5">
+            <p className="text-2xs sm:text-[11px] font-mono text-cyber-muted tracking-wider flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-accent-lime animate-pulse" />
               <span className="truncate max-w-[130px] sm:max-w-none">{groupName}</span>
             </p>
@@ -91,7 +91,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           >
             <Bell className="w-4 h-4" />
             {notificationCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded bg-accent-red text-white font-mono text-[9px] font-bold flex items-center justify-center shadow-sm animate-pulse">
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded bg-accent-red text-on-accent font-mono text-2xs font-bold flex items-center justify-center shadow-sm animate-pulse">
                 {notificationCount}
               </span>
             )}
@@ -119,7 +119,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
               <div className="text-xs font-semibold text-cyber-primary leading-tight">
                 {userName}
               </div>
-              <div className="text-[10px] font-mono text-accent-cyan uppercase tracking-wider">
+              <div className="text-2xs font-mono text-accent-cyan uppercase tracking-wider">
                 {currentRole}
               </div>
             </div>

@@ -32,7 +32,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
         {!isOwn && (
           <div className="flex items-center gap-1.5 px-1 text-[11px] font-mono">
             <span className="font-bold text-cyber-primary">{senderName}</span>
-            <span className="text-[9px] uppercase px-1 rounded bg-cyber-surface-elevated border border-cyber-border text-accent-cyan font-bold">
+            <span className="text-2xs uppercase px-1 rounded bg-cyber-surface-elevated border border-cyber-border text-accent-cyan font-bold">
               {senderRole}
             </span>
           </div>
@@ -69,7 +69,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isOwn }) 
           )}
 
           {/* Timestamp footer in bubble */}
-          <div className="mt-1 text-[9px] font-mono text-right select-none text-cyber-muted">
+          <div className="mt-1 text-2xs font-mono text-right select-none text-cyber-muted">
             {timeFormatted}
           </div>
         </div>
