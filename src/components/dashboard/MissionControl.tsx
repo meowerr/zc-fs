@@ -1,225 +1,191 @@
 import React from 'react';
-import { 
-  Clock, 
-  ChevronRight, 
-  Plus, 
-  MessageSquare, 
-  Activity,
-  CheckCircle2,
-  AlertTriangle,
-  Sliders
-} from 'lucide-react';
-import { GlassCard } from '../common/GlassCard';
+import { Clock, ChevronRight, Plus, MessageSquare, Activity, CheckCircle2, AlertTriangle, Flag } from 'lucide-react';
 import { GlossyButton } from '../common/GlossyButton';
-import { GhostButton } from '../common/GhostButton';
 import { LedStatusChip } from '../common/LedStatusChip';
 import { EmptyState } from '../common/EmptyState';
+import { PageHeader, StatTile } from '../common/PageHeader';
+import { formatDeadline } from '../tasks/TaskCard';
 import { Profile, Task } from '../../lib/database.types';
-import { NavTab } from '../layout/BottomNav';
+import { NavTab } from '../layout/navConfig';
 
 interface MissionControlProps {
   currentUser: Profile;
   tasks: Task[];
   onNavigateTab: (tab: NavTab) => void;
   onCreateTaskClick?: () => void;
+  onOpenTask?: (taskId: string) => void;
 }
+
+const greeting = () => {
+  const h = new Date().getHours();
+  return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+};
+
+const isOpen = (t: Task) => t.status !== 'done' && t.status !== 'approved';
+
+interface TaskRowProps {
+  task: Task;
+  onOpen: () => void;
+  reason?: string;
+}
+
+const TaskRow: React.FC<TaskRowProps> = ({ task, onOpen, reason }) => {
+  const deadline = new Date(task.deadline);
+  const overdue = isOpen(task) && deadline < new Date();
+  return (
+    <li>
+      <button
+        type="button"
+        onClick={onOpen}
+        className="group w-full flex items-center gap-3 p-3 sm:px-4 text-left rounded-lg hover:bg-cyber-surface-hover transition-colors duration-fast cursor-pointer"
+      >
+        <span className="flex-1 min-w-0">
+          <span className="block text-sm font-semibold text-cyber-primary truncate group-hover:text-accent-cyan transition-colors duration-fast">
+            {task.title}
+          </span>
+          <span className="flex items-center gap-2 mt-0.5 text-xs text-cyber-muted">
+            {reason && <span className="text-cyber-secondary">{reason}</span>}
+            {reason && <span aria-hidden="true">·</span>}
+            <span className={overdue ? 'text-accent-red font-medium' : ''}>
+              {isOpen(task) ? formatDeadline(deadline) : deadline.toLocaleDateString([], { month: 'short', day: 'numeric' })}
+            </span>
+          </span>
+        </span>
+        <LedStatusChip status={task.status} size="sm" />
+        <ChevronRight className="hidden sm:block w-4 h-4 text-cyber-muted group-hover:text-accent-cyan shrink-0" aria-hidden="true" />
+      </button>
+    </li>
+  );
+};
 
 export const MissionControl: React.FC<MissionControlProps> = ({
   currentUser,
   tasks,
   onNavigateTab,
   onCreateTaskClick,
+  onOpenTask,
 }) => {
-  // Compute real metrics from live Supabase tasks
+  const isReviewer = currentUser.role === 'admin' || currentUser.role === 'head';
+  const now = new Date();
+
   const inProgressCount = tasks.filter((t) => t.status === 'in_progress').length;
   const reviewCount = tasks.filter((t) => t.status === 'submitted').length;
   const approvedCount = tasks.filter((t) => t.status === 'approved' || t.status === 'done').length;
-  const urgentCount = tasks.filter((t) => t.priority === 'urgent' || t.priority === 'high').length;
+  const overdueCount = tasks.filter((t) => isOpen(t) && new Date(t.deadline) < now).length;
 
-  const relevantTasks = tasks.slice(0, 6);
+  const mine = tasks.filter((t) => t.assignees?.some((a) => a.id === currentUser.id));
+  const attention = (
+    isReviewer
+      ? tasks
+          .filter((t) => t.status === 'submitted' || (isOpen(t) && new Date(t.deadline) < now))
+          .map((t) => ({ task: t, reason: t.status === 'submitted' ? 'Ready for review' : 'Overdue' }))
+      : mine
+          .filter((t) => t.status === 'changes_requested' || (isOpen(t) && new Date(t.deadline).getTime() - now.getTime() < 1000 * 60 * 60 * 72))
+          .map((t) => ({ task: t, reason: t.status === 'changes_requested' ? 'Changes requested' : 'Due soon' }))
+  )
+    .sort((a, b) => new Date(a.task.deadline).getTime() - new Date(b.task.deadline).getTime())
+    .slice(0, 5);
+
+  const recent = [...tasks]
+    .sort((a, b) => new Date(b.updated_at ?? b.created_at).getTime() - new Date(a.updated_at ?? a.created_at).getTime())
+    .slice(0, 6);
+
+  const openTask = (id: string) => (onOpenTask ? onOpenTask(id) : onNavigateTab('tasks'));
+  const firstName = currentUser.full_name.split(' ')[0];
 
   return (
-    <div className="space-y-5">
-      {/* Hero Telemetry Banner */}
-      <GlassCard variant="elevated" className="p-5 sm:p-6">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
-              <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-[11px]">
-                {currentUser.role === 'admin' 
-                  ? 'CLUB // RACE CONTROL' 
-                  : currentUser.role === 'head'
-                  ? 'SUB-TEAM // PIT WALL'
-                  : 'ENGINEERING // WORKSPACE'}
-              </span>
-              <span className="text-accent-lime text-2xs">● LIVE</span>
-            </div>
-
-            <h2 className="font-display font-black text-xl sm:text-2xl lg:text-3xl text-cyber-primary tracking-wider uppercase">
-              Mission Control & Telemetry
-            </h2>
-            <p className="text-xs sm:text-sm text-cyber-secondary max-w-xl leading-relaxed">
-              Motorsport engineering management, multi-version deliverable verification, and telemetry communications for Zewail City Formula Student.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
-            {(currentUser.role === 'admin' || currentUser.role === 'head') && (
-              <GlossyButton
-                variant="primary"
-                icon={<Plus className="w-4 h-4" />}
-                onClick={onCreateTaskClick || (() => onNavigateTab('tasks'))}
-              >
-                Create Task
+    <div className="space-y-6">
+      <PageHeader
+        eyebrow={currentUser.role === 'admin' ? 'Race control' : currentUser.role === 'head' ? 'Pit wall' : 'Your garage'}
+        title={`${greeting()}, ${firstName}`}
+        description={
+          attention.length > 0
+            ? `You have ${attention.length} ${attention.length === 1 ? 'item' : 'items'} that need attention.`
+            : 'Everything is on track. Nice driving.'
+        }
+        actions={
+          <>
+            <GlossyButton variant="secondary" icon={<MessageSquare className="w-4 h-4" />} onClick={() => onNavigateTab('chat')}>
+              Pit Wall
+            </GlossyButton>
+            {isReviewer && (
+              <GlossyButton variant="primary" icon={<Plus className="w-4 h-4" />} onClick={onCreateTaskClick}>
+                New task
               </GlossyButton>
             )}
-            <GlossyButton
-              variant="secondary"
-              icon={<MessageSquare className="w-4 h-4" />}
-              onClick={() => onNavigateTab('chat')}
+          </>
+        }
+      >
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+          <StatTile label="In progress" value={inProgressCount} hint="Active work" tone="orange" icon={<Activity className="w-4 h-4" />} onClick={() => onNavigateTab('tasks')} />
+          <StatTile label="In review" value={reviewCount} hint="Submissions queued" tone="yellow" icon={<Clock className="w-4 h-4" />} onClick={() => onNavigateTab('tasks')} />
+          <StatTile label="Overdue" value={overdueCount} hint="Past deadline" tone="red" icon={<AlertTriangle className="w-4 h-4" />} onClick={() => onNavigateTab('tasks')} />
+          <StatTile label="Approved" value={approvedCount} hint="Verified deliverables" tone="lime" icon={<CheckCircle2 className="w-4 h-4" />} onClick={() => onNavigateTab('tasks')} />
+        </div>
+      </PageHeader>
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5">
+        <section aria-labelledby="attention-title" className="lg:col-span-2 rounded-xl bg-cyber-surface border border-cyber-border">
+          <div className="flex items-center gap-2 px-4 pt-4 pb-3 border-b border-cyber-border">
+            <Flag className="w-4 h-4 text-accent-orange" aria-hidden="true" />
+            <h2 id="attention-title" className="font-display font-bold text-sm text-cyber-primary tracking-wide">
+              {isReviewer ? 'Needs your review' : 'Up next for you'}
+            </h2>
+          </div>
+          {attention.length === 0 ? (
+            <div className="px-4 py-8 text-center">
+              <CheckCircle2 className="w-6 h-6 mx-auto text-accent-lime" aria-hidden="true" />
+              <p className="mt-2 text-sm font-semibold text-cyber-primary">All clear</p>
+              <p className="text-xs text-cyber-muted mt-0.5">
+                {isReviewer ? 'No submissions waiting and nothing overdue.' : 'Nothing due in the next 3 days.'}
+              </p>
+            </div>
+          ) : (
+            <ul className="p-1.5 divide-y divide-cyber-border">
+              {attention.map(({ task, reason }) => (
+                <TaskRow key={task.id} task={task} reason={reason} onOpen={() => openTask(task.id)} />
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section aria-labelledby="recent-title" className="lg:col-span-3 rounded-xl bg-cyber-surface border border-cyber-border">
+          <div className="flex items-center justify-between gap-2 px-4 pt-4 pb-3 border-b border-cyber-border">
+            <h2 id="recent-title" className="font-display font-bold text-sm text-cyber-primary tracking-wide">
+              Recent activity
+            </h2>
+            <button
+              type="button"
+              onClick={() => onNavigateTab('tasks')}
+              className="h-8 px-2 -mr-2 rounded-md inline-flex items-center gap-1 text-xs font-semibold text-accent-cyan hover:bg-accent-cyan/10 transition-colors duration-fast cursor-pointer"
             >
-              Pit Wall Chat
-            </GlossyButton>
+              View all {tasks.length > 0 && <span className="tabular-nums">({tasks.length})</span>}
+              <ChevronRight className="w-3.5 h-3.5" aria-hidden="true" />
+            </button>
           </div>
-        </div>
-
-        {/* Live Gauges (Derived from real Supabase task records) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-5 border-t border-cyber-border">
-          {/* Active / In Progress Metric */}
-          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-orange/40 transition-colors">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-orange opacity-70" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Activity className="w-3.5 h-3.5 text-accent-orange" />
-                Active
-              </span>
-              <span className="text-2xs text-cyber-muted tracking-tighter">P1</span>
+          {recent.length === 0 ? (
+            <div className="p-3">
+              <EmptyState
+                title="No tasks yet"
+                description={
+                  isReviewer
+                    ? 'Dispatch the first deliverable to your sub-team to get the season moving.'
+                    : 'Your group head hasn’t assigned any deliverables yet.'
+                }
+                actionLabel={isReviewer ? 'Create a task' : undefined}
+                onAction={onCreateTaskClick}
+                className="border-0 bg-transparent"
+              />
             </div>
-            <div className="text-2xl sm:text-3xl font-display font-black text-accent-orange mt-1">
-              {inProgressCount}
-            </div>
-            <div className="text-2xs font-mono text-cyber-muted mt-0.5">
-              In Progress Work
-            </div>
-          </div>
-
-          {/* Pending / In Review Metric */}
-          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-yellow/40 transition-colors">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow opacity-70" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-accent-yellow" />
-                In Review
-              </span>
-              <span className="text-2xs text-cyber-muted tracking-tighter">QUEUE</span>
-            </div>
-            <div className="text-2xl sm:text-3xl font-display font-black text-accent-yellow mt-1">
-              {reviewCount}
-            </div>
-            <div className="text-2xs font-mono text-cyber-muted mt-0.5">
-              Submissions Queued
-            </div>
-          </div>
-
-          {/* Approved / Done Metric */}
-          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-lime/40 transition-colors">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime opacity-70" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-accent-lime" />
-                Approved
-              </span>
-              <span className="text-2xs text-cyber-muted tracking-tighter">PASSED</span>
-            </div>
-            <div className="text-2xl sm:text-3xl font-display font-black text-accent-lime mt-1">
-              {approvedCount}
-            </div>
-            <div className="text-2xs font-mono text-cyber-muted mt-0.5">
-              Deliverables Verified
-            </div>
-          </div>
-
-          {/* Urgent / Critical Metric */}
-          <div className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden group hover:border-accent-red/40 transition-colors">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red opacity-70" />
-            <div className="text-[11px] font-mono text-cyber-secondary uppercase flex items-center justify-between">
-              <span className="flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-accent-red" />
-                Critical
-              </span>
-              <span className="text-2xs text-cyber-muted tracking-tighter">ALERT</span>
-            </div>
-            <div className="text-2xl sm:text-3xl font-display font-black text-accent-red mt-1">
-              {urgentCount}
-            </div>
-            <div className="text-2xs font-mono text-cyber-muted mt-0.5">
-              Urgent / High Priority
-            </div>
-          </div>
-        </div>
-      </GlassCard>
-
-      {/* Active Sub-Team Tasks Feed (Live Data) */}
-      <GlassCard className="p-4 sm:p-5">
-        <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-cyber-border">
-          <div className="flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-accent-cyan" />
-            <h3 className="font-display font-bold text-sm sm:text-base text-cyber-primary uppercase tracking-wider">
-              Recent Engineering Deliverables
-            </h3>
-          </div>
-          <GhostButton size="sm" onClick={() => onNavigateTab('tasks')}>
-            <span>VIEW ALL ({tasks.length})</span>
-            <ChevronRight className="w-3.5 h-3.5 inline ml-0.5" />
-          </GhostButton>
-        </div>
-
-        {relevantTasks.length === 0 ? (
-          <EmptyState
-            illustration="telemetry"
-            title="NO ACTIVE DELIVERABLES"
-            description="All deliverables for your sub-team scope are currently clear or waiting for dispatch."
-            actionLabel={currentUser.role === 'admin' || currentUser.role === 'head' ? 'CREATE FIRST DELIVERABLE' : undefined}
-            onAction={onCreateTaskClick || (() => onNavigateTab('tasks'))}
-          />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {relevantTasks.map((t) => (
-              <div
-                key={t.id}
-                onClick={() => onNavigateTab('tasks')}
-                className="p-3.5 rounded-lg bg-cyber-bg-alt border border-cyber-border hover:border-accent-cyan/50 transition-all space-y-2.5 cursor-pointer group shadow-cyber-sm"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="space-y-0.5 min-w-0">
-                    <span className="font-mono text-2xs uppercase tracking-wider text-cyber-muted">
-                      {t.task_type} // {t.priority}
-                    </span>
-                    <h4 className="font-sans font-bold text-xs sm:text-sm text-cyber-primary group-hover:text-accent-cyan transition-colors leading-snug truncate">
-                      {t.title}
-                    </h4>
-                  </div>
-                  <LedStatusChip status={t.status} size="sm" />
-                </div>
-
-                {t.description && (
-                  <p className="text-xs text-cyber-secondary line-clamp-1 leading-relaxed">
-                    {t.description}
-                  </p>
-                )}
-
-                <div className="flex items-center justify-between pt-2 border-t border-cyber-border text-[11px] font-mono text-cyber-muted">
-                  <span>DUE: {new Date(t.deadline).toLocaleDateString([], { month: 'short', day: 'numeric' })}</span>
-                  <span className="text-accent-cyan group-hover:translate-x-0.5 transition-transform flex items-center">
-                    OPEN <ChevronRight className="w-3 h-3 ml-0.5 inline" />
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </GlassCard>
+          ) : (
+            <ul className="p-1.5 divide-y divide-cyber-border">
+              {recent.map((task) => (
+                <TaskRow key={task.id} task={task} reason={task.task_type.charAt(0).toUpperCase() + task.task_type.slice(1)} onOpen={() => openTask(task.id)} />
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
     </div>
   );
 };

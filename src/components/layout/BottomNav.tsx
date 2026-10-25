@@ -1,75 +1,66 @@
 import React from 'react';
-import { LayoutDashboard, CheckSquare, MessageSquare, Users, ShieldAlert } from 'lucide-react';
 import { UserRole } from '../../lib/database.types';
+import { getNavItems, NavTab } from './navConfig';
 
-export type NavTab = 'dashboard' | 'tasks' | 'chat' | 'team' | 'admin';
+export type { NavTab } from './navConfig';
 
 interface BottomNavProps {
   activeTab: NavTab;
   onTabChange: (tab: NavTab) => void;
   role: UserRole;
-  unreadCount?: number;
+  badges?: Partial<Record<NavTab, number>>;
 }
 
-export const BottomNav: React.FC<BottomNavProps> = ({
-  activeTab,
-  onTabChange,
-  role,
-  unreadCount = 0,
-}) => {
-  const tabs = [
-    { id: 'dashboard' as NavTab, label: 'Control', icon: LayoutDashboard },
-    { id: 'tasks' as NavTab, label: 'Tasks', icon: CheckSquare },
-    { id: 'chat' as NavTab, label: 'Pit Wall', icon: MessageSquare, badge: unreadCount },
-    { id: 'team' as NavTab, label: 'Team', icon: Users },
-    ...(role === 'admin' ? [{ id: 'admin' as NavTab, label: 'Admin', icon: ShieldAlert }] : []),
-  ];
+export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onTabChange, role, badges = {} }) => {
+  const items = getNavItems(role);
 
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 pb-[env(safe-area-inset-bottom)] backdrop-blur-md bg-cyber-surface/95 border-t border-cyber-border shadow-cyber">
-      {/* Top micro border with subtle cyan accent */}
-      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-accent-cyan/40 to-transparent" />
-      
-      <div className="flex items-center justify-around px-2 py-1">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
+    <nav
+      aria-label="Primary"
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 pb-[env(safe-area-inset-bottom)] backdrop-blur-md bg-cyber-surface/95 border-t border-cyber-border"
+    >
+      <ul className="flex items-stretch justify-around px-1">
+        {items.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          const badge = badges[item.id] ?? 0;
 
           return (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange(tab.id)}
-              className={`
-                relative flex flex-col items-center justify-center min-w-[56px] min-h-[48px] py-1 px-2 rounded-lg
-                transition-all duration-150 active:scale-95 cursor-pointer
-                ${
-                  isActive
-                    ? 'text-accent-cyan'
-                    : 'text-cyber-muted hover:text-cyber-primary'
-                }
-              `}
-            >
-              {/* Active Top Line Indicator */}
-              {isActive && (
-                <div className="absolute top-0 inset-x-4 h-[2px] bg-accent-cyan rounded-full shadow-[0_0_6px_rgba(0,217,255,0.6)]" />
-              )}
-
-              <div className="relative mt-0.5">
-                <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-105' : ''}`} />
-                {Boolean(tab.badge && tab.badge > 0) && (
-                  <span className="absolute -top-1 -right-2 px-1 rounded-full text-2xs font-mono font-bold bg-accent-red text-on-accent shadow-sm">
-                    {tab.badge}
-                  </span>
-                )}
-              </div>
-
-              <span className={`text-2xs font-display tracking-wider mt-1 ${isActive ? 'font-bold' : 'font-medium'}`}>
-                {tab.label}
-              </span>
-            </button>
+            <li key={item.id} className="flex-1">
+              <button
+                type="button"
+                onClick={() => onTabChange(item.id)}
+                aria-current={isActive ? 'page' : undefined}
+                aria-label={badge > 0 ? `${item.label}, ${badge} pending` : item.label}
+                className={`
+                  relative w-full flex flex-col items-center justify-center gap-1 h-16 rounded-lg
+                  transition-colors duration-fast cursor-pointer
+                  ${isActive ? 'text-accent-cyan' : 'text-cyber-muted hover:text-cyber-primary'}
+                `}
+              >
+                <span
+                  className={`absolute top-0 inset-x-5 h-0.5 rounded-full bg-accent-cyan transition-opacity duration-base ${isActive ? 'opacity-100' : 'opacity-0'}`}
+                  aria-hidden="true"
+                />
+                <span
+                  className={`relative flex items-center justify-center w-12 h-7 rounded-full transition-colors duration-base ${isActive ? 'bg-accent-cyan/10' : ''}`}
+                  aria-hidden="true"
+                >
+                  <Icon className="w-5 h-5" />
+                  {badge > 0 && (
+                    <span className="absolute -top-1 right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-accent-red text-on-accent font-mono text-2xs font-bold flex items-center justify-center ring-2 ring-cyber-surface">
+                      {badge > 9 ? '9+' : badge}
+                    </span>
+                  )}
+                </span>
+                <span className={`text-2xs tracking-wide ${isActive ? 'font-bold' : 'font-medium'}`} aria-hidden="true">
+                  {item.shortLabel}
+                </span>
+              </button>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </nav>
   );
 };

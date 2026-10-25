@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { TopHeader } from './TopHeader';
-import { BottomNav, NavTab } from './BottomNav';
+import { BottomNav } from './BottomNav';
 import { Sidebar } from './Sidebar';
+import { NavTab } from './navConfig';
 import { UserRole, Group, Task } from '../../lib/database.types';
 
 interface AppShellProps {
@@ -10,9 +11,10 @@ interface AppShellProps {
   onTabChange: (tab: NavTab) => void;
   currentRole: UserRole;
   userName: string;
+  userEmail?: string;
   groupName?: string;
-  unreadCount?: number;
-  onOpenProfile?: () => void;
+  badges?: Partial<Record<NavTab, number>>;
+  onSignOut?: () => void;
   notificationCount?: number;
   onOpenNotifications?: () => void;
   onOpenGuide?: () => void;
@@ -27,9 +29,10 @@ export const AppShell: React.FC<AppShellProps> = ({
   onTabChange,
   currentRole,
   userName,
+  userEmail,
   groupName,
-  unreadCount = 0,
-  onOpenProfile,
+  badges,
+  onSignOut,
   notificationCount = 0,
   onOpenNotifications,
   onOpenGuide,
@@ -37,74 +40,62 @@ export const AppShell: React.FC<AppShellProps> = ({
   groups,
   tasks,
 }) => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    return localStorage.getItem('zcfs_theme') !== 'light';
-  });
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => localStorage.getItem('zcfs_theme') !== 'light');
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('zcfs_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('zcfs_theme', 'light');
-    }
+    document.documentElement.classList.toggle('dark', isDarkMode);
+    localStorage.setItem('zcfs_theme', isDarkMode ? 'dark' : 'light');
   }, [isDarkMode]);
 
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
+  const handleTabChange = (tab: NavTab) => {
+    onTabChange(tab);
+    window.scrollTo({ top: 0 });
+    document.getElementById('main-content')?.focus({ preventScroll: true });
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-cyber-bg text-cyber-primary font-sans transition-colors duration-200">
-      {/* Background Subtle Tech-Grid Texture */}
-      <div 
-        className="fixed inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
-        style={{
-          backgroundImage: `radial-gradient(currentColor 1px, transparent 1px)`,
-          backgroundSize: '20px 20px'
-        }}
-      />
+    <div className="min-h-screen flex flex-col bg-cyber-bg text-cyber-primary font-sans">
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
 
-      {/* Top Header Telemetry HUD */}
       <TopHeader
         currentRole={currentRole}
         userName={userName}
+        userEmail={userEmail}
         groupName={groupName}
         isDarkMode={isDarkMode}
-        onToggleTheme={toggleTheme}
-        onOpenProfile={onOpenProfile}
+        onToggleTheme={() => setIsDarkMode((prev) => !prev)}
+        onSignOut={onSignOut}
         notificationCount={notificationCount}
         onOpenNotifications={onOpenNotifications}
         onOpenGuide={onOpenGuide}
-        onOpenStyleGuide={onOpenStyleGuide}
       />
 
-      {/* Body: Desktop Sidebar + Main Content */}
       <div className="flex-1 flex max-w-7xl w-full mx-auto">
         <Sidebar
           activeTab={activeTab}
-          onTabChange={onTabChange}
+          onTabChange={handleTabChange}
           role={currentRole}
           currentGroupName={groupName}
-          unreadCount={unreadCount}
+          badges={badges}
           groups={groups}
           tasks={tasks}
           onOpenStyleGuide={onOpenStyleGuide}
         />
 
-        <main className="flex-1 p-3.5 sm:p-5 md:p-6 pb-24 md:pb-8 max-w-full overflow-x-hidden">
-          {children}
+        <main
+          id="main-content"
+          tabIndex={-1}
+          className="flex-1 min-w-0 px-3 py-4 sm:p-5 lg:p-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-10 outline-none"
+        >
+          <div key={activeTab} className="animate-fade-in">
+            {children}
+          </div>
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation Bar (Hidden on md+) */}
-      <BottomNav
-        activeTab={activeTab}
-        onTabChange={onTabChange}
-        role={currentRole}
-        unreadCount={unreadCount}
-      />
+      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} role={currentRole} badges={badges} />
     </div>
   );
 };

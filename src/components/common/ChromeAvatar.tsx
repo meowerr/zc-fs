@@ -40,9 +40,9 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
   };
 
   return (
-    <div className={`relative inline-block ${className}`}>
+    <span className={`relative inline-block shrink-0 ${className}`}>
       {/* Cyber Technical Bezel Outer Ring */}
-      <div
+      <span
         className={`
           ${sizeStyles[size]} rounded-lg p-[1.5px] 
           bg-cyber-border-strong border border-white/10
@@ -50,19 +50,19 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
         `}
       >
         {/* Avatar Inner Core */}
-        <div className="w-full h-full rounded-[6px] overflow-hidden bg-cyber-surface-elevated flex items-center justify-center font-mono font-bold text-cyber-primary select-none">
+        <span className="w-full h-full rounded-[6px] overflow-hidden bg-cyber-surface-elevated flex items-center justify-center font-mono font-bold text-cyber-primary select-none">
           {avatarUrl ? (
-            <img src={avatarUrl} alt={name} className="w-full h-full object-cover" />
+            <img src={avatarUrl} alt="" className="w-full h-full object-cover" loading="lazy" decoding="async" />
           ) : (
-            <span>{getInitials(name)}</span>
+            <span aria-hidden="true">{getInitials(name)}</span>
           )}
-        </div>
-      </div>
+        </span>
+      </span>
 
       {/* Role Indicator Micro Badge */}
       {role && (
         <span
-          title={`Role: ${role.toUpperCase()}`}
+          aria-hidden="true"
           className={`
             absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded border 
             ${roleBadgeStyles[role]} shadow-sm flex items-center justify-center font-mono text-[8px] font-bold leading-none
@@ -71,6 +71,6 @@ export const ChromeAvatar: React.FC<ChromeAvatarProps> = ({
           {role[0].toUpperCase()}
         </span>
       )}
-    </div>
+    </span>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { F1HorizontalTransition } from './components/transitions/F1HorizontalTransition';
 import { AppShell } from './components/layout/AppShell';
-import { NavTab } from './components/layout/BottomNav';
+import { NavTab } from './components/layout/navConfig';
+import { TeamDirectory } from './components/team/TeamDirectory';
 import { MissionControl } from './components/dashboard/MissionControl';
 import { AuthScreen } from './components/auth/AuthScreen';
 import { PendingApprovalView } from './components/auth/PendingApprovalView';
@@ -26,6 +27,7 @@ export const App: React.FC = () => {
     return window.location.pathname === '/styleguide' || window.location.hash === '#styleguide';
   });
   const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const [tasksIntent, setTasksIntent] = useState<{ create?: boolean; taskId?: string } | null>(null);
   const prevUserRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -184,16 +186,35 @@ export const App: React.FC = () => {
     addNotification('announcement', 'Deliverable Removed', 'Task and associated data deleted from database.');
   };
 
+  const navigateTo = (tab: NavTab) => {
+    setTasksIntent(null);
+    setActiveTab(tab);
+  };
+
+  const openTasks = (intent: { create?: boolean; taskId?: string }) => {
+    setTasksIntent(intent);
+    setActiveTab('tasks');
+  };
+
+  const isReviewer = currentUser.role === 'admin' || currentUser.role === 'head';
+  const navBadges: Partial<Record<NavTab, number>> = {
+    tasks: isReviewer
+      ? tasks.filter((t) => t.status === 'submitted').length
+      : tasks.filter((t) => t.status === 'changes_requested' && t.assignees?.some((a) => a.id === currentUser.id)).length,
+    admin: allProfiles.filter((p) => p.status === 'pending').length,
+  };
+
   const authenticatedContent = (
     <>
       <AppShell
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={navigateTo}
         currentRole={currentUser.role}
         userName={currentUser.full_name}
+        userEmail={currentUser.email}
         groupName={groupDisplayName}
-        unreadCount={currentMessages.length > 0 ? 1 : 0}
-        onOpenProfile={signOut}
+        badges={navBadges}
+        onSignOut={signOut}
         notificationCount={notifUnreadCount}
         onOpenNotifications={() => setIsNotifDrawerOpen(true)}
         onOpenGuide={() => setIsGuideOpen(true)}
@@ -222,6 +243,9 @@ export const App: React.FC = () => {
             currentUser={currentUser}
             tasks={tasks}
             teamMembers={allProfiles}
+            groups={allGroups}
+            initialCreateOpen={tasksIntent?.create}
+            initialTaskId={tasksIntent?.taskId}
             submissions={submissions}
             comments={comments}
             onCreateTask={handleCreateTask}
@@ -246,18 +270,27 @@ export const App: React.FC = () => {
             canPost={canPost}
             onSelectChannel={setActiveChannel}
             onSelectConversation={setActiveConversation}
-            onSendMessage={async (content, attachment) => {
-              await sendMessage(content, attachment);
-              addNotification('mention', 'Message Transmitted', 'Telemetry packet sent.');
-            }}
+            onSendMessage={sendMessage}
             onStartDirectMessage={startDirectMessage}
+          />
+        ) : activeTab === 'team' ? (
+          <TeamDirectory
+            currentUser={currentUser}
+            profiles={allProfiles}
+            groups={allGroups}
+            tasks={tasks}
+            onMessage={async (userId) => {
+              await startDirectMessage(userId);
+              navigateTo('chat');
+            }}
           />
         ) : (
           <MissionControl
             currentUser={currentUser}
             tasks={tasks}
-            onNavigateTab={setActiveTab}
-            onCreateTaskClick={() => setActiveTab('tasks')}
+            onNavigateTab={navigateTo}
+            onCreateTaskClick={() => openTasks({ create: true })}
+            onOpenTask={(taskId) => openTasks({ taskId })}
           />
         )}
       </AppShell>

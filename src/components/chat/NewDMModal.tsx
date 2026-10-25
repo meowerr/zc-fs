@@ -5,6 +5,7 @@ import { GhostButton } from '../common/GhostButton';
 import { Modal, ModalCloseButton } from '../common/Modal';
 import { ChromeAvatar } from '../common/ChromeAvatar';
 import { Profile } from '../../lib/database.types';
+import { canDirectMessage } from '../../lib/permissions';
 import { SUB_TEAMS } from '../admin/AdminApprovalHub';
 
 interface NewDMModalProps {
@@ -27,29 +28,7 @@ export const NewDMModal: React.FC<NewDMModalProps> = ({
   if (!isOpen) return null;
 
   // Filter users permitted for DM based on role & sub-team
-  const permittedUsers = allProfiles.filter((p) => {
-    if (p.id === currentUser.id) return false;
-    if (p.status !== 'approved') return false;
-
-    // Admin can DM anyone
-    if (currentUser.role === 'admin') return true;
-
-    // Head can DM anyone in own group, any other Head, and Admin
-    if (currentUser.role === 'head') {
-      return (
-        p.group_id === currentUser.group_id ||
-        p.role === 'head' ||
-        p.role === 'admin'
-      );
-    }
-
-    // Member can DM people in own group or Admin
-    if (currentUser.role === 'member') {
-      return p.group_id === currentUser.group_id || p.role === 'admin';
-    }
-
-    return false;
-  });
+  const permittedUsers = allProfiles.filter((p) => canDirectMessage(currentUser, p));
 
   const filtered = permittedUsers.filter((p) => {
     if (!search.trim()) return true;

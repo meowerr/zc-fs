@@ -9,7 +9,7 @@ import {
   CheckCircle2,
   FileCheck
 } from 'lucide-react';
-import { GlassCard } from '../common/GlassCard';
+import { PageHeader, StatTile } from '../common/PageHeader';
 import { GlossyButton } from '../common/GlossyButton';
 import { GhostButton } from '../common/GhostButton';
 import { EmptyState } from '../common/EmptyState';
@@ -52,6 +52,8 @@ interface TasksHubProps {
   onReviewSubmission: (submissionId: string, taskId: string, status: SubmissionReviewStatus, feedback: string) => Promise<void>;
   onAddComment: (taskId: string, content: string) => Promise<void>;
   onDeleteTask: (taskId: string) => Promise<void>;
+  initialCreateOpen?: boolean;
+  initialTaskId?: string;
 }
 
 export const TasksHub: React.FC<TasksHubProps> = ({
@@ -67,11 +69,15 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   onReviewSubmission,
   onAddComment,
   onDeleteTask,
+  initialCreateOpen = false,
+  initialTaskId,
 }) => {
   const [filter, setFilter] = useState<'all' | 'my_tasks' | 'submitted' | 'in_progress' | 'approved' | 'overdue'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(
+    () => (initialTaskId ? tasks.find((t) => t.id === initialTaskId) ?? null : null)
+  );
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(initialCreateOpen);
   const [selectedGroupFilter, setSelectedGroupFilter] = useState<string>('all');
 
   const isHeadOrAdmin = currentUser.role === 'admin' || currentUser.role === 'head';
@@ -120,177 +126,164 @@ export const TasksHub: React.FC<TasksHubProps> = ({
   const inReviewCount = tasks.filter((t) => t.status === 'submitted').length;
   const inProgressCount = tasks.filter((t) => t.status === 'in_progress').length;
   const completedCount = tasks.filter((t) => t.status === 'approved' || t.status === 'done').length;
+  const myTasksCount = tasks.filter((t) => t.assignees?.some((a) => a.id === currentUser.id)).length;
+
+  type FilterId = typeof filter;
+  const filterPills: Array<{ id: FilterId; label: string; count?: number }> = [
+    { id: 'all', label: 'All', count: tasks.length },
+    { id: 'my_tasks', label: 'Assigned to me', count: myTasksCount },
+    { id: 'submitted', label: 'In review', count: inReviewCount },
+    { id: 'in_progress', label: 'In progress', count: inProgressCount },
+    { id: 'overdue', label: 'Overdue', count: overdueCount },
+    { id: 'approved', label: 'Approved', count: completedCount },
+  ];
+  const hasActiveFilters = filter !== 'all' || searchQuery.trim() !== '' || selectedGroupFilter !== 'all';
+  const clearFilters = () => {
+    setFilter('all');
+    setSearchQuery('');
+    setSelectedGroupFilter('all');
+  };
 
   return (
     <div className="space-y-5">
-      {/* Top Telemetry Header & Stats */}
-      <GlassCard variant="elevated" className="p-4 sm:p-5">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-2 px-2 py-0.5 rounded bg-cyber-bg-alt border border-cyber-border text-xs font-mono">
-              <span className="text-accent-cyan font-bold">//</span>
-              <span className="text-cyber-secondary uppercase tracking-widest text-[11px]">DELIVERABLES // TELEMETRY</span>
-            </div>
-            <h2 className="font-display font-black text-xl sm:text-2xl text-cyber-primary uppercase tracking-wider">
-              {currentUser.role === 'admin'
-                ? 'Club Task Telemetry'
-                : `${currentUser.role === 'head' ? 'Pit Wall' : 'My Deliverables'} Workspace`}
-            </h2>
-            <p className="text-xs text-cyber-secondary max-w-lg leading-relaxed">
-              Track engineering milestones, submit CAD/code/specs, and review deliverables with multi-version history.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
+      <PageHeader
+        eyebrow={currentUser.role === 'admin' ? 'All sub-teams' : currentUser.role === 'head' ? 'Your sub-team' : 'Your work'}
+        title={currentUser.role === 'member' ? 'My deliverables' : 'Tasks & reviews'}
+        description="Track engineering milestones, submit CAD, code and reports, and review each version before it ships."
+        actions={
+          <>
             <GhostButton
               size="sm"
-              icon={<FileSpreadsheet className="w-3.5 h-3.5 text-accent-cyan" />}
+              icon={<FileSpreadsheet className="w-4 h-4" />}
               onClick={() => exportTasksToCSV(tasks, effectiveGroups)}
-              title="Download tasks as CSV spreadsheet"
+              title="Download all tasks as a CSV spreadsheet"
             >
-              CSV Export
+              CSV
             </GhostButton>
-
             <GhostButton
               size="sm"
-              icon={<Download className="w-3.5 h-3.5 text-cyber-chrome" />}
+              icon={<Download className="w-4 h-4" />}
               onClick={() => exportTasksToJSON(tasks)}
-              title="Download JSON telemetry dump"
+              title="Download all tasks as JSON"
             >
               JSON
             </GhostButton>
-
             {isHeadOrAdmin && (
-              <GlossyButton
-                variant="primary"
-                size="md"
-                icon={<Plus className="w-4 h-4" />}
-                onClick={() => setIsCreateModalOpen(true)}
-              >
-                Create Task
+              <GlossyButton variant="primary" icon={<Plus className="w-4 h-4" />} onClick={() => setIsCreateModalOpen(true)}>
+                New task
               </GlossyButton>
             )}
-          </div>
+          </>
+        }
+      >
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+          <StatTile label="Total" value={tasks.length} hint="All deliverables" icon={<FileCheck className="w-4 h-4" />} onClick={() => setFilter('all')} active={filter === 'all'} />
+          <StatTile label="In review" value={inReviewCount} hint={isHeadOrAdmin ? 'Waiting on you' : 'Waiting on a head'} tone="yellow" icon={<Clock className="w-4 h-4" />} onClick={() => setFilter('submitted')} active={filter === 'submitted'} />
+          <StatTile label="Overdue" value={overdueCount} hint="Past deadline" tone="red" icon={<AlertTriangle className="w-4 h-4" />} onClick={() => setFilter('overdue')} active={filter === 'overdue'} />
+          <StatTile label="Approved" value={completedCount} hint="Verified & done" tone="lime" icon={<CheckCircle2 className="w-4 h-4" />} onClick={() => setFilter('approved')} active={filter === 'approved'} />
         </div>
+      </PageHeader>
 
-        {/* Telemetry Metric Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mt-5 pt-4 border-t border-cyber-border">
-          <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border">
-            <div className="text-2xs font-mono text-cyber-muted uppercase flex items-center justify-between">
-              <span>Total Work</span>
-              <FileCheck className="w-3 h-3 text-cyber-muted" />
-            </div>
-            <div className="text-xl sm:text-2xl font-display font-black text-cyber-primary mt-0.5">{tasks.length}</div>
-            <div className="text-2xs font-mono text-cyber-muted">All Deliverables</div>
-          </div>
-
-          <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-yellow" />
-            <div className="text-2xs font-mono text-cyber-muted uppercase flex items-center justify-between">
-              <span>In Review</span>
-              <Clock className="w-3 h-3 text-accent-yellow" />
-            </div>
-            <div className="text-xl sm:text-2xl font-display font-black text-accent-yellow mt-0.5">{inReviewCount}</div>
-            <div className="text-2xs font-mono text-cyber-muted">Awaiting Head Review</div>
-          </div>
-
-          <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-red" />
-            <div className="text-2xs font-mono text-cyber-muted uppercase flex items-center justify-between">
-              <span>Critical Overdue</span>
-              <AlertTriangle className="w-3 h-3 text-accent-red" />
-            </div>
-            <div className="text-xl sm:text-2xl font-display font-black text-accent-red mt-0.5">{overdueCount}</div>
-            <div className="text-2xs font-mono text-cyber-muted">Requires Immediate Action</div>
-          </div>
-
-          <div className="p-3 rounded-lg bg-cyber-bg-alt border border-cyber-border relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-accent-lime" />
-            <div className="text-2xs font-mono text-cyber-muted uppercase flex items-center justify-between">
-              <span>Verified / Passed</span>
-              <CheckCircle2 className="w-3 h-3 text-accent-lime" />
-            </div>
-            <div className="text-xl sm:text-2xl font-display font-black text-accent-lime mt-0.5">{completedCount}</div>
-            <div className="text-2xs font-mono text-cyber-muted">Deliverables Approved</div>
-          </div>
-        </div>
-      </GlassCard>
-
-      {/* Filter & Search Bar */}
-      <GlassCard className="p-3.5 sm:p-4 space-y-3">
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-          {/* Search Box */}
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row gap-2.5">
           <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-cyber-muted" />
+            <label htmlFor="task-search" className="sr-only">Search tasks</label>
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-cyber-muted pointer-events-none" aria-hidden="true" />
             <input
-              type="text"
-              placeholder="Search deliverables by title, note, or engineer..."
+              id="task-search"
+              type="search"
+              placeholder="Search by title, description or assignee"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-9 pl-9 pr-3.5 rounded-lg text-xs font-sans bg-cyber-surface-elevated border border-cyber-border text-cyber-primary placeholder:text-cyber-muted focus:outline-none focus:border-accent-cyan"
+              className="w-full h-11 pl-10 pr-3.5 rounded-lg text-sm"
             />
           </div>
 
-          {/* Group Filter for Admin */}
           {currentUser.role === 'admin' && (
-            <select
-              value={selectedGroupFilter}
-              onChange={(e) => setSelectedGroupFilter(e.target.value)}
-              className="h-9 px-3 rounded-lg text-xs font-mono bg-cyber-surface-elevated border border-cyber-border text-cyber-primary focus:outline-none focus:border-accent-cyan"
-            >
-              <option value="all">ALL SUB-TEAMS ({effectiveGroups.length})</option>
-              {effectiveGroups.map((team) => (
-                <option key={team.id} value={team.id}>
-                  {team.name}
-                </option>
-              ))}
-            </select>
+            <div className="sm:w-64">
+              <label htmlFor="task-group-filter" className="sr-only">Filter by sub-team</label>
+              <select
+                id="task-group-filter"
+                value={selectedGroupFilter}
+                onChange={(e) => setSelectedGroupFilter(e.target.value)}
+                className="w-full h-11 px-3 rounded-lg text-sm cursor-pointer"
+              >
+                <option value="all">All sub-teams</option>
+                {effectiveGroups.map((team) => (
+                  <option key={team.id} value={team.id}>
+                    {team.name.replace(/^Technical - |^Operations - /, '')}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
         </div>
 
-        {/* Filter Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-cyber-border">
-          {[
-            { id: 'all', label: 'All Tasks' },
-            { id: 'my_tasks', label: 'My Deliverables' },
-            { id: 'submitted', label: `In Review (${inReviewCount})` },
-            { id: 'in_progress', label: `In Progress (${inProgressCount})` },
-            { id: 'overdue', label: `Overdue (${overdueCount})` },
-            { id: 'approved', label: 'Approved' },
-          ].map((pill) => (
-            <button
-              key={pill.id}
-              onClick={() => setFilter(pill.id as any)}
-              className={`
-                px-2.5 py-1 rounded-md text-[11px] font-mono font-bold uppercase transition-all cursor-pointer border
-                ${
-                  filter === pill.id
-                    ? 'bg-accent-cyan text-on-accent border-accent-cyan shadow-[0_0_8px_rgba(0,217,255,0.3)]'
-                    : 'bg-cyber-surface-elevated text-cyber-secondary border-cyber-border hover:border-cyber-border-strong hover:text-cyber-primary'
-                }
-              `}
-            >
-              {pill.label}
-            </button>
-          ))}
+        <div className="flex items-center gap-2">
+          <div role="group" aria-label="Filter by status" className="flex-1 flex gap-1.5 overflow-x-auto pb-1 -mx-3 px-3 sm:mx-0 sm:px-0 sm:flex-wrap">
+            {filterPills.map((pill) => {
+              const isActive = filter === pill.id;
+              return (
+                <button
+                  key={pill.id}
+                  type="button"
+                  onClick={() => setFilter(pill.id)}
+                  aria-pressed={isActive}
+                  className={`
+                    h-9 px-3 shrink-0 rounded-full text-xs font-semibold border inline-flex items-center gap-1.5
+                    transition-colors duration-fast cursor-pointer
+                    ${isActive
+                      ? 'bg-accent-cyan text-on-accent border-accent-cyan'
+                      : 'bg-cyber-surface text-cyber-secondary border-cyber-border hover:border-cyber-border-strong hover:text-cyber-primary'}
+                  `}
+                >
+                  {pill.label}
+                  {pill.count !== undefined && (
+                    <span className={`font-mono text-2xs tabular-nums ${isActive ? 'opacity-80' : 'text-cyber-muted'}`}>{pill.count}</span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </GlassCard>
+
+        <div className="flex items-center justify-between gap-2 text-xs text-cyber-muted min-h-[1.5rem]">
+          <p aria-live="polite">
+            Showing <span className="font-semibold text-cyber-primary tabular-nums">{filteredTasks.length}</span> of {tasks.length} tasks
+          </p>
+          {hasActiveFilters && (
+            <button type="button" onClick={clearFilters} className="h-8 px-2 rounded-md font-semibold text-accent-cyan hover:bg-accent-cyan/10 transition-colors duration-fast cursor-pointer">
+              Clear filters
+            </button>
+          )}
+        </div>
+      </div>
 
       {/* Deliverables Grid */}
       {filteredTasks.length === 0 ? (
-        <EmptyState
-          illustration="wheel"
-          title="NO DELIVERABLES MATCH"
-          description={
-            searchQuery
-              ? 'No deliverables match your search criteria. Try a different keyword.'
-              : 'No tasks currently exist in this filter view.'
-          }
-          actionLabel={isHeadOrAdmin ? '+ CREATE SUB-TEAM TASK' : undefined}
-          onAction={isHeadOrAdmin ? () => setIsCreateModalOpen(true) : undefined}
-        />
+        tasks.length === 0 ? (
+          <EmptyState
+            illustration="telemetry"
+            title={isHeadOrAdmin ? 'No tasks yet' : 'Nothing assigned yet'}
+            description={
+              isHeadOrAdmin
+                ? 'Create the first deliverable for your sub-team. Assignees are notified instantly.'
+                : 'When your group head assigns you a deliverable, it will appear here.'
+            }
+            actionLabel={isHeadOrAdmin ? 'Create a task' : undefined}
+            onAction={isHeadOrAdmin ? () => setIsCreateModalOpen(true) : undefined}
+          />
+        ) : (
+          <EmptyState
+            illustration="wheel"
+            title="No tasks match these filters"
+            description={searchQuery.trim() ? `Nothing matches "${searchQuery.trim()}". Try another keyword or clear the filters.` : 'Try a different status filter to see more work.'}
+            actionLabel="Clear filters"
+            onAction={clearFilters}
+          />
+        )
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {filteredTasks.map((task) => {
             const group = effectiveGroups.find((g) => g.id === task.group_id);
             return (
@@ -303,7 +296,7 @@ export const TasksHub: React.FC<TasksHubProps> = ({
               />
             );
           })}
-        </div>
+        </ul>
       )}
 
       {/* Task Creation Modal */}
